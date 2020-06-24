@@ -5,7 +5,13 @@ export default function Home() {
   return (
     <React.Fragment>
       <div>Login Page</div>
-      <Card>Example usage of card component</Card>
+      <Card
+        title='hi'
+        subtitle='modified xxx'
+        author='Ian M'
+        buttonText='click'
+        onClick={() => alert('click')}
+      >Example usage of card component</Card>
     </React.Fragment>
   )
 }

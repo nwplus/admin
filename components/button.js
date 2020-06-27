@@ -6,7 +6,7 @@ import { EDIT, NEW } from '../constants'
 
 const StyledButton = styled.button`
     border: none;
-    padding: 12px;
+    ${props => props.isText ? 'padding: 6px 24px;' : 'padding: 12px;'}
     color: #fff;
     cursor: pointer;
     background-color: #2D2937;
@@ -25,7 +25,7 @@ const StyledNewIcon = styled(NewIcon)`
 `
 
 const Button = ({children, type, onClick}) => (
-    <StyledButton onClick={onClick}>
+    <StyledButton isText={children && !type} onClick={onClick}>
         {(type === EDIT) && <StyledEditIcon hasText={children} />}
         {(type === NEW) && <StyledNewIcon hasText={children} />}
         {children}

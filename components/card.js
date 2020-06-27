@@ -1,5 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
+import Button from './button'
+import { EDIT, NEW } from '../constants'
 
 const Card = styled.div`
     background-color: #F8F8F8;
@@ -23,15 +25,11 @@ const Subtitle = styled.p`
     margin-left: 24px;
 `
 
-const Button = styled.button`
-    margin-left: auto;
-`
-
 const Content = styled.div`
     padding: 40px;
 `
 
-export default ({title, subtitle, author, buttonText, onClick, children}) => (
+export default ({title, subtitle, author, buttonText, onClick, ctaType, children}) => (
     <Card>
         <Header>
             <Title>
@@ -43,7 +41,7 @@ export default ({title, subtitle, author, buttonText, onClick, children}) => (
                     {subtitle} by <b>{author}</b>
                 </Subtitle>
             }
-            <Button onClick={onClick}>
+            <Button type={ctaType} onClick={onClick}>
                 {buttonText}
             </Button>
         </Header>

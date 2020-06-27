@@ -6,13 +6,14 @@ import { EDIT, NEW } from '../constants'
 
 const StyledButton = styled.button`
     border: none;
-    margin-left: auto;
     padding: 12px;
     color: #fff;
     cursor: pointer;
     background-color: #2D2937;
     display: flex;
     align-items: center;
+    font-size: 16px;
+    border-radius: 3px;
 `
 
 const StyledEditIcon = styled(EditIcon)`

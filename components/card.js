@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import Button from './button'
-import { EDIT, NEW } from '../constants'
 
 const Card = styled.div`
     background-color: #F8F8F8;
@@ -25,6 +24,10 @@ const Subtitle = styled.p`
     margin-left: 24px;
 `
 
+const ButtonContainer = styled.div`
+    margin-left: auto;
+`
+
 const Content = styled.div`
     padding: 40px;
 `
@@ -41,9 +44,11 @@ export default ({title, subtitle, author, buttonText, onClick, ctaType, children
                     {subtitle} by <b>{author}</b>
                 </Subtitle>
             }
-            <Button type={ctaType} onClick={onClick}>
-                {buttonText}
-            </Button>
+            <ButtonContainer>
+                <Button type={ctaType} onClick={onClick}>
+                    {buttonText}
+                </Button>
+            </ButtonContainer>
         </Header>
         <Content>
             {children}

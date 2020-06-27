@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import Card from '../components/card'
 import { EDIT, NEW } from '../constants'
+import Button from '../components/button'
 
 export default function Home() {
   return (
@@ -22,6 +23,7 @@ export default function Home() {
         ctaType={NEW}
         onClick={() => alert('click')}
       >Example usage of card component</Card>
+      <Button>Hi there</Button>
     </React.Fragment>
   )
 }

@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import Button from './button'
 
 const Card = styled.div`
     background-color: #F8F8F8;
@@ -18,7 +17,7 @@ export const CardTitle = styled.h1`
     margin: 0;
 `
 
-export const ButtonContainer = styled.div`
+export const CardButtonContainer = styled.div`
     margin-left: auto;
 `
 

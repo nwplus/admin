@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import Card, { CardHeader, CardTitle, CardContent, ButtonContainer } from '../components/card'
+import Card, { CardHeader, CardTitle, CardContent, CardButtonContainer } from '../components/card'
 import { EDIT, NEW } from '../constants'
 import Button from '../components/button'
 
@@ -11,9 +11,9 @@ export default function Home() {
       <Card>
         <CardHeader>
           <CardTitle>Hi</CardTitle>
-          <ButtonContainer>
-            <Button>Hi there</Button>
-          </ButtonContainer>
+          <CardButtonContainer>
+            <Button type={EDIT}>Hi there</Button>
+          </CardButtonContainer>
         </CardHeader>
         <CardContent>Example usage of card component</CardContent>
       </Card>

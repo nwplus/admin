@@ -6,52 +6,28 @@ const Card = styled.div`
     background-color: #F8F8F8;
 `
 
-const Header = styled.div`
+export const CardHeader = styled.div`
     background-color: #EDEDED;
     padding: 24px 40px;
     display: flex;
     align-items: center;
 `
 
-const Title = styled.h1`
+export const CardTitle = styled.h1`
     font-size: 24px;
     margin: 0;
 `
 
-const Subtitle = styled.p`
-    font-size: 16px;
-    margin: 0;
-    margin-left: 24px;
-`
-
-const ButtonContainer = styled.div`
+export const ButtonContainer = styled.div`
     margin-left: auto;
 `
 
-const Content = styled.div`
+export const CardContent = styled.div`
     padding: 40px;
 `
 
-export default ({title, subtitle, author, buttonText, onClick, ctaType, children}) => (
+export default ({children}) => (
     <Card>
-        <Header>
-            <Title>
-                {title}
-            </Title>
-            {
-                subtitle &&
-                <Subtitle>
-                    {subtitle} by <b>{author}</b>
-                </Subtitle>
-            }
-            <ButtonContainer>
-                <Button type={ctaType} onClick={onClick}>
-                    {buttonText}
-                </Button>
-            </ButtonContainer>
-        </Header>
-        <Content>
-            {children}
-        </Content>
+        {children}
     </Card>
 )

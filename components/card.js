@@ -15,6 +15,7 @@ export const CardHeader = styled.div`
 export const CardTitle = styled.h1`
     font-size: 24px;
     margin: 0;
+    margin-right: 16px;
 `
 
 export const CardButtonContainer = styled.div`

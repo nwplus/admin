@@ -11,6 +11,7 @@ export default function Home() {
       <Card>
         <CardHeader>
           <CardTitle>Hi</CardTitle>
+          <p>Some extra text</p>
           <CardButtonContainer>
             <Button type={EDIT}>Hi there</Button>
           </CardButtonContainer>

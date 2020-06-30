@@ -6,7 +6,7 @@ import { EDIT, NEW } from '../constants'
 
 const StyledButton = styled.button`
     border: none;
-    ${props => props.isText ? 'padding: 6px 24px;' : 'padding: 12px;'}
+    ${props => props.isText ? 'padding: 6px 24px;' : 'padding: 10px;'}
     color: #fff;
     cursor: pointer;
     background-color: #2D2937;
@@ -17,11 +17,11 @@ const StyledButton = styled.button`
 `
 
 const StyledEditIcon = styled(EditIcon)`
-    ${props => props.hasText && 'margin-right: 10px;'}
+    ${props => props.hasText && 'margin-right: 8px;'}
 `
 
 const StyledNewIcon = styled(NewIcon)`
-    ${props => props.hasText && 'margin-right: 10px;'}
+    ${props => props.hasText && 'margin-right: 8px;'}
 `
 
 const Button = ({children, type, onClick}) => (

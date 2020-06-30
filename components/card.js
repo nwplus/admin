@@ -1,12 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
+import { COLOR } from '../constants'
 
 const Card = styled.div`
-    background-color: #F8F8F8;
+    background-color: ${COLOR.BACKGROUND};
 `
 
 export const CardHeader = styled.div`
-    background-color: #EDEDED;
+    background-color: ${COLOR.GREY};
     padding: 24px 40px;
     display: flex;
     align-items: center;

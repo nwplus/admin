@@ -2,14 +2,14 @@ import React from 'react'
 import styled from 'styled-components'
 import EditIcon from './icons/edit'
 import NewIcon from './icons/new'
-import { EDIT, NEW } from '../constants'
+import { COLOR, EDIT, NEW } from '../constants'
 
 const StyledButton = styled.button`
     border: none;
     ${props => props.isText ? 'padding: 6px 24px;' : 'padding: 10px;'}
-    color: #fff;
+    color: ${COLOR.WHITE};
     cursor: pointer;
-    background-color: #2D2937;
+    background-color: ${COLOR.PRIMARY};
     display: flex;
     align-items: center;
     font-size: 16px;

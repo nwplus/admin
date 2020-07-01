@@ -1,22 +1,10 @@
-import Card from '../components/card'
+import Card, { CardHeader, CardTitle, CardContent, CardButtonContainer } from '../components/card'
 import styled from 'styled-components'
+import Button from '../components/button'
 import { useState } from 'react'
+import { EDIT, NEW } from '../constants'
 
 
-const HeaderDiv = styled.div`
-    border: none;
-    height: 50px;
-    line-height: 50px;
-    padding: 0px 43px;
-   
-    
-    overflow: hidden;
-    background-color: #EDEDED;
-    outline: none;
-    font-size: 24px;
-    color: #5A5A5A;
-    font-weight: 600
-`
 const BodyDiv = styled.div`
     background-color: #F8F8F8;
     padding: 34px 43px 50px;
@@ -37,23 +25,39 @@ const HeaderCard = styled.div`
 
 `
 
-const CardDiv = styled.div`
-  
-    padding: 26px 28px;
-    border-bottom: 2px solid #EDEDED;
-
-`
 // map CardDiv to a function
 // async firebase api first 
 
 export default function SponsorshipPage() {
+    
+    const [editWindow, setEditWindow] = useState(false)
+    
+    const handleEdit = (e) => {
+        e.preventDefault();
+        //TODO: pop-up window 
+        setEditWindow(true)
+    };
+
+    const handleCancel = (e) => {
+        e.preventDefault();
+        setEditWindow(false);
+    }
+
+    const handleSave = (e) => {
+        // TODO: update firebase with edits
+        e.preventDefault();
+        setEditWindow();
+    }
+
     return(
         <React.Fragment>
-            <HeaderDiv>
-                Sponsors
-            </HeaderDiv>
+            <CardHeader style={{backgroundColor: "#EDEDED"}}> 
+                <CardTitle>Sponsors</CardTitle>
+                <CardButtonContainer>
+                    <Button onClick={handleEdit} type={NEW}>New Sponsor</Button>
+                </CardButtonContainer>
+            </CardHeader>
             <BodyDiv>
-                
                 <TableDiv>
                     <HeaderCard>
                         Sponsor Name, 
@@ -61,13 +65,15 @@ export default function SponsorshipPage() {
                         Something
 
                     </HeaderCard>
-                    <CardDiv> 
-                        Card
-                    </CardDiv>
-                    <CardDiv>
-                        Card 2
-                    </CardDiv>
-
+                    <CardContent>
+                        Hello
+                    </CardContent>
+                    <Card link='Google.com'>
+                        <CardContent>
+                            pls help
+                        </CardContent>
+                     
+                    </Card>
                 </TableDiv>
             </BodyDiv>
         </React.Fragment>

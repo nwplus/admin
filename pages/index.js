@@ -2,6 +2,7 @@ import Head from 'next/head'
 import Card, { CardHeader, CardTitle, CardContent, CardButtonContainer } from '../components/card'
 import { EDIT, NEW } from '../constants'
 import Button from '../components/button'
+import SponsorshipPage from './sponsorship'
 
 export default function Home() {
   return (
@@ -10,7 +11,7 @@ export default function Home() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Hi</CardTitle>
+          <CardTitle>Hello</CardTitle>
           <p>Some extra text</p>
           <CardButtonContainer>
             <Button type={EDIT}>Hi there</Button>
@@ -18,6 +19,8 @@ export default function Home() {
         </CardHeader>
         <CardContent>Example usage of card component</CardContent>
       </Card>
+      <SponsorshipPage />
+
     </React.Fragment>
 
   )

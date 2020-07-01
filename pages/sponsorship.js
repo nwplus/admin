@@ -37,7 +37,6 @@ const HeaderCard = styled.div`
 
 `
 
-
 const CardDiv = styled.div`
   
     padding: 26px 28px;

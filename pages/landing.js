@@ -2,10 +2,16 @@ import Head from 'next/head'
 import Card, { CardHeader, CardTitle, CardContent, CardButtonContainer } from '../components/card'
 import { EDIT, NEW } from '../constants'
 import Button from '../components/button'
+import { Helmet } from 'react-helmet'
+import { GlobalStyle } from '../components/globalStyles'
 
 export default () => {
   return (
     <React.Fragment>
+      <Helmet>
+      <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/hk-grotesk" type="text/css"/>
+      </Helmet>
+      <GlobalStyle/>
       <div>Login Page</div>
 
       <Card>

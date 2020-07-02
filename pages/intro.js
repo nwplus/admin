@@ -1,6 +1,8 @@
-import Card from '../components/card'
+import Card, { CardHeader, CardTitle, CardContent, CardButtonContainer } from '../components/card'
 import styled from 'styled-components'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { COLOR, EDIT } from '../constants'
+import Button from '../components/button'
 
 const props = {
     nwHacks: {
@@ -13,64 +15,71 @@ const props = {
     }
 }
 
-const HeaderDiv = styled.div`
+const HeaderText = styled.textarea`
     border: none;
     width: 847px;
     overflow: hidden;
-    background-color: #F8F8F8;
+    background-color: ${COLOR.BACKGROUND};
     outline: none;
     font-size: 24px;
     padding-bottom: 13px;
-    color: #5A5A5A;
-    font-weight: 600
+    color: ${COLOR.TEXT};
+    font-weight: 600;
+    resize: none;
+    height: 0px;
 `
 
-const EditingHeader = styled.div`
-    border: 1px solid #606060;
+const EditingHeader = styled.textarea`
+    border: 1px solid ${COLOR.EDIT_BORDER};
     width: 847px;
     overflow: hidden;
-    background-color: #FFFFFF;
+    background-color: ${COLOR.WHITE};
     outline: none;
-    padding: 10px 16px 10px 16px;
+    padding: 10px 16px 0px 16px; 
+    height: 0px;
+    resize: none;
 `
 
-const ContentDiv = styled.div`
+const ContentText = styled.textarea`
     border: none;
     width: 847px;
     overflow: hidden;
-    background-color: #F8F8F8;
+    background-color: ${COLOR.BACKGROUND};
     outline: none;
-    color: #5A5A5A;
+    color: ${COLOR.TEXT};
+    height: 0px;
+    resize: none;
 `
 
-const EditingDiv = styled.div`
-    border: 1px solid #606060;
+const EditingText = styled.textarea`
+    border: 1px solid ${COLOR.EDIT_BORDER};
     width: 847px;
     overflow: hidden;
-    background-color: #FFFFFF;
+    background-color: ${COLOR.WHITE};
     outline: none;
     resize: vertical;
     padding: 10px 16px 10px 16px;
+    height: 0px;
 `
 
 const StyledCancel = styled.button`
     font-size: 16px;
     cursor: pointer;
-    border-bottom: 2px solid #000000;
+    border-bottom: 2px solid ${COLOR.BLACK};
     margin-left: 675px;
     margin-right: 40px;
     border: none;
     outline: none;
-    background-color: #F8F8F8;
+    background-color: ${COLOR.BACKGROUND};
 `
 
 const StyledSave = styled.button`
     font-size: 16px;
-    background-color: #2D2937;
+    background-color: ${COLOR.PRIMARY};
     border-radius: 3px;
     width: 102px;
     height: 40px;
-    color: #FFFFFF;
+    color: ${COLOR.WHITE};
     cursor: pointer;
 `
 
@@ -78,21 +87,31 @@ const StyledHeader = styled.p`
     padding-bottom: 13px;
     padding-top: 17px;
     margin: 0px;
-    background-color: #F8F8F8;
+    background-color: ${COLOR.BACKGROUND};
 `
 
 export default function IntroPage() {
-    const [isEditing, setIsEditing] = useState(false)
+    const [isEditingIntro, setIsEditingIntro] = useState(false)
+    const [isEditingOthers, setIsEditingOthers] = useState(false)
     // TODO need functionality to display data based on what event is currently being viewed
 
-    const handleEdit = (e) => {
+    const handleEdit = (type, e) => {
         e.preventDefault();
-        setIsEditing(!isEditing)
+        calculateTextAreaHeight()
+        if (type == 'intro') {
+            setIsEditingIntro(!isEditingIntro)
+        } else {
+            setIsEditingOthers(!isEditingOthers)
+        }
     };
 
-    const handleCancel = (e) => {
+    const handleCancel = (type, e) => {
         e.preventDefault();
-        setIsEditing(false)
+        if (type == 'intro') {
+            setIsEditingIntro(false)
+        } else {
+            setIsEditingOthers(false)
+        }
     }
 
     const handleSave = (e) => {
@@ -101,33 +120,44 @@ export default function IntroPage() {
         setIsEditing(false)
     }
 
+    // sets the heights for all textareas based on their scroll height
+    const calculateTextAreaHeight = () => {
+        const textareas = document.getElementsByClassName('textarea');
+        Array.prototype.forEach.call(textareas, function (textarea) {
+            textarea.style.height = textarea.scrollHeight + 'px'
+        })
+    }
+
+    useEffect(() => {
+        calculateTextAreaHeight()
+    })
 
     function Content(props) {
-        const { header, content } = props
+        const { header, content, isEditing, cancel } = props
         return (
             <React.Fragment>
                 {
                     isEditing ?
-                        <React.Fragment >
+                        <React.Fragment>
                             <StyledHeader>Header</StyledHeader>
-                            <EditingHeader contentEditable>{header}</EditingHeader>
+                            <EditingHeader className='textarea' defaultValue={header} />
                             <StyledHeader>Body</StyledHeader>
-                            <EditingDiv contentEditable>{content}</EditingDiv>
-                            <div style={{ height: '27px', backgroundColor: '#F8F8F8' }} />
+                            <EditingText className='textarea' defaultValue={content} />
+                            <div style={{ height: '27px', backgroundColor: `${COLOR.BACKGROUND}` }} />
                             <div style={{ display: 'flex' }}>
-                                <StyledCancel onClick={handleCancel}>
-                                    <p style={{ borderBottom: '2px solid #000000', margin: '0px' }}>
+                                <StyledCancel onClick={cancel}>
+                                    <p style={{ borderBottom: `2px solid ${COLOR.BLACK}`, margin: '0px' }}>
                                         Cancel
                                     </p>
                                 </StyledCancel>
                                 <StyledSave>Save</StyledSave>
                             </div>
-                        </React.Fragment >
+                        </React.Fragment>
                         :
-                        < React.Fragment >
-                            <HeaderDiv contentEditable={false}>{header}</HeaderDiv>
-                            <ContentDiv contentEditable={false}>{content}</ContentDiv>
-                        </React.Fragment >
+                        <React.Fragment >
+                            <HeaderText className='textarea' disabled defaultValue={header} />
+                            <ContentText className='textarea' disabled defaultValue={content} />
+                        </React.Fragment>
                 }
             </React.Fragment>
         )
@@ -135,22 +165,33 @@ export default function IntroPage() {
 
     return (
         <React.Fragment>
-            <button onClick={handleEdit}>EDIT</button>
-            <Content header={props.nwHacks.contentHeader} content={props.nwHacks.content} />
-            <button onClick={handleEdit}>EDIT</button>
-            <Content header={props.nwHacks.otherContentHeader} content={props.nwHacks.content} />
+            <div style={{ marginTop: '-40px', marginBottom: '40px' }}>
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Intro Text</CardTitle>
+                        <p>{props.nwHacks.subtitle}</p>
+                        <CardButtonContainer>
+                            <Button type={EDIT} onClick={handleEdit.bind(null, 'intro')} />
+                        </CardButtonContainer>
+                    </CardHeader>
+                    <CardContent>
+                        <Content cancel={handleCancel.bind(null, 'intro')} isEditing={isEditingIntro} header={props.nwHacks.contentHeader} content={props.nwHacks.content} />
+                    </CardContent>
+                </Card>
+            </div>
 
-            <Card
-                Header='Intro Text'
-                Subtitle={props.nwHacks.subtitle}
-                Content={<Content header={props.nwHacks.contentHeader} content={props.nwHacks.content} />}
-            />
-            <Card
-                Header='Other Text Section(s)'
-                Subtitle={props.nwHacks.otherSubtitle}
-                Content={<Content header={props.nwHacks.otherContentHeader} content={props.nwHacks.otherContent} />}
-            />
-
+            <Card>
+                <CardHeader>
+                    <CardTitle>Other Text Section(s)</CardTitle>
+                    <p>{props.nwHacks.otherSubtitle}</p>
+                    <CardButtonContainer>
+                        <Button type={EDIT} onClick={handleEdit.bind(null, 'others')} />
+                    </CardButtonContainer>
+                </CardHeader>
+                <CardContent>
+                    <Content cancel={handleCancel.bind(null, 'others')} isEditing={isEditingOthers} header={props.nwHacks.otherContentHeader} content={props.nwHacks.otherContent} />
+                </CardContent>
+            </Card>
         </React.Fragment>
     )
 }

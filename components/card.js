@@ -7,7 +7,7 @@ const Card = styled.div`
 `
 
 export const CardHeader = styled.div`
-    background-color: ${COLOR.GREY};
+    background-color: ${COLOR.GRAY};
     padding: 24px 40px;
     display: flex;
     align-items: center;
@@ -27,7 +27,7 @@ export const CardContent = styled.div`
     padding: 40px;
 `
 
-export default ({children}) => (
+export default ({ children }) => (
     <Card>
         {children}
     </Card>

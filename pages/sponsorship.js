@@ -4,16 +4,28 @@ import Button from '../components/button'
 import { useState } from 'react'
 import { EDIT, NEW } from '../constants'
 
-
-const BodyDiv = styled.div`
-    background-color: #F8F8F8;
-    padding: 34px 43px 50px;
-`
+let sponsortest = [
+    {"name": "Microsoft",
+    "link":"www.microsoft.com",
+    "image": "path to photo",
+    "lastmod": "today lol"
+     },
+    {"name": "Apple",
+    "link":"www.apple.com",
+    "image": "yeeters",
+    "lastmod": "today lol"
+    },  
+    {"name": "Balenciaga",
+    "link":"www.ssense.com",
+    "image": "koko",
+    "lastmod": "lol"
+}]
 
 const TableDiv = styled.div`
     border: 1px solid #000000;
     border-radius: 3px;
     padding: 1px 1px;
+    background-color: #FFFFFF;
 `
 
 const HeaderCard = styled.div`
@@ -24,6 +36,13 @@ const HeaderCard = styled.div`
     border-bottom: 2px solid #EDEDED;
 
 `
+
+
+const CardDiv = styled.div`
+    padding: 26px 28px;
+    border-bottom: 2px solid #EDEDED;
+`
+
 
 // map CardDiv to a function
 // async firebase api first 
@@ -51,13 +70,15 @@ export default function SponsorshipPage() {
 
     return(
         <React.Fragment>
-            <CardHeader style={{backgroundColor: "#EDEDED"}}> 
-                <CardTitle>Sponsors</CardTitle>
-                <CardButtonContainer>
-                    <Button onClick={handleEdit} type={NEW}>New Sponsor</Button>
-                </CardButtonContainer>
-            </CardHeader>
-            <BodyDiv>
+            <Card>
+                <CardHeader style={{backgroundColor: "#EDEDED"}}> 
+                    <CardTitle>Sponsors</CardTitle>
+                    <CardButtonContainer>
+                        <Button onClick={handleEdit} type={NEW}>New Sponsor</Button>
+                    </CardButtonContainer>
+                </CardHeader>
+
+                <CardContent style={{backgroundColor: "F8F8F8"}}>
                 <TableDiv>
                     <HeaderCard>
                         Sponsor Name, 
@@ -65,17 +86,16 @@ export default function SponsorshipPage() {
                         Something
 
                     </HeaderCard>
-                    <CardContent>
-                        Hello
-                    </CardContent>
-                    <Card link='Google.com'>
-                        <CardContent>
-                            pls help
-                        </CardContent>
-                     
-                    </Card>
+                    <div>
+                        {sponsortest.map((items, index)=> 
+                            <CardDiv>
+                                {items.name} {items.image} {items.link} {items.lastmod} 
+                            </CardDiv>
+                        )}
+                    </div>
                 </TableDiv>
-            </BodyDiv>
+                </CardContent>
+            </Card> 
         </React.Fragment>
     )
 }

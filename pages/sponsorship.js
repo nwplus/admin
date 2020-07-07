@@ -1,11 +1,12 @@
 import Card, { CardHeader, CardTitle, CardContent, CardButtonContainer } from '../components/card'
 import styled from 'styled-components'
 import Button from '../components/button'
-import { useState } from 'react'
+import React, { useState } from 'react'
+import Modal from 'react-modal'
 import { EDIT, NEW } from '../constants'
 
-let sponsortest = [
-    {"name": "Microsoft",
+const sponsortest = [
+    {"name": "Tencent",
     "link":"www.microsoft.com",
     "image": "path to photo",
     "lastmod": "today lol"
@@ -36,6 +37,10 @@ const HeaderCard = styled.div`
     border-bottom: 2px solid #EDEDED;
 
 `
+const Text = styled.text`
+    padding-right: 110px;
+`
+
 
 
 const CardDiv = styled.div`
@@ -81,9 +86,20 @@ export default function SponsorshipPage() {
                 <CardContent style={{backgroundColor: "F8F8F8"}}>
                 <TableDiv>
                     <HeaderCard>
-                        Sponsor Name, 
-                        Link, 
-                        Something
+                        <Text>
+                            Sponsor Name 
+                        </Text>
+                        <Text>
+                            Link
+                        </Text>
+                        <Text>
+                            Logo Image File
+                        </Text>
+                        <Text>
+                            Actions
+                        </Text>
+                        
+                        
 
                     </HeaderCard>
                     <div>
@@ -96,6 +112,21 @@ export default function SponsorshipPage() {
                 </TableDiv>
                 </CardContent>
             </Card> 
+
+            <Modal isOpen={editWindow} onRequestClose={()=>setEditWindow(false)} style={{ overlay: {
+      position: 'fixed',
+      top: 0}}}>
+                <div>
+                   Edit item
+                   <p>Sponsor Name</p>
+                   <input type="text" >
+                   </input>
+                </div>
+              
+                <button onClick={()=>setEditWindow(false)} > 
+                [x]
+                </button>
+            </Modal>
         </React.Fragment>
     )
 }

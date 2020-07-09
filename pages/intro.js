@@ -154,7 +154,7 @@ export default function IntroPage() {
                             </div>
                         </React.Fragment>
                         :
-                        <React.Fragment >
+                        <React.Fragment>
                             <HeaderText className='textarea' disabled defaultValue={header} />
                             <ContentText className='textarea' disabled defaultValue={content} />
                         </React.Fragment>

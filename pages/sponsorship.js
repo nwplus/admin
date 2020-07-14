@@ -52,81 +52,88 @@ const CardDiv = styled.div`
 // map CardDiv to a function
 // async firebase api first 
 
-export default function SponsorshipPage() {
+class SponsorshipPage extends React.Component {
     
-    const [editWindow, setEditWindow] = useState(false)
+   // const [editWindow, setEditWindow] = useState(false);
     
-    const handleEdit = (e) => {
+    handleEdit = (e) => {
         e.preventDefault();
         //TODO: pop-up window 
-        setEditWindow(true)
+        // setEditWindow(true)
     };
 
-    const handleCancel = (e) => {
+    handleCancel = (e) => {
         e.preventDefault();
-        setEditWindow(false);
+        // setEditWindow(false);
     }
 
-    const handleSave = (e) => {
+    handleSave = (e) => {
         // TODO: update firebase with edits
         e.preventDefault();
-        setEditWindow();
+        // setEditWindow(false);
     }
+    
+    render() {
+        return(
+            <React.Fragment>
+                <Card>
+                    <CardHeader style={{backgroundColor: "#EDEDED"}}> 
+                        <CardTitle>Sponsors</CardTitle>
+                        <CardButtonContainer>
+                            <Button type={NEW}>New Sponsor</Button>
+                        </CardButtonContainer>
+                    </CardHeader>
 
-    return(
-        <React.Fragment>
-            <Card>
-                <CardHeader style={{backgroundColor: "#EDEDED"}}> 
-                    <CardTitle>Sponsors</CardTitle>
-                    <CardButtonContainer>
-                        <Button onClick={handleEdit} type={NEW}>New Sponsor</Button>
-                    </CardButtonContainer>
-                </CardHeader>
+                    <CardContent style={{backgroundColor: "F8F8F8"}}>
+                    <TableDiv>
+                        <HeaderCard>
+                            <Text>
+                                Sponsor Name 
+                            </Text>
+                            <Text>
+                                Link
+                            </Text>
+                            <Text>
+                                Logo Image File
+                            </Text>
+                            <Text>
+                                Actions
+                            </Text>
+                            
+                            
 
-                <CardContent style={{backgroundColor: "F8F8F8"}}>
-                <TableDiv>
-                    <HeaderCard>
-                        <Text>
-                            Sponsor Name 
-                        </Text>
-                        <Text>
-                            Link
-                        </Text>
-                        <Text>
-                            Logo Image File
-                        </Text>
-                        <Text>
-                            Actions
-                        </Text>
-                        
-                        
+                        </HeaderCard>
+                        <div>
+                            {sponsortest.map((items, index)=> 
+                                <CardDiv>
+                                    {items.name} {items.image} {items.link} {items.lastmod} 
+                                </CardDiv>
+                            )}
+                        </div>
+                    </TableDiv>
+                    </CardContent>
+                </Card> 
 
-                    </HeaderCard>
+                <Modal // isOpen={editWindow} //onRequestClose={()=>setEditWindow(false)} 
+                    style={{ overlay: {
+                        position: 'fixed',
+                        top: 0}}}>
                     <div>
-                        {sponsortest.map((items, index)=> 
-                            <CardDiv>
-                                {items.name} {items.image} {items.link} {items.lastmod} 
-                            </CardDiv>
-                        )}
+                    Edit item
+                    <p>Sponsor Name</p>
+                    <input type="text" >
+                    </input>
                     </div>
-                </TableDiv>
-                </CardContent>
-            </Card> 
-
-            <Modal isOpen={editWindow} onRequestClose={()=>setEditWindow(false)} style={{ overlay: {
-      position: 'fixed',
-      top: 0}}}>
-                <div>
-                   Edit item
-                   <p>Sponsor Name</p>
-                   <input type="text" >
-                   </input>
-                </div>
-              
-                <button onClick={()=>setEditWindow(false)} > 
-                [x]
-                </button>
-            </Modal>
-        </React.Fragment>
-    )
+                
+                    <button onClick={()=>setEditWindow(false)} > 
+                    [x]
+                    </button>
+                </Modal>
+            </React.Fragment>
+        )
+    }
+      
 }
+
+
+export default SponsorshipPage;

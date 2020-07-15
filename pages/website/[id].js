@@ -1,7 +1,16 @@
 import React from 'react'
+import styled from 'styled-components'
+import Sidebar from '../../components/sidebar'
+
+const Page = styled.div`
+  display: flex;
+`
 
 export default ({id}) => (
+  <Page>
+    <Sidebar />
     <div>Page {id}</div>
+  </Page>
 )
 
 // TODO: Get hackathon ids from firebase
@@ -28,8 +37,8 @@ export const getStaticPaths = () => {
   }
 }
 
+// TODO: Get hackathon data from firebase
 export const getStaticProps = ({ params }) => {
-  // Fetch necessary data using params.id
   return {
     props: {
       id: params.id

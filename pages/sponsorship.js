@@ -2,25 +2,8 @@ import Card, { CardHeader, CardTitle, CardContent, CardButtonContainer } from '.
 import styled from 'styled-components'
 import Button from '../components/button'
 import React, { useState } from 'react'
-import Modal from 'react-modal'
+import Modal from "../components/modal";
 import { EDIT, NEW } from '../constants'
-
-const sponsortest = [
-    {"name": "Tencent",
-    "link":"www.microsoft.com",
-    "image": "path to photo",
-    "lastmod": "today lol"
-     },
-    {"name": "Apple",
-    "link":"www.apple.com",
-    "image": "yeeters",
-    "lastmod": "today lol"
-    },  
-    {"name": "Balenciaga",
-    "link":"www.ssense.com",
-    "image": "koko",
-    "lastmod": "lol"
-}]
 
 const TableDiv = styled.div`
     border: 1px solid #000000;
@@ -54,17 +37,46 @@ const CardDiv = styled.div`
 
 class SponsorshipPage extends React.Component {
     
-   // const [editWindow, setEditWindow] = useState(false);
+    constructor(){
+        super();
+        this.state = {
+            sponsortest: [
+                {"name": "Tencent",
+                "link":"www.microsoft.com",
+                "image": "path to photo",
+                "lastmod": "today lol"
+                 },
+                {"name": "Apple",
+                "link":"www.apple.com",
+                "image": "yeeters",
+                "lastmod": "today lol"
+                },  
+                {"name": "Balenciaga",
+                "link":"www.ssense.com",
+                "image": "koko",
+                "lastmod": "lol"
+            }], 
+            showEditWindow: false
+        }
+    }
+
     
     handleEdit = (e) => {
         e.preventDefault();
         //TODO: pop-up window 
-        // setEditWindow(true)
+        this.setState({showEditWindow: true})
     };
 
-    handleCancel = (e) => {
+    handleNew = (e) => {
         e.preventDefault();
-        // setEditWindow(false);
+        //TODO: pop-up window 
+        this.setState({showEditWindow: true})
+    };
+
+    handleCancel = () => {
+        
+        this.setState({showEditWindow:false});
+        alert("wtf")
     }
 
     handleSave = (e) => {
@@ -80,7 +92,7 @@ class SponsorshipPage extends React.Component {
                     <CardHeader style={{backgroundColor: "#EDEDED"}}> 
                         <CardTitle>Sponsors</CardTitle>
                         <CardButtonContainer>
-                            <Button type={NEW}>New Sponsor</Button>
+                            <Button type={NEW} onClick={this.handleNew}>New Sponsor</Button>
                         </CardButtonContainer>
                     </CardHeader>
 
@@ -104,7 +116,7 @@ class SponsorshipPage extends React.Component {
 
                         </HeaderCard>
                         <div>
-                            {sponsortest.map((items, index)=> 
+                            {this.state.sponsortest.map((items, index)=> 
                                 <CardDiv>
                                     {items.name} {items.image} {items.link} {items.lastmod} 
                                 </CardDiv>
@@ -114,10 +126,7 @@ class SponsorshipPage extends React.Component {
                     </CardContent>
                 </Card> 
 
-                <Modal // isOpen={editWindow} //onRequestClose={()=>setEditWindow(false)} 
-                    style={{ overlay: {
-                        position: 'fixed',
-                        top: 0}}}>
+                <Modal show={this.state.showEditWindow} >
                     <div>
                     Edit item
                     <p>Sponsor Name</p>
@@ -125,7 +134,7 @@ class SponsorshipPage extends React.Component {
                     </input>
                     </div>
                 
-                    <button onClick={()=>setEditWindow(false)} > 
+                    <button onClick={()=> this.handleCancel} > 
                     [x]
                     </button>
                 </Modal>

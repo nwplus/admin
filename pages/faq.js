@@ -4,15 +4,29 @@ import Card, {
   CardButtonContainer,
   CardContent
 } from "../components/card"
+import Button from "../components/button"
 import { COLOR } from "../constants"
+import { EDIT, NEW } from "../constants"
 import styled from "styled-components"
 import React from "react"
 
-const props = {
-  question: "How can I sign up",
-  category: "General",
-  modified: "2019-05-10 03:22:22"
-}
+// const props = [
+//   {
+//     question: "How can I sign up",
+//     category: "General",
+//     modified: "2019-05-10 03:22:22"
+//   },
+//   {
+//     question: "What is a hackathon",
+//     category: "General",
+//     modified: "2020-05-10 03:22:22"
+//   },
+//   {
+//     question: "blah blah blah",
+//     category: "General",
+//     modified: "2019-05-10 03:22:22"
+//   }
+// ]
 
 const ViewDetailsButton = styled.div`
   width: 22px;
@@ -69,73 +83,135 @@ const TableData = styled.td`
 
   color: #5a5a5a;
 `
+function QuestionRow(props) {
+  console.log(props)
+  return (
+    <TableRow>
+      <TableData>{props.question}</TableData>
+      <TableData>{props.category}</TableData>
+      <TableData>{props.modified}</TableData>
+    </TableRow>
+  )
+}
 
-export default function FAQ() {
+class FAQ extends React.Component {
   // Handler for edit modal
-  const editItem = (e) => {
+  constructor() {
+    super()
+    this.state = {
+      questionsList: [
+        {
+          question: "How can I sign up",
+          category: "General",
+          modified: "2019-05-10 03:22:22"
+        },
+        {
+          question: "What is a hackathon",
+          category: "General",
+          modified: "2020-05-10 03:22:22"
+        },
+        {
+          question: "blah blah blah",
+          category: "General",
+          modified: "2019-05-10 03:22:22"
+        },
+        {
+          question: "How can I sign up",
+          category: "General",
+          modified: "2019-05-10 03:22:22"
+        },
+        {
+          question: "What is a hackathon",
+          category: "General",
+          modified: "2020-05-10 03:22:22"
+        },
+        {
+          question: "blah blah blah",
+          category: "General",
+          modified: "2019-05-10 03:22:22"
+        },
+        {
+          question: "How can I sign up",
+          category: "General",
+          modified: "2019-05-10 03:22:22"
+        },
+        {
+          question: "What is a hackathon",
+          category: "General",
+          modified: "2020-05-10 03:22:22"
+        },
+        {
+          question: "blah blah blah",
+          category: "General",
+          modified: "2019-05-10 03:22:22"
+        }
+      ]
+    }
+  }
+  editItem = (e) => {
     /* TODO */
   }
 
   // Handler for saving changes the user made
-  const confirmEdit = (e) => {
+  confirmEdit = (e) => {
     /* TODO */
   }
 
   // view details for a particular question
-  const viewDetails = (e) => {
+  viewDetails = (e) => {
     /* TODO */
   }
 
   // removes an FAQ
-  const removeItem = (e) => {
+  removeItem = (e) => {
     /* TODO */
   }
 
   // Called by function that loops through questions
-  function QuestionRow(props) {
-    const item = props
+
+  // function FAQTable(props) {
+  //   return (
+
+  //   )
+  // }
+
+  render() {
+    const questions = this.state.questionsList
     return (
-      <TableRow>
-        <TableData>{item.question}</TableData>
-        <TableData>{item.category}</TableData>
-        <TableData>{item.modified}</TableData>
-      </TableRow>
+      <React.Fragment>
+        <Card>
+          <CardHeader>
+            <CardTitle>Frequently Asked Questions</CardTitle>
+            <CardButtonContainer>
+              <Button type={NEW}>New Question</Button>
+            </CardButtonContainer>
+          </CardHeader>
+          <CardContent style={{ backgroundColor: COLOR.BACKGROUND }}>
+            {/* <FAQTable data={props} /> */}
+            <FAQContent>
+              <thead>
+                <TableRow>
+                  <TableHeader>Question</TableHeader>
+                  <TableHeader>Category</TableHeader>
+                  <TableHeader>Last Modified</TableHeader>
+                  <TableHeader>Actions</TableHeader>
+                </TableRow>
+              </thead>
+              <tbody>
+                {questions.map((item, id) => (
+                  <QuestionRow
+                    question={item.question}
+                    category={item.category}
+                    modified={item.modified}
+                  />
+                ))}
+              </tbody>
+            </FAQContent>
+          </CardContent>
+        </Card>
+      </React.Fragment>
     )
   }
-
-  function FAQTable(props) {
-    return (
-      <FAQContent>
-        <thead>
-          <TableRow>
-            <TableHeader>Question</TableHeader>
-            <TableHeader>Category</TableHeader>
-            <TableHeader>Last Modified</TableHeader>
-            <TableHeader>Actions</TableHeader>
-          </TableRow>
-        </thead>
-        <tbody>
-          <QuestionRow
-            question={props.data.question}
-            category={props.data.category}
-            modified={props.data.modified}
-          />
-        </tbody>
-      </FAQContent>
-    )
-  }
-
-  return (
-    <React.Fragment>
-      <Card>
-        <CardHeader>
-          <CardTitle>Frequently Asked Questions</CardTitle>
-          <CardButtonContainer>{/* TODO: Add buttons */}</CardButtonContainer>
-        </CardHeader>
-        <CardContent style={{ backgroundColor: COLOR.BACKGROUND }}>
-          <FAQTable data={props} />
-        </CardContent>
-      </Card>
-    </React.Fragment>
-  )
 }
+
+export default FAQ

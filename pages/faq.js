@@ -72,22 +72,22 @@ const TableData = styled.td`
 
 export default function FAQ() {
   // Handler for edit modal
-  const editItem = e => {
+  const editItem = (e) => {
     /* TODO */
   }
 
   // Handler for saving changes the user made
-  const confirmEdit = e => {
+  const confirmEdit = (e) => {
     /* TODO */
   }
 
   // view details for a particular question
-  const viewDetails = e => {
+  const viewDetails = (e) => {
     /* TODO */
   }
 
   // removes an FAQ
-  const removeItem = e => {
+  const removeItem = (e) => {
     /* TODO */
   }
 
@@ -127,11 +127,15 @@ export default function FAQ() {
 
   return (
     <React.Fragment>
-      <CardHeader>
-        <CardTitle>Frequently Asked Questions</CardTitle>
-      </CardHeader>
-      <CardButtonContainer>{/* TODO: Add buttons */}</CardButtonContainer>
-      <FAQTable data={props} />
+      <Card>
+        <CardHeader>
+          <CardTitle>Frequently Asked Questions</CardTitle>
+          <CardButtonContainer>{/* TODO: Add buttons */}</CardButtonContainer>
+        </CardHeader>
+        <CardContent style={{ backgroundColor: COLOR.BACKGROUND }}>
+          <FAQTable data={props} />
+        </CardContent>
+      </Card>
     </React.Fragment>
   )
 }

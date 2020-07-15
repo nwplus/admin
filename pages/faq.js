@@ -5,28 +5,14 @@ import Card, {
   CardContent
 } from "../components/card"
 import Button from "../components/button"
+import EditFAQIcon from "../components/icons/editFAQ"
+import NewIcon from "../components/icons/new"
+import SearchIcon from "../components/icons/search"
+import CloseIcon from "../components/icons/close"
 import { COLOR } from "../constants"
 import { EDIT, NEW } from "../constants"
 import styled from "styled-components"
 import React from "react"
-
-// const props = [
-//   {
-//     question: "How can I sign up",
-//     category: "General",
-//     modified: "2019-05-10 03:22:22"
-//   },
-//   {
-//     question: "What is a hackathon",
-//     category: "General",
-//     modified: "2020-05-10 03:22:22"
-//   },
-//   {
-//     question: "blah blah blah",
-//     category: "General",
-//     modified: "2019-05-10 03:22:22"
-//   }
-// ]
 
 const ViewDetailsButton = styled.div`
   width: 22px;
@@ -83,6 +69,16 @@ const TableData = styled.td`
 
   color: #5a5a5a;
 `
+
+const TransparentButton = styled.button`
+  width: 48px;
+  height: 48px;
+  margin-right: 4px;
+  background-color: Transparent;
+  border: 0;
+  padding: 6px;
+  cursor: pointer;
+`
 function QuestionRow(props) {
   console.log(props)
   return (
@@ -90,6 +86,17 @@ function QuestionRow(props) {
       <TableData>{props.question}</TableData>
       <TableData>{props.category}</TableData>
       <TableData>{props.modified}</TableData>
+      <TableData>
+        <TransparentButton>
+          <SearchIcon />
+        </TransparentButton>
+        <TransparentButton>
+          <EditFAQIcon />
+        </TransparentButton>
+        <TransparentButton>
+          <CloseIcon />
+        </TransparentButton>
+      </TableData>
     </TableRow>
   )
 }
@@ -99,49 +106,59 @@ class FAQ extends React.Component {
   constructor() {
     super()
     this.state = {
+      hackathon: "TestHackathon2020",
       questionsList: [
         {
           question: "How can I sign up",
+          answer: "nwplus.io",
           category: "General",
           modified: "2019-05-10 03:22:22"
         },
         {
           question: "What is a hackathon",
+          answer: "nwplus.io",
           category: "General",
           modified: "2020-05-10 03:22:22"
         },
         {
           question: "blah blah blah",
+          answer: "blah",
           category: "General",
           modified: "2019-05-10 03:22:22"
         },
         {
-          question: "How can I sign up",
+          question: "is nwplus good",
+          answer: "hell yeah",
           category: "General",
           modified: "2019-05-10 03:22:22"
         },
         {
-          question: "What is a hackathon",
+          question: "hell yeah",
+          answer: "nwplus.io",
           category: "General",
           modified: "2020-05-10 03:22:22"
         },
         {
           question: "blah blah blah",
+          answer: "nwplus.io",
           category: "General",
           modified: "2019-05-10 03:22:22"
         },
         {
-          question: "How can I sign up",
+          question: "is nwplus cool",
+          answer: "nwplus.io",
           category: "General",
           modified: "2019-05-10 03:22:22"
         },
         {
-          question: "What is a hackathon",
+          question: "i love nwplus",
+          answer: "ya",
           category: "General",
           modified: "2020-05-10 03:22:22"
         },
         {
           question: "blah blah blah",
+          answer: "nwplus.io",
           category: "General",
           modified: "2019-05-10 03:22:22"
         }
@@ -167,14 +184,6 @@ class FAQ extends React.Component {
     /* TODO */
   }
 
-  // Called by function that loops through questions
-
-  // function FAQTable(props) {
-  //   return (
-
-  //   )
-  // }
-
   render() {
     const questions = this.state.questionsList
     return (
@@ -187,7 +196,6 @@ class FAQ extends React.Component {
             </CardButtonContainer>
           </CardHeader>
           <CardContent style={{ backgroundColor: COLOR.BACKGROUND }}>
-            {/* <FAQTable data={props} /> */}
             <FAQContent>
               <thead>
                 <TableRow>

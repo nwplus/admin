@@ -4,9 +4,16 @@ import { COLOR } from '../constants'
 
 const SidebarContainer = styled.div`
     background-color: ${COLOR.PRIMARY};
-    height: 100vw;
-    width: 300px;
+    color: ${COLOR.WHITE};
+    width: 260px;
+    padding: 60px;
+`
+const Header = styled.h1`
+    font-weight: bold;
+    font-size: 32px;
 `
 export default () => (
-    <SidebarContainer>Sidebar</SidebarContainer>
+    <SidebarContainer>
+        <Header>nwPlus CMS</Header>
+    </SidebarContainer>
 )

@@ -2,8 +2,21 @@ import Card, { CardHeader, CardTitle, CardContent, CardButtonContainer } from '.
 import styled from 'styled-components'
 import Button from '../components/button'
 import React, { useState } from 'react'
-import Modal from "../components/modal";
+import Modal from 'react-modal'
 import { EDIT, NEW } from '../constants'
+
+
+const customStyles = {
+    content : {
+      top                   : '50%',
+      left                  : '50%',
+      right                 : 'auto',
+      bottom                : 'auto',
+      marginRight           : '-50%',
+      transform             : 'translate(-50%, -50%)'
+    }
+  };
+
 
 const TableDiv = styled.div`
     border: 1px solid #000000;
@@ -23,8 +36,6 @@ const HeaderCard = styled.div`
 const Text = styled.text`
     padding-right: 110px;
 `
-
-
 
 const CardDiv = styled.div`
     padding: 26px 28px;
@@ -58,6 +69,8 @@ class SponsorshipPage extends React.Component {
             }], 
             showEditWindow: false
         }
+       
+        
     }
 
     
@@ -84,6 +97,10 @@ class SponsorshipPage extends React.Component {
         e.preventDefault();
         // setEditWindow(false);
     }
+
+  
+
+
     
     render() {
         return(
@@ -126,18 +143,21 @@ class SponsorshipPage extends React.Component {
                     </CardContent>
                 </Card> 
 
-                <Modal show={this.state.showEditWindow} >
-                    <div>
-                    Edit item
-                    <p>Sponsor Name</p>
-                    <input type="text" >
-                    </input>
-                    </div>
-                
-                    <button onClick={()=> this.handleCancel} > 
-                    [x]
-                    </button>
+                <Modal isOpen={this.state.showEditWindow} 
+                    onRequestClose={()=>this.setState({showEditWindow: false})} 
+                    style={customStyles}>
+                            <div>
+                            Edit item
+                                <p>Sponsor Name</p>
+                                <input type="text" >
+                                </input>
+                            </div>
+
+                            <button onClick={()=>this.setState({showEditWindow: false})} > 
+                            [x]
+                            </button>
                 </Modal>
+
             </React.Fragment>
         )
     }

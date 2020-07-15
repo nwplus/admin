@@ -2,10 +2,12 @@ import Head from 'next/head'
 import Card, { CardHeader, CardTitle, CardContent, CardButtonContainer } from '../components/card'
 import { EDIT, NEW } from '../constants'
 import Button from '../components/button'
+import Sidebar from '../components/sidebar'
 
 export default function Home() {
   return (
     <React.Fragment>
+      <Sidebar />
       <div>Login Page</div>
 
       <Card>

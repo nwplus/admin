@@ -2,7 +2,6 @@ import Card, { CardHeader, CardTitle, CardContent, CardButtonContainer, CardDiv,
 import styled from 'styled-components'
 import Button from '../components/button'
 import React, { useState } from 'react'
-import Modal from 'react-modal'
 import { EDIT, NEW } from '../constants'
 
 
@@ -58,11 +57,13 @@ class SponsorshipPage extends React.Component {
                 "lastmod": "lol"
             }], 
             showEditWindow: false,
-            "name": "",
-            "link": "",
-            "image": "",
-            "lastmod": ""
-            
+            newobj: {
+                "name": "",
+                "link": "",
+                "image": "",
+                "lastmod": ""
+            }
+                
         }
        
         
@@ -70,31 +71,50 @@ class SponsorshipPage extends React.Component {
 
     
     handleEdit = (e) => {
-        e.preventDefault();
         //TODO: pop-up window 
         this.setState({showEditWindow: true})
     };
 
     handleNew = (e) => {
-        e.preventDefault();
         //TODO: pop-up window 
         this.setState({showEditWindow: true})
     };
     
-    handleChange = e => {
+
+    // allows a form with "saved state" so if users close the modal, it allows
+    handleChange = (event) => {
+        this.setState({ newobj: {
+            ... this.state.newobj,
+            [event.target.name]: event.target.value} });
+        console.log(this.state.newobj);
        
-    }
+    }   
 
     handleCancel = () => { 
         this.setState({showEditWindow:false});
     }
 
+    // sends and adds it to the list
     handleSave = (event) => {
-        var newObj = {[event.target.name]: event.target.value};
-        alert(newObj.name);
+        // prevents refreshing of the page
+        event.preventDefault(); 
+        this.setState({
+            sponsortest: [...this.state.sponsortest, this.state.newobj],
+            newobj: {"name":"", 
+                    "link": "",
+                    "image": "",
+                    "lastmod": ""
+            }   
+        });
+
+    
+        // this.setState({ newobj: {[event.target.name]: event.target.value} })
+
+        // var newObj = {[event.target.name]: event.target.value};
+        // alert(newObj.name);
         
-        this.setState({sponsortest: [newObj, ...sponsortest]});
-        console.log(this.state.sponsortest)
+        // this.setState({sponsortest: [newObj, ...sponsortest]});
+        console.log(this.state.newobj);
         
 
     }
@@ -139,26 +159,39 @@ class SponsorshipPage extends React.Component {
                     </TableDiv>
                     </CardContent>
                 </Card> 
+        
+                <form onSubmit={this.handleSave}>
+                
+                    <h3> Edit item </h3>
+                    <p>Sponsor Name</p>
+                    <input 
+                      type="text" 
+                      name='name'
+                      value={this.state.newobj.name} 
+                      onChange={this.handleChange}
+                    />
 
-                <Modal isOpen={this.state.showEditWindow} 
-                    onRequestClose={()=>this.setState({showEditWindow: false})} 
-                    style={customStyles}>
-                        <form onSubmit={this.handleSave}>
-                            <div>
-                                <h3> Edit item </h3>
-                                <p>Sponsor Name</p>
-                                <input type="text" name='name' />
-                                <p>Link</p>
-                                <input type ='text' name='link'/>
-                                <br></br>
-                                <button > Submit! </button>
-                            </div>
-                        </form>
-                        
-                        <button onClick={()=>this.setState({showEditWindow: false})} > 
-                            [x]
-                        </button>
-                </Modal>
+                    <p>Link</p>
+                    <input 
+                      type='text' 
+                      name='link' 
+                      value={this.state.newobj.link}
+                      onChange={this.handleChange}
+                    />
+                    
+
+                    <p>Image File</p>
+                    <input 
+                      type='text' 
+                      name='image' 
+                      value={this.state.newobj.image}
+                      onChange={this.handleChange}
+                    />
+                   
+                    <button type='submit'> Submit! </button>
+                
+                </form>
+                
 
             </React.Fragment>
         )

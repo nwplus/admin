@@ -23,12 +23,12 @@ export default function Home() {
             <CardDiv> Example of table within card component </CardDiv>  
             <CardDiv> I'll add buttons in the next merge </CardDiv>  
             <CardDiv> Note that card divs should be wrapped within table divs (which are wrapped in CardContent) </CardDiv>  
-            
-            
           </TableDiv>  
           
         </CardContent>
       </Card>
+
+      <SponsorshipPage /> 
 
       
 

@@ -1,4 +1,4 @@
-import Card, { CardHeader, CardTitle, CardContent, CardButtonContainer } from '../components/card'
+import Card, { CardHeader, CardTitle, CardContent, CardButtonContainer, CardDiv, TableDiv } from '../components/card'
 import styled from 'styled-components'
 import Button from '../components/button'
 import React, { useState } from 'react'
@@ -18,17 +18,11 @@ const customStyles = {
   };
 
 
-const TableDiv = styled.div`
-    border: 1px solid #000000;
-    border-radius: 3px;
-    padding: 1px 1px;
-    background-color: #FFFFFF;
-`
-
+// TODO: move font family higher, reduce need to redefine
 const HeaderCard = styled.div`
     padding: 26px 28px;
     font-weight: bold;
-    font-family: Apercu Pro;
+    font-family: Apercu Pro; 
     font-size: 16px;
     border-bottom: 2px solid #EDEDED;
 
@@ -37,10 +31,6 @@ const Text = styled.text`
     padding-right: 110px;
 `
 
-const CardDiv = styled.div`
-    padding: 26px 28px;
-    border-bottom: 2px solid #EDEDED;
-`
 
 
 // map CardDiv to a function
@@ -67,7 +57,12 @@ class SponsorshipPage extends React.Component {
                 "image": "koko",
                 "lastmod": "lol"
             }], 
-            showEditWindow: false
+            showEditWindow: false,
+            "name": "",
+            "link": "",
+            "image": "",
+            "lastmod": ""
+            
         }
        
         
@@ -85,22 +80,24 @@ class SponsorshipPage extends React.Component {
         //TODO: pop-up window 
         this.setState({showEditWindow: true})
     };
+    
+    handleChange = e => {
+       
+    }
 
-    handleCancel = () => {
-        
+    handleCancel = () => { 
         this.setState({showEditWindow:false});
-        alert("wtf")
     }
 
-    handleSave = (e) => {
-        // TODO: update firebase with edits
-        e.preventDefault();
-        // setEditWindow(false);
+    handleSave = (event) => {
+        var newObj = {[event.target.name]: event.target.value};
+        alert(newObj.name);
+        
+        this.setState({sponsortest: [newObj, ...sponsortest]});
+        console.log(this.state.sponsortest)
+        
+
     }
-
-  
-
-
     
     render() {
         return(
@@ -134,7 +131,7 @@ class SponsorshipPage extends React.Component {
                         </HeaderCard>
                         <div>
                             {this.state.sponsortest.map((items, index)=> 
-                                <CardDiv>
+                                <CardDiv key={index}>
                                     {items.name} {items.image} {items.link} {items.lastmod} 
                                 </CardDiv>
                             )}
@@ -146,16 +143,21 @@ class SponsorshipPage extends React.Component {
                 <Modal isOpen={this.state.showEditWindow} 
                     onRequestClose={()=>this.setState({showEditWindow: false})} 
                     style={customStyles}>
+                        <form onSubmit={this.handleSave}>
                             <div>
-                            Edit item
+                                <h3> Edit item </h3>
                                 <p>Sponsor Name</p>
-                                <input type="text" >
-                                </input>
+                                <input type="text" name='name' />
+                                <p>Link</p>
+                                <input type ='text' name='link'/>
+                                <br></br>
+                                <button > Submit! </button>
                             </div>
-
-                            <button onClick={()=>this.setState({showEditWindow: false})} > 
+                        </form>
+                        
+                        <button onClick={()=>this.setState({showEditWindow: false})} > 
                             [x]
-                            </button>
+                        </button>
                 </Modal>
 
             </React.Fragment>

@@ -27,6 +27,18 @@ export const CardContent = styled.div`
     padding: 40px;
 `
 
+export const CardDiv = styled.div`
+    padding: 26px 28px;
+    border-bottom: 2px solid #EDEDED;
+`
+export const TableDiv = styled.div`
+    border: 1px solid #000000;
+    border-radius: 3px;
+    padding: 1px 1px;
+    background-color: #FFFFFF;
+`
+
+
 export default ({children}) => (
     <Card>
         {children}

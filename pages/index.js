@@ -1,3 +1,4 @@
+import firebase from 'firebase'
 import Head from 'next/head'
 import styled from 'styled-components'
 import { useState } from 'react'
@@ -6,73 +7,65 @@ import { Helmet } from 'react-helmet'
 import { GlobalStyle } from '../components/globalStyles'
 import Button from '../components/button'
 
+
+
 const LogInDiv = styled.div`
     position: absolute;
-    width: 85px;
-    height: 40px;
-    left: 842px;
     top: 179px;
     font-weight: bold;
     font-size: 32px;
     line-height: 40px;
-    text-align: center;
     color: ${ COLOR.BLACK };
+    left: 50%;
+    margin-left: -42.625px;
 `
 
 const UserNameDiv = styled.div`
     position: absolute;
-    width: 119px;
-    height: 30px;
-    left: 702px;
     top: 285px;
     font-weight: bold;
     font-size: 24px;
     line-height: 30px;
     color: ${ COLOR.BLACK };
-    text-align: center;
+    text-align: left;
 `
 
 const PasswordDiv = styled.div`
     position: absolute;
-    width: 102px;
-    height: 30px;
-    left: 702px;
     top: 400px;
     font-weight: bold;
     font-size: 24px;
     line-height: 30px;
-    text-align: center;
+    text-align: left;
     color: ${ COLOR.BLACK };
 `
 
 const ForgotPasswordDiv = styled.div`
     position: absolute;
-    width: 129px;
-    height: 20px;
-    left: 939px;
-    top: 488px;
+    margin-top: 488px;
     font-weight: bold;
     font-size: 16px;
     line-height: 20px;
-    text-align: center;
+    left: 50%;
     color: ${ COLOR.BLACK };
 `
 
 const ButtonWrapper = styled.div`
-    margin-left: 835px;
-    margin-top: 588px;
+    position: absolute;
+    top: 588px;
+    margin: auto;
 `
 
 const Wrapper = styled.div`
-
+    width: 365px;
+    margin: auto;
 `
 
 const UserNameInput = styled.input`
     position: absolute;
+    top: 326px;
     width: 365px;
     height: 40px;
-    left: 702px;
-    top: 326px;
     background: ${ COLOR.WHITE };
     border: 1px solid #606060;
     box-sizing: border-box;
@@ -83,10 +76,9 @@ const UserNameInput = styled.input`
 
 const PasswordInput = styled.input`
     position: absolute;
+    top: 441px;
     width: 365px;
     height: 40px;
-    left: 702px;
-    top: 441px;
     background: ${ COLOR.WHITE };
     border: 1px solid #606060;
     box-sizing: border-box;
@@ -97,22 +89,58 @@ const PasswordInput = styled.input`
 
 
 export default function Home() {
+
+  const googleSignIn = async (e) => {
+    e.preventDefault();
+    if (!firebase.apps.length) {
+      console.log(process.env.NEXT_PUBLIC_FIREBASE_API_KEY)
+      const config = {
+        apiKey: "AIzaSyBppAYPBZ6WxWdErM3smh6t9BEJPUM_NHU",
+        authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+        databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
+        projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+        measurementId: 'G-SV1NEW90HT',
+        appId: '1:98283589440:web:c15c6169d0098fb15d34a5',
+        storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+        messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+      }
+      firebase.initializeApp(config)
+    }
+    
+    const provider = new firebase.auth.GoogleAuthProvider();
+    provider.setCustomParameters({
+      'hd': 'nwplus.io'
+    })
+    await firebase.auth().signInWithPopup(provider).then((result) => {
+      const token = result.credential.accessToken;
+    }).catch((error) => {
+      const errorCode = error.code;
+      console.log(errorCode);
+      alert(errorCode);
+
+      const errorMessage = error.message;
+      console.log(errorMessage);
+      alert(errorMessage);
+    })
+  }
+
   return (
     <React.Fragment>
       <Helmet>
       <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/hk-grotesk" type="text/css"/>
       </Helmet>
       <GlobalStyle/>
-      <LogInDiv>Log iin</LogInDiv>
-      <UserNameDiv>User Name</UserNameDiv>
-      <UserNameInput/>
-      <PasswordDiv>Password</PasswordDiv>
-      <PasswordInput/>
-      <ForgotPasswordDiv>Forgot password?</ForgotPasswordDiv>
-      <ButtonWrapper>
-        <Button>Login</Button>
-      </ButtonWrapper>
-      
+      <Wrapper>
+        <LogInDiv>Log in</LogInDiv>
+        <UserNameDiv>User Name</UserNameDiv>
+        <UserNameInput/>
+        <PasswordDiv>Password</PasswordDiv>
+        <PasswordInput/>
+        <ForgotPasswordDiv>Forgot password?</ForgotPasswordDiv>
+        <ButtonWrapper>
+          <Button onClick={googleSignIn}>Loggggin</Button>
+        </ButtonWrapper>
+      </Wrapper>
     </React.Fragment>
   )
 }

@@ -7,6 +7,7 @@ import 'firebase/analytics'
 import * as Parser from 'json2csv'
 
 if (!firebase.apps.length) {
+  
   const config = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
     authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,

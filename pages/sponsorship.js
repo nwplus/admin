@@ -70,7 +70,7 @@ class SponsorshipPage extends React.Component {
     }
 
     
-    handleEdit = (e) => {
+    handleEdit = () => {
         //TODO: pop-up window 
         this.setState({showEditWindow: true})
     };

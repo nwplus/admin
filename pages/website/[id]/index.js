@@ -1,21 +1,9 @@
 import React from 'react'
-import styled from 'styled-components'
-import Sidebar from '../../components/sidebar'
-
-const Page = styled.div`
-  display: flex;
-  align-items: stretch;
-  min-height: 100vh;
-`
-
-const Content = styled.div`
-  padding: 60px;
-`
+import Page from '../../../components/page'
 
 export default ({id}) => (
   <Page>
-    <Sidebar />
-    <Content>Page {id}</Content>
+    Home
   </Page>
 )
 

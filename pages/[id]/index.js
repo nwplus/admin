@@ -2,8 +2,8 @@ import React from 'react'
 import Page from '../../components/page'
 import { db } from '../../utility/firebase'
 
-export default ({id}) => (
-  <Page>
+export default ({hackathons, id}) => (
+  <Page hackathons={hackathons}>
     Home {id}
   </Page>
 )
@@ -30,10 +30,18 @@ export const getStaticPaths = async () => {
   }
 }
 
-export const getStaticProps = ({ params }) => {
-  return {
-    props: {
-      id: params.id
+export const getStaticProps = async ({ params }) => {
+
+  return await db.collection('Hackathons').get().then(querySnapshot => {
+    const hackathons = []
+    querySnapshot.forEach(doc => {
+        hackathons.push(doc.id)
+    })
+    return {
+      props: {
+        hackathons,
+        id: params.id
+      }
     }
-  }
+  })
 }

@@ -1,4 +1,4 @@
-import firebase from 'firebase'
+// import firebase from 'firebase'
 import Head from 'next/head'
 import styled from 'styled-components'
 import { useState } from 'react'
@@ -6,8 +6,6 @@ import { COLOR } from '../constants'
 import { Helmet } from 'react-helmet'
 import { GlobalStyle } from '../components/globalStyles'
 import Button from '../components/button'
-
-
 
 const LogInDiv = styled.div`
     position: absolute;
@@ -90,39 +88,38 @@ const PasswordInput = styled.input`
 
 export default function Home() {
 
-  const googleSignIn = async (e) => {
-    e.preventDefault();
-    if (!firebase.apps.length) {
-      console.log(process.env.NEXT_PUBLIC_FIREBASE_API_KEY)
-      const config = {
-        apiKey: "AIzaSyBppAYPBZ6WxWdErM3smh6t9BEJPUM_NHU",
-        authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-        databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
-        projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-        measurementId: 'G-SV1NEW90HT',
-        appId: '1:98283589440:web:c15c6169d0098fb15d34a5',
-        storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-        messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
-      }
-      firebase.initializeApp(config)
-    }
+  // const googleSignIn = async (e) => {
+  //   e.preventDefault();
+  //   if (!firebase.apps.length) {
+  //     const config = {
+  //       apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  //       authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  //       databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
+  //       projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  //       measurementId: 'G-SV1NEW90HT',
+  //       appId: '1:98283589440:web:c15c6169d0098fb15d34a5',
+  //       storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  //       messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+  //     }
+  //     firebase.initializeApp(config)
+  //   }
     
-    const provider = new firebase.auth.GoogleAuthProvider();
-    provider.setCustomParameters({
-      'hd': 'nwplus.io'
-    })
-    await firebase.auth().signInWithPopup(provider).then((result) => {
-      const token = result.credential.accessToken;
-    }).catch((error) => {
-      const errorCode = error.code;
-      console.log(errorCode);
-      alert(errorCode);
+  //   const provider = new firebase.auth.GoogleAuthProvider();
+  //   provider.setCustomParameters({
+  //     'hd': 'nwplus.io'
+  //   })
+  //   await firebase.auth().signInWithPopup(provider).then((result) => {
+  //     const token = result.credential.accessToken;
+  //   }).catch((error) => {
+  //     const errorCode = error.code;
+  //     console.log(errorCode);
+  //     alert(errorCode);
 
-      const errorMessage = error.message;
-      console.log(errorMessage);
-      alert(errorMessage);
-    })
-  }
+  //     const errorMessage = error.message;
+  //     console.log(errorMessage);
+  //     alert(errorMessage);
+  //   })
+  // }
 
   return (
     <React.Fragment>
@@ -138,7 +135,7 @@ export default function Home() {
         <PasswordInput/>
         <ForgotPasswordDiv>Forgot password?</ForgotPasswordDiv>
         <ButtonWrapper>
-          <Button onClick={googleSignIn}>Loggggin</Button>
+          {/* <Button onCli>Loggggin</Button> */}
         </ButtonWrapper>
       </Wrapper>
     </React.Fragment>

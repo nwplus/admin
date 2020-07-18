@@ -9,11 +9,10 @@ export default ({id}) => (
 )
 
 const getHackathonIds = async () => {
-
   return db.collection('Hackathons').get().then(querySnapshot => {
     const paths = []
     querySnapshot.forEach(doc => {
-      paths.push( {
+      paths.push({
         params: {
           id: doc.id
         }

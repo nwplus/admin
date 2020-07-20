@@ -54,31 +54,62 @@ class SponsorshipPage extends React.Component {
                 {"name": "Balenciaga",
                 "link":"www.ssense.com",
                 "image": "koko",
-                "lastmod": "lol"
-            }], 
-            showEditWindow: false,
+                "lastmod": "lol"},
+                {"name": "Porsche",
+                "link":"www.porsche.ca",
+                "image": "a car",
+                "lastmod": "july 19" },
+                {"name": "Lexus LC500",
+                "link":"www.autotrader.com",
+                "image": "also a nice car",
+                "lastmod": "2mr"}
+            ], 
             newobj: {
                 "name": "",
                 "link": "",
                 "image": "",
                 "lastmod": ""
+            },
+            showEditWindow: false,
+            itemStatus: {
+                "newItem": true,
+                "index": 0,     
             }
-                
         }
-       
-        
     }
 
     
-    handleEdit = () => {
+    handleEdit = (i) => {
         //TODO: pop-up window 
-        this.setState({showEditWindow: true})
+        this.setState({
+            newobj: {
+                "name": this.state.sponsortest[i].name,
+                "link": this.state.sponsortest[i].link, 
+                "image": this.state.sponsortest[i].image, 
+                "lastmod": this.state.sponsortest[i].lastmod, 
+            },
+            showEditWindow: true,
+            itemStatus: {
+                "newItem": false,
+                "index": i,
+            }
+        })
+        console.log(this.state.newobj, this.state.itemStatus)
     };
 
     handleNew = (e) => {
         //TODO: pop-up window 
-        this.setState({showEditWindow: true})
+        this.setState({
+            showEditWindow: true,
+            itemStatus: {"newItem": true}
+        })
+        console.log(this.state.itemStatus);
     };
+
+    handleDelete(i) {
+        this.state.sponsortest.splice(i, 1);  // returns the removed item but also mutates the original
+        this.setState({sponsortest: this.state.sponsortest})
+    }
     
 
     // allows a form with "saved state" so if users close the modal, it allows
@@ -90,33 +121,29 @@ class SponsorshipPage extends React.Component {
        
     }   
 
-    handleCancel = () => { 
+    handleCloseModal = () => { 
         this.setState({showEditWindow:false});
     }
 
-    // sends and adds it to the list
+    // saves newobj onto state based on this.state.itemStatus
     handleSave = (event) => {
         // prevents refreshing of the page
         event.preventDefault(); 
+       
+        if (this.state.itemStatus.newItem) { // if is a new item
+            this.setState({ sponsortest: [this.state.newobj, ...this.state.sponsortest]})
+          
+        } else { // not a new item
+            this.state.sponsortest.splice(this.state.itemStatus.index, 1, this.state.newobj);
+        }
         this.setState({
-            sponsortest: [...this.state.sponsortest, this.state.newobj],
             newobj: {"name":"", 
                     "link": "",
                     "image": "",
                     "lastmod": ""
             }   
-        });
-
-    
-        // this.setState({ newobj: {[event.target.name]: event.target.value} })
-
-        // var newObj = {[event.target.name]: event.target.value};
-        // alert(newObj.name);
-        
-        // this.setState({sponsortest: [newObj, ...sponsortest]});
-        console.log(this.state.newobj);
-        
-
+        });      
+        console.log(this.state);
     }
     
     render() {
@@ -145,14 +172,15 @@ class SponsorshipPage extends React.Component {
                             <Text>
                                 Actions
                             </Text>
-                            
-                            
 
                         </HeaderCard>
                         <div>
-                            {this.state.sponsortest.map((items, index)=> 
-                                <CardDiv key={index}>
+                            {this.state.sponsortest.map((items, i)=> 
+                                <CardDiv key={i}>
                                     {items.name} {items.image} {items.link} {items.lastmod} 
+                                    <button onClick={() => this.handleDelete(i)}> delete </button>
+                                    <button> view </button>
+                                    <button onClick={() => this.handleEdit(i)}> edit </button>
                                 </CardDiv>
                             )}
                         </div>
@@ -161,7 +189,7 @@ class SponsorshipPage extends React.Component {
                 </Card> 
         
                 <form onSubmit={this.handleSave}>
-                
+                    
                     <h3> Edit item </h3>
                     <p>Sponsor Name</p>
                     <input 
@@ -169,6 +197,7 @@ class SponsorshipPage extends React.Component {
                       name='name'
                       value={this.state.newobj.name} 
                       onChange={this.handleChange}
+                      required
                     />
 
                     <p>Link</p>
@@ -177,6 +206,7 @@ class SponsorshipPage extends React.Component {
                       name='link' 
                       value={this.state.newobj.link}
                       onChange={this.handleChange}
+                      required
                     />
                     
 
@@ -186,9 +216,11 @@ class SponsorshipPage extends React.Component {
                       name='image' 
                       value={this.state.newobj.image}
                       onChange={this.handleChange}
+                      required
                     />
                    
                     <button type='submit'> Submit! </button>
+                    
                 
                 </form>
                 

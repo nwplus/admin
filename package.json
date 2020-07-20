@@ -4,10 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
+    "build": "next build && next export",
+    "start": "next start",
+    "build:prod": "cross-env DEPLOY_ENV=PRODUCTION next build && next export"
   },
   "dependencies": {
+    "cross-env": "^7.0.2",
     "dotenv": "^8.2.0",
     "firebase": "^7.15.5",
     "json2csv": "^5.0.1",

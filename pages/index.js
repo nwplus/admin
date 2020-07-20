@@ -98,6 +98,7 @@ export default function Home() {
     })
     await firebase.auth().signInWithPopup(provider).then((result) => {
       const token = result.credential.accessToken;
+      console.log("Login successful!")
     }).catch((error) => {
       const errorCode = error.code;
       console.log(errorCode);

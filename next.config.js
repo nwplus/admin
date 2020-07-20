@@ -1,7 +1,8 @@
-const envVars = 
-  process.env.DEPLOY_ENV == 'PRODUCTION' ?
-  {
-    env: {
+module.exports = () => {
+  const envVars = 
+    process.env.DEPLOY_ENV == 'PRODUCTION' ?  
+    {
+      env: {
       NEXT_PUBLIC_FIREBASE_API_KEY: "AIzaSyDGa7alU0NhfBATSQ6CalkY4Za9wWPrM7o",
       NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: "nwplus-ubc.firebaseapp.com",
       NEXT_PUBLIC_FIREBASE_DATABASE_URL: "https://nwplus-ubc.firebaseio.com",
@@ -10,10 +11,10 @@ const envVars =
       NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID: "G-BT2W7DSL1G",
       NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: "306881258768",
       NEXT_PUBLIC_FIREBASE_APP_ID: "1:306881258768:web:bc922148732abee79f7195"
-    }
-  } : 
-  {
-    env: {
+      }
+    } : 
+    {
+      env: {
       NEXT_PUBLIC_FIREBASE_API_KEY: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
       NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
       NEXT_PUBLIC_FIREBASE_DATABASE_URL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
@@ -22,8 +23,9 @@ const envVars =
       NEXT_PUBLIC_FIREBASE_APP_ID:  process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
       NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
       NEXT_PUBLIC_RECAPTCHA_SITE_KEY:  process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
+      }
     }
+  return {
+    ...envVars
   }
-module.exports = {
-  ...envVars
 }

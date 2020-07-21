@@ -96,7 +96,8 @@ export default ({ hackathons }) => {
                 })
             }
             <Logout
-                onClick={() => console.log('hey')}>
+                // TODO: logout
+                onClick={() => console.log('LOGOUT')}>
                 <ItemContainer>
                     <Power />
                     <Item>Logout</Item>

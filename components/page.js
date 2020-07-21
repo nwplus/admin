@@ -12,9 +12,9 @@ const Content = styled.div`
   padding: 60px;
 `
 
-export default ({hackathons, children}) => (
+export default ({hackathons, currentPath, children}) => (
   <Container>
-    <Sidebar hackathons={hackathons}/>
+    <Sidebar currentPath={currentPath} hackathons={hackathons}/>
     <Content>{children}</Content>
   </Container>
 ) 

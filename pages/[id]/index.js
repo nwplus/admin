@@ -3,7 +3,7 @@ import Page from '../../components/page'
 import { db } from '../../utility/firebase'
 
 export default ({hackathons, id}) => (
-  <Page hackathons={hackathons}>
+  <Page currentPath={id} hackathons={hackathons}>
     Home {id}
   </Page>
 )

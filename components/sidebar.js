@@ -71,8 +71,7 @@ const Logout = styled.button`
     }
 `
 
-export default ({ hackathons }) => {
-    const currentPath = (typeof location === 'undefined') ? '' : location.pathname
+export default ({ hackathons, currentPath }) => {
     return (
         <SidebarContainer>
             <Header>nwPlus CMS</Header>
@@ -81,8 +80,6 @@ export default ({ hackathons }) => {
                 <Item>Websites</Item>
             </ItemContainer>
             {
-                // client-side-only code
-                (typeof window !== 'undefined') &&
                 hackathons.map(id => {
                     return (
                         <Link

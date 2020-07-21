@@ -32,7 +32,7 @@ const Link = styled.a`
     display: block;
     color: ${p => p.selected ? COLOR.WHITE : COLOR.DARK_COPY};
     text-decoration: none;
-    padding: 10px 0 10px 50px;
+    padding: 10px 0 10px 75px;
     margin: 0 -30px;
     &:hover{
         color: ${COLOR.WHITE};

@@ -28,6 +28,9 @@ export const CardContent = styled.div`
 `
 
 export const CardDiv = styled.div`
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-around;
     padding: 26px 28px;
     border-bottom: 2px solid #EDEDED;
 `

@@ -5,40 +5,23 @@ import React, { useState } from 'react'
 import { EDIT, NEW } from '../constants'
 
 
-const customStyles = {
-    content : {
-      top                   : '50%',
-      left                  : '50%',
-      right                 : 'auto',
-      bottom                : 'auto',
-      marginRight           : '-50%',
-      transform             : 'translate(-50%, -50%)'
-    }
-  };
-
 
 // TODO: move font family higher, reduce need to redefine
-const HeaderCard = styled.div`
-    padding: 26px 28px;
-    font-weight: bold;
-    font-family: Apercu Pro; 
-    font-size: 16px;
-    border-bottom: 2px solid #EDEDED;
 
-`
 const Text = styled.text`
-    padding-right: 110px;
+    padding-right: 80px;
+    flex: 1;
+    white-space: nowrap;    
+    overflow: hidden;         
+    text-overflow: ellipsis;
 `
-
-
-
-// map CardDiv to a function
-// async firebase api first 
 
 class SponsorshipPage extends React.Component {
-    
+
+ 
     constructor(){
         super();
+        
         this.state = {
             sponsortest: [
                 {"name": "Tencent",
@@ -48,7 +31,7 @@ class SponsorshipPage extends React.Component {
                  },
                 {"name": "Apple",
                 "link":"www.apple.com",
-                "image": "yeeters",
+                "image": "yo what if deadass i just had some really long text and honestl",
                 "lastmod": "today lol"
                 },  
                 {"name": "Balenciaga",
@@ -77,7 +60,6 @@ class SponsorshipPage extends React.Component {
             }
         }
     }
-
     
     handleEdit = (i) => {
         //TODO: pop-up window 
@@ -103,7 +85,7 @@ class SponsorshipPage extends React.Component {
             showEditWindow: true,
             itemStatus: {"newItem": true}
         })
-        console.log(this.state.itemStatus);
+        
     };
 
     handleDelete(i) {
@@ -114,9 +96,15 @@ class SponsorshipPage extends React.Component {
 
     // allows a form with "saved state" so if users close the modal, it allows
     handleChange = (event) => {
-        this.setState({ newobj: {
-            ... this.state.newobj,
-            [event.target.name]: event.target.value} });
+        var d = new Date();
+
+        this.setState({ 
+            newobj: {
+                ... this.state.newobj,
+                [event.target.name]: event.target.value,
+                "lastmod": d.toLocaleString(),
+            } 
+        });
         console.log(this.state.newobj);
        
     }   
@@ -128,8 +116,16 @@ class SponsorshipPage extends React.Component {
     // saves newobj onto state based on this.state.itemStatus
     handleSave = (event) => {
         // prevents refreshing of the page
+        var d = new Date();
+
+        this.setState({ newobj:{...this.state.newobj, "lastmod": d.getHours()} })
+        console.log(this.state.newobj);
+
         event.preventDefault(); 
-       
+     
+
+        // this.setState({newobj: {...this.state.newobj, "lastmod": date.get}})
+
         if (this.state.itemStatus.newItem) { // if is a new item
             this.setState({ sponsortest: [this.state.newobj, ...this.state.sponsortest]})
           
@@ -140,7 +136,7 @@ class SponsorshipPage extends React.Component {
             newobj: {"name":"", 
                     "link": "",
                     "image": "",
-                    "lastmod": ""
+                    "lastmod": "",
             }   
         });      
         console.log(this.state);
@@ -159,7 +155,7 @@ class SponsorshipPage extends React.Component {
 
                     <CardContent style={{backgroundColor: "F8F8F8"}}>
                     <TableDiv>
-                        <HeaderCard>
+                        <CardDiv>
                             <Text>
                                 Sponsor Name 
                             </Text>
@@ -170,17 +166,33 @@ class SponsorshipPage extends React.Component {
                                 Logo Image File
                             </Text>
                             <Text>
+                                Last Modified
+                            </Text>
+                            <Text>
                                 Actions
                             </Text>
-
-                        </HeaderCard>
+                        </CardDiv>
+                          
                         <div>
                             {this.state.sponsortest.map((items, i)=> 
                                 <CardDiv key={i}>
-                                    {items.name} {items.image} {items.link} {items.lastmod} 
-                                    <button onClick={() => this.handleDelete(i)}> delete </button>
-                                    <button> view </button>
-                                    <button onClick={() => this.handleEdit(i)}> edit </button>
+                                    <Text>
+                                        {items.name}
+                                    </Text>
+                                    <Text>  
+                                        {items.image}
+                                    </Text>
+                                    <Text>
+                                        {items.link}
+                                    </Text>
+                                    <Text>
+                                        {items.lastmod}
+                                    </Text>
+                                    <Text>
+                                        <button onClick={() => this.handleDelete(i)}> delete </button>
+                                        <button> view </button>
+                                        <button onClick={() => this.handleEdit(i)}> edit </button>
+                                    </Text>
                                 </CardDiv>
                             )}
                         </div>

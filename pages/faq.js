@@ -5,6 +5,7 @@ import Card, {
   CardContent
 } from "../components/card"
 import Button from "../components/button"
+import EditIcon from "../components/icons/edit"
 import EditFAQIcon from "../components/icons/editFAQ"
 import NewIcon from "../components/icons/new"
 import SearchIcon from "../components/icons/search"
@@ -91,7 +92,7 @@ function QuestionRow(props) {
           <SearchIcon />
         </TransparentButton>
         <TransparentButton>
-          <EditFAQIcon />
+          <EditIcon color={COLOR.BLACK} />
         </TransparentButton>
         <TransparentButton>
           <CloseIcon />

@@ -5,9 +5,9 @@ import { COLOR } from "../../constants"
 const EditIcon = ({ className, color }) => (
   <svg
     className={className}
-    width='28'
-    height='28'
-    viewBox='0 0 35 35'
+    width='30'
+    height='30'
+    viewBox='0 0 35 30'
     fill={color || COLOR.WHITE}
     xmlns='http://www.w3.org/2000/svg'
   >

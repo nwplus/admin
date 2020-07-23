@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import firebase from 'firebase/app'
+import firebase, { registerVersion } from 'firebase/app'
 import 'firebase/firestore'
 import 'firebase/auth'
 import 'firebase/storage'
@@ -25,6 +25,11 @@ const storage = firebase.storage()
 const webCollection = 'Website_content'
 
 const fireDb = {
+  getTest: async () => {
+    const ref = db.collection("FAQ").doc("x6HOFAJ09geevy5Mf7PF")
+    const data = (await ref.get()).data() 
+    return data
+  },
   getNumberOfApplicants: callback => {
     db.collection('hacker_email_2020').onSnapshot(callback)
   },

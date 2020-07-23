@@ -3,27 +3,24 @@ import firebase from 'firebase/app'
 import 'firebase/firestore'
 import 'firebase/auth'
 import 'firebase/storage'
-import 'firebase/analytics'
 import * as Parser from 'json2csv'
 
 if (!firebase.apps.length) {
   const config = {
-    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-    databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
-    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-    measurementId: 'G-SV1NEW90HT',
-    appId: '1:98283589440:web:c15c6169d0098fb15d34a5',
-    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+    apiKey: process.env.FIREBASE_API_KEY,
+    authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+    databaseURL: process.env.FIREBASE_DATABASE_URL,
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    measurementId: process.env.FIREBASE_STORAGE_BUCKET,
+    appId: process.env.FIREBASE_APP_ID,
+    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID
   }
   firebase.initializeApp(config)
 }
 
-export const auth = firebase.auth()
-export const analytics = firebase.analytics()
+export const db = firebase.firestore()
 
-const db = firebase.firestore()
 const storage = firebase.storage()
 const webCollection = 'Website_content'
 
@@ -304,44 +301,7 @@ const fireDb = {
     }
     return sponsors
   },
-  get: async (webDocument, collection) => {
-    if (collection === webDocument) {
-      const ref = db.collection(webCollection).doc(webDocument)
-      const data = await ref.get()
-      return data.data()
-    }
-    const ref = db
-      .collection(webCollection)
-      .doc(webDocument)
-      .collection(collection)
-    return (await ref.get()).docs.map(doc => ({
-      id: doc.id,
-      data: doc.data()
-    }))
-  },
-  update: (webDocument, collection, docId, object) => {
-    db.collection(webCollection)
-      .doc(webDocument)
-      .collection(collection)
-      .doc(docId)
-      .update(object)
-  },
-  add: async (webDocument, collection, object) => {
-    const ref = await db
-      .collection(webCollection)
-      .doc(webDocument)
-      .collection(collection)
-      .add(object)
-    return ref.id
-  },
-  delete: async (webDocument, collection, docId) => {
-    await db
-      .collection(webCollection)
-      .doc(webDocument)
-      .collection(collection)
-      .doc(docId)
-      .delete()
-  },
+
   getTimestamp: () => {
     return firebase.firestore.Timestamp.now()
   },
@@ -350,6 +310,48 @@ const fireDb = {
     const url = await image.getDownloadURL()
     return url
   }
+}
+
+export const getDocument = async (hackathon, collection) => {
+  if (collection === hackathon) {
+    const ref = db.collection(webCollection).doc(hackathon)
+    const data = await ref.get()
+    return data.data()
+  }
+  const ref = db
+    .collection(webCollection)
+    .doc(hackathon)
+    .collection(collection)
+  return (await ref.get()).docs.map(doc => ({
+    id: doc.id,
+    data: doc.data()
+  }))
+}
+
+export const updateDocument = (hackathon, collection, docId, object) => {
+  db.collection(webCollection)
+    .doc(hackathon)
+    .collection(collection)
+    .doc(docId)
+    .update(object)
+}
+
+export const addDocument = async (hackathon, collection, object) => {
+  const ref = await db
+    .collection(webCollection)
+    .doc(hackathon)
+    .collection(collection)
+    .add(object)
+  return ref.id
+}
+
+export const deleteDocument = async (hackathon, collection, docId) => {
+  await db
+    .collection(webCollection)
+    .doc(hackathon)
+    .collection(collection)
+    .doc(docId)
+    .delete()
 }
 
 export default fireDb

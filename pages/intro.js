@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { useState } from 'react'
 import { COLOR, EDIT } from '../constants'
 import Button from '../components/button'
-import TextBox from '../components/textboxbox'
+import TextBox from '../components/textbox'
 import firebase from 'firebase/app'
 
 const props = {

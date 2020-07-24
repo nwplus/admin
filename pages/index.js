@@ -14,7 +14,7 @@ export default function Home() {
           <CardTitle>Hi</CardTitle>
           <p>Some extra text</p>
           <CardButtonContainer>
-            <Button type={EDIT} onClick={fireDb.getTest}>Hi there</Button>
+            <Button type={EDIT}>Hi there</Button>
           </CardButtonContainer>
         </CardHeader>
         <CardContent>Example usage of card component</CardContent>

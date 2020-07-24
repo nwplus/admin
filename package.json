@@ -5,9 +5,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build && next export",
-    "start": "next start"
+    "start": "next start",
+    "build:prod": "cross-env DEPLOY_ENV=PRODUCTION next build && next export"
   },
   "dependencies": {
+    "cross-env": "^7.0.2",
     "firebase": "^7.15.1",
     "json2csv": "^5.0.1",
     "next": "9.4.4",

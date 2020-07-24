@@ -98,7 +98,7 @@ export default function Home() {
     })
     await firebase.auth().signInWithPopup(provider).then((result) => {
       const token = result.credential.accessToken;
-      console.log("Login successful!!!!")
+      console.log("Login successful!")
     }).catch((error) => {
       const errorCode = error.code;
       console.log(errorCode);
@@ -124,7 +124,7 @@ export default function Home() {
         <PasswordInput/>
         <ForgotPasswordDiv>Forgot password?</ForgotPasswordDiv>
         <ButtonWrapper>
-          <Button onClick={googleSignIn}>Login</Button>
+          <Button onClick={googleSignIn}>Loggggggin</Button>
         </ButtonWrapper>
       </Wrapper>
     </React.Fragment>

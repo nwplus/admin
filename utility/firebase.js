@@ -17,6 +17,7 @@ if (!firebase.apps.length) {
     messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
   }
   firebase.initializeApp(config)
+  console.log(config.apiKey)
 }
 
 export const db = firebase.firestore()

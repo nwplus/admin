@@ -26,9 +26,10 @@ const webCollection = 'Website_content'
 
 const fireDb = {
   getTest: async () => {
-    const ref = db.collection("FAQ").doc("x6HOFAJ09geevy5Mf7PF")
-    const data = (await ref.get()).data() 
-    return data
+    const ref = await db.collection("FAQ").get()
+    ref.forEach((doc) => {
+      console.log(doc.id)
+    })
   },
   getNumberOfApplicants: callback => {
     db.collection('hacker_email_2020').onSnapshot(callback)

@@ -5,11 +5,6 @@ import Button from '../components/button'
 import fireDb from '../utility/firebase'
 
 export default function Home() {
-
-  const clickclick = () => {
-    console.log(fireDb.getTest())
-  }
-
   return (
     <React.Fragment>
       <div>Login Page</div>
@@ -19,7 +14,7 @@ export default function Home() {
           <CardTitle>Hi</CardTitle>
           <p>Some extra text</p>
           <CardButtonContainer>
-            <Button type={EDIT} onClick={clickclick}>Hi there</Button>
+            <Button type={EDIT} onClick={fireDb.getTest}>Hi there</Button>
           </CardButtonContainer>
         </CardHeader>
         <CardContent>Example usage of card component</CardContent>

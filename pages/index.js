@@ -3,7 +3,6 @@ import Head from 'next/head'
 import styled from 'styled-components'
 import { useState } from 'react'
 import { COLOR } from '../constants'
-import { Helmet } from 'react-helmet'
 import { GlobalStyle } from '../components/globalStyles'
 import Button from '../components/button'
 import fireDb from '../utility/firebase'
@@ -112,9 +111,6 @@ export default function Home() {
 
   return (
     <React.Fragment>
-      <Helmet>
-      <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/hk-grotesk" type="text/css"/>
-      </Helmet>
       <GlobalStyle/>
       <Wrapper>
         <LogInDiv>Log in</LogInDiv>

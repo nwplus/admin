@@ -29,7 +29,7 @@ jobs:
       - name: yarn install and build
         run: |
           yarn install
-          yarn generate:prod
+          yarn build
       - name: run Lighthouse CI
         run: |
           sudo yarn global add @lhci/cli@0.4.x

@@ -17,3 +17,22 @@ jobs:
           yarn install
           yarn lint
           yarn build
+  lhci:
+    name: Lighthouse
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+      - name: yarn install and build
+        run: |
+          yarn install
+          yarn generate:prod
+      - name: run Lighthouse CI
+        run: |
+          sudo yarn global add @lhci/cli@0.4.x
+          lhci autorun
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}

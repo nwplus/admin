@@ -28,7 +28,7 @@ export default function Home() {
         </CardContent>
       </Card>
 
-      <SponsorshipPage /> 
+      <SponsorshipPage name="LHD"/> 
 
       
 

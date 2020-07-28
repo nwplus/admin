@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import Button from '../components/button'
 import React, { useState } from 'react'
 import { EDIT, NEW } from '../constants'
-
+import fireDb from "../utility/firebase"
 
 
 // TODO: move font family higher, reduce need to redefine
@@ -18,9 +18,9 @@ const Text = styled.text`
 
 class SponsorshipPage extends React.Component {
 
- 
     constructor(){
         super();
+        
         
         this.state = {
             sponsortest: [
@@ -147,7 +147,7 @@ class SponsorshipPage extends React.Component {
             <React.Fragment>
                 <Card>
                     <CardHeader style={{backgroundColor: "#EDEDED"}}> 
-                        <CardTitle>Sponsors</CardTitle>
+        <               CardTitle>Sponsors: {this.props.name} </CardTitle>
                         <CardButtonContainer>
                             <Button type={NEW} onClick={this.handleNew}>New Sponsor</Button>
                         </CardButtonContainer>

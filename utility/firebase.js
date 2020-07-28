@@ -4,7 +4,7 @@ import 'firebase/firestore'
 import 'firebase/auth'
 import 'firebase/storage'
 import 'firebase/analytics'
-import * as Parser from 'json2csv'
+// import * as Parser from 'json2csv'
 
 if (!firebase.apps.length) {
   const config = {

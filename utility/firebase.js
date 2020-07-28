@@ -19,6 +19,18 @@ if (!firebase.apps.length) {
   console.log(config)
 }
 
+const changePersistence = async () => {
+  try {
+    await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
+  } catch (err) {
+    console.log(err)
+  }
+  
+  console.log("changed!")
+}
+
+changePersistence();
+
 export const db = firebase.firestore()
 
 const storage = firebase.storage()

@@ -91,6 +91,13 @@ const PasswordInput = styled.input`
 export default function Home() {
 
   const googleSignIn = async (e) => {
+    // try {
+    //   await firebase.auth().setPersistence('none')
+    // } catch (err) {
+    //   console.log(err)
+    //   alert(err)
+    // }
+    
     const provider = new firebase.auth.GoogleAuthProvider();
     provider.setCustomParameters({
       'hd': 'nwplus.io'
@@ -98,6 +105,16 @@ export default function Home() {
     await firebase.auth().signInWithPopup(provider).then((result) => {
       const token = result.credential.accessToken;
       console.log("Login successful!")
+
+      firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+          user.providerData.forEach(profile => {
+            console.log(profile.displayName)
+            console.log(profile.email)
+          })
+        }
+      })
+
     }).catch((error) => {
       const errorCode = error.code;
       console.log(errorCode);

@@ -4,6 +4,7 @@ import { COLOR } from "../constants"
 
 const Modal = styled.div`
   position: absolute;
+  padding: 40px;
   z-index: 500;
   background-color: ${COLOR.BACKGROUND};
   border-radius: 5px;
@@ -14,8 +15,6 @@ const Modal = styled.div`
 `
 
 export const ModalTitle = styled.div`
-  left: 391px;
-  top: 293px;
   font-family: Apercu Pro;
   font-size: 24px;
   line-height: 30px;

@@ -7,7 +7,7 @@ import Card, {
 } from "../components/card"
 import { EDIT, NEW } from "../constants"
 import Button from "../components/button"
-import Modal from "../components/modal"
+import Modal, { ModalTitle } from "../components/modal"
 
 export default function Home() {
   return (
@@ -24,6 +24,10 @@ export default function Home() {
         </CardHeader>
         <CardContent>Example usage of card component</CardContent>
       </Card>
+
+      <Modal>
+        <ModalTitle>hello</ModalTitle>
+      </Modal>
     </React.Fragment>
   )
 }

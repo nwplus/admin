@@ -21,7 +21,7 @@ if (!firebase.apps.length) {
 }
 
 export const auth = firebase.auth()
-export const analytics = firebase.analytics()
+// export const analytics = firebase.analytics()
 
 const db = firebase.firestore()
 const storage = firebase.storage()

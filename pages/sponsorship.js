@@ -60,6 +60,11 @@ class SponsorshipPage extends React.Component {
             }
         }
     }
+
+    testButton = () => {
+        alert(fireDb.getWebsites)
+
+    }
     
     handleEdit = (i) => {
         //TODO: pop-up window 
@@ -147,7 +152,8 @@ class SponsorshipPage extends React.Component {
             <React.Fragment>
                 <Card>
                     <CardHeader style={{backgroundColor: "#EDEDED"}}> 
-        <               CardTitle>Sponsors: {this.props.name} </CardTitle>
+                        <CardTitle>Sponsors: {this.props.name} </CardTitle>
+                        <button onClick={this.testButton}> testing firebase </button>
                         <CardButtonContainer>
                             <Button type={NEW} onClick={this.handleNew}>New Sponsor</Button>
                         </CardButtonContainer>

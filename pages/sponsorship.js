@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import Button from '../components/button'
 import React, { useState } from 'react'
 import { EDIT, NEW } from '../constants'
-import fireDb from "../utility/firebase"
+import fireDb, { db } from "../utility/firebase"
 
 
 // TODO: move font family higher, reduce need to redefine
@@ -62,9 +62,12 @@ class SponsorshipPage extends React.Component {
     }
 
     testButton = () => {
-        alert(fireDb.getWebsites)
-
-    }
+      const yo = db.collection("Sponsorship").doc("HealthX").collection("Companies").doc("Balsamiq");
+      yo.get().then((doc) => {
+          console.log(doc.data().link);
+    })
+       
+    };
     
     handleEdit = (i) => {
         //TODO: pop-up window 
@@ -96,7 +99,7 @@ class SponsorshipPage extends React.Component {
     handleDelete(i) {
         this.state.sponsortest.splice(i, 1);  // returns the removed item but also mutates the original
         this.setState({sponsortest: this.state.sponsortest})
-    }
+    };
     
 
     // allows a form with "saved state" so if users close the modal, it allows
@@ -122,14 +125,10 @@ class SponsorshipPage extends React.Component {
     handleSave = (event) => {
         // prevents refreshing of the page
         var d = new Date();
-
         this.setState({ newobj:{...this.state.newobj, "lastmod": d.getHours()} })
         console.log(this.state.newobj);
 
         event.preventDefault(); 
-     
-
-        // this.setState({newobj: {...this.state.newobj, "lastmod": date.get}})
 
         if (this.state.itemStatus.newItem) { // if is a new item
             this.setState({ sponsortest: [this.state.newobj, ...this.state.sponsortest]})
@@ -238,16 +237,12 @@ class SponsorshipPage extends React.Component {
                     />
                    
                     <button type='submit'> Submit! </button>
-                    
                 
                 </form>
-                
-
             </React.Fragment>
         )
     }
       
 }
-
 
 export default SponsorshipPage;

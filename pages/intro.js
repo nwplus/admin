@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { COLOR, EDIT } from '../constants'
 import Button from '../components/button'
 import TextBox from '../components/textbox'
-import firebase from 'firebase/app'
+import {db} from '../utility/firebase'
 
 const props = {
     nwHacks: {
@@ -66,17 +66,20 @@ const StyledHeader = styled.p`
 
 export default function IntroPage() {
     const [isEditingObj, setIsEditingObj] = useState({})
+    const [websiteData, setWebsiteData] = useState({})
     // TODO need functionality to display data based on what event is currently being viewed
 
-    const config = {
-        apiKey: process.env.FIREBASE_API_KEY,
-        authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-        databaseURL: process.env.FIREBASE_DATABASE_URL,
-        projectId: process.env.FIREBASE_PROJECT_ID,
-        storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-        messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID
+    //need to substitute the value at .doc(ID) with current website
+    const getHackathonData = async () => {
+        return await db.collection('Hackathons').doc('IntroTestHackathon').get().then((doc) => {
+            setWebsiteData(doc.data().WebsiteData)
+        })
     }
-    
+
+    if (Object.keys(websiteData).length == 0) {
+        getHackathonData()
+    }
+
     const handleEdit = (type) => {
         setIsEditingObj({
             ...isEditingObj,
@@ -130,7 +133,7 @@ export default function IntroPage() {
     // map over every text section in a hackathon's WebsiteData and adds the section name to isEditingObj state 
     return (
         <React.Fragment>
-        {Object.keys(props.nwHacks.WebsiteData).map((key) => {
+        {Object.keys(websiteData).map((key) => {
             if (isEditingObj[key] === undefined) {
                 setIsEditingObj({
                     ...isEditingObj,
@@ -140,14 +143,14 @@ export default function IntroPage() {
             return (
             <Card>
                 <CardHeader>
-                    <CardTitle>{props.nwHacks.WebsiteData[key].title}</CardTitle>
-                    <p>{`Last edited by ${props.nwHacks.WebsiteData[key].editor} at ${props.nwHacks.WebsiteData[key].time}`}</p>
+                    <CardTitle>{websiteData[key].title}</CardTitle>
+                    <p>{`Last edited by ${websiteData[key].editor} at ${websiteData[key].time}`}</p>
                     <CardButtonContainer>
                         <Button type={EDIT} onClick={() => handleEdit(key)} />
                     </CardButtonContainer>
                 </CardHeader>
                 <CardContent>
-                    <Content cancel={() => handleCancel(key)} isEditing={isEditingObj[key]} header={props.nwHacks.WebsiteData[key].header} content={props.nwHacks.WebsiteData[key].content} />
+                    <Content cancel={() => handleCancel(key)} isEditing={isEditingObj[key]} header={websiteData[key].header} content={websiteData[key].content} />
                 </CardContent>
             </Card>
             )

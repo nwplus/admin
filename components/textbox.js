@@ -13,6 +13,7 @@ const EditingText = styled.textarea`
 `
 
 export default function TextBox(props) {
+    const {defaultValue, resize, otherClassNames} = props
     useEffect(() => {
         calculateTextAreaHeight()
     })
@@ -26,10 +27,10 @@ export default function TextBox(props) {
     }
  
     const styleObj = {
-        resize: props.resize ? 'vertical' : 'none'
+        resize: resize ? 'vertical' : 'none'
     }
 
     return (
-        <EditingText style={styleObj} className='textarea' defaultValue={props.defaultValue}/>
+        <EditingText style={styleObj} className={`textarea ${otherClassNames}`} defaultValue={defaultValue}/>
     )
 }

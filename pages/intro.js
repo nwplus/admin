@@ -6,27 +6,6 @@ import Button from '../components/button'
 import TextBox from '../components/textbox'
 import {db} from '../utility/firebase'
 
-const props = {
-    nwHacks: {
-        WebsiteData: {
-            intro: {
-                title: `Intro`,
-                editor: `Derek Chen`,
-                header: `This is nwHacks 2019`,
-                time: `July 14, 2020 at 10:30:03 AM UTC-7`,
-                content: `Come make things and break things, and then make them cooler. You'll never be short on inspiration when you're surrounded by 650 of the brightest minds in the Pacific Northwest. All you need to bring is an open mind and an insatiable desire to learn; we'll take care of the rest. After all, we're western Canada's largest hackathon - we make the west coast the best coast.`
-            },
-            otherSection: {
-                editor: `Ian Mah`,
-                title: `Other Text Section(s)`,
-                time: `July 8, 2020 at 12:00:00 PM UTC-7`,
-                header: `Why nwHacks?`,
-                content: `Vancouver is breathtaking and so are you`
-            }
-        }
-    }
-}
-
 const HeaderText = styled.p`
     border: none;
     overflow: hidden;
@@ -69,9 +48,9 @@ export default function IntroPage() {
     const [websiteData, setWebsiteData] = useState({})
     // TODO need functionality to display data based on what event is currently being viewed
 
-    //need to substitute the value at .doc(ID) with current website
+    // TODO need to substitute the value at .doc(ID) with current website
     const getHackathonData = async () => {
-        return await db.collection('Hackathons').doc('IntroTestHackathon').get().then((doc) => {
+        await db.collection('Hackathons').doc('IntroTestHackathon').get().then((doc) => {
             setWebsiteData(doc.data().WebsiteData)
         })
     }
@@ -85,6 +64,7 @@ export default function IntroPage() {
             ...isEditingObj,
             [type]: !isEditingObj[type]
         })
+        
     };
 
     const handleCancel = (type) => {
@@ -94,30 +74,76 @@ export default function IntroPage() {
         })
     }
 
-    const handleSave = (e) => {
-        // TODO: update firebase with value of div
-        e.preventDefault();
-        setIsEditing(false)
+    /**
+     * @param {string} type every section in the intro has a type, which is the key in the map of WebsiteData
+     * reads the value of the header/content associated with the given type and updates the object in Firebase
+     */
+    const handleSave = async (type) => {
+        const textareas = document.getElementsByClassName(type)
+        const time = new Date(new Date().getTime())
+        let updateObj = {
+            WebsiteData: {
+                ...websiteData,
+                [type]: {
+                    editor: 'GRAB USER FROM REDUX?',
+                    time, 
+                    title: websiteData[type].title
+                }
+            }
+        }
+        let header, content
+        Array.prototype.forEach.call(textareas, (textarea) => {
+            if (textarea.style.resize == 'none') {
+                // if the textarea is the header (not resizable)
+                header = textarea.value
+                updateObj.WebsiteData[type]['header'] = header
+            } else {
+                // if text area is content (resizable)
+                content = textarea.value
+                updateObj.WebsiteData[type]['content'] = content
+            }
+        })
+        // TODO need to substitute the value at .doc(ID) with current website
+        await db.collection('Hackathons').doc('IntroTestHackathon')
+            .update(updateObj)
+            .then(() => {
+                setWebsiteData({
+                    ...websiteData,
+                    [type]: {
+                        ...websiteData[type],
+                        header,
+                        content,
+                        time
+                    }
+                })
+            })
+            .catch(() => {
+                alert('An error occured while trying to update the text section')
+            })
+        setIsEditingObj({
+            ...isEditingObj,
+            [type]: false
+        })
     }
 
     function Content(props) {
-        const { header, content, isEditing, cancel } = props
+        const { header, content, isEditing, type } = props
         return (
             <React.Fragment>
                 {
                     isEditing ?
                         <div style={{padding: '0px 40px 37px 40px'}}>
                             <StyledHeader>Header</StyledHeader>
-                            <TextBox defaultValue={header} />
+                            <TextBox otherClassNames={type} defaultValue={header} />
                             <StyledHeader>Body</StyledHeader>
-                            <TextBox defaultValue={content} resize={true}/>
+                            <TextBox otherClassNames={type} defaultValue={content} resize={true}/>
                             <div style={{ marginTop: '27px', display: 'flex', float: 'right' }}>
-                                <StyledCancel onClick={cancel}>
+                                <StyledCancel onClick={() => handleCancel(type)}>
                                     <p style={{ borderBottom: `2px solid ${COLOR.BLACK}`, margin: '0px' }}>
                                         Cancel
                                     </p>
                                 </StyledCancel>
-                                <Button>Save</Button>
+                                <Button onClick={() => handleSave(type)}>Save</Button>
                             </div>
                         </div>
                         :
@@ -133,24 +159,24 @@ export default function IntroPage() {
     // map over every text section in a hackathon's WebsiteData and adds the section name to isEditingObj state 
     return (
         <React.Fragment>
-        {Object.keys(websiteData).map((key) => {
-            if (isEditingObj[key] === undefined) {
+        {Object.keys(websiteData).map((type) => {
+            if (isEditingObj[type] === undefined) {
                 setIsEditingObj({
                     ...isEditingObj,
-                    [key]: false
+                    [type]: false
                 })
             }
             return (
             <Card>
                 <CardHeader>
-                    <CardTitle>{websiteData[key].title}</CardTitle>
-                    <p>{`Last edited by ${websiteData[key].editor} at ${websiteData[key].time}`}</p>
+                    <CardTitle>{websiteData[type].title}</CardTitle>
+                    <p>{`Last edited by ${websiteData[type].editor} at ${new Date(websiteData[type].time.seconds * 1000).toLocaleString()}`}</p>
                     <CardButtonContainer>
-                        <Button type={EDIT} onClick={() => handleEdit(key)} />
+                        <Button type={EDIT} onClick={() => handleEdit(type)} />
                     </CardButtonContainer>
                 </CardHeader>
                 <CardContent>
-                    <Content cancel={() => handleCancel(key)} isEditing={isEditingObj[key]} header={websiteData[key].header} content={websiteData[key].content} />
+                    <Content type={type} isEditing={isEditingObj[type]} header={websiteData[type].header} content={websiteData[type].content} />
                 </CardContent>
             </Card>
             )

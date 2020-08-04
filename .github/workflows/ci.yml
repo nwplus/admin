@@ -41,6 +41,6 @@ jobs:
       - name: run Lighthouse CI
         run: |
           sudo yarn global add @lhci/cli@0.4.x
-          lhci autorun --collect.settings.chromeFlags='--no-sandbox'
+          lhci autorun
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}

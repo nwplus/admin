@@ -15,43 +15,31 @@ const Text = styled.text`
     overflow: hidden;         
     text-overflow: ellipsis;
 `
+const Actions = styled.div`
+    padding-right: 80px;
+    flex: 1;
+`
 
 class SponsorshipPage extends React.Component {
 
     constructor(){
         super();
-        
-        
+
         this.state = {
-            sponsors: {
-                "Apple": {
-                    "name": "Apple",
-                    "link": "www.apple.ca/canada",
-                    "image": "a pinguo",
-                    "lastmod": "anytime bb",
-                    "tier": "Silver",
-                },
-                "Pokemon": {
-                    "name": "Pokemon",
-                    "link": "pikachu",
-                    "image": "giratina",
-                    "lastmod": "2005 lol",
-                    "tier": "Gold",
-                },
-            },
+            sponsors: {},
             newobj: {
                 "name": "",
                 "link": "",
-                "image": "",
+                "imgURL": "",
                 "lastmod": "",
                 "tier": "",
             },
             showEditWindow: false,
-            itemStatus: {
-                "newItem": true,
-                "index": 0,     
-            }
         }
+    }
+
+    componentDidMount(){
+        this.loadFirebase();
     }
 
     
@@ -59,33 +47,27 @@ class SponsorshipPage extends React.Component {
         //TODO: pop-up window 
         this.setState({
             newobj: {
-                "name": this.state.sponsortest[i].name,
-                "link": this.state.sponsortest[i].link, 
-                "image": this.state.sponsortest[i].image, 
-                "lastmod": this.state.sponsortest[i].lastmod, 
+                "name": this.state.sponsors[id].name,
+                "link": this.state.sponsors[id].link, 
+                "imgURL": this.state.sponsors[id].imgURL, 
+                "lastmod": this.state.sponsors[id].lastmod, 
+                "tier": this.state.sponsors[id].tier,
             },
             showEditWindow: true,
-            itemStatus: {
-                "newItem": false,
-                "index": i,
-            }
         })
-        console.log(this.state.newobj, this.state.itemStatus)
     };
 
-    testbutton = () => {
-        fireDb.alexgetSponsors(this.props.name).then((result)=>{
-            this.setState({sponsors: result});
-            console.log("yo we already here" + result);
-        })
-        
+    async loadFirebase() {
+        const data = await fireDb.alexgetSponsors(this.props.name);
+        this.setState({sponsors: data})
+        console.log(this.state.sponsors)
     }
 
+    
     handleNew = (e) => {
         //TODO: pop-up window 
         this.setState({
             showEditWindow: true,
-            itemStatus: {"newItem": true}
         })
         
     };
@@ -102,7 +84,6 @@ class SponsorshipPage extends React.Component {
       
     };
     
-
     // allows a form with "saved state" so if users close the modal, it allows
     handleChange = (event) => {
         var d = new Date();
@@ -115,7 +96,6 @@ class SponsorshipPage extends React.Component {
             } 
         });
         console.log(this.state.newobj);
-       
     }   
 
     handleCloseModal = () => { 
@@ -138,7 +118,7 @@ class SponsorshipPage extends React.Component {
         this.setState({
             newobj: {"name":"", 
                     "link": "",
-                    "image": "",
+                    "umgURL": "",
                     "lastmod": "",
                     "tier": "",
             }   
@@ -150,8 +130,7 @@ class SponsorshipPage extends React.Component {
             <React.Fragment>
                 <Card>
                     <CardHeader style={{backgroundColor: "#EDEDED"}}> 
-                        <CardTitle>Sponsors: {this.props.name} </CardTitle>
-                        <button onClick={this.testbutton}> Freak my shit </button>
+                        <CardTitle> Sponsors: {this.props.name} </CardTitle>
                         <CardButtonContainer>
                             <Button type={NEW} onClick={this.handleNew}>New Sponsor</Button>
                         </CardButtonContainer>
@@ -184,19 +163,19 @@ class SponsorshipPage extends React.Component {
                                         {item.name}
                                     </Text>
                                     <Text>  
-                                        {item.image}
+                                        {item.link}
                                     </Text>
                                     <Text>
-                                        {item.link}
+                                        {item.imgURL}
                                     </Text>
                                     <Text>
                                         {item.lastmod}
                                     </Text>
-                                    <Text>
+                                    <Actions>
                                         <button onClick={() => this.handleDelete(item.name)}> delete </button>
                                         <button> view </button>
                                         <button onClick={() => this.handleEdit(item.name)}> edit </button>
-                                    </Text>
+                                    </Actions>
                                 </CardDiv>
                             )}
                         </div>
@@ -229,15 +208,15 @@ class SponsorshipPage extends React.Component {
                     <p>Image File</p>
                     <input 
                       type='text' 
-                      name='image' 
-                      value={this.state.newobj.image}
+                      name='imgURL' 
+                      value={this.state.newobj.imgURL}
                       onChange={this.handleChange}
                       required
                     />
 
                     <label>
 
-                    Tier
+                    <p>Tier</p>
                     <select value={this.state.newobj.tier} onChange={this.handleChange} name="tier">
                         <option value="inkind">In-kind</option>
                         <option value="bronze">Bronze</option>

@@ -226,15 +226,10 @@ const fireDb = {
     await ref.delete();
   },
   alexgetSponsors: async(website) => { 
-    const sponsors = {};
-    db.collection("Hackathons").doc(website).collection("Sponsors").get()
-      .then((snapshot)=>{
-        snapshot.docs.forEach(doc => {
-          sponsors[doc.id]=doc.data();
-        })
-        console.log(sponsors);
-        return sponsors;
-      })
+    var A = {};
+    const B = await db.collection("Hackathons").doc(website).collection("Sponsors").get();
+    B.docs.forEach(doc => {A[doc.id] = doc.data()})
+    return A;
   },
   async uploadImages(website, files) {
     const failedUploads = []

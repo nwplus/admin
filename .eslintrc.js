@@ -1,7 +1,7 @@
 module.exports = {
   settings: {
     react: {
-      version: "detect"
+      version: 'detect'
     }
   },
   env: {
@@ -9,7 +9,10 @@ module.exports = {
     node: true,
     es6: true
   },
-  plugins: ["react"],
-  extends: ["eslint:recommended", "plugin:react/recommended"],
-  parser: "babel-eslint"
+  plugins: ['react'],
+  extends: ['eslint:recommended', 'plugin:react/recommended'],
+  rules: {
+    'react/prop-types': [2, { ignore: ['children'] }]
+  },
+  parser: 'babel-eslint'
 }

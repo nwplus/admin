@@ -38,7 +38,7 @@ const fireDb = {
       .where('score.finalScore', '>', -1)
       .onSnapshot(callback)
   },
-  applicantToCSV: async (_) => {
+  applicantToCSV: async () => {
     const hackerReference = db.collection('hacker_info_2020')
     const snapshot = await hackerReference.get()
     const hackerInfo = snapshot.docs.map((doc) => doc.data())

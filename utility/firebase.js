@@ -22,24 +22,24 @@ if (!firebase.apps.length) {
 export const db = firebase.firestore()
 
 const storage = firebase.storage()
-const webCollection = "Website_content"
+const webCollection = 'Website_content'
 
 const fireDb = {
   getNumberOfApplicants: (callback) => {
-    db.collection("hacker_email_2020").onSnapshot(callback)
+    db.collection('hacker_email_2020').onSnapshot(callback)
   },
   getNumberOfAccepted: (callback) => {
-    db.collection("hacker_info_2020")
-      .where("tags.accepted", "==", true)
+    db.collection('hacker_info_2020')
+      .where('tags.accepted', '==', true)
       .onSnapshot(callback)
   },
   getScored: (callback) => {
-    db.collection("hacker_info_2020")
-      .where("score.finalScore", ">", -1)
+    db.collection('hacker_info_2020')
+      .where('score.finalScore', '>', -1)
       .onSnapshot(callback)
   },
   applicantToCSV: async (_) => {
-    const hackerReference = db.collection("hacker_info_2020")
+    const hackerReference = db.collection('hacker_info_2020')
     const snapshot = await hackerReference.get()
     const hackerInfo = snapshot.docs.map((doc) => doc.data())
     const parser = new Parser.Parser()
@@ -47,7 +47,7 @@ const fireDb = {
     return csv
   },
   isAdmin: async (email) => {
-    const ref = db.collection("admins")
+    const ref = db.collection('admins')
     const admins = (await ref.get()).docs
     for (const admin of admins) {
       const col = ref.doc(admin.id)
@@ -90,10 +90,10 @@ const fireDb = {
       introTexts[website] = {
         introText: websiteData.IntroText
           ? websiteData.IntroText.toString()
-          : "",
+          : '',
         introSubtext: websiteData.IntroSubtext
           ? websiteData.IntroSubtext.toString()
-          : "",
+          : '',
         introLastEditedBy: websiteData.IntroLastEditedBy || undefined,
         introLastEditedDate: websiteData.IntroLastEditedDate || undefined,
         introButtonEnabled: websiteData.IntroButtonEnabled,
@@ -111,18 +111,18 @@ const fireDb = {
       const websiteData = await db
         .collection(webCollection)
         .doc(website)
-        .collection("Events")
+        .collection('Events')
         .get()
       events[website] = await websiteData.docs.map((doc) => {
         const data = doc.data()
         return {
           id: doc.id,
           title: data.title,
-          text: data.text || "",
+          text: data.text || '',
           order: data.order,
-          imageLink: data.imageLink || "",
-          eventLink: data.eventLink || "",
-          signupLink: data.signupLink || "",
+          imageLink: data.imageLink || '',
+          eventLink: data.eventLink || '',
+          signupLink: data.signupLink || '',
           eventLastEditedBy: data.eventLastEditedBy || undefined,
           eventLastEditedDate: data.eventLastEditedDate || undefined,
           enabled: data.enabled
@@ -135,15 +135,15 @@ const fireDb = {
     const ref = db
       .collection(webCollection)
       .doc(website)
-      .collection("Events")
+      .collection('Events')
     await ref.add({
-      title: event.title || "",
+      title: event.title || '',
       order: parseInt(event.order) || -1,
-      text: event.text || "",
-      eventLink: event.eventLink || "",
-      learnMoreLink: event.learnMoreLink || "",
-      signupLink: event.signupLink || "",
-      imageLink: event.imageLink || "",
+      text: event.text || '',
+      eventLink: event.eventLink || '',
+      learnMoreLink: event.learnMoreLink || '',
+      signupLink: event.signupLink || '',
+      imageLink: event.imageLink || '',
       enabled: true,
       eventLastEditedBy: event.eventLastEditedBy,
       eventLastEditedDate: event.eventLastEditedDate.toDateString()
@@ -153,16 +153,16 @@ const fireDb = {
     const ref = db
       .collection(webCollection)
       .doc(website)
-      .collection("Events")
+      .collection('Events')
       .doc(event.id)
     await ref.update({
-      title: event.title || "",
+      title: event.title || '',
       order: parseInt(event.order) || -1,
-      text: event.text || "",
-      eventLink: event.eventLink || "",
-      learnMoreLink: event.learnMoreLink || "",
-      signupLink: event.signupLink || "",
-      imageLink: event.imageLink || "",
+      text: event.text || '',
+      eventLink: event.eventLink || '',
+      learnMoreLink: event.learnMoreLink || '',
+      signupLink: event.signupLink || '',
+      imageLink: event.imageLink || '',
       eventLastEditedBy: event.eventLastEditedBy,
       eventLastEditedDate: event.eventLastEditedDate.toDateString()
     })
@@ -171,7 +171,7 @@ const fireDb = {
     const ref = db
       .collection(webCollection)
       .doc(website)
-      .collection("Events")
+      .collection('Events')
       .doc(event.id)
     await ref.update({
       enabled: event.enabled
@@ -195,16 +195,16 @@ const fireDb = {
       IntroLastEditedBy: user,
       IntroLastEditedDate: date,
       IntroButtonEnabled: enabled || false,
-      IntroButtonLink: signupLink || "",
-      SignUpButtonText: signupButtonText || "",
-      SignUpText: signupText || ""
+      IntroButtonLink: signupLink || '',
+      SignUpButtonText: signupButtonText || '',
+      SignUpText: signupText || ''
     })
   },
   addSponsorInformation: async (website, sponsor) => {
     const ref = db
       .collection(webCollection)
       .doc(website)
-      .collection("Sponsors")
+      .collection('Sponsors')
     await ref.add({
       image: sponsor.image,
       name: sponsor.name,
@@ -219,7 +219,7 @@ const fireDb = {
       const sponsors = await db
         .collection(webCollection)
         .doc(website)
-        .collection("Sponsors")
+        .collection('Sponsors')
         .get()
       sponsors.forEach(async (sponsor) => {
         if (sponsor.data().image === image) {
@@ -278,7 +278,7 @@ const fireDb = {
     const websites = await fireDb.getWebsites()
     const sponsors = {}
     for (const website of websites) {
-      const data = await fireDb.get(website, "Sponsors")
+      const data = await fireDb.get(website, 'Sponsors')
       if (data.length > 0) {
         await Promise.all(
           data.map(async (sponsor) => {

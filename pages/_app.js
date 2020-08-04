@@ -1,13 +1,13 @@
 // import App from 'next/app'
-import React from "react"
-import firebase from "firebase/app"
-import "firebase/analytics"
+import React from 'react'
+import firebase from 'firebase/app'
+import 'firebase/analytics'
 
 // Initialize firebase app
-import fireDb from "../utility/firebase"
+import fireDb from '../utility/firebase'
 
 // Only execute on client side
-if (typeof window !== "undefined") {
+if (typeof window !== 'undefined') {
   // Initialize firebase analytics
   firebase.analytics()
 }

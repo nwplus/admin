@@ -23,35 +23,28 @@ class SponsorshipPage extends React.Component {
         
         
         this.state = {
-            sponsortest: [
-                {"name": "Tencent",
-                "link":"www.microsoft.com",
-                "image": "path to photo",
-                "lastmod": "today lol"
-                 },
-                {"name": "Apple",
-                "link":"www.apple.com",
-                "image": "yo what if deadass i just had some really long text and honestl",
-                "lastmod": "today lol"
-                },  
-                {"name": "Balenciaga",
-                "link":"www.ssense.com",
-                "image": "koko",
-                "lastmod": "lol"},
-                {"name": "Porsche",
-                "link":"www.porsche.ca",
-                "image": "a car",
-                "lastmod": "july 19" },
-                {"name": "Lexus LC500",
-                "link":"www.autotrader.com",
-                "image": "also a nice car",
-                "lastmod": "2mr"}
-            ], 
+            sponsors: {
+                "Apple": {
+                    "name": "Apple",
+                    "link": "www.apple.ca/canada",
+                    "image": "a pinguo",
+                    "lastmod": "anytime bb",
+                    "tier": "Silver",
+                },
+                "Pokemon": {
+                    "name": "Pokemon",
+                    "link": "pikachu",
+                    "image": "giratina",
+                    "lastmod": "2005 lol",
+                    "tier": "Gold",
+                },
+            },
             newobj: {
                 "name": "",
                 "link": "",
                 "image": "",
-                "lastmod": ""
+                "lastmod": "",
+                "tier": "",
             },
             showEditWindow: false,
             itemStatus: {
@@ -61,15 +54,8 @@ class SponsorshipPage extends React.Component {
         }
     }
 
-    testButton = () => {
-      const yo = db.collection("Sponsorship").doc("HealthX").collection("Companies").doc("Balsamiq");
-      yo.get().then((doc) => {
-          console.log(doc.data().link);
-    })
-       
-    };
     
-    handleEdit = (i) => {
+    handleEdit = (id) => {
         //TODO: pop-up window 
         this.setState({
             newobj: {
@@ -87,6 +73,14 @@ class SponsorshipPage extends React.Component {
         console.log(this.state.newobj, this.state.itemStatus)
     };
 
+    testbutton = () => {
+        fireDb.alexgetSponsors(this.props.name).then((result)=>{
+            this.setState({sponsors: result});
+            console.log("yo we already here" + result);
+        })
+        
+    }
+
     handleNew = (e) => {
         //TODO: pop-up window 
         this.setState({
@@ -96,9 +90,16 @@ class SponsorshipPage extends React.Component {
         
     };
 
-    handleDelete(i) {
-        this.state.sponsortest.splice(i, 1);  // returns the removed item but also mutates the original
-        this.setState({sponsortest: this.state.sponsortest})
+    handleDelete(id) {
+        // 1. deletes from Firebase
+        fireDb.deleteSponsor(this.props.name, id)
+        
+        
+        // 2. deletes from CMS
+        delete this.state.sponsors[id];
+        this.setState({sponsors: this.state.sponsors});
+
+      
     };
     
 
@@ -121,29 +122,27 @@ class SponsorshipPage extends React.Component {
         this.setState({showEditWindow:false});
     }
 
-    // saves newobj onto state based on this.state.itemStatus
+    // MODAL SUBMIT BUTTON CLICKED (NEW + EDIT)
     handleSave = (event) => {
-        // prevents refreshing of the page
-        var d = new Date();
-        this.setState({ newobj:{...this.state.newobj, "lastmod": d.getHours()} })
-        console.log(this.state.newobj);
+        event.preventDefault(); // prevents page reload
 
-        event.preventDefault(); 
+        // 1. uploads to firebase
+        // no duplicate sponsors allowed, so old name means setting sponsor.. 
+        fireDb.setSponsor(this.props.name, this.state.newobj); 
 
-        if (this.state.itemStatus.newItem) { // if is a new item
-            this.setState({ sponsortest: [this.state.newobj, ...this.state.sponsortest]})
-          
-        } else { // not a new item
-            this.state.sponsortest.splice(this.state.itemStatus.index, 1, this.state.newobj);
-        }
+        // 2. renders on CMS
+        this.state.sponsors[this.state.newobj.name] = this.state.newobj;
+        this.setState({ sponsors: this.state.sponsors });
+        
+        // 3. refreshes form 
         this.setState({
             newobj: {"name":"", 
                     "link": "",
                     "image": "",
                     "lastmod": "",
+                    "tier": "",
             }   
-        });      
-        console.log(this.state);
+        });   
     }
     
     render() {
@@ -152,7 +151,7 @@ class SponsorshipPage extends React.Component {
                 <Card>
                     <CardHeader style={{backgroundColor: "#EDEDED"}}> 
                         <CardTitle>Sponsors: {this.props.name} </CardTitle>
-                        <button onClick={this.testButton}> testing firebase </button>
+                        <button onClick={this.testbutton}> Freak my shit </button>
                         <CardButtonContainer>
                             <Button type={NEW} onClick={this.handleNew}>New Sponsor</Button>
                         </CardButtonContainer>
@@ -179,24 +178,24 @@ class SponsorshipPage extends React.Component {
                         </CardDiv>
                           
                         <div>
-                            {this.state.sponsortest.map((items, i)=> 
-                                <CardDiv key={i}>
+                            {Object.values(this.state.sponsors).map((item)=> 
+                                <CardDiv key={item.name}>
                                     <Text>
-                                        {items.name}
+                                        {item.name}
                                     </Text>
                                     <Text>  
-                                        {items.image}
+                                        {item.image}
                                     </Text>
                                     <Text>
-                                        {items.link}
+                                        {item.link}
                                     </Text>
                                     <Text>
-                                        {items.lastmod}
+                                        {item.lastmod}
                                     </Text>
                                     <Text>
-                                        <button onClick={() => this.handleDelete(i)}> delete </button>
+                                        <button onClick={() => this.handleDelete(item.name)}> delete </button>
                                         <button> view </button>
-                                        <button onClick={() => this.handleEdit(i)}> edit </button>
+                                        <button onClick={() => this.handleEdit(item.name)}> edit </button>
                                     </Text>
                                 </CardDiv>
                             )}
@@ -235,6 +234,18 @@ class SponsorshipPage extends React.Component {
                       onChange={this.handleChange}
                       required
                     />
+
+                    <label>
+
+                    Tier
+                    <select value={this.state.newobj.tier} onChange={this.handleChange} name="tier">
+                        <option value="inkind">In-kind</option>
+                        <option value="bronze">Bronze</option>
+                        <option value="silver">Silver</option>
+                        <option value="gold">Gold</option>
+                        <option value="platinum">Platinum / Title Sponsor </option>
+                    </select>
+                    </label>
                    
                     <button type='submit'> Submit! </button>
                 

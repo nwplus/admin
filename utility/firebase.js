@@ -203,43 +203,38 @@ const fireDb = {
       SignUpText: signupText || ''
     })
   },
-  addSponsorInformation: async (website, sponsor) => {
+  setSponsor: async (website, sponsor) => {
     const ref = db
-      .collection(webCollection)
+      .collection("Hackathons")
       .doc(website)
       .collection('Sponsors')
-    await ref.add({
-      image: sponsor.image,
+      .doc(sponsor.name);
+    await ref.set({
+      imgURL: sponsor.image,
       name: sponsor.name,
-      url: sponsor.url,
-      rank: sponsor.rank,
-      altImage: sponsor.altImage
+      link: sponsor.link,
+      tier: sponsor.tier,
+      lastmod: sponsor.lastmod
     })
   },
-  async deleteSponsor(website, image) {
-    let altImage = false
-    try {
-      const sponsors = await db
-        .collection(webCollection)
-        .doc(website)
-        .collection('Sponsors')
-        .get()
-      sponsors.forEach(async sponsor => {
-        if (sponsor.data().image === image) {
-          altImage = !!sponsor.data().altImage
-          await sponsor.ref.delete()
-        }
+  deleteSponsor: async(website, sponsorName) => {
+    const ref = db
+      .collection("Hackathons")
+      .doc(website)
+      .collection("Sponsors")
+      .doc(sponsorName);
+    await ref.delete();
+  },
+  alexgetSponsors: async(website) => { 
+    const sponsors = {};
+    db.collection("Hackathons").doc(website).collection("Sponsors").get()
+      .then((snapshot)=>{
+        snapshot.docs.forEach(doc => {
+          sponsors[doc.id]=doc.data();
+        })
+        console.log(sponsors);
+        return sponsors;
       })
-    } catch (e) {
-      return false
-    }
-    const ref = storage.ref(`${website}/${image}`)
-    await ref.delete()
-    if (altImage) {
-      const altRef = storage.ref(`${website}/alt${image}`)
-      await altRef.delete()
-    }
-    return true
   },
   async uploadImages(website, files) {
     const failedUploads = []
@@ -276,12 +271,12 @@ const fireDb = {
       }
     }
     return failedUploads
-  },
+  },  
   getSponsors: async () => {
     const websites = await fireDb.getWebsites()
     const sponsors = {}
     for (const website of websites) {
-      const data = await fireDb.get(website, 'Sponsors')
+      const data = await fireDb.get(website, 'Sponsor')
       if (data.length > 0) {
         await Promise.all(
           data.map(async sponsor => {

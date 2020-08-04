@@ -11,8 +11,5 @@ module.exports = {
   },
   plugins: ['react'],
   extends: ['eslint:recommended', 'plugin:react/recommended'],
-  rules: {
-    'react/prop-types': [2, { ignore: ['children'] }]
-  },
   parser: 'babel-eslint'
 }

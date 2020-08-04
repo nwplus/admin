@@ -2,7 +2,7 @@ module.exports = {
   ci: {
     collect: {
       url: ["http://localhost:3000/"],
-      startServerCommand: "yarn dev"
+      startServerCommand: "yarn start"
     },
     assert: {
       preset: "lighthouse:recommended"

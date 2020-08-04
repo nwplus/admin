@@ -5,6 +5,7 @@ import Card, {
   CardContent
 } from "../components/card"
 import Button from "../components/button"
+import Modal, { ModalTitle } from "../components/modal"
 import EditIcon from "../components/icons/edit"
 import EditFAQIcon from "../components/icons/editFAQ"
 import NewIcon from "../components/icons/new"
@@ -14,6 +15,7 @@ import { COLOR } from "../constants"
 import { EDIT, NEW } from "../constants"
 import styled from "styled-components"
 import React from "react"
+import { db } from "../../utility/firebase"
 
 const ViewDetailsButton = styled.div`
   width: 22px;
@@ -81,7 +83,6 @@ const TransparentButton = styled.button`
   cursor: pointer;
 `
 function QuestionRow(props) {
-  console.log(props)
   return (
     <TableRow>
       <TableData>{props.question}</TableData>
@@ -102,69 +103,32 @@ function QuestionRow(props) {
   )
 }
 
+const getFaqs = async () => {
+  return db
+    .collection("FAQ")
+    .get()
+    .then(console.log(querySnapshot))
+}
+
 class FAQ extends React.Component {
-  // Handler for edit modal
   constructor() {
     super()
     this.state = {
       hackathon: "TestHackathon2020",
-      questionsList: [
-        {
-          question: "How can I sign up",
-          answer: "nwplus.io",
-          category: "General",
-          modified: "2019-05-10 03:22:22"
-        },
-        {
-          question: "What is a hackathon",
-          answer: "nwplus.io",
-          category: "General",
-          modified: "2020-05-10 03:22:22"
-        },
-        {
-          question: "blah blah blah",
-          answer: "blah",
-          category: "General",
-          modified: "2019-05-10 03:22:22"
-        },
-        {
-          question: "is nwplus good",
-          answer: "hell yeah",
-          category: "General",
-          modified: "2019-05-10 03:22:22"
-        },
-        {
-          question: "hell yeah",
-          answer: "nwplus.io",
-          category: "General",
-          modified: "2020-05-10 03:22:22"
-        },
-        {
-          question: "blah blah blah",
-          answer: "nwplus.io",
-          category: "General",
-          modified: "2019-05-10 03:22:22"
-        },
-        {
-          question: "is nwplus cool",
-          answer: "nwplus.io",
-          category: "General",
-          modified: "2019-05-10 03:22:22"
-        },
-        {
-          question: "i love nwplus",
-          answer: "ya",
-          category: "General",
-          modified: "2020-05-10 03:22:22"
-        },
-        {
-          question: "blah blah blah",
-          answer: "nwplus.io",
-          category: "General",
-          modified: "2019-05-10 03:22:22"
-        }
-      ]
+      questionsList: [],
+      isModalOpen: false
     }
+  }
+
+  toggleState = (e) => {
+    e.preventDefault()
+    this.setState({ isModalOpen: !this.state.isModalOpen })
+  }
+
+  onEscKeyDown = (e) => {
+    console.log("got here")
+    if (e.key !== "Escape" && !this.state.isModalOpen) return
+    this.setState({ isModalOpen: false })
   }
   editItem = (e) => {
     /* TODO */
@@ -193,7 +157,12 @@ class FAQ extends React.Component {
           <CardHeader>
             <CardTitle>Frequently Asked Questions</CardTitle>
             <CardButtonContainer>
-              <Button type={NEW}>New Question</Button>
+              <Button type={NEW} onClick={this.toggleState}>
+                New Question
+                <div>
+                  Modal is: {this.state.isModalOpen ? "Open" : "Closed"}
+                </div>
+              </Button>
             </CardButtonContainer>
           </CardHeader>
           <CardContent style={{ backgroundColor: COLOR.BACKGROUND }}>
@@ -218,6 +187,11 @@ class FAQ extends React.Component {
             </FAQContent>
           </CardContent>
         </Card>
+        {this.state.isModalOpen && (
+          <Modal show={this.state.isModalOpen}>
+            <ModalTitle>New Item</ModalTitle>
+          </Modal>
+        )}
       </React.Fragment>
     )
   }

@@ -1,6 +1,18 @@
 // import App from 'next/app'
+import firebase from 'firebase/app'
+import 'firebase/analytics'
+
+// Initialize firebase app
+import fireDb from '../utility/firebase'
+
+// Only execute on client side
+if (typeof window !== 'undefined') {
+  // Initialize firebase analytics
+  firebase.analytics();
+}
 
 function MyApp({ Component, pageProps }) {
+  
     return <Component {...pageProps} />
   }
   

@@ -1,10 +1,9 @@
 /* eslint-disable no-console */
-import firebase from 'firebase/app'
-import 'firebase/firestore'
-import 'firebase/auth'
-import 'firebase/storage'
-import 'firebase/analytics'
-import * as Parser from 'json2csv'
+import firebase from "firebase/app"
+import "firebase/firestore"
+import "firebase/auth"
+import "firebase/storage"
+import * as Parser from "json2csv"
 
 if (!firebase.apps.length) {
   const config = {
@@ -12,45 +11,43 @@ if (!firebase.apps.length) {
     authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
     databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
     projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-    measurementId: 'G-SV1NEW90HT',
-    appId: '1:98283589440:web:c15c6169d0098fb15d34a5',
+    measurementId: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
     storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
     messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
   }
   firebase.initializeApp(config)
 }
 
-export const auth = firebase.auth()
-export const analytics = firebase.analytics()
+export const db = firebase.firestore()
 
-const db = firebase.firestore()
 const storage = firebase.storage()
-const webCollection = 'Website_content'
+const webCollection = "Website_content"
 
 const fireDb = {
-  getNumberOfApplicants: callback => {
-    db.collection('hacker_email_2020').onSnapshot(callback)
+  getNumberOfApplicants: (callback) => {
+    db.collection("hacker_email_2020").onSnapshot(callback)
   },
-  getNumberOfAccepted: callback => {
-    db.collection('hacker_info_2020')
-      .where('tags.accepted', '==', true)
+  getNumberOfAccepted: (callback) => {
+    db.collection("hacker_info_2020")
+      .where("tags.accepted", "==", true)
       .onSnapshot(callback)
   },
-  getScored: callback => {
-    db.collection('hacker_info_2020')
-      .where('score.finalScore', '>', -1)
+  getScored: (callback) => {
+    db.collection("hacker_info_2020")
+      .where("score.finalScore", ">", -1)
       .onSnapshot(callback)
   },
-  applicantToCSV: async _ => {
-    const hackerReference = db.collection('hacker_info_2020')
+  applicantToCSV: async (_) => {
+    const hackerReference = db.collection("hacker_info_2020")
     const snapshot = await hackerReference.get()
-    const hackerInfo = snapshot.docs.map(doc => doc.data())
+    const hackerInfo = snapshot.docs.map((doc) => doc.data())
     const parser = new Parser.Parser()
     const csv = parser.parse(hackerInfo)
     return csv
   },
-  isAdmin: async email => {
-    const ref = db.collection('admins')
+  isAdmin: async (email) => {
+    const ref = db.collection("admins")
     const admins = (await ref.get()).docs
     for (const admin of admins) {
       const col = ref.doc(admin.id)
@@ -78,7 +75,7 @@ const fireDb = {
   },
   getWebsites: async () => {
     const ref = db.collection(webCollection)
-    return (await ref.get()).docs.map(doc => doc.id)
+    return (await ref.get()).docs.map((doc) => doc.id)
   },
   getIntroText: async () => {
     const websites = await fireDb.getWebsites()
@@ -93,10 +90,10 @@ const fireDb = {
       introTexts[website] = {
         introText: websiteData.IntroText
           ? websiteData.IntroText.toString()
-          : '',
+          : "",
         introSubtext: websiteData.IntroSubtext
           ? websiteData.IntroSubtext.toString()
-          : '',
+          : "",
         introLastEditedBy: websiteData.IntroLastEditedBy || undefined,
         introLastEditedDate: websiteData.IntroLastEditedDate || undefined,
         introButtonEnabled: websiteData.IntroButtonEnabled,
@@ -114,18 +111,18 @@ const fireDb = {
       const websiteData = await db
         .collection(webCollection)
         .doc(website)
-        .collection('Events')
+        .collection("Events")
         .get()
-      events[website] = await websiteData.docs.map(doc => {
+      events[website] = await websiteData.docs.map((doc) => {
         const data = doc.data()
         return {
           id: doc.id,
           title: data.title,
-          text: data.text || '',
+          text: data.text || "",
           order: data.order,
-          imageLink: data.imageLink || '',
-          eventLink: data.eventLink || '',
-          signupLink: data.signupLink || '',
+          imageLink: data.imageLink || "",
+          eventLink: data.eventLink || "",
+          signupLink: data.signupLink || "",
           eventLastEditedBy: data.eventLastEditedBy || undefined,
           eventLastEditedDate: data.eventLastEditedDate || undefined,
           enabled: data.enabled
@@ -138,15 +135,15 @@ const fireDb = {
     const ref = db
       .collection(webCollection)
       .doc(website)
-      .collection('Events')
+      .collection("Events")
     await ref.add({
-      title: event.title || '',
+      title: event.title || "",
       order: parseInt(event.order) || -1,
-      text: event.text || '',
-      eventLink: event.eventLink || '',
-      learnMoreLink: event.learnMoreLink || '',
-      signupLink: event.signupLink || '',
-      imageLink: event.imageLink || '',
+      text: event.text || "",
+      eventLink: event.eventLink || "",
+      learnMoreLink: event.learnMoreLink || "",
+      signupLink: event.signupLink || "",
+      imageLink: event.imageLink || "",
       enabled: true,
       eventLastEditedBy: event.eventLastEditedBy,
       eventLastEditedDate: event.eventLastEditedDate.toDateString()
@@ -156,16 +153,16 @@ const fireDb = {
     const ref = db
       .collection(webCollection)
       .doc(website)
-      .collection('Events')
+      .collection("Events")
       .doc(event.id)
     await ref.update({
-      title: event.title || '',
+      title: event.title || "",
       order: parseInt(event.order) || -1,
-      text: event.text || '',
-      eventLink: event.eventLink || '',
-      learnMoreLink: event.learnMoreLink || '',
-      signupLink: event.signupLink || '',
-      imageLink: event.imageLink || '',
+      text: event.text || "",
+      eventLink: event.eventLink || "",
+      learnMoreLink: event.learnMoreLink || "",
+      signupLink: event.signupLink || "",
+      imageLink: event.imageLink || "",
       eventLastEditedBy: event.eventLastEditedBy,
       eventLastEditedDate: event.eventLastEditedDate.toDateString()
     })
@@ -174,7 +171,7 @@ const fireDb = {
     const ref = db
       .collection(webCollection)
       .doc(website)
-      .collection('Events')
+      .collection("Events")
       .doc(event.id)
     await ref.update({
       enabled: event.enabled
@@ -198,16 +195,16 @@ const fireDb = {
       IntroLastEditedBy: user,
       IntroLastEditedDate: date,
       IntroButtonEnabled: enabled || false,
-      IntroButtonLink: signupLink || '',
-      SignUpButtonText: signupButtonText || '',
-      SignUpText: signupText || ''
+      IntroButtonLink: signupLink || "",
+      SignUpButtonText: signupButtonText || "",
+      SignUpText: signupText || ""
     })
   },
   addSponsorInformation: async (website, sponsor) => {
     const ref = db
       .collection(webCollection)
       .doc(website)
-      .collection('Sponsors')
+      .collection("Sponsors")
     await ref.add({
       image: sponsor.image,
       name: sponsor.name,
@@ -222,9 +219,9 @@ const fireDb = {
       const sponsors = await db
         .collection(webCollection)
         .doc(website)
-        .collection('Sponsors')
+        .collection("Sponsors")
         .get()
-      sponsors.forEach(async sponsor => {
+      sponsors.forEach(async (sponsor) => {
         if (sponsor.data().image === image) {
           altImage = !!sponsor.data().altImage
           await sponsor.ref.delete()
@@ -281,10 +278,10 @@ const fireDb = {
     const websites = await fireDb.getWebsites()
     const sponsors = {}
     for (const website of websites) {
-      const data = await fireDb.get(website, 'Sponsors')
+      const data = await fireDb.get(website, "Sponsors")
       if (data.length > 0) {
         await Promise.all(
-          data.map(async sponsor => {
+          data.map(async (sponsor) => {
             sponsor.data.imageUrl = await fireDb.getImageUrl(
               website,
               sponsor.data.image
@@ -304,44 +301,7 @@ const fireDb = {
     }
     return sponsors
   },
-  get: async (webDocument, collection) => {
-    if (collection === webDocument) {
-      const ref = db.collection(webCollection).doc(webDocument)
-      const data = await ref.get()
-      return data.data()
-    }
-    const ref = db
-      .collection(webCollection)
-      .doc(webDocument)
-      .collection(collection)
-    return (await ref.get()).docs.map(doc => ({
-      id: doc.id,
-      data: doc.data()
-    }))
-  },
-  update: (webDocument, collection, docId, object) => {
-    db.collection(webCollection)
-      .doc(webDocument)
-      .collection(collection)
-      .doc(docId)
-      .update(object)
-  },
-  add: async (webDocument, collection, object) => {
-    const ref = await db
-      .collection(webCollection)
-      .doc(webDocument)
-      .collection(collection)
-      .add(object)
-    return ref.id
-  },
-  delete: async (webDocument, collection, docId) => {
-    await db
-      .collection(webCollection)
-      .doc(webDocument)
-      .collection(collection)
-      .doc(docId)
-      .delete()
-  },
+
   getTimestamp: () => {
     return firebase.firestore.Timestamp.now()
   },
@@ -350,6 +310,48 @@ const fireDb = {
     const url = await image.getDownloadURL()
     return url
   }
+}
+
+export const getDocument = async (hackathon, collection) => {
+  if (collection === hackathon) {
+    const ref = db.collection(webCollection).doc(hackathon)
+    const data = await ref.get()
+    return data.data()
+  }
+  const ref = db
+    .collection(webCollection)
+    .doc(hackathon)
+    .collection(collection)
+  return (await ref.get()).docs.map((doc) => ({
+    id: doc.id,
+    data: doc.data()
+  }))
+}
+
+export const updateDocument = (hackathon, collection, docId, object) => {
+  db.collection(webCollection)
+    .doc(hackathon)
+    .collection(collection)
+    .doc(docId)
+    .update(object)
+}
+
+export const addDocument = async (hackathon, collection, object) => {
+  const ref = await db
+    .collection(webCollection)
+    .doc(hackathon)
+    .collection(collection)
+    .add(object)
+  return ref.id
+}
+
+export const deleteDocument = async (hackathon, collection, docId) => {
+  await db
+    .collection(webCollection)
+    .doc(hackathon)
+    .collection(collection)
+    .doc(docId)
+    .delete()
 }
 
 export default fireDb

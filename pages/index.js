@@ -20,6 +20,5 @@ export default function Home() {
         <CardContent>Example usage of card component</CardContent>
       </Card>
     </React.Fragment>
-
   )
 }

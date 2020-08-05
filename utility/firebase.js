@@ -11,7 +11,7 @@ if (!firebase.apps.length) {
     authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
     databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
     projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-    measurementId: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+    measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
     appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
     storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
     messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
@@ -25,28 +25,28 @@ const storage = firebase.storage()
 const webCollection = 'Website_content'
 
 const fireDb = {
-  getNumberOfApplicants: callback => {
+  getNumberOfApplicants: (callback) => {
     db.collection('hacker_email_2020').onSnapshot(callback)
   },
-  getNumberOfAccepted: callback => {
+  getNumberOfAccepted: (callback) => {
     db.collection('hacker_info_2020')
       .where('tags.accepted', '==', true)
       .onSnapshot(callback)
   },
-  getScored: callback => {
+  getScored: (callback) => {
     db.collection('hacker_info_2020')
       .where('score.finalScore', '>', -1)
       .onSnapshot(callback)
   },
-  applicantToCSV: async _ => {
+  applicantToCSV: async () => {
     const hackerReference = db.collection('hacker_info_2020')
     const snapshot = await hackerReference.get()
-    const hackerInfo = snapshot.docs.map(doc => doc.data())
+    const hackerInfo = snapshot.docs.map((doc) => doc.data())
     const parser = new Parser.Parser()
     const csv = parser.parse(hackerInfo)
     return csv
   },
-  isAdmin: async email => {
+  isAdmin: async (email) => {
     const ref = db.collection('admins')
     const admins = (await ref.get()).docs
     for (const admin of admins) {
@@ -75,7 +75,7 @@ const fireDb = {
   },
   getWebsites: async () => {
     const ref = db.collection(webCollection)
-    return (await ref.get()).docs.map(doc => doc.id)
+    return (await ref.get()).docs.map((doc) => doc.id)
   },
   getIntroText: async () => {
     const websites = await fireDb.getWebsites()
@@ -113,7 +113,7 @@ const fireDb = {
         .doc(website)
         .collection('Events')
         .get()
-      events[website] = await websiteData.docs.map(doc => {
+      events[website] = await websiteData.docs.map((doc) => {
         const data = doc.data()
         return {
           id: doc.id,
@@ -221,7 +221,7 @@ const fireDb = {
         .doc(website)
         .collection('Sponsors')
         .get()
-      sponsors.forEach(async sponsor => {
+      sponsors.forEach(async (sponsor) => {
         if (sponsor.data().image === image) {
           altImage = !!sponsor.data().altImage
           await sponsor.ref.delete()
@@ -281,7 +281,7 @@ const fireDb = {
       const data = await fireDb.get(website, 'Sponsors')
       if (data.length > 0) {
         await Promise.all(
-          data.map(async sponsor => {
+          data.map(async (sponsor) => {
             sponsor.data.imageUrl = await fireDb.getImageUrl(
               website,
               sponsor.data.image
@@ -322,7 +322,7 @@ export const getDocument = async (hackathon, collection) => {
     .collection(webCollection)
     .doc(hackathon)
     .collection(collection)
-  return (await ref.get()).docs.map(doc => ({
+  return (await ref.get()).docs.map((doc) => ({
     id: doc.id,
     data: doc.data()
   }))

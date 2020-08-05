@@ -126,22 +126,19 @@ export default function Home() {
   }
 
   return (
-    <React.Fragment>
-      <Helmet>
-      <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/hk-grotesk" type="text/css"/>
-      </Helmet>
-      <GlobalStyle/>
-      <Wrapper>
-        <LogInDiv>Log in</LogInDiv>
-        <UserNameDiv>User Name</UserNameDiv>
-        <UserNameInput/>
-        <PasswordDiv>Password</PasswordDiv>
-        <PasswordInput/>
-        <ForgotPasswordDiv>Forgot password?</ForgotPasswordDiv>
-        <ButtonWrapper>
-          <Button onClick={googleSignIn}>Loggggin</Button>
-        </ButtonWrapper>
-      </Wrapper>
-    </React.Fragment>
-  )
+    <>
+      <div>Login Page</div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Hi</CardTitle>
+          <p>Some extra text</p>
+          <CardButtonContainer>
+            <Button type={EDIT}>Hi there</Button>
+          </CardButtonContainer>
+        </CardHeader>
+        <CardContent>Example usage of card component</CardContent>
+      </Card>
+    </>
+  );
 }

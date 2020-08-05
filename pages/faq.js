@@ -5,7 +5,7 @@ import Card, {
   CardContent
 } from '../components/card'
 import Button from '../components/button'
-import Modal, { ModalTitle } from '../components/modal'
+// import Modal, { ModalTitle } from '../components/modal'
 import EditIcon from '../components/icons/edit'
 import NewIcon from '../components/icons/new'
 import ViewIcon from '../components/icons/view'
@@ -17,7 +17,7 @@ import React, { useState, useEffect } from 'react'
 import { fireDb } from '../utility/firebase'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-// import Modal from "react-modal"
+import Modal from 'react-modal'
 
 const ViewDetailsButton = styled.div`
   width: 22px;
@@ -97,10 +97,6 @@ export default function Faq() {
     })
   }
 
-  const onEscKeyDown = (e) => {
-    if (e.key !== 'Escape' && !this.state.isModalOpen) return
-    this.setState({ isModalOpen: false })
-  }
   const editItem = (e) => {
     /* TODO */
   }
@@ -121,6 +117,7 @@ export default function Faq() {
   }
 
   function QuestionRow(props) {
+    const router = useRouter()
     return (
       <TableRow>
         <TableData>{props.question}</TableData>
@@ -130,7 +127,7 @@ export default function Faq() {
           <TransparentButton>
             <Link
               href={{
-                pathname: '/faq/[faqId]',
+                pathname: '/faq/',
                 query: {
                   faqId: props.faqId,
                   question: props.question,
@@ -145,6 +142,18 @@ export default function Faq() {
                 <ViewIcon />
               </a>
             </Link>
+            {/* Converting null/undefined faqId to boolean by `!!`
+            can also control using state*/}
+            <Modal
+              isOpen={!!router.query.faqId}
+              onRequestClose={() => router.push('/faq')}
+            >
+              <div>Question ID: {props.faqId}</div>
+              <div>Question: {props.question}</div>
+              <div>Category: {props.category}</div>
+              <div>Answer: {props.answer}</div>
+              <div>Last modified: {props.lastModified}</div>
+            </Modal>
           </TransparentButton>
           <TransparentButton>
             <EditIcon color={COLOR.BLACK} />

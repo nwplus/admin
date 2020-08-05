@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
-import Modal, { ModalTitle } from '../../components/modal'
+// import Modal, { ModalTitle } from '../../components/modal'
+import Modal from 'react-modal'
 import { fireDb } from '../../utility/firebase'
 
 export default function faqIdPage() {

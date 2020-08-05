@@ -8,13 +8,16 @@ import Button from '../components/button'
 import Modal, { ModalTitle } from '../components/modal'
 import EditIcon from '../components/icons/edit'
 import NewIcon from '../components/icons/new'
-import SearchIcon from '../components/icons/search'
+import ViewIcon from '../components/icons/view'
 import CloseIcon from '../components/icons/close'
 import { COLOR } from '../constants'
 import { EDIT, NEW } from '../constants'
 import styled from 'styled-components'
 import React, { useState, useEffect } from 'react'
 import { fireDb } from '../utility/firebase'
+import { useRouter } from 'next/router'
+import Link from 'next/link'
+// import Modal from "react-modal"
 
 const ViewDetailsButton = styled.div`
   width: 22px;
@@ -82,26 +85,6 @@ const TransparentButton = styled.button`
   padding: 6px;
   cursor: pointer;
 `
-function QuestionRow(props) {
-  return (
-    <TableRow>
-      <TableData>{props.question}</TableData>
-      <TableData>{props.category}</TableData>
-      <TableData>{props.modified}</TableData>
-      <TableData>
-        <TransparentButton>
-          <SearchIcon />
-        </TransparentButton>
-        <TransparentButton>
-          <EditIcon color={COLOR.BLACK} />
-        </TransparentButton>
-        <TransparentButton>
-          <CloseIcon />
-        </TransparentButton>
-      </TableData>
-    </TableRow>
-  )
-}
 
 export default function Faq() {
   const [isModalOpen, setModalOpen] = useState({})
@@ -112,11 +95,6 @@ export default function Faq() {
     fireDb.getFaqs().then((res) => {
       setFaqs(res)
     })
-  }
-
-  const toggleState = (e) => {
-    e.preventDefault()
-    this.setState({ isModalOpen: !this.state.isModalOpen })
   }
 
   const onEscKeyDown = (e) => {
@@ -142,6 +120,43 @@ export default function Faq() {
     /* TODO */
   }
 
+  function QuestionRow(props) {
+    return (
+      <TableRow>
+        <TableData>{props.question}</TableData>
+        <TableData>{props.category}</TableData>
+        <TableData>{props.lastModified}</TableData>
+        <TableData>
+          <TransparentButton>
+            <Link
+              href={{
+                pathname: '/faq/[faqId]',
+                query: {
+                  faqId: props.faqId,
+                  question: props.question,
+                  category: props.category,
+                  answer: props.answer,
+                  lastModified: props.lastModified
+                }
+              }}
+              as={`/faq/${props.faqId}`}
+            >
+              <a>
+                <ViewIcon />
+              </a>
+            </Link>
+          </TransparentButton>
+          <TransparentButton>
+            <EditIcon color={COLOR.BLACK} />
+          </TransparentButton>
+          <TransparentButton>
+            <CloseIcon />
+          </TransparentButton>
+        </TableData>
+      </TableRow>
+    )
+  }
+
   return (
     <React.Fragment>
       <Card>
@@ -164,20 +179,18 @@ export default function Faq() {
             <tbody>
               {Object.keys(faqs).map((id, item) => (
                 <QuestionRow
+                  key={id}
+                  faqId={id}
                   question={faqs[id].question}
                   category={faqs[id].category}
-                  modified={faqs[id].lastModified}
+                  answer={faqs[id].answer}
+                  lastModified={faqs[id].lastModified}
                 />
               ))}
             </tbody>
           </FAQContent>
         </CardContent>
       </Card>
-      {/* {this.state.isModalOpen && (
-          <Modal show={this.state.isModalOpen}>
-            <ModalTitle>New Item</ModalTitle>
-          </Modal>
-        )} */}
     </React.Fragment>
   )
 }

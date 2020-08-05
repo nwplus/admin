@@ -1,5 +1,5 @@
-import React from "react"
-import { COLOR } from "../../constants"
+import React from 'react'
+import { COLOR } from '../../constants'
 
 const CloseIcon = ({ className, color }) => (
   <svg
@@ -11,8 +11,8 @@ const CloseIcon = ({ className, color }) => (
     xmlns='http://www.w3.org/2000/svg'
   >
     <path
-      fill-rule='evenodd'
-      clip-rule='evenodd'
+      fillRule='evenodd'
+      clipRule='evenodd'
       d='M19.3332 2.5335L17.4665 0.66683L9.99984 8.1335L2.53317 0.66683L0.666504 2.5335L8.13317 10.0002L0.666504 17.4668L2.53317 19.3335L9.99984 11.8668L17.4665 19.3335L19.3332 17.4668L11.8665 10.0002L19.3332 2.5335Z'
       fill='#EB5757'
     />

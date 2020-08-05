@@ -76,34 +76,34 @@ export const fireDb = {
     await websiteDataRef.update({ featureFlags: flags })
   },
   getFaqIds: async () => {
-    const faqs = db.collection(faqCollection)
-    return (await faqs.get()).docs.map((doc) => doc.id)
+    return (await db.collection(faqCollection).get()).docs.map((doc) => doc.id)
   },
   getFaqs: async () => {
     const faqIds = await fireDb.getFaqIds()
     const faqs = {}
     for (const faqId of faqIds) {
-      const faqData = (
-        await db
-          .collection(faqCollection)
-          .doc(faqId)
-          .get()
-      ).data()
-      faqs[faqId] = {
-        question: faqData.question
-          ? faqData.question.toString()
-          : 'Empty question field',
-        answer: faqData.answer
-          ? faqData.answer.toString()
-          : 'Empty answer field',
-        category: faqData.category ? faqData.category.toString() : '',
-        lastModified: faqData.lastModified
-          ? fireDb.formatDate(faqData.lastModified.seconds)
-          : fireDb.formatDate(Date.now(), true),
-        hackathonIds: faqData.hackathonIDs ? faqData.hackathonIDs : []
-      }
+      faqs[faqId] = await fireDb.getFaq(faqId)
     }
     return faqs
+  },
+  getFaq: async (faqId) => {
+    const faqData = (
+      await db
+        .collection(faqCollection)
+        .doc(faqId)
+        .get()
+    ).data()
+    return {
+      question: faqData.question
+        ? faqData.question.toString()
+        : 'Empty question field',
+      answer: faqData.answer ? faqData.answer.toString() : 'Empty answer field',
+      category: faqData.category ? faqData.category.toString() : '',
+      lastModified: faqData.lastModified
+        ? fireDb.formatDate(faqData.lastModified.seconds)
+        : fireDb.formatDate(Date.now(), true),
+      hackathonIds: faqData.hackathonIDs ? faqData.hackathonIDs : []
+    }
   },
   formatDate: (date, nullDate = false) => {
     if (nullDate) {

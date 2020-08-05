@@ -90,14 +90,47 @@ export const fireDb = {
           .get()
       ).data()
       faqs[faqId] = {
-        question: faqData.question ? faqData.question.toString() : '',
-        answer: faqData.answer ? faqData.answer.toString() : '',
+        question: faqData.question
+          ? faqData.question.toString()
+          : 'Empty question field',
+        answer: faqData.answer
+          ? faqData.answer.toString()
+          : 'Empty answer field',
         category: faqData.category ? faqData.category.toString() : '',
-        hackathonIds:
-          faqData.hackathonIDs.length > 0 ? faqData.hackathonIDs : []
+        lastModified: faqData.lastModified
+          ? fireDb.formatDate(faqData.lastModified.seconds)
+          : fireDb.formatDate(Date.now(), true),
+        hackathonIds: faqData.hackathonIDs ? faqData.hackathonIDs : []
       }
     }
     return faqs
+  },
+  formatDate: (date, nullDate = false) => {
+    if (nullDate) {
+      date = new Date(date)
+      var d = date.getDate()
+      var m = date.getMonth() + 1
+      var y = date.getFullYear()
+      var h = date.getHours()
+      var m = date.getMinutes()
+      var s = date.getSeconds()
+      return (
+        '' +
+        y +
+        '-' +
+        (m <= 9 ? '0' + m : m) +
+        '-' +
+        (d <= 9 ? '0' + d : d) +
+        ' ' +
+        h +
+        ':' +
+        m +
+        ':' +
+        s
+      )
+    }
+    var newDate = new Date(date * 1000).toISOString()
+    return newDate.substring(0, 10) + ' ' + newDate.substring(11, 19)
   },
   getWebsites: async () => {
     const ref = db.collection(webCollection)

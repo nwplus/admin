@@ -7,7 +7,6 @@ import Card, {
 import Button from '../components/button'
 import Modal, { ModalTitle } from '../components/modal'
 import EditIcon from '../components/icons/edit'
-import EditFAQIcon from '../components/icons/editFAQ'
 import NewIcon from '../components/icons/new'
 import SearchIcon from '../components/icons/search'
 import CloseIcon from '../components/icons/close'
@@ -39,10 +38,10 @@ const FAQContent = styled.table`
 
 const TableRow = styled.tr`
   height: 56px;
-  border-top: 2px solid ${COLOR.GRAY};
 `
 
 const TableHeader = styled.th`
+  text-align: left !important;
   width: 95px;
   height: 12px;
 
@@ -52,31 +51,32 @@ const TableHeader = styled.th`
 
   margin-top: 26px;
   margin-bottom: 18px;
-  margin-left: 28px;
+  padding-left: 28px;
 `
 
 const TableData = styled.td`
-  width: 280px;
+  max-width: 280px;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
   height: 12px;
+  vertical-align: middle;
 
   font-family: Apercu Pro;
   font-size: 16px;
   line-height: 11px;
 
-  margin-left: 28px;
+  padding-left: 28px;
   margin-top: 18px;
   margin-bottom: 18px;
 
+  border-top: 2px solid ${COLOR.GRAY} !important;
   color: #5a5a5a;
 `
 
 const TransparentButton = styled.button`
   width: 48px;
   height: 48px;
-  margin-right: 4px;
   background-color: Transparent;
   border: 0;
   padding: 6px;
@@ -110,17 +110,9 @@ export default function Faq() {
 
   if (Object.keys(faqs).length === 0) {
     fireDb.getFaqs().then((res) => {
-      console.log(res)
       setFaqs(res)
     })
   }
-  useEffect(
-    () => {
-      // render the questions here
-      console.log(faqs)
-    },
-    { faqs }
-  )
 
   const toggleState = (e) => {
     e.preventDefault()
@@ -128,7 +120,6 @@ export default function Faq() {
   }
 
   const onEscKeyDown = (e) => {
-    console.log('got here')
     if (e.key !== 'Escape' && !this.state.isModalOpen) return
     this.setState({ isModalOpen: false })
   }
@@ -152,38 +143,34 @@ export default function Faq() {
   }
 
   return (
-    // const questions = this.state.questionsList
     <React.Fragment>
       <Card>
         <CardHeader>
           <CardTitle>Frequently Asked Questions</CardTitle>
           <CardButtonContainer>
-            {/* <Button type={NEW} onClick={this.toggleState}>
-              New Question
-              <div>Modal is: {this.state.isModalOpen ? 'Open' : 'Closed'}</div>
-            </Button> */}
+            <Button type={NEW}>New Question</Button>
           </CardButtonContainer>
         </CardHeader>
         <CardContent style={{ backgroundColor: COLOR.BACKGROUND }}>
-          {/* <FAQContent>
-              <thead>
-                <TableRow>
-                  <TableHeader>Question</TableHeader>
-                  <TableHeader>Category</TableHeader>
-                  <TableHeader>Last Modified</TableHeader>
-                  <TableHeader>Actions</TableHeader>
-                </TableRow>
-              </thead>
-              <tbody>
-                {questions.map((item, id) => (
-                  <QuestionRow
-                    question={item.question}
-                    category={item.category}
-                    modified={item.modified}
-                  />
-                ))}
-              </tbody>
-            </FAQContent> */}
+          <FAQContent>
+            <thead>
+              <TableRow>
+                <TableHeader>Question</TableHeader>
+                <TableHeader>Category</TableHeader>
+                <TableHeader>Last Modified</TableHeader>
+                <TableHeader>Actions</TableHeader>
+              </TableRow>
+            </thead>
+            <tbody>
+              {Object.keys(faqs).map((id, item) => (
+                <QuestionRow
+                  question={faqs[id].question}
+                  category={faqs[id].category}
+                  modified={faqs[id].lastModified}
+                />
+              ))}
+            </tbody>
+          </FAQContent>
         </CardContent>
       </Card>
       {/* {this.state.isModalOpen && (

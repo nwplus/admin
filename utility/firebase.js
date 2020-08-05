@@ -3,7 +3,6 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
 import 'firebase/storage';
-import * as Parser from 'json2csv';
 
 if (!firebase.apps.length) {
   const config = {
@@ -38,14 +37,14 @@ const fireDb = {
       .where('score.finalScore', '>', -1)
       .onSnapshot(callback);
   },
-  applicantToCSV: async () => {
-    const hackerReference = db.collection('hacker_info_2020');
-    const snapshot = await hackerReference.get();
-    const hackerInfo = snapshot.docs.map(doc => doc.data());
-    const parser = new Parser.Parser();
-    const csv = parser.parse(hackerInfo);
-    return csv;
-  },
+  // applicantToCSV: async () => {
+  //   const hackerReference = db.collection('hacker_info_2020');
+  //   const snapshot = await hackerReference.get();
+  //   const hackerInfo = snapshot.docs.map(doc => doc.data());
+  //   const parser = new Parser.Parser();
+  //   const csv = parser.parse(hackerInfo);
+  //   return csv;
+  // },
   isAdmin: async email => {
     const ref = db.collection('admins');
     const admins = (await ref.get()).docs;

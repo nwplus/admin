@@ -14,7 +14,6 @@
     "cross-env": "^7.0.2",
     "dotenv": "^8.2.0",
     "firebase": "^7.15.1",
-    "json2csv": "^5. 0.1",
     "next": "9.4.4",
     "react": "16.13.1",
     "react-dom": "16.13.1",
@@ -22,7 +21,7 @@
   },
   "devDependencies": {
     "babel-eslint": "^9.0.0",
-    "eslint": "^6.1.0",
+    "eslint": "^7.6.0",
     "eslint-config-airbnb": "^18.0.0",
     "eslint-config-nextjs": "1.0.6",
     "eslint-config-prettier": "^4.1.0",

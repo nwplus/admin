@@ -1,92 +1,91 @@
 /* eslint-disable no-console */
-import firebase from 'firebase/app'
-import 'firebase/firestore'
-import 'firebase/auth'
-import 'firebase/storage'
-import * as Parser from 'json2csv'
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+import 'firebase/auth';
+import 'firebase/storage';
 
 if (!firebase.apps.length) {
   const config = {
-    apiKey: process.env.FIREBASE_API_KEY,
-    authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-    databaseURL: process.env.FIREBASE_DATABASE_URL,
-    projectId: process.env.FIREBASE_PROJECT_ID,
-    measurementId: process.env.FIREBASE_STORAGE_BUCKET,
-    appId: process.env.FIREBASE_APP_ID,
-    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID
-  }
-  firebase.initializeApp(config)
+    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+    databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
+    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+    measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
+    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+  };
+  firebase.initializeApp(config);
 }
 
-export const db = firebase.firestore()
+export const db = firebase.firestore();
 
-const storage = firebase.storage()
-const webCollection = 'Website_content'
+const storage = firebase.storage();
+const webCollection = 'Website_content';
 
 const fireDb = {
   getNumberOfApplicants: callback => {
-    db.collection('hacker_email_2020').onSnapshot(callback)
+    db.collection('hacker_email_2020').onSnapshot(callback);
   },
   getNumberOfAccepted: callback => {
     db.collection('hacker_info_2020')
       .where('tags.accepted', '==', true)
-      .onSnapshot(callback)
+      .onSnapshot(callback);
   },
   getScored: callback => {
     db.collection('hacker_info_2020')
       .where('score.finalScore', '>', -1)
-      .onSnapshot(callback)
+      .onSnapshot(callback);
   },
-  applicantToCSV: async _ => {
-    const hackerReference = db.collection('hacker_info_2020')
-    const snapshot = await hackerReference.get()
-    const hackerInfo = snapshot.docs.map(doc => doc.data())
-    const parser = new Parser.Parser()
-    const csv = parser.parse(hackerInfo)
-    return csv
-  },
+  // applicantToCSV: async () => {
+  //   const hackerReference = db.collection('hacker_info_2020');
+  //   const snapshot = await hackerReference.get();
+  //   const hackerInfo = snapshot.docs.map(doc => doc.data());
+  //   const parser = new Parser.Parser();
+  //   const csv = parser.parse(hackerInfo);
+  //   return csv;
+  // },
   isAdmin: async email => {
-    const ref = db.collection('admins')
-    const admins = (await ref.get()).docs
+    const ref = db.collection('admins');
+    const admins = (await ref.get()).docs;
     for (const admin of admins) {
-      const col = ref.doc(admin.id)
-      const userData = (await col.get()).data()
-      if (userData.email === email) return true
+      const col = ref.doc(admin.id);
+      const userData = (await col.get()).data();
+      if (userData.email === email) return true;
     }
-    return false
+    return false;
   },
   getFlags: async () => {
-    const websites = await fireDb.getWebsites()
-    const featureFlags = {}
+    const websites = await fireDb.getWebsites();
+    const featureFlags = {};
     for (const website of websites) {
       const websiteDataRef = await db
         .collection(webCollection)
         .doc(website)
-        .get()
-      const websiteData = websiteDataRef.data()
-      featureFlags[website] = websiteData.featureFlags
+        .get();
+      const websiteData = websiteDataRef.data();
+      featureFlags[website] = websiteData.featureFlags;
     }
-    return featureFlags
+    return featureFlags;
   },
   updateFlags: async (website, flags) => {
-    const websiteDataRef = db.collection(webCollection).doc(website)
-    await websiteDataRef.update({ featureFlags: flags })
+    const websiteDataRef = db.collection(webCollection).doc(website);
+    await websiteDataRef.update({ featureFlags: flags });
   },
   getWebsites: async () => {
-    const ref = db.collection(webCollection)
-    return (await ref.get()).docs.map(doc => doc.id)
+    const ref = db.collection(webCollection);
+    return (await ref.get()).docs.map(doc => doc.id);
   },
   getIntroText: async () => {
-    const websites = await fireDb.getWebsites()
-    const introTexts = {}
+    const websites = await fireDb.getWebsites();
+    const introTexts = {};
     for (const website of websites) {
       const websiteData = (
         await db
           .collection(webCollection)
           .doc(website)
           .get()
-      ).data()
+      ).data();
       introTexts[website] = {
         introText: websiteData.IntroText
           ? websiteData.IntroText.toString()
@@ -100,21 +99,21 @@ const fireDb = {
         introButtonLink: websiteData.IntroButtonLink,
         introSignUpButtonText: websiteData.SignUpButtonText,
         introSignUpText: websiteData.SignUpText
-      }
+      };
     }
-    return introTexts
+    return introTexts;
   },
   getEvents: async () => {
-    const websites = await fireDb.getWebsites()
-    const events = {}
+    const websites = await fireDb.getWebsites();
+    const events = {};
     for (const website of websites) {
       const websiteData = await db
         .collection(webCollection)
         .doc(website)
         .collection('Events')
-        .get()
+        .get();
       events[website] = await websiteData.docs.map(doc => {
-        const data = doc.data()
+        const data = doc.data();
         return {
           id: doc.id,
           title: data.title,
@@ -126,16 +125,16 @@ const fireDb = {
           eventLastEditedBy: data.eventLastEditedBy || undefined,
           eventLastEditedDate: data.eventLastEditedDate || undefined,
           enabled: data.enabled
-        }
-      })
+        };
+      });
     }
-    return events
+    return events;
   },
   addEvent: async (website, event) => {
     const ref = db
       .collection(webCollection)
       .doc(website)
-      .collection('Events')
+      .collection('Events');
     await ref.add({
       title: event.title || '',
       order: parseInt(event.order) || -1,
@@ -147,14 +146,14 @@ const fireDb = {
       enabled: true,
       eventLastEditedBy: event.eventLastEditedBy,
       eventLastEditedDate: event.eventLastEditedDate.toDateString()
-    })
+    });
   },
   updateEvent: async (website, event) => {
     const ref = db
       .collection(webCollection)
       .doc(website)
       .collection('Events')
-      .doc(event.id)
+      .doc(event.id);
     await ref.update({
       title: event.title || '',
       order: parseInt(event.order) || -1,
@@ -165,17 +164,17 @@ const fireDb = {
       imageLink: event.imageLink || '',
       eventLastEditedBy: event.eventLastEditedBy,
       eventLastEditedDate: event.eventLastEditedDate.toDateString()
-    })
+    });
   },
   updateEventEnabled: async (website, event) => {
     const ref = db
       .collection(webCollection)
       .doc(website)
       .collection('Events')
-      .doc(event.id)
+      .doc(event.id);
     await ref.update({
       enabled: event.enabled
-    })
+    });
   },
   updateIntroText: async (
     website,
@@ -188,7 +187,7 @@ const fireDb = {
     signupButtonText = undefined,
     signupText = undefined
   ) => {
-    const ref = db.collection(webCollection).doc(website)
+    const ref = db.collection(webCollection).doc(website);
     await ref.update({
       IntroText: introText,
       IntroSubtext: introSubtext,
@@ -198,60 +197,60 @@ const fireDb = {
       IntroButtonLink: signupLink || '',
       SignUpButtonText: signupButtonText || '',
       SignUpText: signupText || ''
-    })
+    });
   },
   addSponsorInformation: async (website, sponsor) => {
     const ref = db
       .collection(webCollection)
       .doc(website)
-      .collection('Sponsors')
+      .collection('Sponsors');
     await ref.add({
       image: sponsor.image,
       name: sponsor.name,
       url: sponsor.url,
       rank: sponsor.rank,
       altImage: sponsor.altImage
-    })
+    });
   },
   async deleteSponsor(website, image) {
-    let altImage = false
+    let altImage = false;
     try {
       const sponsors = await db
         .collection(webCollection)
         .doc(website)
         .collection('Sponsors')
-        .get()
+        .get();
       sponsors.forEach(async sponsor => {
         if (sponsor.data().image === image) {
-          altImage = !!sponsor.data().altImage
-          await sponsor.ref.delete()
+          altImage = !!sponsor.data().altImage;
+          await sponsor.ref.delete();
         }
-      })
+      });
     } catch (e) {
-      return false
+      return false;
     }
-    const ref = storage.ref(`${website}/${image}`)
-    await ref.delete()
+    const ref = storage.ref(`${website}/${image}`);
+    await ref.delete();
     if (altImage) {
-      const altRef = storage.ref(`${website}/alt${image}`)
-      await altRef.delete()
+      const altRef = storage.ref(`${website}/alt${image}`);
+      await altRef.delete();
     }
-    return true
+    return true;
   },
   async uploadImages(website, files) {
-    const failedUploads = []
+    const failedUploads = [];
     for (const file of files) {
       try {
-        const ref = storage.ref(`${website}/${file.name}`)
-        await ref.put(file)
+        const ref = storage.ref(`${website}/${file.name}`);
+        await ref.put(file);
         if (file.altImage) {
-          const altRef = storage.ref(`${website}/alt${file.name}`)
-          await altRef.put(file.altImage)
+          const altRef = storage.ref(`${website}/alt${file.name}`);
+          await altRef.put(file.altImage);
         }
       } catch (e) {
-        console.log(e)
-        failedUploads.push(file.name)
-        continue
+        console.log(e);
+        failedUploads.push(file.name);
+        continue;
       }
       try {
         await this.addSponsorInformation(website, {
@@ -260,90 +259,92 @@ const fireDb = {
           url: file.url.trim(),
           rank: file.rank,
           altImage: file.altImage ? `alt${file.name}` : null
-        })
+        });
       } catch (e) {
-        const ref = storage.ref(`${website}/${file.name}`)
-        await ref.delete()
+        const ref = storage.ref(`${website}/${file.name}`);
+        await ref.delete();
         if (file.altImage) {
-          const altRef = storage.ref(`${website}/alt${file.name}`)
-          await altRef.delete()
+          const altRef = storage.ref(`${website}/alt${file.name}`);
+          await altRef.delete();
         }
-        console.log(e)
-        failedUploads.push(file.name)
+        console.log(e);
+        failedUploads.push(file.name);
       }
     }
-    return failedUploads
+    return failedUploads;
   },
   getSponsors: async () => {
-    const websites = await fireDb.getWebsites()
-    const sponsors = {}
+    const websites = await fireDb.getWebsites();
+    const sponsors = {};
     for (const website of websites) {
-      const data = await fireDb.get(website, 'Sponsors')
+      const data = await fireDb.get(website, 'Sponsors');
       if (data.length > 0) {
         await Promise.all(
           data.map(async sponsor => {
-            sponsor.data.imageUrl = await fireDb.getImageUrl(
+            const newSponsor = sponsor;
+            newSponsor.data.imageUrl = await fireDb.getImageUrl(
               website,
               sponsor.data.image
-            )
+            );
             if (sponsor.data.altImage) {
-              sponsor.data.altImageUrl = await fireDb.getImageUrl(
+              newSponsor.data.altImageUrl = await fireDb.getImageUrl(
                 website,
                 sponsor.data.altImage
-              )
+              );
             }
+            return newSponsor;
           })
-        )
-        sponsors[website] = data
+        );
+        sponsors[website] = data;
       } else {
-        sponsors[website] = {}
+        sponsors[website] = {};
       }
     }
-    return sponsors
+    return sponsors;
   },
 
   getTimestamp: () => {
-    return firebase.firestore.Timestamp.now()
+    return firebase.firestore.Timestamp.now();
   },
   getImageUrl: async (WebDocument, imageref) => {
-    const image = storage.ref(`${WebDocument}/${imageref}`)
-    const url = await image.getDownloadURL()
-    return url
+    const image = storage.ref(`${WebDocument}/${imageref}`);
+    const url = await image.getDownloadURL();
+    return url;
   }
-}
+};
 
 export const getDocument = async (hackathon, collection) => {
   if (collection === hackathon) {
-    const ref = db.collection(webCollection).doc(hackathon)
-    const data = await ref.get()
-    return data.data()
+    const ref = db.collection(webCollection).doc(hackathon);
+    const data = await ref.get();
+    return data.data();
   }
   const ref = db
     .collection(webCollection)
     .doc(hackathon)
-    .collection(collection)
+    .collection(collection);
   return (await ref.get()).docs.map(doc => ({
     id: doc.id,
     data: doc.data()
-  }))
-}
+  }));
+};
 
 export const updateDocument = (hackathon, collection, docId, object) => {
   db.collection(webCollection)
     .doc(hackathon)
     .collection(collection)
     .doc(docId)
-    .update(object)
-}
+    .update(object);
+};
 
 export const addDocument = async (hackathon, collection, object) => {
   const ref = await db
     .collection(webCollection)
     .doc(hackathon)
     .collection(collection)
-    .add(object)
-  return ref.id
-}
+    .add(object);
+  return ref.id;
+};
 
 export const deleteDocument = async (hackathon, collection, docId) => {
   await db
@@ -351,7 +352,7 @@ export const deleteDocument = async (hackathon, collection, docId) => {
     .doc(hackathon)
     .collection(collection)
     .doc(docId)
-    .delete()
-}
+    .delete();
+};
 
-export default fireDb
+export default fireDb;

@@ -1,7 +1,7 @@
-//https://dev.to/rsanchezp/next-js-and-styled-components-style-loading-issue-3i68
-
-import Document from "next/document"
-import { ServerStyleSheet } from "styled-components"
+// https://dev.to/rsanchezp/next-js-and-styled-components-style-loading-issue-3i68
+import React from 'react'
+import Document from 'next/document'
+import { ServerStyleSheet } from 'styled-components'
 
 export default class MyDocument extends Document {
   static async getInitialProps(ctx) {

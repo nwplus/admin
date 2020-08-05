@@ -294,44 +294,7 @@ const fireDb = {
     }
     return sponsors
   },
-  get: async (webDocument, collection) => {
-    if (collection === webDocument) {
-      const ref = db.collection(webCollection).doc(webDocument)
-      const data = await ref.get()
-      return data.data()
-    }
-    const ref = db
-      .collection(webCollection)
-      .doc(webDocument)
-      .collection(collection)
-    return (await ref.get()).docs.map(doc => ({
-      id: doc.id,
-      data: doc.data()
-    }))
-  },
-  update: (webDocument, collection, docId, object) => {
-    db.collection(webCollection)
-      .doc(webDocument)
-      .collection(collection)
-      .doc(docId)
-      .update(object)
-  },
-  add: async (webDocument, collection, object) => {
-    const ref = await db
-      .collection(webCollection)
-      .doc(webDocument)
-      .collection(collection)
-      .add(object)
-    return ref.id
-  },
-  delete: async (webDocument, collection, docId) => {
-    await db
-      .collection(webCollection)
-      .doc(webDocument)
-      .collection(collection)
-      .doc(docId)
-      .delete()
-  },
+
   getTimestamp: () => {
     return firebase.firestore.Timestamp.now()
   },
@@ -340,6 +303,48 @@ const fireDb = {
     const url = await image.getDownloadURL()
     return url
   }
+}
+
+export const getDocument = async (hackathon, collection) => {
+  if (collection === hackathon) {
+    const ref = db.collection(webCollection).doc(hackathon)
+    const data = await ref.get()
+    return data.data()
+  }
+  const ref = db
+    .collection(webCollection)
+    .doc(hackathon)
+    .collection(collection)
+  return (await ref.get()).docs.map(doc => ({
+    id: doc.id,
+    data: doc.data()
+  }))
+}
+
+export const updateDocument = (hackathon, collection, docId, object) => {
+  db.collection(webCollection)
+    .doc(hackathon)
+    .collection(collection)
+    .doc(docId)
+    .update(object)
+}
+
+export const addDocument = async (hackathon, collection, object) => {
+  const ref = await db
+    .collection(webCollection)
+    .doc(hackathon)
+    .collection(collection)
+    .add(object)
+  return ref.id
+}
+
+export const deleteDocument = async (hackathon, collection, docId) => {
+  await db
+    .collection(webCollection)
+    .doc(hackathon)
+    .collection(collection)
+    .doc(docId)
+    .delete()
 }
 
 export default fireDb

@@ -1,16 +1,16 @@
-import { COLOR } from '../constants'
-import { useEffect } from 'react'
-import styled from 'styled-components'
+import { useEffect } from 'react';
+import styled from 'styled-components';
+import { COLOR } from '../constants';
 
 const EditingText = styled.textarea`
-    border: 1px solid ${COLOR.EDIT_BORDER};
-    overflow: hidden;
-    background-color: ${COLOR.WHITE};
-    outline: none;
-    padding: 10px 16px 0px 16px;
-    height: 0px;
-    width: 100%;
-`
+  border: 1px solid ${COLOR.EDIT_BORDER};
+  overflow: hidden;
+  background-color: ${COLOR.WHITE};
+  outline: none;
+  padding: 10px 16px 0px 16px;
+  height: 0px;
+  width: 100%;
+`;
 
 export default function TextBox(props) {
     const {defaultValue, resize, otherClassNames} = props

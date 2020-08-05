@@ -3,19 +3,19 @@ import Card, {
   CardTitle,
   CardButtonContainer,
   CardContent
-} from "../components/card"
-import Button from "../components/button"
-import Modal, { ModalTitle } from "../components/modal"
-import EditIcon from "../components/icons/edit"
-import EditFAQIcon from "../components/icons/editFAQ"
-import NewIcon from "../components/icons/new"
-import SearchIcon from "../components/icons/search"
-import CloseIcon from "../components/icons/close"
-import { COLOR } from "../constants"
-import { EDIT, NEW } from "../constants"
-import styled from "styled-components"
-import React from "react"
-import { db } from "../../utility/firebase"
+} from '../components/card'
+import Button from '../components/button'
+import Modal, { ModalTitle } from '../components/modal'
+import EditIcon from '../components/icons/edit'
+import EditFAQIcon from '../components/icons/editFAQ'
+import NewIcon from '../components/icons/new'
+import SearchIcon from '../components/icons/search'
+import CloseIcon from '../components/icons/close'
+import { COLOR } from '../constants'
+import { EDIT, NEW } from '../constants'
+import styled from 'styled-components'
+import React, { useState, useEffect } from 'react'
+import { fireDb } from '../utility/firebase'
 
 const ViewDetailsButton = styled.div`
   width: 22px;
@@ -103,70 +103,69 @@ function QuestionRow(props) {
   )
 }
 
-const getFaqs = async () => {
-  return db
-    .collection("FAQ")
-    .get()
-    .then(console.log(querySnapshot))
-}
+export default function Faq() {
+  const [isModalOpen, setModalOpen] = useState({})
+  const [faqs, setFaqs] = useState({})
+  const [hackathon, setHackathon] = useState({})
 
-class FAQ extends React.Component {
-  constructor() {
-    super()
-    this.state = {
-      hackathon: "TestHackathon2020",
-      questionsList: [],
-      isModalOpen: false
-    }
+  if (Object.keys(faqs).length === 0) {
+    fireDb.getFaqs().then((res) => {
+      console.log(res)
+      setFaqs(res)
+    })
   }
+  useEffect(
+    () => {
+      // render the questions here
+      console.log(faqs)
+    },
+    { faqs }
+  )
 
-  toggleState = (e) => {
+  const toggleState = (e) => {
     e.preventDefault()
     this.setState({ isModalOpen: !this.state.isModalOpen })
   }
 
-  onEscKeyDown = (e) => {
-    console.log("got here")
-    if (e.key !== "Escape" && !this.state.isModalOpen) return
+  const onEscKeyDown = (e) => {
+    console.log('got here')
+    if (e.key !== 'Escape' && !this.state.isModalOpen) return
     this.setState({ isModalOpen: false })
   }
-  editItem = (e) => {
+  const editItem = (e) => {
     /* TODO */
   }
 
   // Handler for saving changes the user made
-  confirmEdit = (e) => {
+  const confirmEdit = (e) => {
     /* TODO */
   }
 
   // view details for a particular question
-  viewDetails = (e) => {
+  const viewDetails = (e) => {
     /* TODO */
   }
 
   // removes an FAQ
-  removeItem = (e) => {
+  const removeItem = (e) => {
     /* TODO */
   }
 
-  render() {
-    const questions = this.state.questionsList
-    return (
-      <React.Fragment>
-        <Card>
-          <CardHeader>
-            <CardTitle>Frequently Asked Questions</CardTitle>
-            <CardButtonContainer>
-              <Button type={NEW} onClick={this.toggleState}>
-                New Question
-                <div>
-                  Modal is: {this.state.isModalOpen ? "Open" : "Closed"}
-                </div>
-              </Button>
-            </CardButtonContainer>
-          </CardHeader>
-          <CardContent style={{ backgroundColor: COLOR.BACKGROUND }}>
-            <FAQContent>
+  return (
+    // const questions = this.state.questionsList
+    <React.Fragment>
+      <Card>
+        <CardHeader>
+          <CardTitle>Frequently Asked Questions</CardTitle>
+          <CardButtonContainer>
+            {/* <Button type={NEW} onClick={this.toggleState}>
+              New Question
+              <div>Modal is: {this.state.isModalOpen ? 'Open' : 'Closed'}</div>
+            </Button> */}
+          </CardButtonContainer>
+        </CardHeader>
+        <CardContent style={{ backgroundColor: COLOR.BACKGROUND }}>
+          {/* <FAQContent>
               <thead>
                 <TableRow>
                   <TableHeader>Question</TableHeader>
@@ -184,17 +183,14 @@ class FAQ extends React.Component {
                   />
                 ))}
               </tbody>
-            </FAQContent>
-          </CardContent>
-        </Card>
-        {this.state.isModalOpen && (
+            </FAQContent> */}
+        </CardContent>
+      </Card>
+      {/* {this.state.isModalOpen && (
           <Modal show={this.state.isModalOpen}>
             <ModalTitle>New Item</ModalTitle>
           </Modal>
-        )}
-      </React.Fragment>
-    )
-  }
+        )} */}
+    </React.Fragment>
+  )
 }
-
-export default FAQ

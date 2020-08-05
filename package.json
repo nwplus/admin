@@ -6,9 +6,11 @@
     "dev": "next dev",
     "build": "next build && next export",
     "start": "next start",
-    "build:prod": "cross-env DEPLOY_ENV=PRODUCTION next build && next export"
+    "build:prod": "cross-env DEPLOY_ENV=PRODUCTION next build && next export",
+    "lint": "eslint .  --ext .js"
   },
   "dependencies": {
+    "dotenv": "^8.2.0",
     "cross-env": "^7.0.2",
     "firebase": "^7.15.1",
     "json2csv": "^5.0.1",
@@ -16,5 +18,10 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "styled-components": "^5.1.1"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.5.0",
+    "eslint-plugin-react": "^7.20.3"
   }
 }

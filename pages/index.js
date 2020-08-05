@@ -2,6 +2,7 @@ import Head from 'next/head'
 import Card, { CardHeader, CardTitle, CardContent, CardButtonContainer } from '../components/card'
 import { EDIT, NEW } from '../constants'
 import Button from '../components/button'
+import fireDb from '../utility/firebase'
 
 export default function Home() {
   return (

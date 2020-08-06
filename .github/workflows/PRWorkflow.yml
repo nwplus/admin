@@ -2,7 +2,7 @@ name: Slack pull request open notification
 
 on:
   pull_request:
-    types: [review_requested, ready_for_review]
+    types: [ready_for_review]
 
 jobs:
   Notify:

@@ -1,12 +1,11 @@
-import firebase from 'firebase'
-import Head from 'next/head'
-import styled from 'styled-components'
-import { useState } from 'react'
-import { COLOR } from '../constants'
-import { Helmet } from 'react-helmet'
-import { GlobalStyle } from '../components/globalStyles'
-import Button from '../components/button'
-import SponsorshipPage from './sponsorship'
+import Card, {
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardButtonContainer
+} from '../components/card';
+import { EDIT } from '../constants';
+import Button from '../components/button';
 
 
 

@@ -7,11 +7,11 @@ const Card = styled.div`
 `;
 
 export const CardHeader = styled.div`
-    background-color: ${COLOR.GRAY};
-    padding: 24px 40px;
-    display: flex;
-    align-items: center;
-`
+  background-color: ${COLOR.GRAY};
+  padding: 24px 40px;
+  display: flex;
+  align-items: center;
+`;
 
 export const CardTitle = styled.h1`
   font-size: 24px;
@@ -27,8 +27,4 @@ export const CardContent = styled.div`
   padding: 40px;
 `;
 
-export default ({ children }) => (
-    <Card>
-        {children}
-    </Card>
-)
+export default ({ children }) => <Card>{children}</Card>;

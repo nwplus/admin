@@ -6,6 +6,7 @@ import Card, {
 } from '../components/card';
 import { EDIT } from '../constants';
 import Button from '../components/button';
+import Intro from './intro';
 
 export default function Home() {
   return (
@@ -22,6 +23,7 @@ export default function Home() {
         </CardHeader>
         <CardContent>Example usage of card component</CardContent>
       </Card>
+      <Intro />
     </>
   );
 }

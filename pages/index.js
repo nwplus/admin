@@ -6,6 +6,8 @@ import Card, {
 } from '../components/card';
 import { EDIT } from '../constants';
 import Button from '../components/button';
+import styled from 'styled-components';
+import { COLOR } from '../constants';
 
 
 

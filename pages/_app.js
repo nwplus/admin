@@ -1,6 +1,7 @@
 // import App from 'next/app'
 import React from 'react';
 import firebase from 'firebase/app';
+import '../utility/firebase';
 import 'firebase/analytics';
 
 // Initialize firebase app

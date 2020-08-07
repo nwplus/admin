@@ -61,6 +61,7 @@ class SponsorshipPage extends React.Component {
         const data = await fireDb.alexgetSponsors(this.props.name);
         this.setState({sponsors: data})
         console.log(this.state.sponsors)
+        
     }
 
     

@@ -1,11 +1,12 @@
 import firebase from 'firebase'
-import Head from 'next/head'
 import styled from 'styled-components'
 import { useState } from 'react'
 import { COLOR } from '../constants'
 import { GlobalStyle } from '../components/globalStyles'
 import Button from '../components/button'
 import fireDb from '../utility/firebase'
+import { useEffect } from 'react'
+import { useRouter } from 'next/router'
 
 
 
@@ -89,43 +90,46 @@ const PasswordInput = styled.input`
 
 
 export default function Home() {
-
-  const googleSignIn = async (e) => {
-    // try {
-    //   await firebase.auth().setPersistence('none')
-    // } catch (err) {
-    //   console.log(err)
-    //   alert(err)
-    // }
+  const router = useRouter()
+  const googleSignIn = async () => {
+    try {
+      await firebase.auth().setPersistence('session')
+    } catch (err) {
+      console.log(err)
+      alert(err)
+    }
     
     const provider = new firebase.auth.GoogleAuthProvider();
     provider.setCustomParameters({
       'hd': 'nwplus.io'
     })
-    await firebase.auth().signInWithPopup(provider).then((result) => {
-      const token = result.credential.accessToken;
-      console.log("Login successful!")
 
+    try {
+      await firebase.auth().signInWithPopup(provider)
       firebase.auth().onAuthStateChanged(user => {
         if (user) {
-          user.providerData.forEach(profile => {
-            console.log(profile.displayName)
-            console.log(profile.email)
+          user.providerData.forEach(async (profile) => {
+            // console.log(profile.email.split('@')[1]=='nwplus.io')
+            if (/@nwplus.io/.test(profile.email)) {
+              router.push('/landing')
+            } else {
+              await user.delete()
+              router.push('/')
+            }
           })
         }
       })
+    } catch (err) {
+      const errorCode = error.code
+      console.log(errorCode)
+      alert(errorCode)
 
-    }).catch((error) => {
-      const errorCode = error.code;
-      console.log(errorCode);
-      alert(errorCode);
-
-      const errorMessage = error.message;
-      console.log(errorMessage);
-      alert(errorMessage);
-    })
+      const errorMessage = error.message
+      console.log(errorMessage)
+      alert(errorMessage)
+    }
   }
-
+    
   return (
     <React.Fragment>
       <GlobalStyle/>

@@ -19,17 +19,17 @@ if (!firebase.apps.length) {
   console.log(config)
 }
 
-const changePersistence = async () => {
-  try {
-    await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
-  } catch (err) {
-    console.log(err)
-  }
+// const changePersistence = async () => {
+//   try {
+//     await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
+//   } catch (err) {
+//     console.log(err)
+//   }
   
-  console.log("changed!")
-}
+//   console.log("changed!!!!!")
+// }
 
-changePersistence();
+// changePersistence();
 
 export const db = firebase.firestore()
 
@@ -37,6 +37,11 @@ const storage = firebase.storage()
 const webCollection = 'Website_content'
 
 const fireDb = {
+  getTest: async () => {
+    const ref = db.collection("Hackathons").doc("HealthX2020")
+    const data = (await ref.get()).data()
+    return data
+  },
   getNumberOfApplicants: callback => {
     db.collection('hacker_email_2020').onSnapshot(callback)
   },

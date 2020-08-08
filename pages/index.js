@@ -8,6 +8,7 @@ import { EDIT } from '../constants';
 import Button from '../components/button';
 import styled from 'styled-components';
 import { COLOR } from '../constants';
+import SponsorshipPage from './sponsorship';
 
 
 
@@ -140,6 +141,11 @@ export default function Home() {
         </CardHeader>
         <CardContent>Example usage of card component</CardContent>
       </Card>
+
+      <SponsorshipPage name='LHD'/>
+
+      
+
     </>
   );
 }

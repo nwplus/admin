@@ -4,6 +4,8 @@ import Button from '../components/button'
 import React, { useState } from 'react'
 import { EDIT, NEW } from '../constants'
 import fireDb, { db } from "../utility/firebase"
+import Modal from '../components/modal'
+import { GlobalStyle } from '../components/globalStyles';
 
 
 // TODO: move font family higher, reduce need to redefine
@@ -67,9 +69,7 @@ class SponsorshipPage extends React.Component {
     
     handleNew = (e) => {
         //TODO: pop-up window 
-        this.setState({
-            showEditWindow: true,
-        })
+        this.setState({ showEditWindow: true })
         
     };
 
@@ -122,13 +122,14 @@ class SponsorshipPage extends React.Component {
                     "umgURL": "",
                     "lastmod": "",
                     "tier": "",
-            }   
+            }, 
+            showEditWindow: false,   
         });   
     }
     
     render() {
         return(
-            <React.Fragment>
+            <>
                 <Card>
                     <CardHeader style={{backgroundColor: "#EDEDED"}}> 
                         <CardTitle> Sponsors: {this.props.name} </CardTitle>
@@ -183,54 +184,58 @@ class SponsorshipPage extends React.Component {
                     </TableDiv>
                     </CardContent>
                 </Card> 
-        
-                <form onSubmit={this.handleSave}>
-                    
-                    <h3> Edit item </h3>
-                    <p>Sponsor Name</p>
-                    <input 
-                      type="text" 
-                      name='name'
-                      value={this.state.newobj.name} 
-                      onChange={this.handleChange}
-                      required
-                    />
-
-                    <p>Link</p>
-                    <input 
-                      type='text' 
-                      name='link' 
-                      value={this.state.newobj.link}
-                      onChange={this.handleChange}
-                      required
-                    />
-                    
-
-                    <p>Image File</p>
-                    <input 
-                      type='text' 
-                      name='imgURL' 
-                      value={this.state.newobj.imgURL}
-                      onChange={this.handleChange}
-                      required
-                    />
-
-                    <label>
-
-                    <p>Tier</p>
-                    <select value={this.state.newobj.tier} onChange={this.handleChange} name="tier">
-                        <option value="inkind">In-kind</option>
-                        <option value="bronze">Bronze</option>
-                        <option value="silver">Silver</option>
-                        <option value="gold">Gold</option>
-                        <option value="platinum">Platinum / Title Sponsor </option>
-                    </select>
-                    </label>
-                   
-                    <button type='submit'> Submit! </button>
                 
-                </form>
-            </React.Fragment>
+                <Modal show={this.state.showEditWindow}>
+                    <form onSubmit={this.handleSave}>
+                        
+                        <h3> Edit item </h3>
+                        <p>Sponsor Name</p>
+                        <input 
+                        type="text" 
+                        name='name'
+                        value={this.state.newobj.name} 
+                        onChange={this.handleChange}
+                        required
+                        />
+
+                        <p>Link</p>
+                        <input 
+                        type='text' 
+                        name='link' 
+                        value={this.state.newobj.link}
+                        onChange={this.handleChange}
+                        required
+                        />
+                        
+
+                        <p>Image File</p>
+                        <input 
+                        type='text' 
+                        name='imgURL' 
+                        value={this.state.newobj.imgURL}
+                        onChange={this.handleChange}
+                        required
+                        />
+
+                        <label>
+
+                        <p>Tier</p>
+                        <select value={this.state.newobj.tier} onChange={this.handleChange} name="tier">
+                            <option value="inkind">In-kind</option>
+                            <option value="bronze">Bronze</option>
+                            <option value="silver">Silver</option>
+                            <option value="gold">Gold</option>
+                            <option value="platinum">Platinum / Title Sponsor </option>
+                        </select>
+                        </label>
+                    
+                        <button type='submit'> Submit! </button>
+                    
+                    </form>
+                </Modal>
+        
+               
+            </>
         )
     }
       

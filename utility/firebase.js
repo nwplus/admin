@@ -206,7 +206,7 @@ const fireDb = {
       .collection('Sponsors')
       .doc(sponsor.name);
     await ref.set({
-      imgURL: sponsor.image,
+      imgURL: sponsor.imgURL,
       name: sponsor.name,
       link: sponsor.link,
       tier: sponsor.tier,

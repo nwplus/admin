@@ -13,12 +13,12 @@ const EditingText = styled.textarea`
 `;
 
 export default function TextBox(props) {
-  const { defaultValue, resize, otherClassNames } = props;
+  const { defaultValue, resize, otherClassNames, onChange } = props;
 
   // sets the heights for all textareas based on their scroll height
   const calculateTextAreaHeight = () => {
     const textareas = document.getElementsByClassName('textarea');
-    Array.prototype.forEach.call(textareas, function(textarea) {
+    Array.prototype.forEach.call(textareas, textarea => {
       textarea.style.height = `${textarea.scrollHeight - 5}px`;
     });
   };
@@ -36,6 +36,7 @@ export default function TextBox(props) {
       style={styleObj}
       className={`textarea ${otherClassNames}`}
       defaultValue={defaultValue}
+      onChange={onChange}
     />
   );
 }

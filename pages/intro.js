@@ -51,31 +51,40 @@ const StyledHeader = styled.p`
 export default function IntroPage() {
   const [isEditingObj, setIsEditingObj] = useState({});
   const [websiteData, setWebsiteData] = useState({});
+  const [editingData, setEditingData] = useState({});
+  const currUserName = 'SOME_HARD_CODED_USER';
   // TODO need functionality to display data based on what event is currently being viewed
 
   // TODO need to substitute the value at .doc(ID) with current website
   const getHackathonData = async () => {
-    await db
+    const doc = await db
       .collection('Hackathons')
       .doc('IntroTestHackathon')
-      .get()
-      .then(doc => {
-        setWebsiteData(doc.data().WebsiteData);
-      });
-  };
+      .get();
+    const data = doc.data().WebsiteData;
+    setWebsiteData(data);
 
-  const initializeIsEditingObj = () => {
-    Object.keys(websiteData).forEach(type => {
-      setIsEditingObj({
+    let editingDataObj = {};
+    let isEditing = {};
+    Object.keys(data).forEach(type => {
+      isEditing = {
         ...isEditingObj,
         [type]: false
-      });
+      };
+      editingDataObj = {
+        ...editingDataObj,
+        [type]: {
+          header: data[type].header,
+          content: data[type].content
+        }
+      };
     });
+    setIsEditingObj(isEditing);
+    setEditingData(editingDataObj);
   };
 
   useEffect(() => {
     getHackathonData();
-    initializeIsEditingObj();
   }, []);
 
   const handleEdit = type => {
@@ -98,12 +107,12 @@ export default function IntroPage() {
    */
   const handleSave = async type => {
     const textareas = document.getElementsByClassName(type);
-    const time = new Date(new Date().getTime());
+    const time = new Date().getTime();
     const updateObj = {
       WebsiteData: {
         ...websiteData,
         [type]: {
-          editor: 'GRAB USER FROM REDUX?',
+          editor: currUserName,
           time,
           title: websiteData[type].title
         }
@@ -123,28 +132,39 @@ export default function IntroPage() {
       }
     });
     // TODO need to substitute the value at .doc(ID) with current website
-    await db
-      .collection('Hackathons')
-      .doc('IntroTestHackathon')
-      .update(updateObj)
-      .then(() => {
-        setWebsiteData({
-          ...websiteData,
-          [type]: {
-            ...websiteData[type],
-            header,
-            content,
-            time
-          }
-        });
-      })
-      .catch(error => {
-        console.error(error);
-        alert('An error occured while trying to update the text section');
+    try {
+      await db
+        .collection('Hackathons')
+        .doc('IntroTestHackathon')
+        .update(updateObj);
+      setWebsiteData({
+        ...websiteData,
+        [type]: {
+          ...websiteData[type],
+          header,
+          content,
+          time,
+          editor: currUserName
+        }
       });
+    } catch (error) {
+      console.error(error);
+      alert('An error occured while trying to update the text section');
+    }
     setIsEditingObj({
       ...isEditingObj,
       [type]: false
+    });
+  };
+
+  const handleEditChange = (event, type, isHeader) => {
+    const newVal = event.target.value;
+    const updatedVal = isHeader
+      ? { header: newVal, content: editingData[type].content }
+      : { header: editingData[type].header, content: newVal };
+    setEditingData({
+      ...editingData,
+      [type]: updatedVal
     });
   };
 
@@ -153,11 +173,22 @@ export default function IntroPage() {
     return (
       <>
         {isEditing ? (
-          <div style={{ padding: '0px 40px 37px 40px' }}>
+          <div key={`div${type}`} style={{ padding: '0px 40px 37px 40px' }}>
             <StyledHeader>Header</StyledHeader>
-            <TextBox otherClassNames={type} defaultValue={header} />
+            <TextBox
+              key={`header${type}`}
+              otherClassNames={type}
+              defaultValue={editingData[type].header}
+              onChange={event => handleEditChange(event, type, true)}
+            />
             <StyledHeader>Body</StyledHeader>
-            <TextBox otherClassNames={type} defaultValue={content} resize />
+            <TextBox
+              key={`textcontent${type}`}
+              otherClassNames={type}
+              defaultValue={editingData[type].content}
+              resize
+              onChange={event => handleEditChange(event, type, false)}
+            />
             <div style={{ marginTop: '27px', display: 'flex', float: 'right' }}>
               <StyledCancel onClick={() => handleCancel(type)}>
                 <p
@@ -187,18 +218,19 @@ export default function IntroPage() {
     <>
       {Object.keys(websiteData).map(type => {
         return (
-          <Card>
-            <CardHeader>
+          <Card key={`card${type}`}>
+            <CardHeader key={`cardheader${type}`}>
               <CardTitle>{websiteData[type].title}</CardTitle>
               <p>{`Last edited by ${websiteData[type].editor} at ${new Date(
-                websiteData[type].time.seconds * 1000
+                websiteData[type].time
               ).toLocaleString()}`}</p>
               <CardButtonContainer>
                 <Button type={EDIT} onClick={() => handleEdit(type)} />
               </CardButtonContainer>
             </CardHeader>
-            <CardContent>
+            <CardContent key={`cardcontent${type}`}>
               <Content
+                key={`content${type}`}
                 type={type}
                 isEditing={isEditingObj[type]}
                 header={websiteData[type].header}

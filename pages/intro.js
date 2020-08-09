@@ -106,31 +106,20 @@ export default function IntroPage() {
    * reads the value of the header/content associated with the given type and updates the object in Firebase
    */
   const handleSave = async type => {
-    const textareas = document.getElementsByClassName(type);
     const time = new Date().getTime();
+    const { header, content } = editingData[type];
     const updateObj = {
       WebsiteData: {
         ...websiteData,
         [type]: {
           editor: currUserName,
-          time,
-          title: websiteData[type].title
+          title: websiteData[type].title,
+          header,
+          content,
+          time
         }
       }
     };
-    let header;
-    let content;
-    Array.prototype.forEach.call(textareas, textarea => {
-      if (textarea.style.resize === 'none') {
-        // if the textarea is the header (not resizable)
-        header = textarea.value;
-        updateObj.WebsiteData[type].header = header;
-      } else {
-        // if text area is content (resizable)
-        content = textarea.value;
-        updateObj.WebsiteData[type].content = content;
-      }
-    });
     // TODO need to substitute the value at .doc(ID) with current website
     try {
       await db
@@ -150,11 +139,12 @@ export default function IntroPage() {
     } catch (error) {
       console.error(error);
       alert('An error occured while trying to update the text section');
+    } finally {
+      setIsEditingObj({
+        ...isEditingObj,
+        [type]: false
+      });
     }
-    setIsEditingObj({
-      ...isEditingObj,
-      [type]: false
-    });
   };
 
   const handleEditChange = (event, type, isHeader) => {

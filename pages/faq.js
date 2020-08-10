@@ -3,45 +3,36 @@ import Card, {
   CardTitle,
   CardButtonContainer,
   CardContent
-} from '../components/card'
-import Button from '../components/button'
-// import Modal, { ModalTitle } from '../components/modal'
-import EditIcon from '../components/icons/edit'
-import NewIcon from '../components/icons/new'
-import ViewIcon from '../components/icons/view'
-import CloseIcon from '../components/icons/close'
-import { COLOR } from '../constants'
-import { EDIT, NEW } from '../constants'
-import styled from 'styled-components'
-import React, { useState, useEffect } from 'react'
-import { fireDb } from '../utility/firebase'
-import { useRouter } from 'next/router'
-import Link from 'next/link'
-import Modal from 'react-modal'
-
-const ViewDetailsButton = styled.div`
-  width: 22px;
-  height: 22px;
-
-  background: ${COLOR.BLACK};
-  mix-blend-mode: normal;
-  transform: matrix(1, 0, 0, -1, 0, 0);
-`
+} from '../components/card';
+import styled from 'styled-components';
+import React, { useState, useEffect } from 'react';
+import { fireDb } from '../utility/firebase';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
+import Button from '../components/button';
+import Modal, {
+  ModalContent,
+  ModalField,
+  Label,
+  InputField
+} from '../components/modal';
+import { COLOR, EDIT, VIEW, NEW, DELETE, FAQ } from '../constants';
 
 const FAQContent = styled.table`
   width: 846px;
   height: 456px;
   left: 465px;
   top: 327px;
+  background-color: ${COLOR.WHITE};
 
   border: 1px solid ${COLOR.BLACK};
   box-sizing: border-box;
   border-radius: 3px;
-`
+`;
 
 const TableRow = styled.tr`
   height: 56px;
-`
+`;
 
 const TableHeader = styled.th`
   text-align: left !important;
@@ -55,7 +46,7 @@ const TableHeader = styled.th`
   margin-top: 26px;
   margin-bottom: 18px;
   padding-left: 28px;
-`
+`;
 
 const TableData = styled.td`
   max-width: 280px;
@@ -75,95 +66,99 @@ const TableData = styled.td`
 
   border-top: 2px solid ${COLOR.GRAY} !important;
   color: #5a5a5a;
-`
+`;
 
-const TransparentButton = styled.button`
+const ActionsButtonContainer = styled.button`
   width: 48px;
   height: 48px;
   background-color: Transparent;
   border: 0;
   padding: 6px;
-  cursor: pointer;
-`
+`;
 
 export default function Faq() {
-  const [isModalOpen, setModalOpen] = useState({})
-  const [faqs, setFaqs] = useState({})
-  const [hackathon, setHackathon] = useState({})
+  const [faqs, setFaqs] = useState({});
+  const [isModalOpen, setModalOpen] = useState(false);
 
   if (Object.keys(faqs).length === 0) {
     fireDb.getFaqs().then((res) => {
-      setFaqs(res)
-    })
+      setFaqs(res);
+    });
   }
 
   const editItem = (e) => {
     /* TODO */
-  }
+  };
 
   // Handler for saving changes the user made
   const confirmEdit = (e) => {
     /* TODO */
-  }
+  };
 
   // view details for a particular question
   const viewDetails = (e) => {
     /* TODO */
-  }
+  };
 
   // removes an FAQ
   const removeItem = (e) => {
     /* TODO */
-  }
+  };
 
   function QuestionRow(props) {
-    const router = useRouter()
+    const router = useRouter();
+    const { faqId, question, category, answer, lastModified } = props;
     return (
       <TableRow>
-        <TableData>{props.question}</TableData>
-        <TableData>{props.category}</TableData>
-        <TableData>{props.lastModified}</TableData>
+        <TableData>{question}</TableData>
+        <TableData>{category}</TableData>
+        <TableData>{lastModified}</TableData>
         <TableData>
-          <TransparentButton>
+          <ActionsButtonContainer>
             <Link
               href={{
-                pathname: '/faq/',
+                pathname: '/faq',
                 query: {
-                  faqId: props.faqId,
-                  question: props.question,
-                  category: props.category,
-                  answer: props.answer,
-                  lastModified: props.lastModified
+                  faqId: faqId,
+                  question: question,
+                  category: category,
+                  answer: answer,
+                  lastModified: lastModified
                 }
               }}
-              as={`/faq/${props.faqId}`}
+              as={`/faq/${faqId}`}
             >
               <a>
-                <ViewIcon />
+                <Button type={VIEW} color={COLOR.TRANSPARENT} />
               </a>
             </Link>
-            {/* Converting null/undefined faqId to boolean by `!!`
-            can also control using state*/}
+            {/* Converting null/undefined faqId to boolean by `!!` */}
             <Modal
               isOpen={!!router.query.faqId}
-              onRequestClose={() => router.push('/faq')}
+              handleClose={() => router.push('/faq')}
+              handleSave={() => router.push('/faq')}
+              modalAction={VIEW}
             >
-              <div>Question ID: {props.faqId}</div>
-              <div>Question: {props.question}</div>
-              <div>Category: {props.category}</div>
-              <div>Answer: {props.answer}</div>
-              <div>Last modified: {props.lastModified}</div>
+              <ModalContent type={FAQ} columns={2}>
+                <ModalField label='Question' value={router.query.question} />
+                <ModalField label='Category' value={router.query.category} />
+              </ModalContent>
+              <ModalContent type={FAQ} columns={1}>
+                <ModalField label='Answer' value={router.query.answer} />
+              </ModalContent>
+              <div>Question ID: {router.query.faqId}</div>
+              <div>Last modified: {router.query.lastModified}</div>
             </Modal>
-          </TransparentButton>
-          <TransparentButton>
-            <EditIcon color={COLOR.BLACK} />
-          </TransparentButton>
-          <TransparentButton>
-            <CloseIcon />
-          </TransparentButton>
+          </ActionsButtonContainer>
+          <ActionsButtonContainer>
+            <Button type={EDIT} color={COLOR.TRANSPARENT} />
+          </ActionsButtonContainer>
+          <ActionsButtonContainer>
+            <Button type={DELETE} color={COLOR.TRANSPARENT} />
+          </ActionsButtonContainer>
         </TableData>
       </TableRow>
-    )
+    );
   }
 
   return (
@@ -175,7 +170,7 @@ export default function Faq() {
             <Button type={NEW}>New Question</Button>
           </CardButtonContainer>
         </CardHeader>
-        <CardContent style={{ backgroundColor: COLOR.BACKGROUND }}>
+        <CardContent style={{ backgroundColor: `${COLOR.BACKGROUND}` }}>
           <FAQContent>
             <thead>
               <TableRow>
@@ -201,5 +196,5 @@ export default function Faq() {
         </CardContent>
       </Card>
     </React.Fragment>
-  )
+  );
 }

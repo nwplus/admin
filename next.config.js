@@ -1,5 +1,5 @@
 module.exports = () => {
-  if (process.env.DEPLOY_ENV !== 'PRODUCTION') return {}
+  if (process.env.DEPLOY_ENV !== 'PRODUCTION') return {};
   return {
     env: {
       NEXT_PUBLIC_FIREBASE_API_KEY: 'AIzaSyDGa7alU0NhfBATSQ6CalkY4Za9wWPrM7o',
@@ -11,5 +11,5 @@ module.exports = () => {
       NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: '306881258768',
       NEXT_PUBLIC_FIREBASE_APP_ID: '1:306881258768:web:bc922148732abee79f7195'
     }
-  }
-}
+  };
+};

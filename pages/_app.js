@@ -4,7 +4,7 @@ import firebase from 'firebase/app';
 import 'firebase/analytics';
 
 // Initialize firebase app
-// import fireDb from '../utility/firebase'
+import fireDb from '../utility/firebase';
 
 // Only execute on client side
 if (typeof window !== 'undefined') {

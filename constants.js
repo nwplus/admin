@@ -1,5 +1,11 @@
-export const EDIT = 'EDIT'
-export const NEW = 'NEW'
+export const EDIT = 'EDIT';
+export const NEW = 'NEW';
+export const VIEW = 'VIEW';
+export const CLOSE = 'CLOSE';
+export const DELETE = 'DELETE';
+export const SAVE = 'SAVE';
+export const FAQ = 'FAQ';
+export const SPONSORSHIP = 'SPONSORSHIP';
 export const COLOR = {
   BACKGROUND: '#F8F8F8',
   WHITE: '#FFFFFF',
@@ -7,5 +13,6 @@ export const COLOR = {
   PRIMARY: '#2D2937',
   BLACK: '#000000',
   RED: '#EB5757',
-  EDIT_BORDER: '#606060'
-}
+  DARK_GRAY: '#606060',
+  TRANSPARENT: 'Transparent'
+};

@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react'
-import { useRouter } from 'next/router'
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 // import Modal, { ModalTitle } from '../../components/modal'
-import Modal from 'react-modal'
-import { fireDb } from '../../utility/firebase'
+import Modal from 'react-modal';
+import { fireDb } from '../../utility/firebase';
 
 export default function faqIdPage() {
-  const router = useRouter()
+  const router = useRouter();
   // access the query element
-  let { faqId, question, category, answer, lastModified } = router.query
+  let { faqId, question, category, answer, lastModified } = router.query;
   const [currFaq, setCurrFaq] = useState({
     question: question,
     category: category,
     answer: answer,
     lastModified: lastModified
-  })
+  });
 
   if (
     question === undefined &&
@@ -23,8 +23,8 @@ export default function faqIdPage() {
     faqId
   ) {
     fireDb.getFaq(faqId).then((res) => {
-      setCurrFaq(res)
-    })
+      setCurrFaq(res);
+    });
   }
   return (
     <>
@@ -36,5 +36,5 @@ export default function faqIdPage() {
       <div>Answer: {currFaq['answer']}</div>
       <div>Last modified: {currFaq['lastModified']}</div>
     </>
-  )
+  );
 }

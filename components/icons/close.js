@@ -1,5 +1,5 @@
-import React from 'react'
-import { COLOR } from '../../constants'
+import React from 'react';
+import { COLOR } from '../../constants';
 
 const CloseIcon = ({ className, color }) => (
   <svg
@@ -17,6 +17,6 @@ const CloseIcon = ({ className, color }) => (
       fill='#EB5757'
     />
   </svg>
-)
+);
 
-export default CloseIcon
+export default CloseIcon;

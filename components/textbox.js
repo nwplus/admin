@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { COLOR } from '../constants';
 
 const EditingText = styled.textarea`
-  border: 1px solid ${COLOR.EDIT_BORDER};
+  border: 1px solid ${COLOR.DARK_GRAY};
   overflow: hidden;
   background-color: ${COLOR.WHITE};
   outline: none;
@@ -16,7 +16,7 @@ export default function TextBox(props) {
   // sets the heights for all textareas based on their scroll height
   const calculateTextAreaHeight = () => {
     const textareas = document.getElementsByClassName('textarea');
-    Array.prototype.forEach.call(textareas, function(textarea) {
+    Array.prototype.forEach.call(textareas, function (textarea) {
       textarea.style.height = `${textarea.scrollHeight - 5}px`;
     });
   };

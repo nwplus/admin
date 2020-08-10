@@ -13,7 +13,7 @@ const EditingText = styled.textarea`
 `;
 
 export default function TextBox(props) {
-  const { defaultValue, resize, otherClassNames, onChange } = props;
+  const { defaultValue, resize, onChange } = props;
 
   // sets the heights for all textareas based on their scroll height
   const calculateTextAreaHeight = () => {
@@ -25,7 +25,7 @@ export default function TextBox(props) {
 
   useEffect(() => {
     calculateTextAreaHeight();
-  });
+  }, []);
 
   const styleObj = {
     resize: resize ? 'vertical' : 'none'
@@ -34,7 +34,7 @@ export default function TextBox(props) {
   return (
     <EditingText
       style={styleObj}
-      className={`textarea ${otherClassNames}`}
+      className="textarea"
       defaultValue={defaultValue}
       onChange={onChange}
     />

@@ -158,74 +158,63 @@ export default function IntroPage() {
     });
   };
 
-  function Content(props) {
-    const { header, content, isEditing, type } = props;
-    return (
-      <>
-        {isEditing ? (
-          <div key={`div${type}`} style={{ padding: '0px 40px 37px 40px' }}>
-            <StyledHeader>Header</StyledHeader>
-            <TextBox
-              key={`header${type}`}
-              otherClassNames={type}
-              defaultValue={editingData[type].header}
-              onChange={event => handleEditChange(event, type, true)}
-            />
-            <StyledHeader>Body</StyledHeader>
-            <TextBox
-              key={`textcontent${type}`}
-              otherClassNames={type}
-              defaultValue={editingData[type].content}
-              resize
-              onChange={event => handleEditChange(event, type, false)}
-            />
-            <div style={{ marginTop: '27px', display: 'flex', float: 'right' }}>
-              <StyledCancel onClick={() => handleCancel(type)}>
-                <p
-                  style={{
-                    borderBottom: `2px solid ${COLOR.BLACK}`,
-                    margin: '0px'
-                  }}
-                >
-                  Cancel
-                </p>
-              </StyledCancel>
-              <Button onClick={() => handleSave(type)}>Save</Button>
-            </div>
-          </div>
-        ) : (
-          <>
-            <HeaderText>{header}</HeaderText>
-            <ContentText>{content}</ContentText>
-          </>
-        )}
-      </>
-    );
-  }
-
   // map over every text section in a hackathon's WebsiteData and adds the section name to isEditingObj state
   return (
     <>
       {Object.keys(websiteData).map(type => {
         return (
           <Card key={`card${type}`}>
-            <CardHeader key={`cardheader${type}`}>
+            <CardHeader>
               <CardTitle>{websiteData[type].title}</CardTitle>
-              <p>{`Last edited by ${websiteData[type].editor} at ${new Date(
-                websiteData[type].time
-              ).toLocaleString()}`}</p>
+              <p>
+                {`Last edited by ${websiteData[type].editor} at ${new Date(
+                  websiteData[type].time
+                ).toLocaleString()}`}
+              </p>
               <CardButtonContainer>
                 <Button type={EDIT} onClick={() => handleEdit(type)} />
               </CardButtonContainer>
             </CardHeader>
-            <CardContent key={`cardcontent${type}`}>
-              <Content
-                key={`content${type}`}
-                type={type}
-                isEditing={isEditingObj[type]}
-                header={websiteData[type].header}
-                content={websiteData[type].content}
-              />
+            <CardContent>
+              {isEditingObj[type] ? (
+                <div style={{ padding: '0px 40px 37px 40px' }}>
+                  <StyledHeader>Header</StyledHeader>
+                  <TextBox
+                    defaultValue={editingData[type].header}
+                    onChange={event => handleEditChange(event, type, true)}
+                  />
+                  <StyledHeader>Body</StyledHeader>
+                  <TextBox
+                    defaultValue={editingData[type].content}
+                    resize
+                    onChange={event => handleEditChange(event, type, false)}
+                  />
+                  <div
+                    style={{
+                      marginTop: '27px',
+                      display: 'flex',
+                      float: 'right'
+                    }}
+                  >
+                    <StyledCancel onClick={() => handleCancel(type)}>
+                      <p
+                        style={{
+                          borderBottom: `2px solid ${COLOR.BLACK}`,
+                          margin: '0px'
+                        }}
+                      >
+                        Cancel
+                      </p>
+                    </StyledCancel>
+                    <Button onClick={() => handleSave(type)}>Save</Button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <HeaderText>{websiteData[type].header}</HeaderText>
+                  <ContentText>{websiteData[type].content}</ContentText>
+                </>
+              )}
             </CardContent>
           </Card>
         );

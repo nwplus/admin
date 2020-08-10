@@ -359,14 +359,14 @@ export const getHackathons = async () => {
   return db.collection('Hackathons').get().then(querySnapshot => {
     const hackathons = []
     querySnapshot.forEach(doc => {
-      paths.push(doc.id)
+      hackathons.push(doc.id)
     })
     return hackathons
   })
 }
 
 export const getHackathonPaths = async () => {
-  const hackathons = await hackathons()
+  const hackathons = await getHackathons()
   const paths = hackathons.map(id => {
     return {
       params: { id }

@@ -1,6 +1,6 @@
 import React from 'react'
 import Page from '../../components/page'
-import { db, getHackathonPaths, getHackathons } from '../../utility/firebase'
+import { getHackathonPaths, getHackathons } from '../../utility/firebase'
 
 export default ({id, hackathons}) => (
   <Page currentPath={id} hackathons={hackathons}>

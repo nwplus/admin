@@ -4,6 +4,7 @@ import { COLOR } from '../constants';
 
 const EditingText = styled.textarea`
   border: 1px solid ${COLOR.DARK_GRAY};
+  border-radius: 2px;
   overflow: hidden;
   background-color: ${COLOR.WHITE};
   outline: none;

@@ -25,7 +25,7 @@ export const db = firebase.firestore();
 
 const storage = firebase.storage();
 const webCollection = 'Website_content';
-const faqCollection = FAQ;
+const faqCollection = FAQ.label;
 
 export const fireDb = {
   getNumberOfApplicants: (callback) => {
@@ -89,10 +89,7 @@ export const fireDb = {
   },
   getFaq: async (faqId) => {
     const faqData = (
-      await db
-        .collection(faqCollection)
-        .doc(faqId)
-        .get()
+      await db.collection(faqCollection).doc(faqId).get()
     ).data();
     return {
       question: faqData.question
@@ -142,10 +139,7 @@ export const fireDb = {
     const introTexts = {};
     for (const website of websites) {
       const websiteData = (
-        await db
-          .collection(webCollection)
-          .doc(website)
-          .get()
+        await db.collection(webCollection).doc(website).get()
       ).data();
       introTexts[website] = {
         introText: websiteData.IntroText
@@ -192,10 +186,7 @@ export const fireDb = {
     return events;
   },
   addEvent: async (website, event) => {
-    const ref = db
-      .collection(webCollection)
-      .doc(website)
-      .collection('Events');
+    const ref = db.collection(webCollection).doc(website).collection('Events');
     await ref.add({
       title: event.title || '',
       order: parseInt(event.order) || -1,

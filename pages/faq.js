@@ -19,11 +19,9 @@ import Modal, {
 import { COLOR, EDIT, VIEW, NEW, DELETE, FAQ } from '../constants';
 
 const FAQContent = styled.table`
-  width: 846px;
-  height: 456px;
-  left: 465px;
-  top: 327px;
   background-color: ${COLOR.WHITE};
+  table-layout: fixed;
+  width: 100%;
 
   border: 1px solid ${COLOR.BLACK};
   box-sizing: border-box;
@@ -65,7 +63,7 @@ const TableData = styled.td`
   margin-bottom: 18px;
 
   border-top: 2px solid ${COLOR.GRAY} !important;
-  color: #5a5a5a;
+  color: ${COLOR.BODY_TEXT};
 `;
 
 const ActionsButtonContainer = styled.button`
@@ -79,6 +77,9 @@ const ActionsButtonContainer = styled.button`
 export default function Faq() {
   const [faqs, setFaqs] = useState({});
   const [isModalOpen, setModalOpen] = useState(false);
+  const [currFaq, setCurrFaq] = useState({});
+  const [isViewing, setIsViewing] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   if (Object.keys(faqs).length === 0) {
     fireDb.getFaqs().then((res) => {
@@ -115,6 +116,40 @@ export default function Faq() {
         <TableData>{lastModified}</TableData>
         <TableData>
           <ActionsButtonContainer>
+            <Button
+              type={VIEW}
+              color={COLOR.TRANSPARENT}
+              onClick={() => setCurrFaq(props)}
+            />
+            <Modal
+              isOpen={Object.keys(currFaq).length > 0}
+              handleClose={() => setCurrFaq({})}
+              handleSave={() => setCurrFaq({})}
+              modalAction={VIEW}
+              lastModified={currFaq.lastModified}
+            >
+              <ModalContent page={FAQ.label} columns={2}>
+                <ModalField
+                  label="Question"
+                  value={currFaq.question}
+                  modalAction={VIEW}
+                />
+                <ModalField
+                  label="Category"
+                  value={currFaq.category}
+                  modalAction={VIEW}
+                />
+              </ModalContent>
+              <ModalContent page={FAQ.label} columns={1}>
+                <ModalField
+                  label="Answer"
+                  value={currFaq.answer}
+                  modalAction={VIEW}
+                />
+              </ModalContent>
+            </Modal>
+          </ActionsButtonContainer>
+          <ActionsButtonContainer>
             <Link
               href={{
                 pathname: '/faq',
@@ -129,7 +164,7 @@ export default function Faq() {
               as={`/faq/${faqId}`}
             >
               <a>
-                <Button type={VIEW} color={COLOR.TRANSPARENT} />
+                <Button type={EDIT} color={COLOR.TRANSPARENT} />
               </a>
             </Link>
             {/* Converting null/undefined faqId to boolean by `!!` */}
@@ -137,21 +172,29 @@ export default function Faq() {
               isOpen={!!router.query.faqId}
               handleClose={() => router.push('/faq')}
               handleSave={() => router.push('/faq')}
-              modalAction={VIEW}
+              modalAction={EDIT}
+              lastModified={router.query.lastModified}
             >
-              <ModalContent type={FAQ} columns={2}>
-                <ModalField label='Question' value={router.query.question} />
-                <ModalField label='Category' value={router.query.category} />
+              <ModalContent page={FAQ.label} columns={2}>
+                <ModalField
+                  label="Question"
+                  value={router.query.question}
+                  modalAction={EDIT}
+                />
+                <ModalField
+                  label="Category"
+                  value={router.query.category}
+                  modalAction={EDIT}
+                />
               </ModalContent>
-              <ModalContent type={FAQ} columns={1}>
-                <ModalField label='Answer' value={router.query.answer} />
+              <ModalContent page={FAQ.label} columns={1}>
+                <ModalField
+                  label="Answer"
+                  value={router.query.answer}
+                  modalAction={EDIT}
+                />
               </ModalContent>
-              <div>Question ID: {router.query.faqId}</div>
-              <div>Last modified: {router.query.lastModified}</div>
             </Modal>
-          </ActionsButtonContainer>
-          <ActionsButtonContainer>
-            <Button type={EDIT} color={COLOR.TRANSPARENT} />
           </ActionsButtonContainer>
           <ActionsButtonContainer>
             <Button type={DELETE} color={COLOR.TRANSPARENT} />

@@ -44,6 +44,8 @@ const Label = styled.label`
 const InputField = styled.input`
   height: 40px;
   border: 1px solid ${COLOR.DARK_GRAY};
+  box-sizing: border-box;
+  border-radius: 2px;
   margin: 0.5rem 0;
   padding: 0 0.5rem;
   width: 95%;
@@ -56,18 +58,33 @@ const TextBoxContainer = styled(TextBox)`
   width: 100%;
 `;
 
-export const ModalField = ({ label, value, type = 'text' }) => {
+const GenericText = styled.p`
+  font-size: 16px;
+  line-height: 20px;
+  color: ${COLOR.BODY_TEXT};
+  word-wrap: break-word;
+  white-space: normal;
+  word-break: break-all !important;
+  width: auto;
+  text-align: left;
+`;
+
+export const ModalField = ({ label, value, type = 'text', modalAction }) => {
   // TODO: add detect dropdown based on label === category?
   return (
     <>
       <div>
         <Label>{label}</Label>
-        {/* {label === "Category && dropdown here"} */}
-        {label === 'Answer' ? (
+        {label === 'Answer' && modalAction === EDIT && (
           <TextBoxContainer defaultValue={value} />
-        ) : (
+        )}
+        {label !== 'Answer' && label !== 'Category' && modalAction !== VIEW && (
           <InputField type={type} defaultValue={value} />
         )}
+        {label === 'Category' && modalAction === EDIT && (
+          <InputField type={type} defaultValue={value} />
+        )}
+        {modalAction === VIEW && <GenericText>{value}</GenericText>}
       </div>
     </>
   );
@@ -85,8 +102,6 @@ const UploadContainer = ({ onClick }) => (
     <UploadButton onClick={onClick} />
   </>
 );
-
-const GenericText = styled.p``;
 
 const ModalBackground = styled.div`
   transform: translateY(0);
@@ -107,26 +122,43 @@ const ModalBackground = styled.div`
   max-height: 100%;
 `;
 
-const ButtonContainer = styled.span`
+const ButtonContainer = styled.div`
   margin: 0;
   float: right;
   display: inline-block;
 `;
 
+const InlineSpan = styled.div`
+  margin-left: 28px;
+  margin-top: 37px;
+  float: right;
+  display: inline;
+`;
+
 export const ModalButton = ({ type, handleClose, handleSave }) => (
   <ButtonContainer>
     {type === CLOSE && (
-      <Button type={CLOSE} color={COLOR.TRANSPARENT} onClick={handleClose} />
+      <Button
+        type={CLOSE}
+        color={COLOR.TRANSPARENT}
+        contentColor={COLOR.DARK_GRAY}
+        onClick={handleClose}
+      />
     )}
     {type !== CLOSE && (
       <>
-        <Button
-          onClick={handleClose}
-          color={'linear-gradient(180deg, #FF4E4E 0%, #FFEBEB 289.71%)'}
-        >
-          Cancel
-        </Button>
-        <Button onClick={handleSave}>Save</Button>
+        <InlineSpan>
+          <Button onClick={handleSave}>Save</Button>
+        </InlineSpan>
+        <InlineSpan>
+          <Button
+            onClick={handleClose}
+            color={'linear-gradient(180deg, #FF4E4E 0%, #FFEBEB 289.71%)'}
+            contentColor={COLOR.WHITE}
+          >
+            Cancel
+          </Button>
+        </InlineSpan>
       </>
     )}
   </ButtonContainer>
@@ -136,12 +168,13 @@ const ContentContainer = styled.div`
   display: grid;
   grid-template-columns: ${(props) => props.columns};
   grid-gap: 32px;
+  width: 95%;
   background-color: ${COLOR.BACKGROUND};
   text-align: left;
 `;
 
-export const ModalContent = ({ type, columns = 2, children }) => {
-  if (type === SPONSORSHIP) {
+export const ModalContent = ({ page, columns = 2, children }) => {
+  if (page === SPONSORSHIP) {
     return (
       <>
         <ContentContainer columns={'40% 60%'}>{children}</ContentContainer>
@@ -150,7 +183,7 @@ export const ModalContent = ({ type, columns = 2, children }) => {
   }
   return (
     <>
-      <ContentContainer columns={columns === 2 ? '60% 40%' : 'auto'}>
+      <ContentContainer columns={columns === 2 ? '60% 40%' : '100%'}>
         {children}
       </ContentContainer>
     </>
@@ -162,6 +195,7 @@ export default function Modal({
   handleClose,
   handleSave,
   modalAction,
+  lastModified,
   children
 }) {
   if (!isOpen) {
@@ -179,14 +213,19 @@ export default function Modal({
       <ModalBackground isOpen={isOpen}>
         <ModalButton type={CLOSE} handleClose={handleClose} />
         <ModalTitle>
-          {modalAction === VIEW ? 'Edit Item' : 'View Details'}
+          {modalAction !== VIEW ? 'Edit Item' : 'View Details'}
         </ModalTitle>
+        {modalAction === VIEW && (
+          <GenericText>Last Modified {lastModified}</GenericText>
+        )}
         {children}
-        <ModalButton
-          type={['Cancel', 'Save']}
-          handleClose={handleClose}
-          handleSave={handleSave}
-        />
+        {modalAction === EDIT && (
+          <ModalButton
+            type={['Cancel', 'Save']}
+            handleClose={handleClose}
+            handleSave={handleSave}
+          />
+        )}
       </ModalBackground>
     </>
   );

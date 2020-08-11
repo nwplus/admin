@@ -54,12 +54,6 @@ export const InputField = styled.input`
   background: ${COLOR.WHITE};
 `;
 
-const TextBoxContainer = styled(TextBox)`
-  display: block;
-  margin-right: 40px !important;
-  width: 100%;
-`;
-
 const GenericText = styled.p`
   font-size: 16px;
   line-height: 20px;
@@ -78,7 +72,7 @@ export const ModalField = ({ label, value, type = 'text', modalAction }) => {
       <div>
         <Label>{label}</Label>
         {label === 'Answer' && modalAction === EDIT && (
-          <TextBoxContainer defaultValue={value} />
+          <TextBox width={'95%'} defaultValue={value} />
         )}
         {label !== 'Answer' && label !== 'Category' && modalAction !== VIEW && (
           <InputField type={type} defaultValue={value} />
@@ -113,6 +107,7 @@ const ImageContainer = styled.div`
   margin-bottom: 0.5rem;
   background: #c4c4c4;
 `;
+
 export const UploadContainer = ({ type, value, onClick }) => (
   <>
     <Inline>
@@ -160,7 +155,7 @@ const ButtonContainer = styled.div`
   display: inline-block;
 `;
 
-const InlineSpan = styled.div`
+const InlineButtonSpan = styled.div`
   margin-left: 28px;
   margin-top: 37px;
   float: right;
@@ -179,10 +174,10 @@ export const ModalButton = ({ type, handleClose, handleSave }) => (
     )}
     {type !== CLOSE && (
       <>
-        <InlineSpan>
+        <InlineButtonSpan>
           <Button onClick={handleSave}>Save</Button>
-        </InlineSpan>
-        <InlineSpan>
+        </InlineButtonSpan>
+        <InlineButtonSpan>
           <Button
             onClick={handleClose}
             color={'linear-gradient(180deg, #FF4E4E 0%, #FFEBEB 289.71%)'}
@@ -190,7 +185,7 @@ export const ModalButton = ({ type, handleClose, handleSave }) => (
           >
             Cancel
           </Button>
-        </InlineSpan>
+        </InlineButtonSpan>
       </>
     )}
   </ButtonContainer>
@@ -199,8 +194,8 @@ export const ModalButton = ({ type, handleClose, handleSave }) => (
 const ContentContainer = styled.div`
   display: grid;
   grid-template-columns: ${(props) => props.columns};
-  grid-gap: 32px;
-  width: 95%;
+  grid-gap: 0.8rem;
+  width: 100%;
   background-color: ${COLOR.BACKGROUND};
   text-align: left;
 `;
@@ -233,11 +228,6 @@ export default function Modal({
   if (!isOpen) {
     return null;
   }
-
-  // let type;
-  // useEffect(() => {
-  //   type = Object.values(data).some(isValidUrl) ? SPONSORSHIP : FAQ;
-  // }, [data]);
 
   return (
     <>

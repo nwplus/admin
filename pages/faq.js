@@ -174,6 +174,26 @@ export default function Faq() {
               modalAction={EDIT}
               lastModified={router.query.lastModified}
             >
+              <ModalContent page={FAQ.label} columns={2}>
+                <ModalField
+                  label="Question"
+                  value={router.query.question}
+                  modalAction={EDIT}
+                />
+                <ModalField
+                  label="Category"
+                  value={router.query.category}
+                  modalAction={EDIT}
+                />
+              </ModalContent>
+              <ModalContent page={FAQ.label} columns={1}>
+                <ModalField
+                  label="Answer"
+                  value={router.query.answer}
+                  modalAction={EDIT}
+                />
+              </ModalContent>
+              {/* COMMENTED OUT SPONSORSHIP EXAMPLE
               <ModalContent page={SPONSORSHIP}>
                 <ModalField
                   label="Sponsor Name"
@@ -191,7 +211,7 @@ export default function Faq() {
                   onClick={() => console.log('hola')}
                   value={router.query.question}
                 />
-              </ModalContent>
+              </ModalContent> */}
             </Modal>
           </ActionsButtonContainer>
           <ActionsButtonContainer>

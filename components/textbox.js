@@ -10,7 +10,7 @@ const EditingText = styled.textarea`
   outline: none;
   padding: 10px 16px 0px 16px;
   height: 0px;
-  width: 100%;
+  width: ${(props) => (props.width ? `${props.width};` : '100%;')};
 `;
 
 export default function TextBox(props) {
@@ -35,6 +35,7 @@ export default function TextBox(props) {
       style={styleObj}
       className="textarea"
       defaultValue={props.defaultValue}
+      width={props.width}
     />
   );
 }

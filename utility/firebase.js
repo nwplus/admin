@@ -3,9 +3,6 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
 import 'firebase/storage';
-import * as Parser from 'json2csv';
-import { async } from 'q';
-import { FAQ } from '../constants';
 
 if (!firebase.apps.length) {
   const config = {
@@ -25,9 +22,8 @@ export const db = firebase.firestore();
 
 const storage = firebase.storage();
 const webCollection = 'Website_content';
-const faqCollection = FAQ.label;
 
-export const fireDb = {
+const fireDb = {
   getNumberOfApplicants: (callback) => {
     db.collection('hacker_email_2020').onSnapshot(callback);
   },
@@ -41,14 +37,14 @@ export const fireDb = {
       .where('score.finalScore', '>', -1)
       .onSnapshot(callback);
   },
-  applicantToCSV: async () => {
-    const hackerReference = db.collection('hacker_info_2020');
-    const snapshot = await hackerReference.get();
-    const hackerInfo = snapshot.docs.map((doc) => doc.data());
-    const parser = new Parser.Parser();
-    const csv = parser.parse(hackerInfo);
-    return csv;
-  },
+  // applicantToCSV: async () => {
+  //   const hackerReference = db.collection('hacker_info_2020');
+  //   const snapshot = await hackerReference.get();
+  //   const hackerInfo = snapshot.docs.map(doc => doc.data());
+  //   const parser = new Parser.Parser();
+  //   const csv = parser.parse(hackerInfo);
+  //   return csv;
+  // },
   isAdmin: async (email) => {
     const ref = db.collection('admins');
     const admins = (await ref.get()).docs;
@@ -75,60 +71,6 @@ export const fireDb = {
   updateFlags: async (website, flags) => {
     const websiteDataRef = db.collection(webCollection).doc(website);
     await websiteDataRef.update({ featureFlags: flags });
-  },
-  getFaqIds: async () => {
-    return (await db.collection(faqCollection).get()).docs.map((doc) => doc.id);
-  },
-  getFaqs: async () => {
-    const faqIds = await fireDb.getFaqIds();
-    const faqs = {};
-    for (const faqId of faqIds) {
-      faqs[faqId] = await fireDb.getFaq(faqId);
-    }
-    return faqs;
-  },
-  getFaq: async (faqId) => {
-    const faqData = (
-      await db.collection(faqCollection).doc(faqId).get()
-    ).data();
-    return {
-      question: faqData.question
-        ? faqData.question.toString()
-        : 'Empty question field',
-      answer: faqData.answer ? faqData.answer.toString() : 'Empty answer field',
-      category: faqData.category ? faqData.category.toString() : '',
-      lastModified: faqData.lastModified
-        ? fireDb.formatDate(faqData.lastModified.seconds)
-        : fireDb.formatDate(Date.now(), true),
-      hackathonIds: faqData.hackathonIDs ? faqData.hackathonIDs : []
-    };
-  },
-  formatDate: (date, nullDate = false) => {
-    if (nullDate) {
-      date = new Date(date);
-      var d = date.getDate();
-      var m = date.getMonth() + 1;
-      var y = date.getFullYear();
-      var h = date.getHours();
-      var m = date.getMinutes();
-      var s = date.getSeconds();
-      return (
-        '' +
-        y +
-        '-' +
-        (m <= 9 ? '0' + m : m) +
-        '-' +
-        (d <= 9 ? '0' + d : d) +
-        ' ' +
-        h +
-        ':' +
-        m +
-        ':' +
-        s
-      );
-    }
-    var newDate = new Date(date * 1000).toISOString();
-    return newDate.substring(0, 10) + ' ' + newDate.substring(11, 19);
   },
   getWebsites: async () => {
     const ref = db.collection(webCollection);
@@ -333,7 +275,8 @@ export const fireDb = {
       if (data.length > 0) {
         await Promise.all(
           data.map(async (sponsor) => {
-            sponsor.data.imageUrl = await fireDb.getImageUrl(
+            const newSponsor = sponsor;
+            newSponsor.data.imageUrl = await fireDb.getImageUrl(
               website,
               sponsor.data.image
             );

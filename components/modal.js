@@ -1,16 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import {
-  COLOR,
-  EDIT,
-  VIEW,
-  NEW,
-  CLOSE,
-  DELETE,
-  SAVE,
-  FAQ,
-  SPONSORSHIP
-} from '../constants';
+import { COLOR, EDIT, VIEW, CLOSE, SPONSORSHIP } from '../constants';
 import TextBox from './textbox';
 import Button from './button';
 
@@ -119,8 +109,6 @@ export const UploadContainer = ({ type, value, onClick }) => (
   </>
 );
 
-const Dropdown = styled.select``;
-
 export const LogoImage = ({ children }) => (
   <>
     <div>
@@ -142,7 +130,6 @@ const ModalBackground = styled.div`
   top: 50%;
   transform: translate(-50%, -50%);
   transition: all 0.3s ease-out;
-  /* TODO: add media queries to make width responsive */
   width: 740px;
   max-width: 100%;
   height: 480px;

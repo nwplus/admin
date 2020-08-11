@@ -8,7 +8,7 @@ import { COLOR, EDIT, VIEW, NEW, CLOSE, DELETE } from '../constants';
 
 const StyledButton = styled.button`
   border: none;
-  ${(props) => props.isText && 'padding: 6px 24px;'}
+  ${(props) => props.isText && 'padding: 6px 24px; height: 40px;'}
   ${(props) =>
     !props.isText && props.contentColor === COLOR.BLACK && 'padding: 10px;'}
   ${(props) =>
@@ -19,7 +19,8 @@ const StyledButton = styled.button`
   display: flex;
   align-items: center;
   font-size: 16px;
-  border-radius: 3px;
+  border-radius: ${(props) => (props.inline ? '0 3px 3px 0' : '3px;')}
+  
 `;
 
 const StyledEditIcon = styled(EditIcon)`
@@ -40,13 +41,15 @@ const Button = ({
   type,
   color,
   contentColor = COLOR.BLACK,
-  onClick
+  onClick,
+  inline = false
 }) => (
   <StyledButton
     isText={children && !type}
     onClick={onClick}
     color={color}
     contentColor={contentColor}
+    inline={inline}
   >
     {type === EDIT && !color && <StyledEditIcon hasText={children} />}
     {type === EDIT && color && <EditIcon color={COLOR.BLACK} />}

@@ -34,21 +34,23 @@ export const ModalTitle = styled.h1`
   color: ${COLOR.BLACK};
 `;
 
-const Label = styled.label`
+export const Label = styled.label`
   display: block;
-  margin-top: 16px;
+  margin: 14px 0;
   font-size: 16px;
   line-height: 20px;
 `;
 
-const InputField = styled.input`
+export const InputField = styled.input`
+  ${(props) =>
+    props.inline
+      ? 'flex-grow: 1; width: 50%; border-radius: 2px 0 0 2px;'
+      : 'width: 95%; border-radius: 2px;'}
   height: 40px;
   border: 1px solid ${COLOR.DARK_GRAY};
   box-sizing: border-box;
-  border-radius: 2px;
-  margin: 0.5rem 0;
+  margin-bottom: 0.5rem;
   padding: 0 0.5rem;
-  width: 95%;
   background: ${COLOR.WHITE};
 `;
 
@@ -90,22 +92,52 @@ export const ModalField = ({ label, value, type = 'text', modalAction }) => {
   );
 };
 
+const UploadButton = styled(Button)`
+  border-radius: !important;
+  flex-grow: 1;
+  width: 50%;
+  padding: 24px 24px !important;
+  padding: 0 0.5rem;
+  margin-bottom: 0.5rem;
+`;
+
+const Inline = styled.div`
+  margin-top: 48px;
+  display: flex;
+  align-items: top;
+`;
+
+const ImageContainer = styled.div`
+  width: 200px;
+  height: 200px;
+  margin-bottom: 0.5rem;
+  background: #c4c4c4;
+`;
+export const UploadContainer = ({ type, value, onClick }) => (
+  <>
+    <Inline>
+      <InputField inline={true} type={type} defaultValue={value} />
+      <UploadButton onClick={onClick} inline={true}>
+        Upload Image
+      </UploadButton>
+    </Inline>
+  </>
+);
+
 const Dropdown = styled.select``;
 
-const LogoImage = styled.div``;
-
-const UploadButton = styled.button``;
-
-const UploadContainer = ({ onClick }) => (
+export const LogoImage = ({ children }) => (
   <>
-    <InputField />
-    <UploadButton onClick={onClick} />
+    <div>
+      <Label>Logo Image File</Label>
+      <ImageContainer>{children}</ImageContainer>
+    </div>
   </>
 );
 
 const ModalBackground = styled.div`
   transform: translateY(0);
-  position: absolute;
+  position: fixed;
   display: block;
   padding: 40px;
   z-index: 500;

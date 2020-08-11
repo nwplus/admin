@@ -13,10 +13,10 @@ import Button from '../components/button';
 import Modal, {
   ModalContent,
   ModalField,
-  Label,
-  InputField
+  UploadContainer,
+  LogoImage
 } from '../components/modal';
-import { COLOR, EDIT, VIEW, NEW, DELETE, FAQ } from '../constants';
+import { COLOR, EDIT, VIEW, NEW, DELETE, FAQ, SPONSORSHIP } from '../constants';
 
 const FAQContent = styled.table`
   background-color: ${COLOR.WHITE};
@@ -174,23 +174,22 @@ export default function Faq() {
               modalAction={EDIT}
               lastModified={router.query.lastModified}
             >
-              <ModalContent page={FAQ.label} columns={2}>
+              <ModalContent page={SPONSORSHIP}>
                 <ModalField
-                  label="Question"
+                  label="Sponsor Name"
                   value={router.query.question}
                   modalAction={EDIT}
                 />
                 <ModalField
-                  label="Category"
+                  label="Link"
                   value={router.query.category}
                   modalAction={EDIT}
                 />
-              </ModalContent>
-              <ModalContent page={FAQ.label} columns={1}>
-                <ModalField
-                  label="Answer"
-                  value={router.query.answer}
-                  modalAction={EDIT}
+                <LogoImage></LogoImage>
+                <UploadContainer
+                  type={'text'}
+                  onClick={() => console.log('hola')}
+                  value={router.query.question}
                 />
               </ModalContent>
             </Modal>

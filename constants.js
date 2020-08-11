@@ -6,7 +6,7 @@ export const DELETE = 'DELETE';
 export const SAVE = 'SAVE';
 export const FAQ = {
   label: 'FAQ',
-  Categories: ['General', 'Teams & Projects', 'Logistics']
+  categories: ['General', 'Teams & Projects', 'Logistics']
 };
 export const SPONSORSHIP = 'SPONSORSHIP';
 export const COLOR = {

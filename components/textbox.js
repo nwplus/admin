@@ -19,13 +19,14 @@ export default function TextBox(props) {
   const calculateTextAreaHeight = () => {
     const textareas = document.getElementsByClassName('textarea');
     Array.prototype.forEach.call(textareas, textarea => {
+      textarea.style.height = 'auto';
       textarea.style.height = `${textarea.scrollHeight - 5}px`;
     });
   };
 
   useEffect(() => {
     calculateTextAreaHeight();
-  }, []);
+  });
 
   const styleObj = {
     resize: resize ? 'vertical' : 'none'

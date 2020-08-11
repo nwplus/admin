@@ -78,7 +78,6 @@ export default function Faq() {
   const [faqs, setFaqs] = useState({});
   const [isModalOpen, setModalOpen] = useState(false);
   const [currFaq, setCurrFaq] = useState({});
-  const [isViewing, setIsViewing] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
   if (Object.keys(faqs).length === 0) {

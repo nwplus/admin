@@ -55,20 +55,26 @@ const GenericText = styled.p`
   text-align: left;
 `;
 
-export const ModalField = ({ label, value, type = 'text', modalAction }) => {
+export const ModalField = ({
+  label,
+  value,
+  type = 'text',
+  onChange,
+  modalAction
+}) => {
   // TODO: add detect dropdown based on label === category?
   return (
     <>
       <div>
         <Label>{label}</Label>
         {label === 'Answer' && modalAction === EDIT && (
-          <TextBox width={'95%'} defaultValue={value} />
+          <TextBox width={'95%'} defaultValue={value} onChange={onChange} />
         )}
         {label !== 'Answer' && label !== 'Category' && modalAction !== VIEW && (
-          <InputField type={type} defaultValue={value} />
+          <InputField type={type} defaultValue={value} onChange={onChange} />
         )}
         {label === 'Category' && modalAction === EDIT && (
-          <InputField type={type} defaultValue={value} />
+          <InputField type={type} defaultValue={value} onChange={onChange} />
         )}
         {modalAction === VIEW && <GenericText>{value}</GenericText>}
       </div>
@@ -98,10 +104,15 @@ const ImageContainer = styled.div`
   background: #c4c4c4;
 `;
 
-export const UploadContainer = ({ type, value, onClick }) => (
+export const UploadContainer = ({ type, value, onClick, onChange }) => (
   <>
     <Inline>
-      <InputField inline={true} type={type} defaultValue={value} />
+      <InputField
+        inline={true}
+        type={type}
+        defaultValue={value}
+        onChange={onChange}
+      />
       <UploadButton onClick={onClick} inline={true}>
         Upload Image
       </UploadButton>

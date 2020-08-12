@@ -7,7 +7,7 @@ import React from 'react';
 // Initialize firebase app
 // import fireDb from '../utility/firebase'
 
-import '../app.css'
+import '../app.css';
 
 // // Only execute on client side
 // if (typeof window !== 'undefined') {

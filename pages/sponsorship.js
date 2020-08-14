@@ -5,7 +5,7 @@ import React, { useState } from 'react'
 import { EDIT, NEW } from '../constants'
 import fireDb, { db } from "../utility/firebase"
 import Modal from '../components/modal'
-import { GlobalStyle } from '../components/globalStyles';
+
 
 
 // TODO: move font family higher, reduce need to redefine
@@ -60,7 +60,7 @@ class SponsorshipPage extends React.Component {
     };
 
     async loadFirebase() {
-        const data = await fireDb.alexgetSponsors(this.props.name);
+        const data = await fireDb.getSponsors(this.props.name);
         this.setState({sponsors: data})
         console.log(this.state.sponsors)
         
@@ -174,8 +174,9 @@ class SponsorshipPage extends React.Component {
                                         {item.lastmod}
                                     </Text>
                                     <Actions>
+
                                         <button onClick={() => this.handleDelete(item.name)}> delete </button>
-                                        <button> view </button>
+                                        <button onClick={()=> this.handleEdit(item.name)}> view </button>
                                         <button onClick={() => this.handleEdit(item.name)}> edit </button>
                                     </Actions>
                                 </CardDiv>

@@ -221,10 +221,10 @@ const fireDb = {
       .doc(sponsorName);
     await ref.delete();
   },
-  alexgetSponsors: async(website) => { 
+  getSponsors: async(website) => { 
     var A = {};
-    const B = await db.collection("Hackathons").doc(website).collection("Sponsors").get();
-    B.docs.forEach(doc => {A[doc.id] = doc.data()})
+    const refs = await db.collection("Hackathons").doc(website).collection("Sponsors").get();
+    refs.docs.forEach(doc => {A[doc.id] = doc.data()})
     return A;
   },
   async uploadImages(website, files) {
@@ -263,36 +263,6 @@ const fireDb = {
     }
     return failedUploads;
   },
-  getSponsors: async () => {
-    const websites = await fireDb.getWebsites();
-    const sponsors = {};
-    for (const website of websites) {
-      const data = await fireDb.get(website, 'Sponsors');
-      if (data.length > 0) {
-        await Promise.all(
-          data.map(async sponsor => {
-            const newSponsor = sponsor;
-            newSponsor.data.imageUrl = await fireDb.getImageUrl(
-              website,
-              sponsor.data.image
-            );
-            if (sponsor.data.altImage) {
-              newSponsor.data.altImageUrl = await fireDb.getImageUrl(
-                website,
-                sponsor.data.altImage
-              );
-            }
-            return newSponsor;
-          })
-        );
-        sponsors[website] = data;
-      } else {
-        sponsors[website] = {};
-      }
-    }
-    return sponsors;
-  },
-
   getTimestamp: () => {
     return firebase.firestore.Timestamp.now();
   },

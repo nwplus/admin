@@ -5,5 +5,6 @@ export const COLOR = {
   WHITE: '#FFFFFF',
   GRAY: '#EDEDED',
   PRIMARY: '#2D2937',
-  EDIT_BORDER: '#606060'
+  EDIT_BORDER: '#606060',
+  DARK_COPY: '#A198A6'
 };

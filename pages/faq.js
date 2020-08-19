@@ -5,7 +5,7 @@ import Card, {
   CardContent
 } from '../components/card';
 import styled from 'styled-components';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { fireDb } from '../utility/firebase';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
@@ -16,7 +16,7 @@ import Modal, {
   UploadContainer,
   LogoImage
 } from '../components/modal';
-import { COLOR, EDIT, VIEW, NEW, DELETE, FAQ, SPONSORSHIP } from '../constants';
+import { COLOR, EDIT, VIEW, NEW, DELETE, FAQ } from '../constants';
 
 const FAQContent = styled.table`
   background-color: ${COLOR.WHITE};
@@ -75,10 +75,11 @@ const ActionsButtonContainer = styled.button`
 `;
 
 export default function Faq() {
-  const [faqs, setFaqs] = useState({});
-  const [isModalOpen, setModalOpen] = useState(false);
+  const [faqs, setFaqs] = useState([]);
   const [currFaq, setCurrFaq] = useState({});
-  const [isEditing, setIsEditing] = useState(false);
+  const [faqEditing, setFaqEditing] = useState({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const inputTimeout = useRef(null);
 
   if (Object.keys(faqs).length === 0) {
     fireDb.getFaqs().then((res) => {
@@ -86,28 +87,78 @@ export default function Faq() {
     });
   }
 
-  const editItem = (e) => {
-    /* TODO */
+  const handleAdd = (faq) => {
+    console.log(faq);
+    // TODO: add call to confirmation modal here before we add the data
+    fireDb.addFaq(faq);
+    faq.lastModified = fireDb.formatDate(Date.now(), true);
+    setFaqs({
+      ...faqs,
+      [faq.faqId]: {
+        ...faqEditing
+      }
+    });
+    handleClose();
   };
 
-  // Handler for saving changes the user made
-  const confirmEdit = (e) => {
-    /* TODO */
+  const handleInput = (property, value, faq) => {
+    if (inputTimeout.current) {
+      if (inputTimeout.current[property] !== null)
+        clearTimeout(inputTimeout.current[property]);
+    } else {
+      inputTimeout.current = {};
+      inputTimeout.current[property] = null;
+    }
+
+    inputTimeout.current[property] = setTimeout(() => {
+      inputTimeout.current[property] = null;
+      setFaqEditing({
+        ...faq,
+        [property]: value
+      });
+    }, 1000);
   };
 
-  // view details for a particular question
-  const viewDetails = (e) => {
-    /* TODO */
+  const handleDelete = (faqId) => {
+    console.log(faqId);
+    fireDb.deleteFaq(faqId);
+    // setFaqs(
+    //   Object.keys(faqs)
+    //     .filter((id) => {
+    //       id != faqId;
+    //     })
+    //     .reduce((obj, id) => {
+    //       obj[id] = faqs[id];
+    //       return obj;
+    //     }, {})
+    // );
+    // console.log(faqs);
+    handleClose();
   };
 
-  // removes an FAQ
-  const removeItem = (e) => {
-    /* TODO */
+  const handleClose = () => {
+    setFaqEditing({});
+    setCurrFaq({});
+    setIsModalOpen(false);
   };
 
   function QuestionRow(props) {
     const router = useRouter();
     const { faqId, question, category, answer, lastModified } = props;
+
+    const handleSave = () => {
+      fireDb.updateFaq(faqEditing);
+      setFaqs({
+        ...faqs,
+        [faqId]: {
+          ...faqEditing
+        }
+      });
+      props = { ...faqEditing };
+      router.push('/faq');
+      handleClose();
+    };
+
     return (
       <TableRow>
         <TableData>{question}</TableData>
@@ -122,8 +173,8 @@ export default function Faq() {
             />
             <Modal
               isOpen={Object.keys(currFaq).length > 0}
-              handleClose={() => setCurrFaq({})}
-              handleSave={() => setCurrFaq({})}
+              handleClose={() => handleClose({})}
+              handleSave={() => handleClose({})}
               modalAction={VIEW}
               lastModified={currFaq.lastModified}
             >
@@ -163,64 +214,68 @@ export default function Faq() {
               as={`/faq/${faqId}`}
             >
               <a>
-                <Button type={EDIT} color={COLOR.TRANSPARENT} />
+                <Button
+                  type={EDIT}
+                  color={COLOR.TRANSPARENT}
+                  onClick={() => setFaqEditing(props)}
+                />
               </a>
             </Link>
             {/* Converting null/undefined faqId to boolean by `!!` */}
             <Modal
               isOpen={!!router.query.faqId}
               handleClose={() => router.push('/faq')}
-              handleSave={() => router.push('/faq')}
+              handleSave={() => handleSave()}
               modalAction={EDIT}
-              lastModified={router.query.lastModified}
+              // lastModified={router.query.lastModified}
+              lastModified={faqEditing.lastModified}
             >
               <ModalContent page={FAQ.label} columns={2}>
                 <ModalField
                   label="Question"
-                  value={router.query.question}
+                  // value={router.query.question}
+                  value={faqEditing.question}
                   modalAction={EDIT}
+                  onChange={(event) =>
+                    handleInput('question', event.target.value, faqEditing)
+                  }
                 />
                 <ModalField
                   label="Category"
-                  value={router.query.category}
+                  // value={router.query.category}
+                  value={faqEditing.category}
                   modalAction={EDIT}
+                  onChange={(event) =>
+                    handleInput('category', event.target.value, faqEditing)
+                  }
                 />
               </ModalContent>
               <ModalContent page={FAQ.label} columns={1}>
                 <ModalField
                   label="Answer"
-                  value={router.query.answer}
+                  // value={router.query.answer}
+                  value={faqEditing.answer}
                   modalAction={EDIT}
+                  onChange={(event) =>
+                    handleInput('answer', event.target.value, faqEditing)
+                  }
                 />
               </ModalContent>
-              {/* COMMENTED OUT SPONSORSHIP EXAMPLE
-              <ModalContent page={SPONSORSHIP}>
-                <ModalField
-                  label="Sponsor Name"
-                  value={router.query.question}
-                  modalAction={EDIT}
-                />
-                <ModalField
-                  label="Link"
-                  value={router.query.category}
-                  modalAction={EDIT}
-                />
-                <LogoImage></LogoImage>
-                <UploadContainer
-                  type={'text'}
-                  onClick={() => console.log('hola')}
-                  value={router.query.question}
-                />
-              </ModalContent> */}
             </Modal>
           </ActionsButtonContainer>
           <ActionsButtonContainer>
-            <Button type={DELETE} color={COLOR.TRANSPARENT} />
+            {/* TODO: Need to add confirmation modal before deleting */}
+            <Button
+              type={DELETE}
+              color={COLOR.TRANSPARENT}
+              onClick={() => handleDelete(props.faqId)}
+            />
           </ActionsButtonContainer>
         </TableData>
       </TableRow>
     );
   }
+  console.log(faqs);
 
   return (
     <React.Fragment>
@@ -228,7 +283,43 @@ export default function Faq() {
         <CardHeader>
           <CardTitle>Frequently Asked Questions</CardTitle>
           <CardButtonContainer>
-            <Button type={NEW}>New Question</Button>
+            <Button type={NEW} onClick={() => setIsModalOpen(true)}>
+              New Question
+            </Button>
+            <Modal
+              isOpen={isModalOpen}
+              // TODO: add function confirming if user would like to exit away
+              handleClose={() => setIsModalOpen(false)}
+              handleSave={() => handleAdd(faqEditing)}
+              modalAction={NEW}
+            >
+              <ModalContent page={FAQ.label} columns={2}>
+                <ModalField
+                  label="Question"
+                  modalAction={NEW}
+                  onChange={(event) =>
+                    handleInput('question', event.target.value, faqEditing)
+                  }
+                />
+                <ModalField
+                  label="Category"
+                  // TODO: need to add dropdown here for category options
+                  modalAction={NEW}
+                  onChange={(event) =>
+                    handleInput('category', event.target.value, faqEditing)
+                  }
+                />
+              </ModalContent>
+              <ModalContent page={FAQ.label} columns={1}>
+                <ModalField
+                  label="Answer"
+                  modalAction={NEW}
+                  onChange={(event) =>
+                    handleInput('answer', event.target.value, faqEditing)
+                  }
+                />
+              </ModalContent>
+            </Modal>
           </CardButtonContainer>
         </CardHeader>
         <CardContent style={{ backgroundColor: `${COLOR.BACKGROUND}` }}>

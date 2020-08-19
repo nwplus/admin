@@ -104,8 +104,16 @@ export const fireDb = {
     };
   },
   formatDate: (date, nullDate = false) => {
+    if (!nullDate) {
+      try {
+        var newDate = new Date(date * 1000).toISOString();
+      } catch (err) {
+        nullDate = true;
+        date = newDate;
+      }
+    }
+
     if (nullDate) {
-      date = new Date(date);
       var d = date.getDate();
       var m = date.getMonth() + 1;
       var y = date.getFullYear();
@@ -126,9 +134,33 @@ export const fireDb = {
         ':' +
         s
       );
+    } else {
+      return newDate.substring(0, 10) + ' ' + newDate.substring(11, 19);
     }
-    var newDate = new Date(date * 1000).toISOString();
-    return newDate.substring(0, 10) + ' ' + newDate.substring(11, 19);
+  },
+  addFaq: async (faq) => {
+    const ref = db.collection(faqCollection).doc();
+    const currDate = fireDb.getTimestamp();
+    await ref.set({
+      question: faq.question,
+      category: faq.category,
+      answer: faq.answer,
+      lastModified: currDate
+    });
+  },
+  updateFaq: async (faq) => {
+    const ref = db.collection(faqCollection).doc(faq.faqId);
+    const currDate = fireDb.getTimestamp();
+    // todo: need to add enum support for category, and add null check (before this update stage) to prevent empty data from being inserted
+    await ref.update({
+      question: faq.question || 'Empty Question Field',
+      category: faq.category || 'None',
+      answer: faq.answer || 'Empty Answer',
+      lastModified: currDate
+    });
+  },
+  deleteFaq: async (faqId) => {
+    await db.collection(faqCollection).doc(faqId).delete();
   },
   getWebsites: async () => {
     const ref = db.collection(webCollection);

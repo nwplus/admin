@@ -7,5 +7,6 @@ export const COLOR = {
   PRIMARY: '#2D2937',
   TEXT: '#5A5A5A',
   EDIT_BORDER: '#606060',
-  BLACK: '#000000'
+  BLACK: '#000000',
+  DARK_COPY: '#A198A6'
 };

@@ -91,9 +91,44 @@ const PasswordInput = styled.input`
 
 export default function Home() {
   const router = useRouter()
-  const { pushToLanding, user, googleSignIn } = useAuth()
+  const { user } = useAuth()
 
-  if (pushToLanding) router.push('/landing')
+  // const currUser = firebase.auth().currentUser
+  // console.log(user.email)
+  // console.log("push to landing")
+  // console.log("pushed to landing")
+  // router.push('/landing')
+
+  const googleSignIn = async () => {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    provider.setCustomParameters({
+      'hd': 'nwplus.io'
+    })
+
+    try {
+      await firebase.auth().signInWithPopup(provider)
+      const user = firebase.auth().currentUser
+      if (user && /.+@nwplus\.io$/.test(user.email)) {
+        router.push('/landing')
+        const token = await user.getIdTokenResult();
+        console.log(token.claims)
+        if (!token.claims.hasOwnProperty('admin')) {
+          setTimeout(async () => {
+            await firebase.auth().currentUser.getIdToken(true)
+            const token2 = await user.getIdTokenResult();
+            console.log(token2.claims)
+          }, 2000)
+        }
+      } else {
+        console.log("smh")
+        await firebase.auth().signOut()
+        console.log("get out of here")
+      }
+    } catch (error) {
+      console.log(error.message)
+      alert(error.message)
+    }
+}
     
   return (
     <>

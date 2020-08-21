@@ -6,15 +6,15 @@ const AuthContext = createContext({});
 
 const Auth = ({ children }) => {
     const [user, setUser] = useState(null)
-    const [isAuthenticated, setIsAuthenticated] = useState(false)
-    const [pushToLanding, setPushToLanding] = useState(false)
+    // const [isAuthenticated, setIsAuthenticated] = useState(false)
+    // const [pushToLanding, setPushToLanding] = useState(false)
     const router = useRouter()
 
     useEffect(() => {
-        firebase.auth().onAuthStateChanged(user => {
+        const unsubscribe = firebase.auth().onAuthStateChanged(user => {
             if (user) {
                 setUser(user)
-                setIsAuthenticated(true)
+                // setIsAuthenticated(true)
                 console.log(user)
             } else {
                 console.log("pushing...")
@@ -22,46 +22,36 @@ const Auth = ({ children }) => {
                 console.log("pushed")
             }
         })
+
+        return () => unsubscribe()
     }, [])
 
-    useEffect(() => {
-        const checkEmail = async () => {
-            if (isAuthenticated) {
-                console.log(/.+@nwplus\.io$/.test(user.email))
-                if (/.+@nwplus\.io$/.test(user.email)) {
-                    setPushToLanding(true)
-                    setTimeout(async () => {
-                        await firebase.auth().currentUser.getIdToken(true)
-                        }, 2000)
-                    console.log("refreshed")
-                  } else {
-                    console.log("smh")
-                    router.push('/')
-                    await firebase.auth().signOut()
-                    console.log("get out of here")
-                  }
-            }
-        }
+    // useEffect(() => {
+    //     const checkEmail = async () => {
+    //         if (isAuthenticated) {
+    //             console.log(/.+@nwplus\.io$/.test(user.email))
+    //             if (/.+@nwplus\.io$/.test(user.email)) {
+    //                 setPushToLanding(true)
+    //                 setTimeout(async () => {
+    //                     await firebase.auth().currentUser.getIdToken(true)
+    //                     }, 2000)
+    //                 console.log("refreshed")
+    //               } else {
+    //                 console.log("smh")
+    //                 router.push('/')
+    //                 await firebase.auth().signOut()
+    //                 console.log("get out of here")
+    //               }
+    //         }
+    //     }
         
-        checkEmail()
-    }, [isAuthenticated])
+    //     checkEmail()
+    // }, [isAuthenticated])
 
-    const googleSignIn = async () => {
-        const provider = new firebase.auth.GoogleAuthProvider();
-        provider.setCustomParameters({
-          'hd': 'nwplus.io'
-        })
     
-        try {
-          await firebase.auth().signInWithPopup(provider)
-        } catch (error) {
-          console.log(error.message)
-          alert(error.message)
-        }
-    }
 
     return (
-        <AuthContext.Provider value={{ pushToLanding, user, googleSignIn }}>
+        <AuthContext.Provider value={{ user }}>
             {children}
         </AuthContext.Provider>
     )

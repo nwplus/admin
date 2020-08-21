@@ -99,44 +99,13 @@ export const fireDb = {
       category: faqData.category ? faqData.category.toString() : '',
       lastModified: faqData.lastModified
         ? fireDb.formatDate(faqData.lastModified.seconds)
-        : fireDb.formatDate(Date.now(), true),
+        : fireDb.formatDate(fireDb.getTimestamp().seconds),
       hackathonIds: faqData.hackathonIDs ? faqData.hackathonIDs : []
     };
   },
-  formatDate: (date, nullDate = false) => {
-    if (!nullDate) {
-      try {
-        var newDate = new Date(date * 1000).toISOString();
-      } catch (err) {
-        nullDate = true;
-        date = newDate;
-      }
-    }
-
-    if (nullDate) {
-      var d = date.getDate();
-      var m = date.getMonth() + 1;
-      var y = date.getFullYear();
-      var h = date.getHours();
-      var m = date.getMinutes();
-      var s = date.getSeconds();
-      return (
-        '' +
-        y +
-        '-' +
-        (m <= 9 ? '0' + m : m) +
-        '-' +
-        (d <= 9 ? '0' + d : d) +
-        ' ' +
-        h +
-        ':' +
-        m +
-        ':' +
-        s
-      );
-    } else {
-      return newDate.substring(0, 10) + ' ' + newDate.substring(11, 19);
-    }
+  formatDate: (date) => {
+    date = new Date(date * 1000).toISOString();
+    return date.substring(0, 10) + ' ' + date.substring(11, 19);
   },
   addFaq: async (faq) => {
     const ref = db.collection(faqCollection).doc();

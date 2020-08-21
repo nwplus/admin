@@ -88,10 +88,9 @@ export default function Faq() {
   }
 
   const handleAdd = (faq) => {
-    console.log(faq);
     // TODO: add call to confirmation modal here before we add the data
     fireDb.addFaq(faq);
-    faq.lastModified = fireDb.formatDate(Date.now(), true);
+    faq.lastModified = fireDb.formatDate(fireDb.getTimestamp().seconds);
     setFaqs({
       ...faqs,
       [faq.faqId]: {
@@ -120,7 +119,6 @@ export default function Faq() {
   };
 
   const handleDelete = (faqId) => {
-    console.log(faqId);
     fireDb.deleteFaq(faqId);
     // setFaqs(
     //   Object.keys(faqs)
@@ -148,6 +146,9 @@ export default function Faq() {
 
     const handleSave = () => {
       fireDb.updateFaq(faqEditing);
+      faqEditing.lastModified = fireDb.formatDate(
+        fireDb.getTimestamp().seconds
+      );
       setFaqs({
         ...faqs,
         [faqId]: {
@@ -275,7 +276,6 @@ export default function Faq() {
       </TableRow>
     );
   }
-  console.log(faqs);
 
   return (
     <React.Fragment>

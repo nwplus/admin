@@ -1,3 +1,7 @@
+import React, { useState, useEffect, useRef } from 'react'
+import { useRouter } from 'next/router'
+import Auth from '../utility/auth'
+
 // import App from 'next/app'
 import firebase from 'firebase/app'
 import 'firebase/analytics'
@@ -12,8 +16,11 @@ if (typeof window !== 'undefined') {
 }
 
 function MyApp({ Component, pageProps }) {
-  
-    return <Component {...pageProps} />
+    return (
+      <Auth>
+        <Component {...pageProps} />
+      </Auth>
+    )
   }
   
   // Only uncomment this method if you have blocking data requirements for

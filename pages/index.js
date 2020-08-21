@@ -2,11 +2,11 @@ import firebase from 'firebase'
 import styled from 'styled-components'
 import { useState } from 'react'
 import { COLOR } from '../constants'
-import { GlobalStyle } from '../components/globalStyles'
 import Button from '../components/button'
 import fireDb from '../utility/firebase'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
+import { useAuth } from '../utility/auth'
 
 
 
@@ -91,48 +91,10 @@ const PasswordInput = styled.input`
 
 export default function Home() {
   const router = useRouter()
-  const googleSignIn = async () => {
-    try {
-      await firebase.auth().setPersistence('session')
-    } catch (err) {
-      console.log(err)
-      alert(err)
-    }
-    
-    const provider = new firebase.auth.GoogleAuthProvider();
-    provider.setCustomParameters({
-      'hd': 'nwplus.io'
-    })
-
-    try {
-      await firebase.auth().signInWithPopup(provider)
-      firebase.auth().onAuthStateChanged(user => {
-        if (user) {
-          user.providerData.forEach(async (profile) => {
-            // console.log(profile.email.split('@')[1]=='nwplus.io')
-            if (/@nwplus.io/.test(profile.email)) {
-              router.push('/landing')
-            } else {
-              await user.delete()
-              router.push('/')
-            }
-          })
-        }
-      })
-    } catch (err) {
-      const errorCode = error.code
-      console.log(errorCode)
-      alert(errorCode)
-
-      const errorMessage = error.message
-      console.log(errorMessage)
-      alert(errorMessage)
-    }
-  }
+  const { isAuthenticated, user, googleSignIn } = useAuth()
     
   return (
     <React.Fragment>
-      <GlobalStyle/>
       <Wrapper>
         <LogInDiv>Log in</LogInDiv>
         <UserNameDiv>User Name</UserNameDiv>

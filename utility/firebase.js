@@ -38,7 +38,7 @@ const webCollection = 'Website_content'
 
 const fireDb = {
   getTest: async () => {
-    const ref = db.collection("Hackathons").doc("HealthX2020")
+    const ref = db.collection("Hackathons").doc("HealthX")
     const data = (await ref.get()).data()
     return data
   },

@@ -2,7 +2,6 @@ import Head from 'next/head'
 import Card, { CardHeader, CardTitle, CardContent, CardButtonContainer } from '../components/card'
 import { EDIT, NEW } from '../constants'
 import Button from '../components/button'
-import { GlobalStyle } from '../components/globalStyles'
 import fireDb from '../utility/firebase'
 
 export default () => {
@@ -11,7 +10,6 @@ export default () => {
   }
   return (
     <React.Fragment>
-      <GlobalStyle/>
       <div>Login Page</div>
 
       <Card>

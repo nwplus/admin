@@ -67,13 +67,17 @@ export const ModalField = ({
     <>
       <div>
         <Label>{label}</Label>
-        {label === 'Answer' && modalAction === EDIT && (
+        {label === 'Answer' && modalAction !== VIEW && (
           <TextBox width={'95%'} defaultValue={value} onChange={onChange} />
         )}
         {label !== 'Answer' && label !== 'Category' && modalAction !== VIEW && (
           <InputField type={type} defaultValue={value} onChange={onChange} />
         )}
+<<<<<<< HEAD
         {label === 'Category' && modalAction === EDIT && (
+=======
+        {label === 'Category' && modalAction !== VIEW && (
+>>>>>>> faq
           <InputField type={type} defaultValue={value} onChange={onChange} />
         )}
         {modalAction === VIEW && <GenericText>{value}</GenericText>}
@@ -160,34 +164,42 @@ const InlineButtonSpan = styled.div`
   display: inline;
 `;
 
-export const ModalButton = ({ type, handleClose, handleSave }) => (
-  <ButtonContainer>
-    {type === CLOSE && (
-      <Button
-        type={CLOSE}
-        color={COLOR.TRANSPARENT}
-        contentColor={COLOR.DARK_GRAY}
-        onClick={handleClose}
-      />
-    )}
-    {type !== CLOSE && (
-      <>
-        <InlineButtonSpan>
-          <Button onClick={handleSave}>Save</Button>
-        </InlineButtonSpan>
-        <InlineButtonSpan>
+export const ModalButton = ({ type, handleClose, handleSave }) => {
+  let buttonText;
+  if (type !== CLOSE && type != VIEW) {
+    buttonText = type === NEW ? 'Add New' : 'Save';
+  }
+  return (
+    <>
+      <ButtonContainer>
+        {type === CLOSE && (
           <Button
+            type={CLOSE}
+            color={COLOR.TRANSPARENT}
+            contentColor={COLOR.DARK_GRAY}
             onClick={handleClose}
-            color={'linear-gradient(180deg, #FF4E4E 0%, #FFEBEB 289.71%)'}
-            contentColor={COLOR.WHITE}
-          >
-            Cancel
-          </Button>
-        </InlineButtonSpan>
-      </>
-    )}
-  </ButtonContainer>
-);
+          />
+        )}
+        {type !== CLOSE && type !== VIEW && (
+          <>
+            <InlineButtonSpan>
+              <Button onClick={handleSave}>{buttonText}</Button>
+            </InlineButtonSpan>
+            <InlineButtonSpan>
+              <Button
+                onClick={handleClose}
+                color={'linear-gradient(180deg, #FF4E4E 0%, #FFEBEB 289.71%)'}
+                contentColor={COLOR.WHITE}
+              >
+                Cancel
+              </Button>
+            </InlineButtonSpan>
+          </>
+        )}
+      </ButtonContainer>
+    </>
+  );
+};
 
 const ContentContainer = styled.div`
   display: grid;
@@ -227,25 +239,42 @@ export default function Modal({
     return null;
   }
 
+  const getTitle = (action) => {
+    switch (action) {
+      case VIEW:
+        return (
+          <>
+            <ModalTitle>{'View Details'}</ModalTitle>
+            <GenericText>Last Modified {lastModified}</GenericText>
+          </>
+        );
+      case EDIT:
+        return (
+          <>
+            <ModalTitle>{'Edit Item'}</ModalTitle>
+          </>
+        );
+      case NEW:
+        return (
+          <>
+            <ModalTitle>{'New Item'}</ModalTitle>
+          </>
+        );
+    }
+  };
+
   return (
     <>
       <BackDropScreen />
       <ModalBackground isOpen={isOpen}>
         <ModalButton type={CLOSE} handleClose={handleClose} />
-        <ModalTitle>
-          {modalAction !== VIEW ? 'Edit Item' : 'View Details'}
-        </ModalTitle>
-        {modalAction === VIEW && (
-          <GenericText>Last Modified {lastModified}</GenericText>
-        )}
+        {getTitle(modalAction)}
         {children}
-        {modalAction === EDIT && (
-          <ModalButton
-            type={['Cancel', 'Save']}
-            handleClose={handleClose}
-            handleSave={handleSave}
-          />
-        )}
+        <ModalButton
+          type={modalAction}
+          handleClose={handleClose}
+          handleSave={handleSave}
+        />
       </ModalBackground>
     </>
   );

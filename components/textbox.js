@@ -36,6 +36,7 @@ export default function TextBox(props) {
       className="textarea"
       defaultValue={props.defaultValue}
       width={props.width}
+      onChange={props.onChange}
     />
   );
 }

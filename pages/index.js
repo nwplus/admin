@@ -91,10 +91,12 @@ const PasswordInput = styled.input`
 
 export default function Home() {
   const router = useRouter()
-  const { isAuthenticated, user, googleSignIn } = useAuth()
+  const { pushToLanding, user, googleSignIn } = useAuth()
+
+  if (pushToLanding) router.push('/landing')
     
   return (
-    <React.Fragment>
+    <>
       <Wrapper>
         <LogInDiv>Log in</LogInDiv>
         <UserNameDiv>User Name</UserNameDiv>
@@ -106,6 +108,6 @@ export default function Home() {
           <Button onClick={googleSignIn}>Loggggggin</Button>
         </ButtonWrapper>
       </Wrapper>
-    </React.Fragment>
+    </>
   )
 }

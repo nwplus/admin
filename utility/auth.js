@@ -6,12 +6,15 @@ const AuthContext = createContext({});
 
 const Auth = ({ children }) => {
     const [user, setUser] = useState(null)
+    const [isAuthenticated, setIsAuthenticated] = useState(false)
+    const [pushToLanding, setPushToLanding] = useState(false)
     const router = useRouter()
 
     useEffect(() => {
         firebase.auth().onAuthStateChanged(user => {
             if (user) {
                 setUser(user)
+                setIsAuthenticated(true)
                 console.log(user)
             } else {
                 console.log("pushing...")
@@ -21,6 +24,28 @@ const Auth = ({ children }) => {
         })
     }, [])
 
+    useEffect(() => {
+        const checkEmail = async () => {
+            if (isAuthenticated) {
+                console.log(/.+@nwplus\.io$/.test(user.email))
+                if (/.+@nwplus\.io$/.test(user.email)) {
+                    setPushToLanding(true)
+                    setTimeout(async () => {
+                        await firebase.auth().currentUser.getIdToken(true)
+                        }, 2000)
+                    console.log("refreshed")
+                  } else {
+                    console.log("smh")
+                    router.push('/')
+                    await firebase.auth().signOut()
+                    console.log("get out of here")
+                  }
+            }
+        }
+        
+        checkEmail()
+    }, [isAuthenticated])
+
     const googleSignIn = async () => {
         const provider = new firebase.auth.GoogleAuthProvider();
         provider.setCustomParameters({
@@ -29,19 +54,6 @@ const Auth = ({ children }) => {
     
         try {
           await firebase.auth().signInWithPopup(provider)
-          if (user && /.+@nwplus\.io$/.test(user.email)) {
-            //   router.push('/landing')
-            
-              setTimeout(async () => {
-                await firebase.auth().currentUser.getIdToken(true)
-              }, 2000)
-              console.log("refreshed")
-          } else {
-              console.log("smh")
-              router.push('/')
-              await firebase.auth().signOut()
-              console.log("get out of here")
-          }
         } catch (error) {
           console.log(error.message)
           alert(error.message)
@@ -49,7 +61,7 @@ const Auth = ({ children }) => {
     }
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated: !!user, user, googleSignIn }}>
+        <AuthContext.Provider value={{ pushToLanding, user, googleSignIn }}>
             {children}
         </AuthContext.Provider>
     )

@@ -7,13 +7,14 @@ const AuthContext = createContext({});
 const Auth = ({ children }) => {
     const [user, setUser] = useState(null)
     // const [isAuthenticated, setIsAuthenticated] = useState(false)
-    // const [pushToLanding, setPushToLanding] = useState(false)
+    const [pushToLanding, setPushToLanding] = useState(false)
     const router = useRouter()
 
     useEffect(() => {
         const unsubscribe = firebase.auth().onAuthStateChanged(user => {
-            if (user) {
+            if (user && /.+@nwplus\.io$/.test(user.email)) {
                 setUser(user)
+                setPushToLanding(true)
                 // setIsAuthenticated(true)
                 console.log(user)
             } else {
@@ -51,7 +52,7 @@ const Auth = ({ children }) => {
     
 
     return (
-        <AuthContext.Provider value={{ user }}>
+        <AuthContext.Provider value={{ user, pushToLanding }}>
             {children}
         </AuthContext.Provider>
     )

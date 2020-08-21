@@ -91,13 +91,14 @@ const PasswordInput = styled.input`
 
 export default function Home() {
   const router = useRouter()
-  const { user } = useAuth()
+  const { user, pushToLanding } = useAuth()
 
   // const currUser = firebase.auth().currentUser
   // console.log(user.email)
   // console.log("push to landing")
   // console.log("pushed to landing")
   // router.push('/landing')
+  if (pushToLanding) router.push('/landing')
 
   const googleSignIn = async () => {
     const provider = new firebase.auth.GoogleAuthProvider();

@@ -9,7 +9,7 @@ import Card, {
 import { COLOR, EDIT } from '../constants';
 import Button from '../components/button';
 import TextBox from '../components/textbox';
-import { db } from '../utility/firebase';
+import { updateHackathonField, getHackathon } from '../utility/firebase';
 
 const HeaderText = styled.p`
   border: none;
@@ -57,10 +57,7 @@ export default function IntroPage() {
 
   // TODO need to substitute the value at .doc(ID) with current website
   const getHackathonData = async () => {
-    const doc = await db
-      .collection('Hackathons')
-      .doc('IntroTestHackathon')
-      .get();
+    const doc = await getHackathon('IntroTestHackathon');
     const data = doc.data().WebsiteData;
     setWebsiteData(data);
 
@@ -122,10 +119,7 @@ export default function IntroPage() {
     };
     // TODO need to substitute the value at .doc(ID) with current website
     try {
-      await db
-        .collection('Hackathons')
-        .doc('IntroTestHackathon')
-        .update(updateObj);
+      await updateHackathonField('IntroTestHackathon', updateObj);
       setWebsiteData({
         ...websiteData,
         [type]: {

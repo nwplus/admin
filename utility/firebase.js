@@ -38,6 +38,7 @@ export const db = firebase.firestore();
 
 const storage = firebase.storage();
 const webCollection = 'Website_content';
+const Hackathons = 'Hackathons';
 
 const fireDb = {
   getNumberOfApplicants: callback => {
@@ -395,6 +396,19 @@ export const getHackathonPaths = async () => {
     paths,
     fallback: false
   };
+};
+
+export const updateHackathonField = async (hackathonId, updateObj) => {
+  db.collection(Hackathons)
+    .doc(hackathonId)
+    .update(updateObj);
+};
+
+export const getHackathon = async hackathonId => {
+  return db
+    .collection(Hackathons)
+    .doc(hackathonId)
+    .get();
 };
 
 export default fireDb;

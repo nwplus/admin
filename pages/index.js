@@ -2,10 +2,10 @@ import Card, {
   CardHeader,
   CardTitle,
   CardContent,
-  CardButtonContainer,
-} from '../components/card';
-import { EDIT } from '../constants';
-import Button from '../components/button';
+  CardButtonContainer
+} from '../components/card'
+import { EDIT, NEW } from '../constants'
+import Button from '../components/button'
 
 export default function Home() {
   return (
@@ -23,5 +23,5 @@ export default function Home() {
         <CardContent>Example usage of card component</CardContent>
       </Card>
     </>
-  );
+  )
 }

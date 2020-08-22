@@ -1,13 +1,13 @@
 module.exports = {
   settings: {
     react: {
-      version: 'detect',
-    },
+      version: 'detect'
+    }
   },
   env: {
     browser: true,
     node: true,
-    es6: true,
+    es6: true
   },
   plugins: ['react'],
   extends: ['eslint:recommended', 'nextjs'],
@@ -18,6 +18,6 @@ module.exports = {
     'no-continue': 0,
     'no-restricted-syntax': 0,
     radix: 0,
-    'no-param-reassign': 0,
-  },
+    'no-param-reassign': 0
+  }
 };

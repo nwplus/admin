@@ -5,7 +5,7 @@ import React from 'react';
 // import 'firebase/analytics';
 
 // Initialize firebase app
-// import fireDb from '../utility/firebase';
+import fireDb from '../utility/firebase';
 
 import '../app.css';
 

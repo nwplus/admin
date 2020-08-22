@@ -1,6 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { COLOR, VIEW, NEW, CLOSE, SPONSORSHIP } from '../constants';
+import {
+  COLOR,
+  EDIT,
+  VIEW,
+  NEW,
+  CLOSE,
+  DELETE,
+  SAVE,
+  FAQ,
+  SPONSORSHIP
+} from '../constants';
 import TextBox from './textbox';
 import Button from './button';
 
@@ -60,7 +70,7 @@ export const ModalField = ({
   value,
   type = 'text',
   onChange,
-  modalAction,
+  modalAction
 }) => {
   // TODO: add detect dropdown based on label === category?
   return (
@@ -68,7 +78,7 @@ export const ModalField = ({
       <div>
         <Label>{label}</Label>
         {label === 'Answer' && modalAction !== VIEW && (
-          <TextBox width="95%" defaultValue={value} onChange={onChange} />
+          <TextBox width={'95%'} defaultValue={value} onChange={onChange} />
         )}
         {label !== 'Answer' && label !== 'Category' && modalAction !== VIEW && (
           <InputField type={type} defaultValue={value} onChange={onChange} />
@@ -104,16 +114,18 @@ const ImageContainer = styled.div`
   background: #c4c4c4;
 `;
 
-export const UploadContainer = ({ type, value, onClick, onChange }) => (
+export const UploadContainer = ({ type, value, onClick }) => (
   <>
     <Inline>
-      <InputField inline type={type} defaultValue={value} onChange={onChange} />
-      <UploadButton onClick={onClick} inline>
+      <InputField inline={true} type={type} defaultValue={value} />
+      <UploadButton onClick={onClick} inline={true}>
         Upload Image
       </UploadButton>
     </Inline>
   </>
 );
+
+const Dropdown = styled.select``;
 
 export const LogoImage = ({ children }) => (
   <>
@@ -136,6 +148,7 @@ const ModalBackground = styled.div`
   top: 50%;
   transform: translate(-50%, -50%);
   transition: all 0.3s ease-out;
+  /* TODO: add media queries to make width responsive */
   width: 740px;
   max-width: 100%;
   height: 480px;
@@ -157,7 +170,7 @@ const InlineButtonSpan = styled.div`
 
 export const ModalButton = ({ type, handleClose, handleSave }) => {
   let buttonText;
-  if (type !== CLOSE && type !== VIEW) {
+  if (type !== CLOSE && type != VIEW) {
     buttonText = type === NEW ? 'Add New' : 'Save';
   }
   return (
@@ -179,7 +192,7 @@ export const ModalButton = ({ type, handleClose, handleSave }) => {
             <InlineButtonSpan>
               <Button
                 onClick={handleClose}
-                color="linear-gradient(180deg, #FF4E4E 0%, #FFEBEB 289.71%)"
+                color={'linear-gradient(180deg, #FF4E4E 0%, #FFEBEB 289.71%)'}
                 contentColor={COLOR.WHITE}
               >
                 Cancel
@@ -205,7 +218,7 @@ export const ModalContent = ({ page, columns = 2, children }) => {
   if (page === SPONSORSHIP) {
     return (
       <>
-        <ContentContainer columns="40% 60%">{children}</ContentContainer>
+        <ContentContainer columns={'40% 60%'}>{children}</ContentContainer>
       </>
     );
   }
@@ -224,7 +237,7 @@ export default function Modal({
   handleSave,
   modalAction,
   lastModified,
-  children,
+  children
 }) {
   if (!isOpen) {
     return null;
@@ -235,20 +248,20 @@ export default function Modal({
       case VIEW:
         return (
           <>
-            <ModalTitle>View Details</ModalTitle>
+            <ModalTitle>{'View Details'}</ModalTitle>
             <GenericText>Last Modified {lastModified}</GenericText>
+          </>
+        );
+      case EDIT:
+        return (
+          <>
+            <ModalTitle>{'Edit Item'}</ModalTitle>
           </>
         );
       case NEW:
         return (
           <>
-            <ModalTitle>New Item</ModalTitle>
-          </>
-        );
-      default:
-        return (
-          <>
-            <ModalTitle>Edit Item</ModalTitle>
+            <ModalTitle>{'New Item'}</ModalTitle>
           </>
         );
     }

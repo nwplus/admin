@@ -27,7 +27,7 @@ export default function TextBox(props) {
   });
 
   const styleObj = {
-    resize: props.resize ? 'vertical' : 'none',
+    resize: props.resize ? 'vertical' : 'none'
   };
 
   return (

@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import EditIcon from './icons/edit';
 import NewIcon from './icons/new';
-import ViewIcon from './icons/view';
+import ViewIcon from '../components/icons/view';
 import CloseIcon from './icons/close';
 import { COLOR, EDIT, VIEW, NEW, CLOSE, DELETE } from '../constants';
 
@@ -42,7 +42,7 @@ const Button = ({
   color,
   contentColor = COLOR.BLACK,
   onClick,
-  inline = false,
+  inline = false
 }) => (
   <StyledButton
     isText={children && !type}

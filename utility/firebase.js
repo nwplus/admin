@@ -9,14 +9,30 @@ import { FAQ } from '../constants';
 
 if (!firebase.apps.length) {
   const config = {
-    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-    databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
-    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-    measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
-    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+    apiKey:
+      process.env.NEXT_PUBLIC_FIREBASE_API_KEY ||
+      process.env.NUXT_ENV_FIREBASE_API_KEY,
+    authDomain:
+      process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN ||
+      process.env.NUXT_ENV_FIREBASE_AUTH_DOMAIN,
+    databaseURL:
+      process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL ||
+      process.env.NUXT_ENV_FIREBASE_DATABASE_URL,
+    projectId:
+      process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID ||
+      process.env.NUXT_ENV_FIREBASE_PROJECT_ID,
+    measurementId:
+      process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID ||
+      process.env.NUXT_ENV_FIREBASE_MEASUREMENT_ID,
+    appId:
+      process.env.NEXT_PUBLIC_FIREBASE_APP_ID ||
+      process.env.NUXT_ENV_FIREBASE_APP_ID,
+    storageBucket:
+      process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET ||
+      process.env.NUXT_ENV_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId:
+      process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID ||
+      process.env.NUXT_ENV_FIREBASE_MESSAGING_SENDER_ID
   };
   firebase.initializeApp(config);
 }
@@ -405,6 +421,32 @@ export const deleteDocument = async (hackathon, collection, docId) => {
     .collection(collection)
     .doc(docId)
     .delete();
+};
+
+export const getHackathons = async () => {
+  return db
+    .collection('Hackathons')
+    .get()
+    .then(querySnapshot => {
+      const hackathons = [];
+      querySnapshot.forEach(doc => {
+        hackathons.push(doc.id);
+      });
+      return hackathons;
+    });
+};
+
+export const getHackathonPaths = async () => {
+  const hackathons = await getHackathons();
+  const paths = hackathons.map(id => {
+    return {
+      params: { id }
+    };
+  });
+  return {
+    paths,
+    fallback: false
+  };
 };
 
 export default fireDb;

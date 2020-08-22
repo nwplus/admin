@@ -17,6 +17,7 @@
 
 # misc
 .DS_Store
+.prettierignore
 
 # debug
 npm-debug.log*

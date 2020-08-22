@@ -30,7 +30,7 @@ const Item = styled.p`
 
 const Link = styled.a`
   display: block;
-  color: ${p => (p.selected ? COLOR.WHITE : COLOR.DARK_COPY)};
+  color: ${(p) => (p.selected ? COLOR.WHITE : COLOR.DARK_COPY)};
   text-decoration: none;
   padding: 10px 0 10px 75px;
   margin: 0 -30px;
@@ -40,7 +40,7 @@ const Link = styled.a`
   &:focus {
     color: ${COLOR.WHITE};
   }
-  ${p => p.selected && 'background-color: #1b1821'}
+  ${(p) => p.selected && 'background-color: #1b1821'}
 `;
 
 const Logout = styled.button`
@@ -79,7 +79,7 @@ export default ({ hackathons, currentPath }) => {
         <Website />
         <Item>Websites</Item>
       </ItemContainer>
-      {hackathons.map(id => {
+      {hackathons.map((id) => {
         return (
           <Link key={id} href={`/${id}`} selected={currentPath === id}>
             {id}

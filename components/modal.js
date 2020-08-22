@@ -60,7 +60,7 @@ export const ModalField = ({
   value,
   type = 'text',
   onChange,
-  modalAction
+  modalAction,
 }) => {
   // TODO: add detect dropdown based on label === category?
   return (
@@ -73,11 +73,7 @@ export const ModalField = ({
         {label !== 'Answer' && label !== 'Category' && modalAction !== VIEW && (
           <InputField type={type} defaultValue={value} onChange={onChange} />
         )}
-<<<<<<< HEAD
-        {label === 'Category' && modalAction === EDIT && (
-=======
         {label === 'Category' && modalAction !== VIEW && (
->>>>>>> faq
           <InputField type={type} defaultValue={value} onChange={onChange} />
         )}
         {modalAction === VIEW && <GenericText>{value}</GenericText>}
@@ -233,7 +229,7 @@ export default function Modal({
   handleSave,
   modalAction,
   lastModified,
-  children
+  children,
 }) {
   if (!isOpen) {
     return null;

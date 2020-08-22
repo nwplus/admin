@@ -6,8 +6,6 @@ const AuthContext = createContext({});
 
 const Auth = ({ children }) => {
     const [user, setUser] = useState(null)
-    // const [isAuthenticated, setIsAuthenticated] = useState(false)
-    const [pushToLanding, setPushToLanding] = useState(false)
     const router = useRouter()
     console.log(router.pathname)
 
@@ -16,7 +14,7 @@ const Auth = ({ children }) => {
             if (user && /.+@nwplus\.io$/.test(user.email)) {
                 console.log(user)
                 if (router.pathname=='/') {
-                    setPushToLanding(true)
+                    router.push('/landing')
                 } else {
                     setUser(user)
                 }
@@ -31,7 +29,7 @@ const Auth = ({ children }) => {
     }, [])
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated: !!user, user, pushToLanding }}>
+        <AuthContext.Provider value={{ isAuthenticated: !!user, user }}>
             {children}
         </AuthContext.Provider>
     )

@@ -91,11 +91,9 @@ const PasswordInput = styled.input`
 
 export default function Home() {
   const router = useRouter()
-  const { user, pushToLanding } = useAuth()
+  const { user } = useAuth()
   const [ showError, setShowError ] = useState(false)
   const setAdmin = firebase.functions().httpsCallable('setAdmin')
-
-  if (pushToLanding) router.push('/landing')
 
   const googleSignIn = async () => {
     const provider = new firebase.auth.GoogleAuthProvider();

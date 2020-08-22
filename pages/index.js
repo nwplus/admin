@@ -93,11 +93,6 @@ export default function Home() {
   const router = useRouter()
   const { user, pushToLanding } = useAuth()
 
-  // const currUser = firebase.auth().currentUser
-  // console.log(user.email)
-  // console.log("push to landing")
-  // console.log("pushed to landing")
-  // router.push('/landing')
   if (pushToLanding) router.push('/landing')
 
   const googleSignIn = async () => {
@@ -114,11 +109,11 @@ export default function Home() {
         const token = await user.getIdTokenResult();
         console.log(token.claims)
         if (!token.claims.hasOwnProperty('admin')) {
-          setTimeout(async () => {
-            await firebase.auth().currentUser.getIdToken(true)
-            const token2 = await user.getIdTokenResult();
-            console.log(token2.claims)
-          }, 2000)
+          const setAdmin = firebase.functions().httpsCallable('setAdmin')
+          await setAdmin()
+          await firebase.auth().currentUser.getIdToken(true)
+          const token2 = await user.getIdTokenResult();
+          console.log(token2.claims)
         }
       } else {
         console.log("smh")

@@ -1,7 +1,10 @@
 import React from 'react'
+import { useAuth } from '../utility/auth'
 
 export default () => {
+    const { user, isAuthenticated } = useAuth()
+    console.log(isAuthenticated)
     return (
-        <div>HELLO WORLD?</div>
+        <div>{isAuthenticated ? user.email : null}</div>
     )
 }

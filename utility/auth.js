@@ -9,14 +9,17 @@ const Auth = ({ children }) => {
     // const [isAuthenticated, setIsAuthenticated] = useState(false)
     const [pushToLanding, setPushToLanding] = useState(false)
     const router = useRouter()
+    console.log(router.pathname)
 
     useEffect(() => {
         const unsubscribe = firebase.auth().onAuthStateChanged(user => {
             if (user && /.+@nwplus\.io$/.test(user.email)) {
-                setUser(user)
-                setPushToLanding(true)
-                // setIsAuthenticated(true)
                 console.log(user)
+                if (router.pathname=='/') {
+                    setPushToLanding(true)
+                } else {
+                    setUser(user)
+                }
             } else {
                 console.log("pushing...")
                 router.push('/')
@@ -27,32 +30,8 @@ const Auth = ({ children }) => {
         return () => unsubscribe()
     }, [])
 
-    // useEffect(() => {
-    //     const checkEmail = async () => {
-    //         if (isAuthenticated) {
-    //             console.log(/.+@nwplus\.io$/.test(user.email))
-    //             if (/.+@nwplus\.io$/.test(user.email)) {
-    //                 setPushToLanding(true)
-    //                 setTimeout(async () => {
-    //                     await firebase.auth().currentUser.getIdToken(true)
-    //                     }, 2000)
-    //                 console.log("refreshed")
-    //               } else {
-    //                 console.log("smh")
-    //                 router.push('/')
-    //                 await firebase.auth().signOut()
-    //                 console.log("get out of here")
-    //               }
-    //         }
-    //     }
-        
-    //     checkEmail()
-    // }, [isAuthenticated])
-
-    
-
     return (
-        <AuthContext.Provider value={{ user, pushToLanding }}>
+        <AuthContext.Provider value={{ isAuthenticated: !!user, user, pushToLanding }}>
             {children}
         </AuthContext.Provider>
     )

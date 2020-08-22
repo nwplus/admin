@@ -16,20 +16,7 @@ if (!firebase.apps.length) {
     messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
   }
   firebase.initializeApp(config)
-  console.log(config)
 }
-
-// const changePersistence = async () => {
-//   try {
-//     await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
-//   } catch (err) {
-//     console.log(err)
-//   }
-  
-//   console.log("changed!!!!!")
-// }
-
-// changePersistence();
 
 export const db = firebase.firestore()
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { COLOR, EDIT, VIEW, NEW, CLOSE, SPONSORSHIP } from '../constants';
+import { COLOR, VIEW, NEW, CLOSE, SPONSORSHIP } from '../constants';
 import TextBox from './textbox';
 import Button from './button';
 
@@ -107,13 +107,8 @@ const ImageContainer = styled.div`
 export const UploadContainer = ({ type, value, onClick, onChange }) => (
   <>
     <Inline>
-      <InputField
-        inline={true}
-        type={type}
-        defaultValue={value}
-        onChange={onChange}
-      />
-      <UploadButton onClick={onClick} inline={true}>
+      <InputField inline type={type} defaultValue={value} onChange={onChange} />
+      <UploadButton onClick={onClick} inline>
         Upload Image
       </UploadButton>
     </Inline>

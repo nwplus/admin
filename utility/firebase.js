@@ -40,7 +40,7 @@ const storage = firebase.storage();
 const webCollection = 'Website_content';
 
 const fireDb = {
-  getNumberOfApplicants: callback => {
+  getNumberOfApplicants: (callback) => {
     db.collection('hacker_email_2020').onSnapshot(callback);
   },
   getNumberOfAccepted: callback => {
@@ -61,7 +61,7 @@ const fireDb = {
   //   const csv = parser.parse(hackerInfo);
   //   return csv;
   // },
-  isAdmin: async email => {
+  isAdmin: async (email) => {
     const ref = db.collection('admins');
     const admins = (await ref.get()).docs;
     for (const admin of admins) {
@@ -296,7 +296,7 @@ const fireDb = {
       const data = await fireDb.get(website, 'Sponsors');
       if (data.length > 0) {
         await Promise.all(
-          data.map(async sponsor => {
+          data.map(async (sponsor) => {
             const newSponsor = sponsor;
             newSponsor.data.imageUrl = await fireDb.getImageUrl(
               website,

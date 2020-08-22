@@ -6,7 +6,7 @@ export const DELETE = 'DELETE';
 export const SAVE = 'SAVE';
 export const FAQ = {
   label: 'FAQ',
-  categories: ['General', 'Teams & Projects', 'Logistics']
+  categories: ['General', 'Teams & Projects', 'Logistics'],
 };
 export const SPONSORSHIP = 'SPONSORSHIP';
 export const COLOR = {
@@ -18,5 +18,5 @@ export const COLOR = {
   RED: '#EB5757',
   DARK_GRAY: '#606060',
   TRANSPARENT: 'Transparent',
-  BODY_TEXT: '#5A5A5A'
+  BODY_TEXT: '#5A5A5A',
 };

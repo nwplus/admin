@@ -11,10 +11,10 @@
     "lint:fix": "eslint --fix --ext .js,.jsx ."
   },
   "dependencies": {
+    "firebase": "^7.15.5",
     "cross-env": "^7.0.2",
-    "dotenv": "^8.2.0",
-    "firebase": "^7.15.1",
     "json2csv": "^5.0.1",
+    "dotenv": "^8.2.0",
     "next": "9.4.4",
     "react": "16.13.1",
     "react-dom": "16.13.1",
@@ -22,6 +22,7 @@
     "styled-components": "^5.1.1"
   },
   "devDependencies": {
+    "babel-plugin-styled-components": "^1.10.7",
     "babel-eslint": "^10.1.0",
     "eslint": "^7.6.0",
     "eslint-config-airbnb": "^18.0.0",

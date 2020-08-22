@@ -119,7 +119,7 @@ export default function Home() {
       } else {
         console.log("smh")
         await firebase.auth().signOut()
-        // setShowError(true)
+        setShowError(true)
         console.log("get out of here")
       }
     } catch (error) {
@@ -127,7 +127,7 @@ export default function Home() {
       alert(error.message)
     }
 }
-  // console.log(showError)  
+  console.log(showError)  
   return (
     <>
       <Wrapper>

@@ -92,6 +92,8 @@ const PasswordInput = styled.input`
 export default function Home() {
   const router = useRouter()
   const { user, pushToLanding } = useAuth()
+  const [ showError, setShowError ] = useState(false)
+  const setAdmin = firebase.functions().httpsCallable('setAdmin')
 
   if (pushToLanding) router.push('/landing')
 
@@ -109,7 +111,6 @@ export default function Home() {
         const token = await user.getIdTokenResult();
         console.log(token.claims)
         if (!token.claims.hasOwnProperty('admin')) {
-          const setAdmin = firebase.functions().httpsCallable('setAdmin')
           await setAdmin()
           await firebase.auth().currentUser.getIdToken(true)
           const token2 = await user.getIdTokenResult();
@@ -118,6 +119,7 @@ export default function Home() {
       } else {
         console.log("smh")
         await firebase.auth().signOut()
+        // setShowError(true)
         console.log("get out of here")
       }
     } catch (error) {
@@ -125,7 +127,7 @@ export default function Home() {
       alert(error.message)
     }
 }
-    
+  // console.log(showError)  
   return (
     <>
       <Wrapper>
@@ -138,7 +140,9 @@ export default function Home() {
         <ButtonWrapper>
           <Button onClick={googleSignIn}>Loggggggin</Button>
         </ButtonWrapper>
+        {showError ? <div>smh</div> : null}
       </Wrapper>
+      
     </>
   )
 }

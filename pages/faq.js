@@ -1,21 +1,16 @@
+import React, { useState, useRef } from 'react';
+import styled from 'styled-components';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
+import { fireDb } from '../utility/firebase';
 import Card, {
   CardHeader,
   CardTitle,
   CardButtonContainer,
-  CardContent
+  CardContent,
 } from '../components/card';
-import styled from 'styled-components';
-import React, { useState, useEffect, useRef } from 'react';
-import { fireDb } from '../utility/firebase';
-import { useRouter } from 'next/router';
-import Link from 'next/link';
 import Button from '../components/button';
-import Modal, {
-  ModalContent,
-  ModalField,
-  UploadContainer,
-  LogoImage
-} from '../components/modal';
+import Modal, { ModalContent, ModalField } from '../components/modal';
 import { COLOR, EDIT, VIEW, NEW, DELETE, FAQ } from '../constants';
 
 const FAQContent = styled.table`
@@ -87,6 +82,12 @@ export default function Faq() {
     });
   }
 
+  const handleClose = () => {
+    setFaqEditing({});
+    setCurrFaq({});
+    setIsModalOpen(false);
+  };
+
   const handleAdd = (faq) => {
     // TODO: add call to confirmation modal here before we add the data
     fireDb.addFaq(faq);
@@ -94,8 +95,8 @@ export default function Faq() {
     setFaqs({
       ...faqs,
       [faq.faqId]: {
-        ...faqEditing
-      }
+        ...faqEditing,
+      },
     });
     handleClose();
   };
@@ -113,7 +114,7 @@ export default function Faq() {
       inputTimeout.current[property] = null;
       setFaqEditing({
         ...faq,
-        [property]: value
+        [property]: value,
       });
     }, 1000);
   };
@@ -134,12 +135,6 @@ export default function Faq() {
     handleClose();
   };
 
-  const handleClose = () => {
-    setFaqEditing({});
-    setCurrFaq({});
-    setIsModalOpen(false);
-  };
-
   function QuestionRow(props) {
     const router = useRouter();
     const { faqId, question, category, answer, lastModified } = props;
@@ -152,8 +147,8 @@ export default function Faq() {
       setFaqs({
         ...faqs,
         [faqId]: {
-          ...faqEditing
-        }
+          ...faqEditing,
+        },
       });
       props = { ...faqEditing };
       router.push('/faq');
@@ -209,8 +204,8 @@ export default function Faq() {
                   question: question,
                   category: category,
                   answer: answer,
-                  lastModified: lastModified
-                }
+                  lastModified: lastModified,
+                },
               }}
               as={`/faq/${faqId}`}
             >
@@ -278,7 +273,7 @@ export default function Faq() {
   }
 
   return (
-    <React.Fragment>
+    <>
       <Card>
         <CardHeader>
           <CardTitle>Frequently Asked Questions</CardTitle>
@@ -333,7 +328,7 @@ export default function Faq() {
               </TableRow>
             </thead>
             <tbody>
-              {Object.keys(faqs).map((id, item) => (
+              {Object.keys(faqs).map((id) => (
                 <QuestionRow
                   key={id}
                   faqId={id}
@@ -347,6 +342,6 @@ export default function Faq() {
           </FAQContent>
         </CardContent>
       </Card>
-    </React.Fragment>
+    </>
   );
 }

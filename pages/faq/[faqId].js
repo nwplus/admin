@@ -12,7 +12,7 @@ export default function faqIdPage() {
     question: question,
     category: category,
     answer: answer,
-    lastModified: lastModified
+    lastModified: lastModified,
   });
 
   if (

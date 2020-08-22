@@ -3,9 +3,6 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
 import 'firebase/storage';
-import * as Parser from 'json2csv';
-import { async } from 'q';
-import { FAQ } from '../constants';
 
 if (!firebase.apps.length) {
   const config = {
@@ -32,7 +29,7 @@ if (!firebase.apps.length) {
       process.env.NUXT_ENV_FIREBASE_STORAGE_BUCKET,
     messagingSenderId:
       process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID ||
-      process.env.NUXT_ENV_FIREBASE_MESSAGING_SENDER_ID
+      process.env.NUXT_ENV_FIREBASE_MESSAGING_SENDER_ID,
   };
   firebase.initializeApp(config);
 }
@@ -41,9 +38,8 @@ export const db = firebase.firestore();
 
 const storage = firebase.storage();
 const webCollection = 'Website_content';
-const faqCollection = FAQ.label;
 
-export const fireDb = {
+const fireDb = {
   getNumberOfApplicants: (callback) => {
     db.collection('hacker_email_2020').onSnapshot(callback);
   },
@@ -57,14 +53,14 @@ export const fireDb = {
       .where('score.finalScore', '>', -1)
       .onSnapshot(callback);
   },
-  applicantToCSV: async () => {
-    const hackerReference = db.collection('hacker_info_2020');
-    const snapshot = await hackerReference.get();
-    const hackerInfo = snapshot.docs.map((doc) => doc.data());
-    const parser = new Parser.Parser();
-    const csv = parser.parse(hackerInfo);
-    return csv;
-  },
+  // applicantToCSV: async () => {
+  //   const hackerReference = db.collection('hacker_info_2020');
+  //   const snapshot = await hackerReference.get();
+  //   const hackerInfo = snapshot.docs.map(doc => doc.data());
+  //   const parser = new Parser.Parser();
+  //   const csv = parser.parse(hackerInfo);
+  //   return csv;
+  // },
   isAdmin: async (email) => {
     const ref = db.collection('admins');
     const admins = (await ref.get()).docs;
@@ -92,61 +88,6 @@ export const fireDb = {
     const websiteDataRef = db.collection(webCollection).doc(website);
     await websiteDataRef.update({ featureFlags: flags });
   },
-  getFaqIds: async () => {
-    return (await db.collection(faqCollection).get()).docs.map((doc) => doc.id);
-  },
-  getFaqs: async () => {
-    const faqIds = await fireDb.getFaqIds();
-    const faqs = {};
-    for (const faqId of faqIds) {
-      faqs[faqId] = await fireDb.getFaq(faqId);
-    }
-    return faqs;
-  },
-  getFaq: async (faqId) => {
-    const faqData = (
-      await db.collection(faqCollection).doc(faqId).get()
-    ).data();
-    return {
-      question: faqData.question
-        ? faqData.question.toString()
-        : 'Empty question field',
-      answer: faqData.answer ? faqData.answer.toString() : 'Empty answer field',
-      category: faqData.category ? faqData.category.toString() : '',
-      lastModified: faqData.lastModified
-        ? fireDb.formatDate(faqData.lastModified.seconds)
-        : fireDb.formatDate(fireDb.getTimestamp().seconds),
-      hackathonIds: faqData.hackathonIDs ? faqData.hackathonIDs : []
-    };
-  },
-  formatDate: (date) => {
-    date = new Date(date * 1000).toISOString();
-    return date.substring(0, 10) + ' ' + date.substring(11, 19);
-  },
-  addFaq: async (faq) => {
-    const ref = db.collection(faqCollection).doc();
-    const currDate = fireDb.getTimestamp();
-    await ref.set({
-      question: faq.question,
-      category: faq.category,
-      answer: faq.answer,
-      lastModified: currDate
-    });
-  },
-  updateFaq: async (faq) => {
-    const ref = db.collection(faqCollection).doc(faq.faqId);
-    const currDate = fireDb.getTimestamp();
-    // todo: need to add enum support for category, and add null check (before this update stage) to prevent empty data from being inserted
-    await ref.update({
-      question: faq.question || 'Empty Question Field',
-      category: faq.category || 'None',
-      answer: faq.answer || 'Empty Answer',
-      lastModified: currDate
-    });
-  },
-  deleteFaq: async (faqId) => {
-    await db.collection(faqCollection).doc(faqId).delete();
-  },
   getWebsites: async () => {
     const ref = db.collection(webCollection);
     return (await ref.get()).docs.map((doc) => doc.id);
@@ -170,7 +111,7 @@ export const fireDb = {
         introButtonEnabled: websiteData.IntroButtonEnabled,
         introButtonLink: websiteData.IntroButtonLink,
         introSignUpButtonText: websiteData.SignUpButtonText,
-        introSignUpText: websiteData.SignUpText
+        introSignUpText: websiteData.SignUpText,
       };
     }
     return introTexts;
@@ -196,7 +137,7 @@ export const fireDb = {
           signupLink: data.signupLink || '',
           eventLastEditedBy: data.eventLastEditedBy || undefined,
           eventLastEditedDate: data.eventLastEditedDate || undefined,
-          enabled: data.enabled
+          enabled: data.enabled,
         };
       });
     }
@@ -214,7 +155,7 @@ export const fireDb = {
       imageLink: event.imageLink || '',
       enabled: true,
       eventLastEditedBy: event.eventLastEditedBy,
-      eventLastEditedDate: event.eventLastEditedDate.toDateString()
+      eventLastEditedDate: event.eventLastEditedDate.toDateString(),
     });
   },
   updateEvent: async (website, event) => {
@@ -232,7 +173,7 @@ export const fireDb = {
       signupLink: event.signupLink || '',
       imageLink: event.imageLink || '',
       eventLastEditedBy: event.eventLastEditedBy,
-      eventLastEditedDate: event.eventLastEditedDate.toDateString()
+      eventLastEditedDate: event.eventLastEditedDate.toDateString(),
     });
   },
   updateEventEnabled: async (website, event) => {
@@ -242,7 +183,7 @@ export const fireDb = {
       .collection('Events')
       .doc(event.id);
     await ref.update({
-      enabled: event.enabled
+      enabled: event.enabled,
     });
   },
   updateIntroText: async (
@@ -265,7 +206,7 @@ export const fireDb = {
       IntroButtonEnabled: enabled || false,
       IntroButtonLink: signupLink || '',
       SignUpButtonText: signupButtonText || '',
-      SignUpText: signupText || ''
+      SignUpText: signupText || '',
     });
   },
   addSponsorInformation: async (website, sponsor) => {
@@ -278,7 +219,7 @@ export const fireDb = {
       name: sponsor.name,
       url: sponsor.url,
       rank: sponsor.rank,
-      altImage: sponsor.altImage
+      altImage: sponsor.altImage,
     });
   },
   async deleteSponsor(website, image) {
@@ -327,7 +268,7 @@ export const fireDb = {
           name: file.sponsorName.trim(),
           url: file.url.trim(),
           rank: file.rank,
-          altImage: file.altImage ? `alt${file.name}` : null
+          altImage: file.altImage ? `alt${file.name}` : null,
         });
       } catch (e) {
         const ref = storage.ref(`${website}/${file.name}`);
@@ -350,7 +291,8 @@ export const fireDb = {
       if (data.length > 0) {
         await Promise.all(
           data.map(async (sponsor) => {
-            sponsor.data.imageUrl = await fireDb.getImageUrl(
+            const newSponsor = sponsor;
+            newSponsor.data.imageUrl = await fireDb.getImageUrl(
               website,
               sponsor.data.image
             );
@@ -378,7 +320,7 @@ export const fireDb = {
     const image = storage.ref(`${WebDocument}/${imageref}`);
     const url = await image.getDownloadURL();
     return url;
-  }
+  },
 };
 
 export const getDocument = async (hackathon, collection) => {
@@ -393,7 +335,7 @@ export const getDocument = async (hackathon, collection) => {
     .collection(collection);
   return (await ref.get()).docs.map((doc) => ({
     id: doc.id,
-    data: doc.data()
+    data: doc.data(),
   }));
 };
 
@@ -427,9 +369,9 @@ export const getHackathons = async () => {
   return db
     .collection('Hackathons')
     .get()
-    .then(querySnapshot => {
+    .then((querySnapshot) => {
       const hackathons = [];
-      querySnapshot.forEach(doc => {
+      querySnapshot.forEach((doc) => {
         hackathons.push(doc.id);
       });
       return hackathons;
@@ -438,14 +380,14 @@ export const getHackathons = async () => {
 
 export const getHackathonPaths = async () => {
   const hackathons = await getHackathons();
-  const paths = hackathons.map(id => {
+  const paths = hackathons.map((id) => {
     return {
-      params: { id }
+      params: { id },
     };
   });
   return {
     paths,
-    fallback: false
+    fallback: false,
   };
 };
 

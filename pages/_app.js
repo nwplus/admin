@@ -1,19 +1,21 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { useRouter } from 'next/router'
 import Auth from '../utility/auth'
 
 // import App from 'next/app'
-import firebase from 'firebase/app'
-import 'firebase/analytics'
+import '../utility/firebase';
+import React from 'react';
+// import firebase from 'firebase/app';
+// import 'firebase/analytics';
 
 // Initialize firebase app
-import fireDb from '../utility/firebase'
+// import fireDb from '../utility/firebase';
 
-// Only execute on client side
-if (typeof window !== 'undefined') {
-  // Initialize firebase analytics
-  firebase.analytics();
-}
+import '../app.css';
+
+// // Only execute on client side
+// if (typeof window !== 'undefined') {
+//   // Initialize firebase analytics
+//   firebase.analytics();
+// }
 
 function MyApp({ Component, pageProps }) {
     return (

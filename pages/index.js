@@ -136,7 +136,7 @@ export default function Home() {
         <PasswordInput/>
         <ForgotPasswordDiv>Forgot password?</ForgotPasswordDiv>
         <ButtonWrapper>
-          <Button onClick={googleSignIn}>Loggggggin</Button>
+          <Button onClick={googleSignIn}>Login</Button>
         </ButtonWrapper>
         {showError ? <div>smh</div> : null}
       </Wrapper>

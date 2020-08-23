@@ -11,13 +11,10 @@ const Auth = ({ children }) => {
 
     useEffect(() => {
         const unsubscribe = firebase.auth().onAuthStateChanged(user => {
-            if (user && /.+@nwplus\.io$/.test(user.email)) {
+            if (user) {
                 console.log(user)
-                if (router.pathname=='/') {
-                    router.push('/landing')
-                } else {
-                    setUser(user)
-                }
+                if (router.pathname=='/') router.push('/landing')
+                setUser(user)
             } else {
                 console.log("pushing...")
                 router.push('/')
@@ -28,11 +25,17 @@ const Auth = ({ children }) => {
         return () => unsubscribe()
     }, [])
 
-    return (
-        <AuthContext.Provider value={{ isAuthenticated: !!user, user }}>
-            {children}
-        </AuthContext.Provider>
-    )
+    // if (user==null && router.pathname!="/") {
+    //     return <div>Loading...</div>
+    // } else {
+        return (
+
+            <AuthContext.Provider value={{ isAuthenticated: !!user, user }}>
+                {(user==null&&router.pathname!='/') ? <div>Loading...</div> : children}
+            </AuthContext.Provider>
+        )
+    
+    
 }
 
 export const useAuth = () => {

@@ -3,31 +3,38 @@ import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { fireDb } from '../utility/firebase';
-import Card, {
-  CardHeader,
-  CardTitle,
-  CardButtonContainer,
-  CardContent,
-} from '../components/card';
+import Card, { CardHeader, CardTitle, CardButtonContainer, CardContent } from '../components/card';
 import Button from '../components/button';
 import Modal, { ModalContent, ModalField } from '../components/modal';
 import { COLOR, EDIT, VIEW, NEW, DELETE, FAQ } from '../constants';
 
-const FAQContent = styled.table`
-  background-color: ${COLOR.WHITE};
-  table-layout: fixed;
-  width: 100%;
+const FAQWrapper = styled.div`
+  max-height: 512px; /* 9 rows (56px row height + 2px row border height) = 522px limit */
+  overflow-y: scroll;
 
   border: 1px solid ${COLOR.BLACK};
   box-sizing: border-box;
   border-radius: 3px;
 `;
 
+const FAQContent = styled.table`
+  background-color: ${COLOR.WHITE};
+  table-layout: fixed;
+  width: 100%;
+`;
+
 const TableRow = styled.tr`
   height: 56px;
+  vertical-align: middle;
 `;
 
 const TableHeader = styled.th`
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: ${COLOR.WHITE};
+
   text-align: left !important;
   width: 95px;
   height: 12px;
@@ -42,12 +49,10 @@ const TableHeader = styled.th`
 `;
 
 const TableData = styled.td`
-  max-width: 280px;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
+  ${(props) => !props.actions && 'max-width: 280px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;'}
+
   height: 12px;
-  vertical-align: middle;
+  vertical-align: middle !important;
 
   font-family: Apercu Pro;
   font-size: 16px;
@@ -61,41 +66,67 @@ const TableData = styled.td`
   color: ${COLOR.BODY_TEXT};
 `;
 
-const ActionsButtonContainer = styled.button`
+const ActionsButtonContainer = styled.div`
+  display: inline-block;
+  align-items: flex-start;
+  margin: 0;
   width: 48px;
   height: 48px;
   background-color: Transparent;
   border: 0;
-  padding: 6px;
 `;
 
-export default function Faq() {
+const PlaceHolderText = styled.td`
+  text-align: center !important;
+  height: 24px;
+  color: ${COLOR.BODY_TEXT};
+
+  font-family: Apercu Pro;
+  font-size: 18px;
+  line-height: 24px;
+
+  margin-top: 32px;
+  margin-bottom: 32px;
+`;
+
+export default function Faq({ currHackathon, hackathons }) {
+  const router = useRouter();
+  // uncomment this when integrated with sidebar to receive hackathon that is passed down
+  // const [currHackathon, setCurrHackathon] = useState(currHackathon);
+  const [hackathon, setHackathon] = useState('LHD2021');
   const [faqs, setFaqs] = useState([]);
-  const [currFaq, setCurrFaq] = useState({});
+  const [faqViewing, setFaqViewing] = useState({});
   const [faqEditing, setFaqEditing] = useState({});
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [addNew, setAddNew] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const inputTimeout = useRef(null);
 
   if (Object.keys(faqs).length === 0) {
-    fireDb.getFaqs().then((res) => {
-      setFaqs(res);
+    fireDb.getFaqs(hackathon).then((res) => {
+      if (Object.keys(res).length > 0) {
+        setFaqs(res);
+      }
+      setIsLoading(false);
     });
   }
 
   const handleClose = () => {
     setFaqEditing({});
-    setCurrFaq({});
-    setIsModalOpen(false);
+    setFaqViewing({});
+    setAddNew(false);
   };
 
-  const handleAdd = (faq) => {
+  const handleNew = (faq) => {
+    faq.hackathonIDs = [hackathon];
+    console.log(faq);
     // TODO: add call to confirmation modal here before we add the data
     fireDb.addFaq(faq);
     faq.lastModified = fireDb.formatDate(fireDb.getTimestamp().seconds);
     setFaqs({
       ...faqs,
-      [faq.faqId]: {
+      [faq.faqID]: {
         ...faqEditing,
+        hackathonIDs: [hackathon],
       },
     });
     handleClose();
@@ -103,8 +134,7 @@ export default function Faq() {
 
   const handleInput = (property, value, faq) => {
     if (inputTimeout.current) {
-      if (inputTimeout.current[property] !== null)
-        clearTimeout(inputTimeout.current[property]);
+      if (inputTimeout.current[property] !== null) clearTimeout(inputTimeout.current[property]);
     } else {
       inputTimeout.current = {};
       inputTimeout.current[property] = null;
@@ -119,79 +149,61 @@ export default function Faq() {
     }, 1000);
   };
 
-  const handleDelete = (faqId) => {
-    fireDb.deleteFaq(faqId);
-    // setFaqs(
-    //   Object.keys(faqs)
-    //     .filter((id) => {
-    //       id != faqId;
-    //     })
-    //     .reduce((obj, id) => {
-    //       obj[id] = faqs[id];
-    //       return obj;
-    //     }, {})
-    // );
-    // console.log(faqs);
+  const handleUpdate = (faqID, faq) => {
+    fireDb.updateFaq(faqID, faq);
+    setFaqEditing(
+      {
+        ...faq,
+        lastModified: fireDb.formatDate(fireDb.getTimestamp().seconds),
+      },
+      setFaqs({
+        ...faqs,
+        [faqID]: {
+          ...faq,
+        },
+      })
+    );
+    router.push('/faq');
+    handleClose();
+  };
+
+  const handleDelete = (faqID) => {
+    fireDb.deleteFaq(faqID);
+    setFaqs(
+      Object.keys(faqs)
+        .filter((id) => {
+          id != faqID;
+        })
+        .reduce((obj, id) => {
+          obj[id] = faqs[id];
+          return obj;
+        }, {})
+    );
     handleClose();
   };
 
   function QuestionRow(props) {
-    const router = useRouter();
-    const { faqId, question, category, answer, lastModified } = props;
-
-    const handleSave = () => {
-      fireDb.updateFaq(faqEditing);
-      faqEditing.lastModified = fireDb.formatDate(
-        fireDb.getTimestamp().seconds
-      );
-      setFaqs({
-        ...faqs,
-        [faqId]: {
-          ...faqEditing,
-        },
-      });
-      props = { ...faqEditing };
-      router.push('/faq');
-      handleClose();
-    };
-
     return (
       <TableRow>
-        <TableData>{question}</TableData>
-        <TableData>{category}</TableData>
-        <TableData>{lastModified}</TableData>
-        <TableData>
+        <TableData>{faqs[props.faqID].question}</TableData>
+        <TableData>{faqs[props.faqID].category}</TableData>
+        <TableData>{faqs[props.faqID].lastModified}</TableData>
+        <TableData actions>
           <ActionsButtonContainer>
-            <Button
-              type={VIEW}
-              color={COLOR.TRANSPARENT}
-              onClick={() => setCurrFaq(props)}
-            />
+            <Button type={VIEW} color={COLOR.TRANSPARENT} onClick={() => setFaqViewing(faqs[props.faqID])} />
             <Modal
-              isOpen={Object.keys(currFaq).length > 0}
+              isOpen={Object.keys(faqViewing).length > 0}
               handleClose={() => handleClose({})}
               handleSave={() => handleClose({})}
               modalAction={VIEW}
-              lastModified={currFaq.lastModified}
+              lastModified={faqViewing.lastModified}
             >
               <ModalContent page={FAQ.label} columns={2}>
-                <ModalField
-                  label="Question"
-                  value={currFaq.question}
-                  modalAction={VIEW}
-                />
-                <ModalField
-                  label="Category"
-                  value={currFaq.category}
-                  modalAction={VIEW}
-                />
+                <ModalField label="Question" value={faqViewing.question} modalAction={VIEW} />
+                <ModalField label="Category" value={faqViewing.category} modalAction={VIEW} />
               </ModalContent>
               <ModalContent page={FAQ.label} columns={1}>
-                <ModalField
-                  label="Answer"
-                  value={currFaq.answer}
-                  modalAction={VIEW}
-                />
+                <ModalField label="Answer" value={faqViewing.answer} modalAction={VIEW} />
               </ModalContent>
             </Modal>
           </ActionsButtonContainer>
@@ -200,28 +212,24 @@ export default function Faq() {
               href={{
                 pathname: '/faq',
                 query: {
-                  faqId: faqId,
-                  question: question,
-                  category: category,
-                  answer: answer,
-                  lastModified: lastModified,
+                  faqID: props.faqID,
+                  question: faqs[props.faqID].question,
+                  category: faqs[props.faqID].category,
+                  answer: faqs[props.faqID].answer,
+                  lastModified: faqs[props.faqID].lastModified,
                 },
               }}
-              as={`/faq/${faqId}`}
+              as={`/faq/${props.faqID}`}
             >
               <a>
-                <Button
-                  type={EDIT}
-                  color={COLOR.TRANSPARENT}
-                  onClick={() => setFaqEditing(props)}
-                />
+                <Button type={EDIT} color={COLOR.TRANSPARENT} onClick={() => setFaqEditing(faqs[props.faqID])} />
               </a>
             </Link>
-            {/* Converting null/undefined faqId to boolean by `!!` */}
+            {/* Converting null/undefined faqID to boolean by `!!` */}
             <Modal
-              isOpen={!!router.query.faqId}
+              isOpen={!!router.query.faqID}
               handleClose={() => router.push('/faq')}
-              handleSave={() => handleSave()}
+              handleSave={() => handleUpdate(router.query.faqID, faqEditing)}
               modalAction={EDIT}
               // lastModified={router.query.lastModified}
               lastModified={faqEditing.lastModified}
@@ -232,18 +240,14 @@ export default function Faq() {
                   // value={router.query.question}
                   value={faqEditing.question}
                   modalAction={EDIT}
-                  onChange={(event) =>
-                    handleInput('question', event.target.value, faqEditing)
-                  }
+                  onChange={(event) => handleInput('question', event.target.value, faqEditing)}
                 />
                 <ModalField
                   label="Category"
                   // value={router.query.category}
                   value={faqEditing.category}
                   modalAction={EDIT}
-                  onChange={(event) =>
-                    handleInput('category', event.target.value, faqEditing)
-                  }
+                  onChange={(event) => handleInput('category', event.target.value, faqEditing)}
                 />
               </ModalContent>
               <ModalContent page={FAQ.label} columns={1}>
@@ -252,20 +256,14 @@ export default function Faq() {
                   // value={router.query.answer}
                   value={faqEditing.answer}
                   modalAction={EDIT}
-                  onChange={(event) =>
-                    handleInput('answer', event.target.value, faqEditing)
-                  }
+                  onChange={(event) => handleInput('answer', event.target.value, faqEditing)}
                 />
               </ModalContent>
             </Modal>
           </ActionsButtonContainer>
           <ActionsButtonContainer>
             {/* TODO: Need to add confirmation modal before deleting */}
-            <Button
-              type={DELETE}
-              color={COLOR.TRANSPARENT}
-              onClick={() => handleDelete(props.faqId)}
-            />
+            <Button type={DELETE} color={COLOR.TRANSPARENT} onClick={() => handleDelete(props.faqID)} />
           </ActionsButtonContainer>
         </TableData>
       </TableRow>
@@ -278,68 +276,77 @@ export default function Faq() {
         <CardHeader>
           <CardTitle>Frequently Asked Questions</CardTitle>
           <CardButtonContainer>
-            <Button type={NEW} onClick={() => setIsModalOpen(true)}>
+            <Button type={NEW} onClick={() => setAddNew(true)}>
               New Question
             </Button>
             <Modal
-              isOpen={isModalOpen}
+              isOpen={addNew}
               // TODO: add function confirming if user would like to exit away
-              handleClose={() => setIsModalOpen(false)}
-              handleSave={() => handleAdd(faqEditing)}
+              handleClose={() => setAddNew(false)}
+              handleSave={() => handleNew(faqEditing)}
               modalAction={NEW}
             >
               <ModalContent page={FAQ.label} columns={2}>
-                <ModalField
-                  label="Question"
-                  modalAction={NEW}
-                  onChange={(event) =>
-                    handleInput('question', event.target.value, faqEditing)
-                  }
-                />
+                <ModalField label="Question" modalAction={NEW} onChange={(event) => handleInput('question', event.target.value, faqEditing)} />
                 <ModalField
                   label="Category"
                   // TODO: need to add dropdown here for category options
                   modalAction={NEW}
-                  onChange={(event) =>
-                    handleInput('category', event.target.value, faqEditing)
-                  }
+                  onChange={(event) => handleInput('category', event.target.value, faqEditing)}
                 />
               </ModalContent>
               <ModalContent page={FAQ.label} columns={1}>
-                <ModalField
-                  label="Answer"
-                  modalAction={NEW}
-                  onChange={(event) =>
-                    handleInput('answer', event.target.value, faqEditing)
-                  }
-                />
+                <ModalField label="Answer" modalAction={NEW} onChange={(event) => handleInput('answer', event.target.value, faqEditing)} />
               </ModalContent>
             </Modal>
           </CardButtonContainer>
         </CardHeader>
         <CardContent style={{ backgroundColor: `${COLOR.BACKGROUND}` }}>
-          <FAQContent>
-            <thead>
-              <TableRow>
-                <TableHeader>Question</TableHeader>
-                <TableHeader>Category</TableHeader>
-                <TableHeader>Last Modified</TableHeader>
-                <TableHeader>Actions</TableHeader>
-              </TableRow>
-            </thead>
-            <tbody>
-              {Object.keys(faqs).map((id) => (
-                <QuestionRow
-                  key={id}
-                  faqId={id}
-                  question={faqs[id].question}
-                  category={faqs[id].category}
-                  answer={faqs[id].answer}
-                  lastModified={faqs[id].lastModified}
-                />
-              ))}
-            </tbody>
-          </FAQContent>
+          <FAQWrapper>
+            {isLoading && (
+              <FAQContent>
+                <tbody>
+                  <TableRow>
+                    <PlaceHolderText>Loading FAQs for {hackathon}...</PlaceHolderText>
+                  </TableRow>
+                </tbody>
+              </FAQContent>
+            )}
+            {Object.keys(faqs).length === 0 && !isLoading && (
+              <FAQContent>
+                <tbody>
+                  <TableRow>
+                    <PlaceHolderText>No FAQs for {hackathon}</PlaceHolderText>
+                  </TableRow>
+                </tbody>
+              </FAQContent>
+            )}
+            {Object.keys(faqs).length > 0 && !isLoading && (
+              <FAQContent>
+                <thead>
+                  <TableRow>
+                    <TableHeader>Question</TableHeader>
+                    <TableHeader>Category</TableHeader>
+                    <TableHeader>Last Modified</TableHeader>
+                    <TableHeader>Actions</TableHeader>
+                  </TableRow>
+                </thead>
+                <tbody>
+                  {Object.keys(faqs).map((id) => (
+                    <QuestionRow
+                      key={id}
+                      faqID={id}
+                      question={faqs[id].question}
+                      category={faqs[id].category}
+                      answer={faqs[id].answer}
+                      lastModified={faqs[id].lastModified}
+                      hackathonIDs={faqs[id].hackathonIDs}
+                    />
+                  ))}
+                </tbody>
+              </FAQContent>
+            )}
+          </FAQWrapper>
         </CardContent>
       </Card>
     </>

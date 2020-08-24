@@ -9,30 +9,14 @@ import { FAQ } from '../constants';
 
 if (!firebase.apps.length) {
   const config = {
-    apiKey:
-      process.env.NEXT_PUBLIC_FIREBASE_API_KEY ||
-      process.env.NUXT_ENV_FIREBASE_API_KEY,
-    authDomain:
-      process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN ||
-      process.env.NUXT_ENV_FIREBASE_AUTH_DOMAIN,
-    databaseURL:
-      process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL ||
-      process.env.NUXT_ENV_FIREBASE_DATABASE_URL,
-    projectId:
-      process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID ||
-      process.env.NUXT_ENV_FIREBASE_PROJECT_ID,
-    measurementId:
-      process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID ||
-      process.env.NUXT_ENV_FIREBASE_MEASUREMENT_ID,
-    appId:
-      process.env.NEXT_PUBLIC_FIREBASE_APP_ID ||
-      process.env.NUXT_ENV_FIREBASE_APP_ID,
-    storageBucket:
-      process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET ||
-      process.env.NUXT_ENV_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId:
-      process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID ||
-      process.env.NUXT_ENV_FIREBASE_MESSAGING_SENDER_ID
+    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || process.env.NUXT_ENV_FIREBASE_API_KEY,
+    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || process.env.NUXT_ENV_FIREBASE_AUTH_DOMAIN,
+    databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL || process.env.NUXT_ENV_FIREBASE_DATABASE_URL,
+    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || process.env.NUXT_ENV_FIREBASE_PROJECT_ID,
+    measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID || process.env.NUXT_ENV_FIREBASE_MEASUREMENT_ID,
+    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || process.env.NUXT_ENV_FIREBASE_APP_ID,
+    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || process.env.NUXT_ENV_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || process.env.NUXT_ENV_FIREBASE_MESSAGING_SENDER_ID,
   };
   firebase.initializeApp(config);
 }
@@ -48,14 +32,10 @@ export const fireDb = {
     db.collection('hacker_email_2020').onSnapshot(callback);
   },
   getNumberOfAccepted: (callback) => {
-    db.collection('hacker_info_2020')
-      .where('tags.accepted', '==', true)
-      .onSnapshot(callback);
+    db.collection('hacker_info_2020').where('tags.accepted', '==', true).onSnapshot(callback);
   },
   getScored: (callback) => {
-    db.collection('hacker_info_2020')
-      .where('score.finalScore', '>', -1)
-      .onSnapshot(callback);
+    db.collection('hacker_info_2020').where('score.finalScore', '>', -1).onSnapshot(callback);
   },
   applicantToCSV: async () => {
     const hackerReference = db.collection('hacker_info_2020');
@@ -79,10 +59,7 @@ export const fireDb = {
     const websites = await fireDb.getWebsites();
     const featureFlags = {};
     for (const website of websites) {
-      const websiteDataRef = await db
-        .collection(webCollection)
-        .doc(website)
-        .get();
+      const websiteDataRef = await db.collection(webCollection).doc(website).get();
       const websiteData = websiteDataRef.data();
       featureFlags[website] = websiteData.featureFlags;
     }
@@ -92,32 +69,31 @@ export const fireDb = {
     const websiteDataRef = db.collection(webCollection).doc(website);
     await websiteDataRef.update({ featureFlags: flags });
   },
-  getFaqIds: async () => {
+  getfaqIDs: async () => {
     return (await db.collection(faqCollection).get()).docs.map((doc) => doc.id);
   },
-  getFaqs: async () => {
-    const faqIds = await fireDb.getFaqIds();
+  getFaqs: async (hackathon) => {
+    const faqIDs = await fireDb.getfaqIDs();
     const faqs = {};
-    for (const faqId of faqIds) {
-      faqs[faqId] = await fireDb.getFaq(faqId);
+    for (const faqID of faqIDs) {
+      const currFaq = await fireDb.getFaq(faqID);
+      if (currFaq) {
+        if (currFaq.hackathonIDs.includes(hackathon)) faqs[faqID] = currFaq;
+      }
     }
     return faqs;
   },
-  getFaq: async (faqId) => {
-    const faqData = (
-      await db.collection(faqCollection).doc(faqId).get()
-    ).data();
-    return {
-      question: faqData.question
-        ? faqData.question.toString()
-        : 'Empty question field',
-      answer: faqData.answer ? faqData.answer.toString() : 'Empty answer field',
-      category: faqData.category ? faqData.category.toString() : '',
-      lastModified: faqData.lastModified
-        ? fireDb.formatDate(faqData.lastModified.seconds)
-        : fireDb.formatDate(fireDb.getTimestamp().seconds),
-      hackathonIds: faqData.hackathonIDs ? faqData.hackathonIDs : []
-    };
+  getFaq: async (faqID) => {
+    const faqData = (await db.collection(faqCollection).doc(faqID).get()).data();
+    return faqData
+      ? {
+          question: faqData.question ? faqData.question.toString() : 'Empty question field',
+          answer: faqData.answer ? faqData.answer.toString() : 'Empty answer field',
+          category: faqData.category ? faqData.category.toString() : '',
+          lastModified: faqData.lastModified ? fireDb.formatDate(faqData.lastModified.seconds) : fireDb.formatDate(fireDb.getTimestamp().seconds),
+          hackathonIDs: faqData.hackathonIDs ? faqData.hackathonIDs : [],
+        }
+      : null;
   },
   formatDate: (date) => {
     date = new Date(date * 1000).toISOString();
@@ -130,22 +106,24 @@ export const fireDb = {
       question: faq.question,
       category: faq.category,
       answer: faq.answer,
-      lastModified: currDate
+      lastModified: currDate,
+      hackathonIDs: faq.hackathonIDs,
     });
   },
-  updateFaq: async (faq) => {
-    const ref = db.collection(faqCollection).doc(faq.faqId);
+  updateFaq: async (faqID, faq) => {
+    const ref = db.collection(faqCollection).doc(faqID);
     const currDate = fireDb.getTimestamp();
     // todo: need to add enum support for category, and add null check (before this update stage) to prevent empty data from being inserted
     await ref.update({
       question: faq.question || 'Empty Question Field',
       category: faq.category || 'None',
       answer: faq.answer || 'Empty Answer',
-      lastModified: currDate
+      lastModified: currDate,
+      hackathonIDs: faq.hackathonIDs,
     });
   },
-  deleteFaq: async (faqId) => {
-    await db.collection(faqCollection).doc(faqId).delete();
+  deleteFaq: async (faqID) => {
+    await db.collection(faqCollection).doc(faqID).delete();
   },
   getWebsites: async () => {
     const ref = db.collection(webCollection);
@@ -155,22 +133,16 @@ export const fireDb = {
     const websites = await fireDb.getWebsites();
     const introTexts = {};
     for (const website of websites) {
-      const websiteData = (
-        await db.collection(webCollection).doc(website).get()
-      ).data();
+      const websiteData = (await db.collection(webCollection).doc(website).get()).data();
       introTexts[website] = {
-        introText: websiteData.IntroText
-          ? websiteData.IntroText.toString()
-          : '',
-        introSubtext: websiteData.IntroSubtext
-          ? websiteData.IntroSubtext.toString()
-          : '',
+        introText: websiteData.IntroText ? websiteData.IntroText.toString() : '',
+        introSubtext: websiteData.IntroSubtext ? websiteData.IntroSubtext.toString() : '',
         introLastEditedBy: websiteData.IntroLastEditedBy || undefined,
         introLastEditedDate: websiteData.IntroLastEditedDate || undefined,
         introButtonEnabled: websiteData.IntroButtonEnabled,
         introButtonLink: websiteData.IntroButtonLink,
         introSignUpButtonText: websiteData.SignUpButtonText,
-        introSignUpText: websiteData.SignUpText
+        introSignUpText: websiteData.SignUpText,
       };
     }
     return introTexts;
@@ -179,11 +151,7 @@ export const fireDb = {
     const websites = await fireDb.getWebsites();
     const events = {};
     for (const website of websites) {
-      const websiteData = await db
-        .collection(webCollection)
-        .doc(website)
-        .collection('Events')
-        .get();
+      const websiteData = await db.collection(webCollection).doc(website).collection('Events').get();
       events[website] = await websiteData.docs.map((doc) => {
         const data = doc.data();
         return {
@@ -196,7 +164,7 @@ export const fireDb = {
           signupLink: data.signupLink || '',
           eventLastEditedBy: data.eventLastEditedBy || undefined,
           eventLastEditedDate: data.eventLastEditedDate || undefined,
-          enabled: data.enabled
+          enabled: data.enabled,
         };
       });
     }
@@ -214,15 +182,11 @@ export const fireDb = {
       imageLink: event.imageLink || '',
       enabled: true,
       eventLastEditedBy: event.eventLastEditedBy,
-      eventLastEditedDate: event.eventLastEditedDate.toDateString()
+      eventLastEditedDate: event.eventLastEditedDate.toDateString(),
     });
   },
   updateEvent: async (website, event) => {
-    const ref = db
-      .collection(webCollection)
-      .doc(website)
-      .collection('Events')
-      .doc(event.id);
+    const ref = db.collection(webCollection).doc(website).collection('Events').doc(event.id);
     await ref.update({
       title: event.title || '',
       order: parseInt(event.order) || -1,
@@ -232,17 +196,13 @@ export const fireDb = {
       signupLink: event.signupLink || '',
       imageLink: event.imageLink || '',
       eventLastEditedBy: event.eventLastEditedBy,
-      eventLastEditedDate: event.eventLastEditedDate.toDateString()
+      eventLastEditedDate: event.eventLastEditedDate.toDateString(),
     });
   },
   updateEventEnabled: async (website, event) => {
-    const ref = db
-      .collection(webCollection)
-      .doc(website)
-      .collection('Events')
-      .doc(event.id);
+    const ref = db.collection(webCollection).doc(website).collection('Events').doc(event.id);
     await ref.update({
-      enabled: event.enabled
+      enabled: event.enabled,
     });
   },
   updateIntroText: async (
@@ -265,30 +225,23 @@ export const fireDb = {
       IntroButtonEnabled: enabled || false,
       IntroButtonLink: signupLink || '',
       SignUpButtonText: signupButtonText || '',
-      SignUpText: signupText || ''
+      SignUpText: signupText || '',
     });
   },
   addSponsorInformation: async (website, sponsor) => {
-    const ref = db
-      .collection(webCollection)
-      .doc(website)
-      .collection('Sponsors');
+    const ref = db.collection(webCollection).doc(website).collection('Sponsors');
     await ref.add({
       image: sponsor.image,
       name: sponsor.name,
       url: sponsor.url,
       rank: sponsor.rank,
-      altImage: sponsor.altImage
+      altImage: sponsor.altImage,
     });
   },
   async deleteSponsor(website, image) {
     let altImage = false;
     try {
-      const sponsors = await db
-        .collection(webCollection)
-        .doc(website)
-        .collection('Sponsors')
-        .get();
+      const sponsors = await db.collection(webCollection).doc(website).collection('Sponsors').get();
       sponsors.forEach(async (sponsor) => {
         if (sponsor.data().image === image) {
           altImage = !!sponsor.data().altImage;
@@ -327,7 +280,7 @@ export const fireDb = {
           name: file.sponsorName.trim(),
           url: file.url.trim(),
           rank: file.rank,
-          altImage: file.altImage ? `alt${file.name}` : null
+          altImage: file.altImage ? `alt${file.name}` : null,
         });
       } catch (e) {
         const ref = storage.ref(`${website}/${file.name}`);
@@ -350,15 +303,9 @@ export const fireDb = {
       if (data.length > 0) {
         await Promise.all(
           data.map(async (sponsor) => {
-            sponsor.data.imageUrl = await fireDb.getImageUrl(
-              website,
-              sponsor.data.image
-            );
+            sponsor.data.imageUrl = await fireDb.getImageUrl(website, sponsor.data.image);
             if (sponsor.data.altImage) {
-              newSponsor.data.altImageUrl = await fireDb.getImageUrl(
-                website,
-                sponsor.data.altImage
-              );
+              newSponsor.data.altImageUrl = await fireDb.getImageUrl(website, sponsor.data.altImage);
             }
             return newSponsor;
           })
@@ -378,7 +325,7 @@ export const fireDb = {
     const image = storage.ref(`${WebDocument}/${imageref}`);
     const url = await image.getDownloadURL();
     return url;
-  }
+  },
 };
 
 export const getDocument = async (hackathon, collection) => {
@@ -387,49 +334,33 @@ export const getDocument = async (hackathon, collection) => {
     const data = await ref.get();
     return data.data();
   }
-  const ref = db
-    .collection(webCollection)
-    .doc(hackathon)
-    .collection(collection);
+  const ref = db.collection(webCollection).doc(hackathon).collection(collection);
   return (await ref.get()).docs.map((doc) => ({
     id: doc.id,
-    data: doc.data()
+    data: doc.data(),
   }));
 };
 
 export const updateDocument = (hackathon, collection, docId, object) => {
-  db.collection(webCollection)
-    .doc(hackathon)
-    .collection(collection)
-    .doc(docId)
-    .update(object);
+  db.collection(webCollection).doc(hackathon).collection(collection).doc(docId).update(object);
 };
 
 export const addDocument = async (hackathon, collection, object) => {
-  const ref = await db
-    .collection(webCollection)
-    .doc(hackathon)
-    .collection(collection)
-    .add(object);
+  const ref = await db.collection(webCollection).doc(hackathon).collection(collection).add(object);
   return ref.id;
 };
 
 export const deleteDocument = async (hackathon, collection, docId) => {
-  await db
-    .collection(webCollection)
-    .doc(hackathon)
-    .collection(collection)
-    .doc(docId)
-    .delete();
+  await db.collection(webCollection).doc(hackathon).collection(collection).doc(docId).delete();
 };
 
 export const getHackathons = async () => {
   return db
     .collection('Hackathons')
     .get()
-    .then(querySnapshot => {
+    .then((querySnapshot) => {
       const hackathons = [];
-      querySnapshot.forEach(doc => {
+      querySnapshot.forEach((doc) => {
         hackathons.push(doc.id);
       });
       return hackathons;
@@ -438,14 +369,14 @@ export const getHackathons = async () => {
 
 export const getHackathonPaths = async () => {
   const hackathons = await getHackathons();
-  const paths = hackathons.map(id => {
+  const paths = hackathons.map((id) => {
     return {
-      params: { id }
+      params: { id },
     };
   });
   return {
     paths,
-    fallback: false
+    fallback: false,
   };
 };
 

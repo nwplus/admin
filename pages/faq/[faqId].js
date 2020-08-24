@@ -7,7 +7,7 @@ import { fireDb } from '../../utility/firebase';
 export default function faqIdPage() {
   const router = useRouter();
   // access the query element
-  let { faqId, question, category, answer, lastModified } = router.query;
+  let { faqID, question, category, answer, lastModified } = router.query;
   const [currFaq, setCurrFaq] = useState({
     question: question,
     category: category,
@@ -20,9 +20,9 @@ export default function faqIdPage() {
     answer === undefined &&
     category === undefined &&
     lastModified === undefined &&
-    faqId
+    faqID
   ) {
-    fireDb.getFaq(faqId).then((res) => {
+    fireDb.getFaq(faqID).then((res) => {
       setCurrFaq(res);
     });
   }
@@ -30,7 +30,7 @@ export default function faqIdPage() {
     <>
       {/* {console.log(currFaq)} */}
       {/* {useEffect(() => {}, {currFaq})} */}
-      <div>Question ID: {faqId}</div>
+      <div>Question ID: {faqID}</div>
       <div>Question: {currFaq['question']}</div>
       <div>Category: {currFaq['category']}</div>
       <div>Answer: {currFaq['answer']}</div>

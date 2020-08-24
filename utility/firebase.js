@@ -96,8 +96,9 @@ export const fireDb = {
       : null;
   },
   formatDate: (date) => {
-    date = new Date(date * 1000).toISOString();
-    return date.substring(0, 10) + ' ' + date.substring(11, 19);
+    date = new Date(date * 1000);
+    var timeZoneOffset = new Date().getTimezoneOffset() * 60000;
+    return new Date(date - timeZoneOffset).toISOString().slice(0, -1).slice(0, -4).replace('T', ' ');
   },
   addFaq: async (faq) => {
     const ref = db.collection(faqCollection).doc();

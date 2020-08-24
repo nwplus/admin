@@ -8,10 +8,10 @@ import { COLOR, EDIT, VIEW, NEW, CLOSE, DELETE } from '../constants';
 
 const StyledButton = styled.button`
   border: none;
-  ${(props) => props.isText && 'padding: 6px 24px; height: 40px;'}
-  ${(props) =>
+  ${props => props.isText && 'padding: 6px 24px; height: 40px;'}
+  ${props =>
     !props.isText && props.contentColor === COLOR.BLACK && 'padding: 10px;'}
-  ${(props) =>
+  ${props =>
     props.color
       ? `color: ${props.contentColor}; background: ${props.color};`
       : `color: ${COLOR.WHITE}; background-color: ${COLOR.PRIMARY};`}
@@ -19,16 +19,16 @@ const StyledButton = styled.button`
   display: flex;
   align-items: center;
   font-size: 16px;
-  border-radius: ${(props) => (props.inline ? '0 3px 3px 0' : '3px;')}
+  border-radius: ${props => (props.inline ? '0 3px 3px 0' : '3px;')}
   
 `;
 
 const StyledEditIcon = styled(EditIcon)`
-  ${(props) => props.hasText && 'margin-right: 8px;'}
+  ${props => props.hasText && 'margin-right: 8px;'}
 `;
 
 const StyledNewIcon = styled(NewIcon)`
-  ${(props) => props.hasText && 'margin-right: 8px;'}
+  ${props => props.hasText && 'margin-right: 8px;'}
 `;
 
 /* color specifies the background color, contentColor specifies the color of the text/icon 
@@ -42,7 +42,7 @@ const Button = ({
   color,
   contentColor = COLOR.BLACK,
   onClick,
-  inline = false,
+  inline = false
 }) => (
   <StyledButton
     isText={children && !type}

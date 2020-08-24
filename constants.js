@@ -6,7 +6,7 @@ export const DELETE = 'DELETE';
 export const SAVE = 'SAVE';
 export const FAQ = {
   label: 'FAQ',
-  categories: ['General', 'Teams & Projects', 'Logistics'],
+  categories: ['General', 'Teams & Projects', 'Logistics']
 };
 export const SPONSORSHIP = 'SPONSORSHIP';
 export const COLOR = {
@@ -14,16 +14,11 @@ export const COLOR = {
   WHITE: '#FFFFFF',
   GRAY: '#EDEDED',
   PRIMARY: '#2D2937',
-<<<<<<< HEAD
   TEXT: '#5A5A5A',
-  EDIT_BORDER: '#606060',
   BLACK: '#000000',
-  DARK_COPY: '#A198A6'
-=======
-  BLACK: '#000000',
+  DARK_COPY: '#A198A6',
   RED: '#EB5757',
   DARK_GRAY: '#606060',
   TRANSPARENT: 'Transparent',
-  BODY_TEXT: '#5A5A5A',
->>>>>>> master
+  BODY_TEXT: '#5A5A5A'
 };

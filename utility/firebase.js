@@ -29,7 +29,7 @@ if (!firebase.apps.length) {
       process.env.NUXT_ENV_FIREBASE_STORAGE_BUCKET,
     messagingSenderId:
       process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID ||
-      process.env.NUXT_ENV_FIREBASE_MESSAGING_SENDER_ID,
+      process.env.NUXT_ENV_FIREBASE_MESSAGING_SENDER_ID
   };
   firebase.initializeApp(config);
 }
@@ -41,15 +41,15 @@ const webCollection = 'Website_content';
 const Hackathons = 'Hackathons';
 
 const fireDb = {
-  getNumberOfApplicants: (callback) => {
+  getNumberOfApplicants: callback => {
     db.collection('hacker_email_2020').onSnapshot(callback);
   },
-  getNumberOfAccepted: (callback) => {
+  getNumberOfAccepted: callback => {
     db.collection('hacker_info_2020')
       .where('tags.accepted', '==', true)
       .onSnapshot(callback);
   },
-  getScored: (callback) => {
+  getScored: callback => {
     db.collection('hacker_info_2020')
       .where('score.finalScore', '>', -1)
       .onSnapshot(callback);
@@ -62,7 +62,7 @@ const fireDb = {
   //   const csv = parser.parse(hackerInfo);
   //   return csv;
   // },
-  isAdmin: async (email) => {
+  isAdmin: async email => {
     const ref = db.collection('admins');
     const admins = (await ref.get()).docs;
     for (const admin of admins) {
@@ -91,14 +91,17 @@ const fireDb = {
   },
   getWebsites: async () => {
     const ref = db.collection(webCollection);
-    return (await ref.get()).docs.map((doc) => doc.id);
+    return (await ref.get()).docs.map(doc => doc.id);
   },
   getIntroText: async () => {
     const websites = await fireDb.getWebsites();
     const introTexts = {};
     for (const website of websites) {
       const websiteData = (
-        await db.collection(webCollection).doc(website).get()
+        await db
+          .collection(webCollection)
+          .doc(website)
+          .get()
       ).data();
       introTexts[website] = {
         introText: websiteData.IntroText
@@ -112,7 +115,7 @@ const fireDb = {
         introButtonEnabled: websiteData.IntroButtonEnabled,
         introButtonLink: websiteData.IntroButtonLink,
         introSignUpButtonText: websiteData.SignUpButtonText,
-        introSignUpText: websiteData.SignUpText,
+        introSignUpText: websiteData.SignUpText
       };
     }
     return introTexts;
@@ -126,7 +129,7 @@ const fireDb = {
         .doc(website)
         .collection('Events')
         .get();
-      events[website] = await websiteData.docs.map((doc) => {
+      events[website] = await websiteData.docs.map(doc => {
         const data = doc.data();
         return {
           id: doc.id,
@@ -138,14 +141,17 @@ const fireDb = {
           signupLink: data.signupLink || '',
           eventLastEditedBy: data.eventLastEditedBy || undefined,
           eventLastEditedDate: data.eventLastEditedDate || undefined,
-          enabled: data.enabled,
+          enabled: data.enabled
         };
       });
     }
     return events;
   },
   addEvent: async (website, event) => {
-    const ref = db.collection(webCollection).doc(website).collection('Events');
+    const ref = db
+      .collection(webCollection)
+      .doc(website)
+      .collection('Events');
     await ref.add({
       title: event.title || '',
       order: parseInt(event.order) || -1,
@@ -156,7 +162,7 @@ const fireDb = {
       imageLink: event.imageLink || '',
       enabled: true,
       eventLastEditedBy: event.eventLastEditedBy,
-      eventLastEditedDate: event.eventLastEditedDate.toDateString(),
+      eventLastEditedDate: event.eventLastEditedDate.toDateString()
     });
   },
   updateEvent: async (website, event) => {
@@ -174,7 +180,7 @@ const fireDb = {
       signupLink: event.signupLink || '',
       imageLink: event.imageLink || '',
       eventLastEditedBy: event.eventLastEditedBy,
-      eventLastEditedDate: event.eventLastEditedDate.toDateString(),
+      eventLastEditedDate: event.eventLastEditedDate.toDateString()
     });
   },
   updateEventEnabled: async (website, event) => {
@@ -184,7 +190,7 @@ const fireDb = {
       .collection('Events')
       .doc(event.id);
     await ref.update({
-      enabled: event.enabled,
+      enabled: event.enabled
     });
   },
   updateIntroText: async (
@@ -207,7 +213,7 @@ const fireDb = {
       IntroButtonEnabled: enabled || false,
       IntroButtonLink: signupLink || '',
       SignUpButtonText: signupButtonText || '',
-      SignUpText: signupText || '',
+      SignUpText: signupText || ''
     });
   },
   addSponsorInformation: async (website, sponsor) => {
@@ -220,7 +226,7 @@ const fireDb = {
       name: sponsor.name,
       url: sponsor.url,
       rank: sponsor.rank,
-      altImage: sponsor.altImage,
+      altImage: sponsor.altImage
     });
   },
   async deleteSponsor(website, image) {
@@ -231,7 +237,7 @@ const fireDb = {
         .doc(website)
         .collection('Sponsors')
         .get();
-      sponsors.forEach(async (sponsor) => {
+      sponsors.forEach(async sponsor => {
         if (sponsor.data().image === image) {
           altImage = !!sponsor.data().altImage;
           await sponsor.ref.delete();
@@ -269,7 +275,7 @@ const fireDb = {
           name: file.sponsorName.trim(),
           url: file.url.trim(),
           rank: file.rank,
-          altImage: file.altImage ? `alt${file.name}` : null,
+          altImage: file.altImage ? `alt${file.name}` : null
         });
       } catch (e) {
         const ref = storage.ref(`${website}/${file.name}`);
@@ -291,7 +297,7 @@ const fireDb = {
       const data = await fireDb.get(website, 'Sponsors');
       if (data.length > 0) {
         await Promise.all(
-          data.map(async (sponsor) => {
+          data.map(async sponsor => {
             const newSponsor = sponsor;
             newSponsor.data.imageUrl = await fireDb.getImageUrl(
               website,
@@ -321,7 +327,7 @@ const fireDb = {
     const image = storage.ref(`${WebDocument}/${imageref}`);
     const url = await image.getDownloadURL();
     return url;
-  },
+  }
 };
 
 export const getDocument = async (hackathon, collection) => {
@@ -334,9 +340,9 @@ export const getDocument = async (hackathon, collection) => {
     .collection(webCollection)
     .doc(hackathon)
     .collection(collection);
-  return (await ref.get()).docs.map((doc) => ({
+  return (await ref.get()).docs.map(doc => ({
     id: doc.id,
-    data: doc.data(),
+    data: doc.data()
   }));
 };
 
@@ -370,9 +376,9 @@ export const getHackathons = async () => {
   return db
     .collection('Hackathons')
     .get()
-    .then((querySnapshot) => {
+    .then(querySnapshot => {
       const hackathons = [];
-      querySnapshot.forEach((doc) => {
+      querySnapshot.forEach(doc => {
         hackathons.push(doc.id);
       });
       return hackathons;
@@ -381,14 +387,14 @@ export const getHackathons = async () => {
 
 export const getHackathonPaths = async () => {
   const hackathons = await getHackathons();
-  const paths = hackathons.map((id) => {
+  const paths = hackathons.map(id => {
     return {
-      params: { id },
+      params: { id }
     };
   });
   return {
     paths,
-    fallback: false,
+    fallback: false
   };
 };
 

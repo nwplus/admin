@@ -3,11 +3,13 @@ import Card, { CardHeader, CardTitle, CardContent, CardButtonContainer } from '.
 import { EDIT, NEW } from '../constants'
 import Button from '../components/button'
 import fireDb from '../utility/firebase'
+import { useRouter } from 'next/router'
 
 export default () => {
   const clickclick = async () => {
     console.log(await fireDb.getTest())
   }
+  const router = useRouter()
   return (
     <React.Fragment>
       <div>Login Page</div>
@@ -18,6 +20,8 @@ export default () => {
           <p>Some extra text</p>
           <CardButtonContainer>
             <Button type={EDIT} onClick={clickclick}>Hi there</Button>
+            
+        <Button onClick={() => router.push('/testing')}>goto</Button>
           </CardButtonContainer>
         </CardHeader>
         <CardContent>Example usage of card component</CardContent>

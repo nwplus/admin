@@ -95,6 +95,10 @@ export default function Home() {
   const [ showError, setShowError ] = useState(false)
   const setAdmin = firebase.functions().httpsCallable('setAdmin')
 
+  console.log("hello")
+  // const currUser = firebase.auth().currentUser
+  // if (currUser) router.push('/landing')
+
   const googleSignIn = async () => {
     const provider = new firebase.auth.GoogleAuthProvider();
     provider.setCustomParameters({
@@ -125,7 +129,6 @@ export default function Home() {
       alert(error.message)
     }
 }
-  console.log(showError)  
   return (
     <>
       <Wrapper>

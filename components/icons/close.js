@@ -18,4 +18,8 @@ const CloseIcon = ({ className, color }) => (
   </svg>
 );
 
+<<<<<<< HEAD
 export default CloseIcon;
+=======
+export default CloseIcon;
+>>>>>>> master

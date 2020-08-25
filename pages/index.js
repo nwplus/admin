@@ -2,7 +2,7 @@ import Card, {
   CardHeader,
   CardTitle,
   CardContent,
-  CardButtonContainer
+  CardButtonContainer,
 } from '../components/card';
 import { EDIT } from '../constants';
 import Button from '../components/button';

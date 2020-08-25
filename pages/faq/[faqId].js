@@ -1,40 +1,46 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-// import Modal, { ModalTitle } from '../../components/modal'
-import Modal from 'react-modal';
 import { fireDb } from '../../utility/firebase';
+import Modal, { ModalContent, ModalField } from '../../components/modal';
+import { EDIT, FAQ } from '../../constants';
 
-export default function faqIdPage() {
+export default function FaqID() {
   const router = useRouter();
-  // access the query element
-  let { faqID, question, category, answer, lastModified } = router.query;
-  const [currFaq, setCurrFaq] = useState({
-    question: question,
-    category: category,
-    answer: answer,
-    lastModified: lastModified,
-  });
+  const [faq, setFaq] = useState(router.query);
 
-  if (
-    question === undefined &&
-    answer === undefined &&
-    category === undefined &&
-    lastModified === undefined &&
-    faqID
-  ) {
-    fireDb.getFaq(faqID).then((res) => {
-      setCurrFaq(res);
+  // For some reason, faqID becomes faqId when passed through the router
+  if (faq.question === undefined && router.query.faqId) {
+    fireDb.getFaq(router.query.faqId).then((res) => {
+      setFaq(res);
     });
   }
+
+  const handleInput = (property, value, isDropdown = false) => {
+    setFaq({
+      ...faq,
+      [property]: value,
+    });
+  };
+
+  const handleUpdate = (faqID) => {
+    fireDb.updateFaq(faqID, faq);
+    handleClose();
+  };
+
+  const handleClose = () => {
+    router.push('/faq');
+    setFaq({});
+  };
+
   return (
-    <>
-      {/* {console.log(currFaq)} */}
-      {/* {useEffect(() => {}, {currFaq})} */}
-      <div>Question ID: {faqID}</div>
-      <div>Question: {currFaq['question']}</div>
-      <div>Category: {currFaq['category']}</div>
-      <div>Answer: {currFaq['answer']}</div>
-      <div>Last modified: {currFaq['lastModified']}</div>
-    </>
+    <Modal isOpen handleClose={() => handleClose()} handleSave={() => handleUpdate(router.query.faqId)} modalAction={EDIT}>
+      <ModalContent page={FAQ} columns={2}>
+        <ModalField label="Question" value={faq.question} modalAction={EDIT} onChange={(event) => handleInput('question', event.target.value)} />
+        <ModalField label="Category" value={faq.category} modalAction={EDIT} onChange={(category) => handleInput('category', category.label, true)} />
+      </ModalContent>
+      <ModalContent page={FAQ} columns={1}>
+        <ModalField label="Answer" value={faq.answer} modalAction={EDIT} onChange={(event) => handleInput('answer', event.target.value)} />
+      </ModalContent>
+    </Modal>
   );
 }

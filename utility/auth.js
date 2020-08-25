@@ -8,28 +8,20 @@ const Auth = ({ children }) => {
     const [user, setUser] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
     const router = useRouter()
-    console.log(router.pathname)
-    console.log(`${isLoading} outside`)
 
+    useEffect(async () => {
+        await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
+    },[])
+    
     useEffect(() => {
         const unsubscribe = firebase.auth().onAuthStateChanged(async user => {
-            console.log(router.pathname+" curr path")
             if (user && /.+@nwplus\.io$/.test(user.email)) {
-                if (router.pathname=='/') await router.push('/landing')
-                console.log(user)
-                
                 setUser(user)
+                if (router.pathname=='/') await router.push('/landing')
             } else {
-                console.log("pushing...")
-                if (router.pathname!='/') await router.push('/')
-                console.log("pushed")
-                
+                await router.push('/')
             }
-            if (isLoading) {
-                console.log("changing loading state...")
-                setIsLoading(false)
-                console.log("changed state")
-            }
+            setIsLoading(false)
         })
 
         return () => unsubscribe()
@@ -37,11 +29,9 @@ const Auth = ({ children }) => {
 
     return (
         <AuthContext.Provider value={{ isAuthenticated: !!user, user }}>
-            {isLoading ? <h1>Loading....</h1> : children}
+            {isLoading ? null : children}
         </AuthContext.Provider>
     )
-    
-    
 }
 
 export const useAuth = () => {

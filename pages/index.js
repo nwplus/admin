@@ -1,108 +1,46 @@
 import firebase from 'firebase'
 import styled from 'styled-components'
 import { useState } from 'react'
-import { COLOR } from '../constants'
 import Button from '../components/button'
-import fireDb from '../utility/firebase'
-import { useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { useAuth } from '../utility/auth'
+import { COLOR } from '../constants'
 
-
-
-const LogInDiv = styled.div`
-    position: absolute;
-    top: 179px;
-    font-weight: bold;
-    font-size: 32px;
-    line-height: 40px;
-    color: ${ COLOR.BLACK };
-    left: 50%;
-    margin-left: -42.625px;
+const Container = styled.div`
+    display: flex;
+    justify-content: center;
 `
-
-const UserNameDiv = styled.div`
-    position: absolute;
-    top: 285px;
-    font-weight: bold;
-    font-size: 24px;
-    line-height: 30px;
-    color: ${ COLOR.BLACK };
-    text-align: left;
+const NameHeader = styled.h1`
+    position: absolute:
+    top: 100px;
 `
-
-const PasswordDiv = styled.div`
-    position: absolute;
-    top: 400px;
-    font-weight: bold;
-    font-size: 24px;
-    line-height: 30px;
-    text-align: left;
-    color: ${ COLOR.BLACK };
-`
-
-const ForgotPasswordDiv = styled.div`
-    position: absolute;
-    margin-top: 488px;
-    font-weight: bold;
-    font-size: 16px;
-    line-height: 20px;
-    left: 50%;
-    color: ${ COLOR.BLACK };
-`
-
 const ButtonWrapper = styled.div`
     position: absolute;
-    top: 588px;
-    margin: auto;
+    top: 200px;
 `
-
-const Wrapper = styled.div`
-    width: 365px;
-    margin: auto;
-`
-
-const UserNameInput = styled.input`
+const ErrorDiv = styled.div`
     position: absolute;
-    top: 326px;
-    width: 365px;
-    height: 40px;
-    background: ${ COLOR.WHITE };
-    border: 1px solid #606060;
-    box-sizing: border-box;
-    border-radius: 2px;
-    font-size: 16px;
-    line-height: 20px;
+    top: 300px;
+    color: ${COLOR.RED}
 `
-
-const PasswordInput = styled.input`
-    position: absolute;
-    top: 441px;
-    width: 365px;
-    height: 40px;
-    background: ${ COLOR.WHITE };
-    border: 1px solid #606060;
-    box-sizing: border-box;
-    border-radius: 2px;
-    font-size: 16px;
-    line-height: 20px;
-`
-
 
 export default function Home() {
   const router = useRouter()
-  const { user } = useAuth()
   const [ showError, setShowError ] = useState(false)
   const setAdmin = firebase.functions().httpsCallable('setAdmin')
 
-  console.log("hello")
-  // const currUser = firebase.auth().currentUser
-  // if (currUser) router.push('/landing')
+  const checkAddAdminClaim = async user => {
+    const token = await user.getIdTokenResult();
+    if (!token.claims.hasOwnProperty('admin')) {
+      await setAdmin()
+      await firebase.auth().currentUser.getIdToken(true)
+    }
+  }
 
   const googleSignIn = async () => {
     const provider = new firebase.auth.GoogleAuthProvider();
     provider.setCustomParameters({
-      'hd': 'nwplus.io'
+      'hd': 'nwplus.io',
+      'prompt': 'consent'
     })
 
     try {
@@ -110,19 +48,10 @@ export default function Home() {
       const user = firebase.auth().currentUser
       if (user && /.+@nwplus\.io$/.test(user.email)) {
         router.push('/landing')
-        const token = await user.getIdTokenResult();
-        console.log(token.claims)
-        if (!token.claims.hasOwnProperty('admin')) {
-          await setAdmin()
-          await firebase.auth().currentUser.getIdToken(true)
-          const token2 = await user.getIdTokenResult();
-          console.log(token2.claims)
-        }
+        checkAddAdminClaim(user)
       } else {
-        console.log("smh")
         await firebase.auth().signOut()
         setShowError(true)
-        console.log("get out of here")
       }
     } catch (error) {
       console.log(error.message)
@@ -131,19 +60,13 @@ export default function Home() {
 }
   return (
     <>
-      <Wrapper>
-        <LogInDiv>Log in</LogInDiv>
-        <UserNameDiv>User Name</UserNameDiv>
-        <UserNameInput/>
-        <PasswordDiv>Password</PasswordDiv>
-        <PasswordInput/>
-        <ForgotPasswordDiv>Forgot password?</ForgotPasswordDiv>
+      <Container>
+        <NameHeader>nwPlus CMS</NameHeader>
         <ButtonWrapper>
-          <Button onClick={googleSignIn}>Login</Button>
-        </ButtonWrapper>
-        {showError ? <div>smh</div> : null}
-      </Wrapper>
-      
+            <Button onClick={googleSignIn}>Login</Button>
+          </ButtonWrapper>
+          {showError ? <ErrorDiv>Unauthorized user! Please log in again.</ErrorDiv> : null}
+      </Container>
     </>
   )
 }

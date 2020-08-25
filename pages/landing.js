@@ -1,15 +1,9 @@
-import Head from 'next/head'
 import Card, { CardHeader, CardTitle, CardContent, CardButtonContainer } from '../components/card'
-import { EDIT, NEW } from '../constants'
+import { EDIT } from '../constants'
 import Button from '../components/button'
-import fireDb from '../utility/firebase'
-import { useRouter } from 'next/router'
+import firebase from 'firebase'
 
 export default () => {
-  const clickclick = async () => {
-    console.log(await fireDb.getTest())
-  }
-  const router = useRouter()
   return (
     <React.Fragment>
       <div>Login Page</div>
@@ -21,7 +15,7 @@ export default () => {
           <CardButtonContainer>
             <Button type={EDIT} onClick={clickclick}>Hi there</Button>
             
-        <Button onClick={() => router.push('/testing')}>goto</Button>
+        <Button onClick={() => firebase.auth().signOut()}>Sign out</Button>
           </CardButtonContainer>
         </CardHeader>
         <CardContent>Example usage of card component</CardContent>

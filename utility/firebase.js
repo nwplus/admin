@@ -40,11 +40,6 @@ const storage = firebase.storage();
 const webCollection = 'Website_content';
 
 const fireDb = {
-  getTest: async () => {
-    const ref = db.collection("Hackathons").doc("HealthX")
-    const data = (await ref.get()).data()
-    return data
-  },
   getNumberOfApplicants: callback => {
     db.collection('hacker_email_2020').onSnapshot(callback)
   },

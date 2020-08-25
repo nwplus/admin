@@ -13,7 +13,6 @@ module.exports = {
     extends: ['eslint:recommended', 'plugin:react/recommended'],
     parser: 'babel-eslint',
     rules: {
-      'react/react-in-jsx-scope': 0,  
       'react/prop-types': 0,
       'no-await-in-loop': 0,
       'no-continue': 0,
@@ -21,7 +20,4 @@ module.exports = {
       radix: 0,
       'no-param-reassign': 0,
     },
-    global: {
-        React: 'writable'
-    }
   };

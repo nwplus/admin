@@ -13,7 +13,7 @@ export default () => {
           <CardTitle>Hi</CardTitle>
           <p>Some extra text</p>
           <CardButtonContainer>
-            <Button type={EDIT} onClick={clickclick}>Hi there</Button>
+            <Button type={EDIT}>Hi there</Button>
             
         <Button onClick={() => firebase.auth().signOut()}>Sign out</Button>
           </CardButtonContainer>

@@ -6,10 +6,10 @@ import { fireDb } from '../utility/firebase';
 import Card, { CardHeader, CardTitle, CardButtonContainer, CardContent } from '../components/card';
 import Button from '../components/button';
 import Modal, { ModalContent, ModalField } from '../components/modal';
-import { COLOR, EDIT, VIEW, NEW, DELETE, FAQ } from '../constants';
+import { COLOR, EDIT, VIEW, NEW, DELETE, FAQ, FAQCategory } from '../constants';
 
 const FAQWrapper = styled.div`
-  max-height: 512px; /* 9 rows (56px row height + 2px row border height) = 522px limit */
+  max-height: 512px;
   overflow-y: scroll;
 
   border: 1px solid ${COLOR.BLACK};
@@ -118,8 +118,6 @@ export default function Faq({ currHackathon, hackathons }) {
 
   const handleNew = (faq) => {
     faq.hackathonIDs = [hackathon];
-    console.log(faq);
-    // TODO: add call to confirmation modal here before we add the data
     fireDb.addFaq(faq);
     faq.lastModified = fireDb.formatDate(fireDb.getTimestamp().seconds);
     setFaqs({
@@ -132,7 +130,14 @@ export default function Faq({ currHackathon, hackathons }) {
     handleClose();
   };
 
-  const handleInput = (property, value, faq) => {
+  const handleInput = (property, value, faq, isDropdown = false) => {
+    if (isDropdown) {
+      setFaqEditing({
+        ...faq,
+        [property]: value,
+      });
+      return;
+    }
     if (inputTimeout.current) {
       if (inputTimeout.current[property] !== null) clearTimeout(inputTimeout.current[property]);
     } else {
@@ -198,11 +203,11 @@ export default function Faq({ currHackathon, hackathons }) {
               modalAction={VIEW}
               lastModified={faqViewing.lastModified}
             >
-              <ModalContent page={FAQ.label} columns={2}>
+              <ModalContent page={FAQ} columns={2}>
                 <ModalField label="Question" value={faqViewing.question} modalAction={VIEW} />
                 <ModalField label="Category" value={faqViewing.category} modalAction={VIEW} />
               </ModalContent>
-              <ModalContent page={FAQ.label} columns={1}>
+              <ModalContent page={FAQ} columns={1}>
                 <ModalField label="Answer" value={faqViewing.answer} modalAction={VIEW} />
               </ModalContent>
             </Modal>
@@ -234,7 +239,7 @@ export default function Faq({ currHackathon, hackathons }) {
               // lastModified={router.query.lastModified}
               lastModified={faqEditing.lastModified}
             >
-              <ModalContent page={FAQ.label} columns={2}>
+              <ModalContent page={FAQ} columns={2}>
                 <ModalField
                   label="Question"
                   // value={router.query.question}
@@ -247,10 +252,10 @@ export default function Faq({ currHackathon, hackathons }) {
                   // value={router.query.category}
                   value={faqEditing.category}
                   modalAction={EDIT}
-                  onChange={(event) => handleInput('category', event.target.value, faqEditing)}
+                  onChange={(category) => handleInput('category', category.label, faqEditing, true)}
                 />
               </ModalContent>
-              <ModalContent page={FAQ.label} columns={1}>
+              <ModalContent page={FAQ} columns={1}>
                 <ModalField
                   label="Answer"
                   // value={router.query.answer}
@@ -286,16 +291,16 @@ export default function Faq({ currHackathon, hackathons }) {
               handleSave={() => handleNew(faqEditing)}
               modalAction={NEW}
             >
-              <ModalContent page={FAQ.label} columns={2}>
+              <ModalContent page={FAQ} columns={2}>
                 <ModalField label="Question" modalAction={NEW} onChange={(event) => handleInput('question', event.target.value, faqEditing)} />
                 <ModalField
                   label="Category"
-                  // TODO: need to add dropdown here for category options
                   modalAction={NEW}
-                  onChange={(event) => handleInput('category', event.target.value, faqEditing)}
+                  onChange={(category) => handleInput('category', category.label, faqEditing, true)}
+                  value={FAQCategory.GENERAL}
                 />
               </ModalContent>
-              <ModalContent page={FAQ.label} columns={1}>
+              <ModalContent page={FAQ} columns={1}>
                 <ModalField label="Answer" modalAction={NEW} onChange={(event) => handleInput('answer', event.target.value, faqEditing)} />
               </ModalContent>
             </Modal>

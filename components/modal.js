@@ -1,8 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import { COLOR, EDIT, VIEW, NEW, CLOSE, SPONSORSHIP } from '../constants';
+import { COLOR, VIEW, NEW, CLOSE, SPONSORSHIP, FAQCategory, FAQ } from '../constants';
 import TextBox from './textbox';
 import Button from './button';
+import Dropdown from './dropdown';
 
 const BackDropScreen = styled.div`
   width: 100%;
@@ -26,7 +27,7 @@ export const ModalTitle = styled.h1`
 
 export const Label = styled.label`
   display: block;
-  margin: 14px 0;
+  margin: 14px 0 11px 0;
   font-size: 16px;
   line-height: 20px;
 `;
@@ -36,8 +37,8 @@ export const InputField = styled.input`
   height: 40px;
   border: 1px solid ${COLOR.DARK_GRAY};
   box-sizing: border-box;
-  margin-bottom: 0.5rem;
-  padding: 0 0.5rem;
+  margin-bottom: 0.75rem;
+  padding: 0 0.75rem;
   background: ${COLOR.WHITE};
 `;
 
@@ -53,14 +54,32 @@ const GenericText = styled.p`
 `;
 
 export const ModalField = ({ label, value, type = 'text', onChange, modalAction }) => {
-  // TODO: add detect dropdown based on label === category?
   return (
     <>
       <div>
         <Label>{label}</Label>
         {label === 'Answer' && modalAction !== VIEW && <TextBox width={'95%'} defaultValue={value} onChange={onChange} />}
         {label !== 'Answer' && label !== 'Category' && modalAction !== VIEW && <InputField type={type} defaultValue={value} onChange={onChange} />}
-        {label === 'Category' && modalAction !== VIEW && <InputField type={type} defaultValue={value} onChange={onChange} />}
+        {label === 'Category' && modalAction !== VIEW && (
+          <Dropdown
+            options={[
+              {
+                label: FAQCategory.GENERAL,
+              },
+              {
+                label: FAQCategory.LOGS,
+              },
+              {
+                label: FAQCategory.TEAMS,
+              },
+              {
+                label: FAQCategory.MISC,
+              },
+            ]}
+            onChange={onChange}
+            defaultValue={value}
+          />
+        )}
         {modalAction === VIEW && <GenericText>{value}</GenericText>}
       </div>
     </>
@@ -72,8 +91,8 @@ const UploadButton = styled(Button)`
   flex-grow: 1;
   width: 50%;
   padding: 24px 24px !important;
-  padding: 0 0.5rem;
-  margin-bottom: 0.5rem;
+  padding: 0 0.75rem;
+  margin-bottom: 0.75rem;
 `;
 
 const Inline = styled.div`
@@ -85,7 +104,7 @@ const Inline = styled.div`
 const ImageContainer = styled.div`
   width: 200px;
   height: 200px;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
   background: #c4c4c4;
 `;
 
@@ -99,8 +118,6 @@ export const UploadContainer = ({ type, value, onClick }) => (
     </Inline>
   </>
 );
-
-const Dropdown = styled.select``;
 
 export const LogoImage = ({ children }) => (
   <>

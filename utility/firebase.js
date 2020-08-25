@@ -5,7 +5,7 @@ import 'firebase/auth';
 import 'firebase/storage';
 import * as Parser from 'json2csv';
 import { async } from 'q';
-import { FAQ } from '../constants';
+import { FAQ, FAQCategory } from '../constants';
 
 if (!firebase.apps.length) {
   const config = {
@@ -25,7 +25,7 @@ export const db = firebase.firestore();
 
 const storage = firebase.storage();
 const webCollection = 'Website_content';
-const faqCollection = FAQ.label;
+const faqCollection = FAQ;
 
 export const fireDb = {
   getNumberOfApplicants: (callback) => {
@@ -87,13 +87,25 @@ export const fireDb = {
     const faqData = (await db.collection(faqCollection).doc(faqID).get()).data();
     return faqData
       ? {
-          question: faqData.question ? faqData.question.toString() : 'Empty question field',
-          answer: faqData.answer ? faqData.answer.toString() : 'Empty answer field',
-          category: faqData.category ? faqData.category.toString() : '',
+          question: faqData.question ? faqData.question : 'Empty question field',
+          answer: faqData.answer ? faqData.answer : 'Empty answer field',
+          category: faqData.category ? fireDb.getFaqCategory(faqData.category) : FAQCategory.MISC,
           lastModified: faqData.lastModified ? fireDb.formatDate(faqData.lastModified.seconds) : fireDb.formatDate(fireDb.getTimestamp().seconds),
           hackathonIDs: faqData.hackathonIDs ? faqData.hackathonIDs : [],
         }
       : null;
+  },
+  getFaqCategory: (faqCategory) => {
+    switch (faqCategory) {
+      case FAQCategory.LOGS:
+        return FAQCategory.LOGS;
+      case FAQCategory.TEAMS:
+        return FAQCategory.TEAMS;
+      case FAQCategory.MISC:
+        return FAQCategory.MISC;
+      default:
+        return FAQCategory.GENERAL;
+    }
   },
   formatDate: (date) => {
     date = new Date(date * 1000);

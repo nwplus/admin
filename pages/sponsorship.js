@@ -2,7 +2,7 @@ import Card, { CardHeader, CardTitle, CardContent, CardButtonContainer, CardDiv,
 import styled from 'styled-components'
 import Button from '../components/button'
 import React, { useState } from 'react'
-import { EDIT, NEW } from '../constants'
+import { EDIT, NEW, VIEW, DELETE, COLOR} from '../constants'
 import fireDb, { db } from "../utility/firebase"
 import Modal from '../components/modal'
 
@@ -20,6 +20,8 @@ const Text = styled.text`
 const Actions = styled.div`
     padding-right: 80px;
     flex: 1;
+    display: flex;
+    justify-content: flex-start;
 `
 
 class SponsorshipPage extends React.Component {
@@ -99,6 +101,13 @@ class SponsorshipPage extends React.Component {
         console.log(this.state.newobj);
     }   
 
+    selectImageFile = e => {
+        if (e.target.files[0]) {
+            console.log("Files:", e.target.files[0])
+            
+        }
+    }
+
     handleCloseModal = () => { 
         this.setState({showEditWindow:false});
     }
@@ -174,10 +183,9 @@ class SponsorshipPage extends React.Component {
                                         {item.lastmod}
                                     </Text>
                                     <Actions>
-
-                                        <button onClick={() => this.handleDelete(item.name)}> delete </button>
-                                        <button onClick={()=> this.handleEdit(item.name)}> view </button>
-                                        <button onClick={() => this.handleEdit(item.name)}> edit </button>
+                                        <Button type={DELETE} color={COLOR.TRANSPARENT} onClick={() => this.handleDelete(item.name)} /> 
+                                        <Button type={VIEW} color={COLOR.TRANSPARENT} onClick={()=> this.handleEdit(item.name)} />
+                                        <Button type={EDIT} color={COLOR.TRANSPARENT} onClick={() => this.handleEdit(item.name)}/>
                                     </Actions>
                                 </CardDiv>
                             )}
@@ -211,12 +219,13 @@ class SponsorshipPage extends React.Component {
 
                         <p>Image File</p>
                         <input 
-                        type='text' 
+                        type='file' 
                         name='imgURL' 
                         value={this.state.newobj.imgURL}
-                        onChange={this.handleChange}
+                        onChange={this.selectImageFile}
                         required
                         />
+
 
                         <label>
 

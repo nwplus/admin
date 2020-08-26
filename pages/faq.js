@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
@@ -98,9 +98,8 @@ const PlaceHolderText = styled.td`
 
 export default function Faq({ currHackathon, hackathons }) {
   const router = useRouter();
-  // uncomment this when integrated with sidebar to receive hackathon that is passed down
-  // const [currHackathon, setCurrHackathon] = useState(currHackathon);
-  const [hackathon, setHackathon] = useState('LHD2021');
+  // uncomment 'LHD2021' when integrated with sidebar to receive hackathon that is passed down
+  const [hackathon, setHackathon] = useState(currHackathon || 'LHD2021');
   const [faqs, setFaqs] = useState([]);
   const [faqViewing, setFaqViewing] = useState({});
   const [faqEditing, setFaqEditing] = useState({});
@@ -108,14 +107,16 @@ export default function Faq({ currHackathon, hackathons }) {
   const [isLoading, setIsLoading] = useState(true);
   const inputTimeout = useRef(null);
 
-  if (Object.keys(faqs).length === 0) {
-    fireDb.getFaqs(hackathon).then((res) => {
-      if (Object.keys(res).length > 0) {
-        setFaqs(res);
-      }
-      setIsLoading(false);
-    });
-  }
+  useEffect(() => {
+    if (Object.keys(faqs).length === 0) {
+      fireDb.getFaqs(hackathon).then((res) => {
+        if (Object.keys(res).length > 0) {
+          setFaqs(res);
+        }
+        setIsLoading(false);
+      });
+    }
+  }, []);
 
   const handleClose = () => {
     setFaqEditing({});
@@ -258,19 +259,16 @@ export default function Faq({ currHackathon, hackathons }) {
                 />
               </a>
             </Link>
-            {/* Converting null/undefined faqID to boolean by `!!` */}
             <Modal
               isOpen={!!router.query.faqID}
               handleClose={() => router.push('/faq')}
               handleSave={() => handleUpdate(router.query.faqID, faqEditing)}
               modalAction={EDIT}
-              // lastModified={router.query.lastModified}
               lastModified={faqEditing.lastModified}
             >
               <ModalContent page={FAQ} columns={2}>
                 <ModalField
                   label="Question"
-                  // value={router.query.question}
                   value={faqEditing.question}
                   modalAction={EDIT}
                   onChange={(event) =>
@@ -279,7 +277,6 @@ export default function Faq({ currHackathon, hackathons }) {
                 />
                 <ModalField
                   label="Category"
-                  // value={router.query.category}
                   value={faqEditing.category}
                   modalAction={EDIT}
                   onChange={(category) =>
@@ -290,7 +287,6 @@ export default function Faq({ currHackathon, hackathons }) {
               <ModalContent page={FAQ} columns={1}>
                 <ModalField
                   label="Answer"
-                  // value={router.query.answer}
                   value={faqEditing.answer}
                   modalAction={EDIT}
                   onChange={(event) =>
@@ -301,7 +297,6 @@ export default function Faq({ currHackathon, hackathons }) {
             </Modal>
           </ActionsButtonContainer>
           <ActionsButtonContainer>
-            {/* TODO: Need to add confirmation modal before deleting */}
             <Button
               type={DELETE}
               color={COLOR.TRANSPARENT}
@@ -324,7 +319,6 @@ export default function Faq({ currHackathon, hackathons }) {
             </Button>
             <Modal
               isOpen={addNew}
-              // TODO: add function confirming if user would like to exit away
               handleClose={() => setAddNew(false)}
               handleSave={() => handleNew(faqEditing)}
               modalAction={NEW}

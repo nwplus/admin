@@ -4,7 +4,7 @@ import Card, {
   CardContent,
   CardButtonContainer,
 } from '../components/card';
-import { EDIT, NEW } from '../constants';
+import { EDIT } from '../constants';
 import Button from '../components/button';
 
 export default function Home() {

@@ -4,7 +4,6 @@ import 'firebase/firestore';
 import 'firebase/auth';
 import 'firebase/storage';
 import * as Parser from 'json2csv';
-import { async } from 'q';
 import { FAQ, FAQCategory } from '../constants';
 
 if (!firebase.apps.length) {
@@ -140,7 +139,7 @@ export const fireDb = {
   },
   formatDate: (date) => {
     date = new Date(date * 1000);
-    let timeZoneOffset = new Date().getTimezoneOffset() * 60000;
+    const timeZoneOffset = new Date().getTimezoneOffset() * 60000;
     return new Date(date - timeZoneOffset)
       .toISOString()
       .slice(0, -1)

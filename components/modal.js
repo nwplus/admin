@@ -1,6 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
-import { COLOR, VIEW, NEW, CLOSE, SPONSORSHIP, FAQCategory, FAQ } from '../constants';
+import {
+  COLOR,
+  VIEW,
+  NEW,
+  CLOSE,
+  SPONSORSHIP,
+  FAQCategory,
+} from '../constants';
 import TextBox from './textbox';
 import Button from './button';
 import Dropdown from './dropdown';
@@ -33,7 +40,10 @@ export const Label = styled.label`
 `;
 
 export const InputField = styled.input`
-  ${(props) => (props.inline ? 'flex-grow: 1; width: 50%; border-radius: 2px 0 0 2px;' : 'width: 95%; border-radius: 2px;')}
+  ${(props) =>
+    props.inline
+      ? 'flex-grow: 1; width: 50%; border-radius: 2px 0 0 2px;'
+      : 'width: 95%; border-radius: 2px;'}
   height: 40px;
   border: 1px solid ${COLOR.DARK_GRAY};
   box-sizing: border-box;
@@ -53,13 +63,23 @@ const GenericText = styled.p`
   text-align: left;
 `;
 
-export const ModalField = ({ label, value, type = 'text', onChange, modalAction }) => {
+export const ModalField = ({
+  label,
+  value,
+  type = 'text',
+  onChange,
+  modalAction,
+}) => {
   return (
     <>
       <div>
         <Label>{label}</Label>
-        {label === 'Answer' && modalAction !== VIEW && <TextBox width={'95%'} defaultValue={value} onChange={onChange} />}
-        {label !== 'Answer' && label !== 'Category' && modalAction !== VIEW && <InputField type={type} defaultValue={value} onChange={onChange} />}
+        {label === 'Answer' && modalAction !== VIEW && (
+          <TextBox width="95%" defaultValue={value} onChange={onChange} />
+        )}
+        {label !== 'Answer' && label !== 'Category' && modalAction !== VIEW && (
+          <InputField type={type} defaultValue={value} onChange={onChange} />
+        )}
         {label === 'Category' && modalAction !== VIEW && (
           <Dropdown
             options={[
@@ -168,14 +188,25 @@ export const ModalButton = ({ type, handleClose, handleSave }) => {
   return (
     <>
       <ButtonContainer>
-        {type === CLOSE && <Button type={CLOSE} color={COLOR.TRANSPARENT} contentColor={COLOR.DARK_GRAY} onClick={handleClose} />}
+        {type === CLOSE && (
+          <Button
+            type={CLOSE}
+            color={COLOR.TRANSPARENT}
+            contentColor={COLOR.DARK_GRAY}
+            onClick={handleClose}
+          />
+        )}
         {type !== CLOSE && type !== VIEW && (
           <>
             <InlineButtonSpan>
               <Button onClick={handleSave}>{buttonText}</Button>
             </InlineButtonSpan>
             <InlineButtonSpan>
-              <Button onClick={handleClose} color="linear-gradient(180deg, #FF4E4E 0%, #FFEBEB 289.71%)" contentColor={COLOR.WHITE}>
+              <Button
+                onClick={handleClose}
+                color="linear-gradient(180deg, #FF4E4E 0%, #FFEBEB 289.71%)"
+                contentColor={COLOR.WHITE}
+              >
                 Cancel
               </Button>
             </InlineButtonSpan>
@@ -205,12 +236,21 @@ export const ModalContent = ({ page, columns = 2, children }) => {
   }
   return (
     <>
-      <ContentContainer columns={columns === 2 ? '60% 40%' : '100%'}>{children}</ContentContainer>
+      <ContentContainer columns={columns === 2 ? '60% 40%' : '100%'}>
+        {children}
+      </ContentContainer>
     </>
   );
 };
 
-export default function Modal({ isOpen, handleClose, handleSave, modalAction, lastModified, children }) {
+export default function Modal({
+  isOpen,
+  handleClose,
+  handleSave,
+  modalAction,
+  lastModified,
+  children,
+}) {
   if (!isOpen) {
     return null;
   }
@@ -246,7 +286,11 @@ export default function Modal({ isOpen, handleClose, handleSave, modalAction, la
         <ModalButton type={CLOSE} handleClose={handleClose} />
         {getTitle(modalAction)}
         {children}
-        <ModalButton type={modalAction} handleClose={handleClose} handleSave={handleSave} />
+        <ModalButton
+          type={modalAction}
+          handleClose={handleClose}
+          handleSave={handleSave}
+        />
       </ModalBackground>
     </>
   );

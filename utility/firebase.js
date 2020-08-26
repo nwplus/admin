@@ -9,14 +9,30 @@ import { FAQ, FAQCategory } from '../constants';
 
 if (!firebase.apps.length) {
   const config = {
-    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || process.env.NUXT_ENV_FIREBASE_API_KEY,
-    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || process.env.NUXT_ENV_FIREBASE_AUTH_DOMAIN,
-    databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL || process.env.NUXT_ENV_FIREBASE_DATABASE_URL,
-    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || process.env.NUXT_ENV_FIREBASE_PROJECT_ID,
-    measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID || process.env.NUXT_ENV_FIREBASE_MEASUREMENT_ID,
-    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || process.env.NUXT_ENV_FIREBASE_APP_ID,
-    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || process.env.NUXT_ENV_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || process.env.NUXT_ENV_FIREBASE_MESSAGING_SENDER_ID,
+    apiKey:
+      process.env.NEXT_PUBLIC_FIREBASE_API_KEY ||
+      process.env.NUXT_ENV_FIREBASE_API_KEY,
+    authDomain:
+      process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN ||
+      process.env.NUXT_ENV_FIREBASE_AUTH_DOMAIN,
+    databaseURL:
+      process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL ||
+      process.env.NUXT_ENV_FIREBASE_DATABASE_URL,
+    projectId:
+      process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID ||
+      process.env.NUXT_ENV_FIREBASE_PROJECT_ID,
+    measurementId:
+      process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID ||
+      process.env.NUXT_ENV_FIREBASE_MEASUREMENT_ID,
+    appId:
+      process.env.NEXT_PUBLIC_FIREBASE_APP_ID ||
+      process.env.NUXT_ENV_FIREBASE_APP_ID,
+    storageBucket:
+      process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET ||
+      process.env.NUXT_ENV_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId:
+      process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID ||
+      process.env.NUXT_ENV_FIREBASE_MESSAGING_SENDER_ID,
   };
   firebase.initializeApp(config);
 }
@@ -32,10 +48,14 @@ export const fireDb = {
     db.collection('hacker_email_2020').onSnapshot(callback);
   },
   getNumberOfAccepted: (callback) => {
-    db.collection('hacker_info_2020').where('tags.accepted', '==', true).onSnapshot(callback);
+    db.collection('hacker_info_2020')
+      .where('tags.accepted', '==', true)
+      .onSnapshot(callback);
   },
   getScored: (callback) => {
-    db.collection('hacker_info_2020').where('score.finalScore', '>', -1).onSnapshot(callback);
+    db.collection('hacker_info_2020')
+      .where('score.finalScore', '>', -1)
+      .onSnapshot(callback);
   },
   applicantToCSV: async () => {
     const hackerReference = db.collection('hacker_info_2020');
@@ -59,7 +79,10 @@ export const fireDb = {
     const websites = await fireDb.getWebsites();
     const featureFlags = {};
     for (const website of websites) {
-      const websiteDataRef = await db.collection(webCollection).doc(website).get();
+      const websiteDataRef = await db
+        .collection(webCollection)
+        .doc(website)
+        .get();
       const websiteData = websiteDataRef.data();
       featureFlags[website] = websiteData.featureFlags;
     }
@@ -84,13 +107,21 @@ export const fireDb = {
     return faqs;
   },
   getFaq: async (faqID) => {
-    const faqData = (await db.collection(faqCollection).doc(faqID).get()).data();
+    const faqData = (
+      await db.collection(faqCollection).doc(faqID).get()
+    ).data();
     return faqData
       ? {
-          question: faqData.question ? faqData.question : 'Empty question field',
+          question: faqData.question
+            ? faqData.question
+            : 'Empty question field',
           answer: faqData.answer ? faqData.answer : 'Empty answer field',
-          category: faqData.category ? fireDb.getFaqCategory(faqData.category) : FAQCategory.MISC,
-          lastModified: faqData.lastModified ? fireDb.formatDate(faqData.lastModified.seconds) : fireDb.formatDate(fireDb.getTimestamp().seconds),
+          category: faqData.category
+            ? fireDb.getFaqCategory(faqData.category)
+            : FAQCategory.MISC,
+          lastModified: faqData.lastModified
+            ? fireDb.formatDate(faqData.lastModified.seconds)
+            : fireDb.formatDate(fireDb.getTimestamp().seconds),
           hackathonIDs: faqData.hackathonIDs ? faqData.hackathonIDs : [],
         }
       : null;
@@ -109,8 +140,12 @@ export const fireDb = {
   },
   formatDate: (date) => {
     date = new Date(date * 1000);
-    var timeZoneOffset = new Date().getTimezoneOffset() * 60000;
-    return new Date(date - timeZoneOffset).toISOString().slice(0, -1).slice(0, -4).replace('T', ' ');
+    let timeZoneOffset = new Date().getTimezoneOffset() * 60000;
+    return new Date(date - timeZoneOffset)
+      .toISOString()
+      .slice(0, -1)
+      .slice(0, -4)
+      .replace('T', ' ');
   },
   addFaq: async (faq) => {
     const ref = db.collection(faqCollection).doc();
@@ -146,10 +181,16 @@ export const fireDb = {
     const websites = await fireDb.getWebsites();
     const introTexts = {};
     for (const website of websites) {
-      const websiteData = (await db.collection(webCollection).doc(website).get()).data();
+      const websiteData = (
+        await db.collection(webCollection).doc(website).get()
+      ).data();
       introTexts[website] = {
-        introText: websiteData.IntroText ? websiteData.IntroText.toString() : '',
-        introSubtext: websiteData.IntroSubtext ? websiteData.IntroSubtext.toString() : '',
+        introText: websiteData.IntroText
+          ? websiteData.IntroText.toString()
+          : '',
+        introSubtext: websiteData.IntroSubtext
+          ? websiteData.IntroSubtext.toString()
+          : '',
         introLastEditedBy: websiteData.IntroLastEditedBy || undefined,
         introLastEditedDate: websiteData.IntroLastEditedDate || undefined,
         introButtonEnabled: websiteData.IntroButtonEnabled,
@@ -164,7 +205,11 @@ export const fireDb = {
     const websites = await fireDb.getWebsites();
     const events = {};
     for (const website of websites) {
-      const websiteData = await db.collection(webCollection).doc(website).collection('Events').get();
+      const websiteData = await db
+        .collection(webCollection)
+        .doc(website)
+        .collection('Events')
+        .get();
       events[website] = await websiteData.docs.map((doc) => {
         const data = doc.data();
         return {
@@ -199,7 +244,11 @@ export const fireDb = {
     });
   },
   updateEvent: async (website, event) => {
-    const ref = db.collection(webCollection).doc(website).collection('Events').doc(event.id);
+    const ref = db
+      .collection(webCollection)
+      .doc(website)
+      .collection('Events')
+      .doc(event.id);
     await ref.update({
       title: event.title || '',
       order: parseInt(event.order) || -1,
@@ -213,7 +262,11 @@ export const fireDb = {
     });
   },
   updateEventEnabled: async (website, event) => {
-    const ref = db.collection(webCollection).doc(website).collection('Events').doc(event.id);
+    const ref = db
+      .collection(webCollection)
+      .doc(website)
+      .collection('Events')
+      .doc(event.id);
     await ref.update({
       enabled: event.enabled,
     });
@@ -242,7 +295,10 @@ export const fireDb = {
     });
   },
   addSponsorInformation: async (website, sponsor) => {
-    const ref = db.collection(webCollection).doc(website).collection('Sponsors');
+    const ref = db
+      .collection(webCollection)
+      .doc(website)
+      .collection('Sponsors');
     await ref.add({
       image: sponsor.image,
       name: sponsor.name,
@@ -254,7 +310,11 @@ export const fireDb = {
   async deleteSponsor(website, image) {
     let altImage = false;
     try {
-      const sponsors = await db.collection(webCollection).doc(website).collection('Sponsors').get();
+      const sponsors = await db
+        .collection(webCollection)
+        .doc(website)
+        .collection('Sponsors')
+        .get();
       sponsors.forEach(async (sponsor) => {
         if (sponsor.data().image === image) {
           altImage = !!sponsor.data().altImage;
@@ -316,9 +376,15 @@ export const fireDb = {
       if (data.length > 0) {
         await Promise.all(
           data.map(async (sponsor) => {
-            sponsor.data.imageUrl = await fireDb.getImageUrl(website, sponsor.data.image);
+            sponsor.data.imageUrl = await fireDb.getImageUrl(
+              website,
+              sponsor.data.image
+            );
             if (sponsor.data.altImage) {
-              newSponsor.data.altImageUrl = await fireDb.getImageUrl(website, sponsor.data.altImage);
+              newSponsor.data.altImageUrl = await fireDb.getImageUrl(
+                website,
+                sponsor.data.altImage
+              );
             }
             return newSponsor;
           })
@@ -347,7 +413,10 @@ export const getDocument = async (hackathon, collection) => {
     const data = await ref.get();
     return data.data();
   }
-  const ref = db.collection(webCollection).doc(hackathon).collection(collection);
+  const ref = db
+    .collection(webCollection)
+    .doc(hackathon)
+    .collection(collection);
   return (await ref.get()).docs.map((doc) => ({
     id: doc.id,
     data: doc.data(),
@@ -355,16 +424,29 @@ export const getDocument = async (hackathon, collection) => {
 };
 
 export const updateDocument = (hackathon, collection, docId, object) => {
-  db.collection(webCollection).doc(hackathon).collection(collection).doc(docId).update(object);
+  db.collection(webCollection)
+    .doc(hackathon)
+    .collection(collection)
+    .doc(docId)
+    .update(object);
 };
 
 export const addDocument = async (hackathon, collection, object) => {
-  const ref = await db.collection(webCollection).doc(hackathon).collection(collection).add(object);
+  const ref = await db
+    .collection(webCollection)
+    .doc(hackathon)
+    .collection(collection)
+    .add(object);
   return ref.id;
 };
 
 export const deleteDocument = async (hackathon, collection, docId) => {
-  await db.collection(webCollection).doc(hackathon).collection(collection).doc(docId).delete();
+  await db
+    .collection(webCollection)
+    .doc(hackathon)
+    .collection(collection)
+    .doc(docId)
+    .delete();
 };
 
 export const getHackathons = async () => {

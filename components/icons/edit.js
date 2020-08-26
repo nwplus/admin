@@ -1,7 +1,6 @@
 import React from 'react';
 import { COLOR } from '../../constants';
 
-//className is to allow styles to be passed to the component
 const EditIcon = ({ className, color }) => (
   <svg
     className={className}

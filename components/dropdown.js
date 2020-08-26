@@ -1,13 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { COLOR, EDIT, VIEW, NEW, CLOSE, SPONSORSHIP } from '../constants';
+import { COLOR } from '../constants';
 import ArrowIcon from './icons/arrow';
 
 const DropdownContainer = styled.div`
   width: 100%;
 `;
 
-const Select = ({ type = 'button', isOpened, onKeyDown, onClick, children }) => {
+const Select = ({
+  type = 'button',
+  isOpened,
+  onKeyDown,
+  onClick,
+  children,
+}) => {
   return (
     <>
       <SelectContent type={type} onKeyDown={onKeyDown} onClick={onClick}>
@@ -22,7 +28,10 @@ const Select = ({ type = 'button', isOpened, onKeyDown, onClick, children }) => 
 const TransformedArrow = styled(ArrowIcon)`
   position: absolute;
   margin-top: 0.25rem;
-  ${(props) => (props.flip ? 'transform-origin: 50% 50%; transform: rotate(180deg); padding-right: 14.75rem;' : 'padding-left: 14.75rem;')}
+  ${(props) =>
+    props.flip
+      ? 'transform-origin: 50% 50%; transform: rotate(180deg); padding-right: 14.75rem;'
+      : 'padding-left: 14.75rem;'}
 `;
 
 const SelectContent = styled.button`
@@ -68,22 +77,16 @@ const Option = styled.li`
 
 export default function Dropdown({ options, onChange, defaultValue }) {
   const [isOpened, updateIsOpened] = useState(false);
-  const [activeItem, updateActiveItem] = useState(options[options.findIndex((category) => category.label === defaultValue)] || options[0]);
+  const [activeItem, updateActiveItem] = useState(
+    options[options.findIndex((category) => category.label === defaultValue)] ||
+      options[0]
+  );
   const optionsListRef = useRef(null);
 
   const handleOptionClick = (item) => {
     onChange(item);
     updateActiveItem(item);
     updateIsOpened(false);
-  };
-
-  const moveActiveItem = (changeBy) => {
-    let activeItemIndex = options.indexOf(activeItem);
-    activeItemIndex += changeBy;
-
-    if (options[activeItemIndex]) {
-      updateActiveItem(options[activeItemIndex]);
-    }
   };
 
   const handleButtonKeyDown = (e) => {
@@ -103,13 +106,29 @@ export default function Dropdown({ options, onChange, defaultValue }) {
 
   return (
     <DropdownContainer>
-      <Select type="button" isOpened={isOpened} onKeyDown={handleButtonKeyDown} onClick={() => updateIsOpened(!isOpened)}>
+      <Select
+        type="button"
+        isOpened={isOpened}
+        onKeyDown={handleButtonKeyDown}
+        onClick={() => updateIsOpened(!isOpened)}
+      >
         {activeItem.label}
       </Select>
       <OptionsContainer>
-        <OptionList tabIndex="-1" ref={optionsListRef} isOpened={isOpened} role="listbox">
+        <OptionList
+          tabIndex="-1"
+          ref={optionsListRef}
+          isOpened={isOpened}
+          role="listbox"
+        >
           {options.map((option) => (
-            <Option id={option.label} key={option.label} isActive={option.label === activeItem.label} onClick={() => handleOptionClick(option)} role="option">
+            <Option
+              id={option.label}
+              key={option.label}
+              isActive={option.label === activeItem.label}
+              onClick={() => handleOptionClick(option)}
+              role="option"
+            >
               {option.label}
             </Option>
           ))}

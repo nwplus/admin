@@ -3,7 +3,12 @@ import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { fireDb } from '../utility/firebase';
-import Card, { CardHeader, CardTitle, CardButtonContainer, CardContent } from '../components/card';
+import Card, {
+  CardHeader,
+  CardTitle,
+  CardButtonContainer,
+  CardContent,
+} from '../components/card';
 import Button from '../components/button';
 import Modal, { ModalContent, ModalField } from '../components/modal';
 import { COLOR, EDIT, VIEW, NEW, DELETE, FAQ, FAQCategory } from '../constants';
@@ -49,7 +54,9 @@ const TableHeader = styled.th`
 `;
 
 const TableData = styled.td`
-  ${(props) => !props.actions && 'max-width: 280px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;'}
+  ${(props) =>
+    !props.actions &&
+    'max-width: 280px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;'}
 
   height: 12px;
   vertical-align: middle !important;
@@ -139,7 +146,8 @@ export default function Faq({ currHackathon, hackathons }) {
       return;
     }
     if (inputTimeout.current) {
-      if (inputTimeout.current[property] !== null) clearTimeout(inputTimeout.current[property]);
+      if (inputTimeout.current[property] !== null)
+        clearTimeout(inputTimeout.current[property]);
     } else {
       inputTimeout.current = {};
       inputTimeout.current[property] = null;
@@ -177,7 +185,7 @@ export default function Faq({ currHackathon, hackathons }) {
     setFaqs(
       Object.keys(faqs)
         .filter((id) => {
-          id != faqID;
+          id !== faqID;
         })
         .reduce((obj, id) => {
           obj[id] = faqs[id];
@@ -195,7 +203,11 @@ export default function Faq({ currHackathon, hackathons }) {
         <TableData>{faqs[props.faqID].lastModified}</TableData>
         <TableData actions>
           <ActionsButtonContainer>
-            <Button type={VIEW} color={COLOR.TRANSPARENT} onClick={() => setFaqViewing(faqs[props.faqID])} />
+            <Button
+              type={VIEW}
+              color={COLOR.TRANSPARENT}
+              onClick={() => setFaqViewing(faqs[props.faqID])}
+            />
             <Modal
               isOpen={Object.keys(faqViewing).length > 0}
               handleClose={() => handleClose({})}
@@ -204,11 +216,23 @@ export default function Faq({ currHackathon, hackathons }) {
               lastModified={faqViewing.lastModified}
             >
               <ModalContent page={FAQ} columns={2}>
-                <ModalField label="Question" value={faqViewing.question} modalAction={VIEW} />
-                <ModalField label="Category" value={faqViewing.category} modalAction={VIEW} />
+                <ModalField
+                  label="Question"
+                  value={faqViewing.question}
+                  modalAction={VIEW}
+                />
+                <ModalField
+                  label="Category"
+                  value={faqViewing.category}
+                  modalAction={VIEW}
+                />
               </ModalContent>
               <ModalContent page={FAQ} columns={1}>
-                <ModalField label="Answer" value={faqViewing.answer} modalAction={VIEW} />
+                <ModalField
+                  label="Answer"
+                  value={faqViewing.answer}
+                  modalAction={VIEW}
+                />
               </ModalContent>
             </Modal>
           </ActionsButtonContainer>
@@ -227,7 +251,11 @@ export default function Faq({ currHackathon, hackathons }) {
               as={`/faq/${props.faqID}`}
             >
               <a>
-                <Button type={EDIT} color={COLOR.TRANSPARENT} onClick={() => setFaqEditing(faqs[props.faqID])} />
+                <Button
+                  type={EDIT}
+                  color={COLOR.TRANSPARENT}
+                  onClick={() => setFaqEditing(faqs[props.faqID])}
+                />
               </a>
             </Link>
             {/* Converting null/undefined faqID to boolean by `!!` */}
@@ -245,14 +273,18 @@ export default function Faq({ currHackathon, hackathons }) {
                   // value={router.query.question}
                   value={faqEditing.question}
                   modalAction={EDIT}
-                  onChange={(event) => handleInput('question', event.target.value, faqEditing)}
+                  onChange={(event) =>
+                    handleInput('question', event.target.value, faqEditing)
+                  }
                 />
                 <ModalField
                   label="Category"
                   // value={router.query.category}
                   value={faqEditing.category}
                   modalAction={EDIT}
-                  onChange={(category) => handleInput('category', category.label, faqEditing, true)}
+                  onChange={(category) =>
+                    handleInput('category', category.label, faqEditing, true)
+                  }
                 />
               </ModalContent>
               <ModalContent page={FAQ} columns={1}>
@@ -261,14 +293,20 @@ export default function Faq({ currHackathon, hackathons }) {
                   // value={router.query.answer}
                   value={faqEditing.answer}
                   modalAction={EDIT}
-                  onChange={(event) => handleInput('answer', event.target.value, faqEditing)}
+                  onChange={(event) =>
+                    handleInput('answer', event.target.value, faqEditing)
+                  }
                 />
               </ModalContent>
             </Modal>
           </ActionsButtonContainer>
           <ActionsButtonContainer>
             {/* TODO: Need to add confirmation modal before deleting */}
-            <Button type={DELETE} color={COLOR.TRANSPARENT} onClick={() => handleDelete(props.faqID)} />
+            <Button
+              type={DELETE}
+              color={COLOR.TRANSPARENT}
+              onClick={() => handleDelete(props.faqID)}
+            />
           </ActionsButtonContainer>
         </TableData>
       </TableRow>
@@ -292,16 +330,30 @@ export default function Faq({ currHackathon, hackathons }) {
               modalAction={NEW}
             >
               <ModalContent page={FAQ} columns={2}>
-                <ModalField label="Question" modalAction={NEW} onChange={(event) => handleInput('question', event.target.value, faqEditing)} />
+                <ModalField
+                  label="Question"
+                  modalAction={NEW}
+                  onChange={(event) =>
+                    handleInput('question', event.target.value, faqEditing)
+                  }
+                />
                 <ModalField
                   label="Category"
                   modalAction={NEW}
-                  onChange={(category) => handleInput('category', category.label, faqEditing, true)}
+                  onChange={(category) =>
+                    handleInput('category', category.label, faqEditing, true)
+                  }
                   value={FAQCategory.GENERAL}
                 />
               </ModalContent>
               <ModalContent page={FAQ} columns={1}>
-                <ModalField label="Answer" modalAction={NEW} onChange={(event) => handleInput('answer', event.target.value, faqEditing)} />
+                <ModalField
+                  label="Answer"
+                  modalAction={NEW}
+                  onChange={(event) =>
+                    handleInput('answer', event.target.value, faqEditing)
+                  }
+                />
               </ModalContent>
             </Modal>
           </CardButtonContainer>
@@ -312,7 +364,9 @@ export default function Faq({ currHackathon, hackathons }) {
               <FAQContent>
                 <tbody>
                   <TableRow>
-                    <PlaceHolderText>Loading FAQs for {hackathon}...</PlaceHolderText>
+                    <PlaceHolderText>
+                      Loading FAQs for {hackathon}...
+                    </PlaceHolderText>
                   </TableRow>
                 </tbody>
               </FAQContent>

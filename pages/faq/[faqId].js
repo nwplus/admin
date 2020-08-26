@@ -15,16 +15,11 @@ export default function FaqID() {
     });
   }
 
-  const handleInput = (property, value, isDropdown = false) => {
+  const handleInput = (property, value) => {
     setFaq({
       ...faq,
       [property]: value,
     });
-  };
-
-  const handleUpdate = (faqID) => {
-    fireDb.updateFaq(faqID, faq);
-    handleClose();
   };
 
   const handleClose = () => {
@@ -32,14 +27,43 @@ export default function FaqID() {
     setFaq({});
   };
 
+  const handleUpdate = (faqID) => {
+    fireDb.updateFaq(faqID, faq);
+    handleClose();
+  };
+
   return (
-    <Modal isOpen handleClose={() => handleClose()} handleSave={() => handleUpdate(router.query.faqId)} modalAction={EDIT}>
+    <Modal
+      isOpen
+      handleClose={() => handleClose()}
+      handleSave={() => handleUpdate(router.query.faqId)}
+      modalAction={EDIT}
+    >
       <ModalContent page={FAQ} columns={2}>
-        <ModalField label="Question" value={faq.question} modalAction={EDIT} onChange={(event) => handleInput('question', event.target.value)} />
-        <ModalField label="Category" value={faq.category} modalAction={EDIT} onChange={(category) => handleInput('category', category.label, true)} />
+        <ModalField
+          label="Question"
+          value={faq.question}
+          modalAction={EDIT}
+          onChange={(event) => handleInput('question', event.target.value)}
+        />
+        {faq.category && (
+          <ModalField
+            label="Category"
+            value={faq.category}
+            modalAction={EDIT}
+            onChange={(category) =>
+              handleInput('category', category.label, true)
+            }
+          />
+        )}
       </ModalContent>
       <ModalContent page={FAQ} columns={1}>
-        <ModalField label="Answer" value={faq.answer} modalAction={EDIT} onChange={(event) => handleInput('answer', event.target.value)} />
+        <ModalField
+          label="Answer"
+          value={faq.answer}
+          modalAction={EDIT}
+          onChange={(event) => handleInput('answer', event.target.value)}
+        />
       </ModalContent>
     </Modal>
   );

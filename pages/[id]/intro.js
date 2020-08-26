@@ -5,7 +5,7 @@ import Card, {
   CardHeader,
   CardTitle,
   CardContent,
-  CardButtonContainer,
+  CardButtonContainer
 } from '../../components/card';
 import { COLOR, EDIT } from '../../constants';
 import Button from '../../components/button';
@@ -14,7 +14,7 @@ import {
   updateHackathonField,
   getHackathonSnapShot,
   getHackathonPaths,
-  getHackathons,
+  getHackathons
 } from '../../utility/firebase';
 
 const HeaderText = styled.h2`
@@ -72,17 +72,17 @@ export default ({ id, hackathons }) => {
 
     let editingDataObj = {};
     let isEditing = {};
-    Object.keys(data).forEach((type) => {
+    Object.keys(data).forEach(type => {
       isEditing = {
         ...isEditingObj,
-        [type]: false,
+        [type]: false
       };
       editingDataObj = {
         ...editingDataObj,
         [type]: {
           header: data[type].header,
-          content: data[type].content,
-        },
+          content: data[type].content
+        }
       };
     });
     setIsEditingObj(isEditing);
@@ -94,17 +94,17 @@ export default ({ id, hackathons }) => {
     return () => unsubscribe();
   }, []);
 
-  const handleEdit = (type) => {
+  const handleEdit = type => {
     setIsEditingObj({
       ...isEditingObj,
-      [type]: !isEditingObj[type],
+      [type]: !isEditingObj[type]
     });
   };
 
-  const handleCancel = (type) => {
+  const handleCancel = type => {
     setIsEditingObj({
       ...isEditingObj,
-      [type]: false,
+      [type]: false
     });
   };
 
@@ -112,7 +112,7 @@ export default ({ id, hackathons }) => {
    * @param {string} type every section in the intro has a type, which is the key in the map of WebsiteData
    * reads the value of the header/content associated with the given type and updates the object in Firebase
    */
-  const handleSave = async (type) => {
+  const handleSave = async type => {
     const time = new Date().getTime();
     const { header, content } = editingData[type];
     const updateObj = {
@@ -123,29 +123,19 @@ export default ({ id, hackathons }) => {
           title: websiteData[type].title,
           header,
           content,
-          time,
-        },
-      },
+          time
+        }
+      }
     };
     try {
       updateHackathonField(id, updateObj);
-      setWebsiteData({
-        ...websiteData,
-        [type]: {
-          ...websiteData[type],
-          header,
-          content,
-          time,
-          editor: currUserName,
-        },
-      });
     } catch (error) {
       console.error(error);
       alert('An error occured while trying to update the text section');
     } finally {
       setIsEditingObj({
         ...isEditingObj,
-        [type]: false,
+        [type]: false
       });
     }
   };
@@ -157,7 +147,7 @@ export default ({ id, hackathons }) => {
       : { header: editingData[type].header, content: newVal };
     setEditingData({
       ...editingData,
-      [type]: updatedVal,
+      [type]: updatedVal
     });
   };
 
@@ -187,7 +177,7 @@ export default ({ id, hackathons }) => {
                       <Label>Header</Label>
                       <TextBox
                         defaultValue={editingData[type].header}
-                        onChange={(event) => {
+                        onChange={event => {
                           handleEditChange(event, type, true);
                         }}
                       />
@@ -195,7 +185,7 @@ export default ({ id, hackathons }) => {
                       <TextBox
                         defaultValue={editingData[type].content}
                         resize
-                        onChange={(event) => {
+                        onChange={event => {
                           handleEditChange(event, type, false);
                         }}
                       />
@@ -203,7 +193,7 @@ export default ({ id, hackathons }) => {
                         style={{
                           marginTop: '27px',
                           display: 'flex',
-                          float: 'right',
+                          float: 'right'
                         }}
                       >
                         <CancelButton onClick={() => handleCancel(type)}>
@@ -237,7 +227,7 @@ export const getStaticProps = async ({ params }) => {
   return {
     props: {
       hackathons,
-      id: params.id,
-    },
+      id: params.id
+    }
   };
 };

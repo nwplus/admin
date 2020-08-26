@@ -32,7 +32,7 @@ export const Label = styled.label`
 `;
 
 export const InputField = styled.input`
-  ${(props) =>
+  ${props =>
     props.inline
       ? 'flex-grow: 1; width: 50%; border-radius: 2px 0 0 2px;'
       : 'width: 95%; border-radius: 2px;'}
@@ -60,7 +60,7 @@ export const ModalField = ({
   value,
   type = 'text',
   onChange,
-  modalAction,
+  modalAction
 }) => {
   // TODO: add detect dropdown based on label === category?
   return (
@@ -194,7 +194,7 @@ export const ModalButton = ({ type, handleClose, handleSave }) => {
 
 const ContentContainer = styled.div`
   display: grid;
-  grid-template-columns: ${(props) => props.columns};
+  grid-template-columns: ${props => props.columns};
   grid-gap: 0.8rem;
   width: 100%;
   background-color: ${COLOR.BACKGROUND};
@@ -224,13 +224,13 @@ export default function Modal({
   handleSave,
   modalAction,
   lastModified,
-  children,
+  children
 }) {
   if (!isOpen) {
     return null;
   }
 
-  const getTitle = (action) => {
+  const getTitle = action => {
     switch (action) {
       case VIEW:
         return (

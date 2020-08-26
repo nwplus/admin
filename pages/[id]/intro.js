@@ -12,17 +12,16 @@ import Button from '../../components/button';
 import TextBox from '../../components/textbox';
 import {
   updateHackathonField,
-  getHackathon,
+  getHackathonSnapShot,
   getHackathonPaths,
   getHackathons
 } from '../../utility/firebase';
 
-const HeaderText = styled.p`
+const HeaderText = styled.h2`
   border: none;
   overflow: hidden;
   background-color: ${COLOR.BACKGROUND};
   outline: none;
-  font-size: 24px;
   padding-bottom: 13px;
   color: ${COLOR.TEXT};
   font-weight: 600;
@@ -36,7 +35,7 @@ const ContentText = styled.p`
   color: ${COLOR.TEXT};
 `;
 
-const StyledCancel = styled.button`
+const CancelButton = styled.button`
   font-size: 16px;
   cursor: pointer;
   border-bottom: 2px solid ${COLOR.BLACK};
@@ -47,11 +46,16 @@ const StyledCancel = styled.button`
   background-color: ${COLOR.BACKGROUND};
 `;
 
-const StyledHeader = styled.p`
+const Label = styled.p`
   padding-bottom: 13px;
   padding-top: 17px;
   margin: 0px;
   background-color: ${COLOR.BACKGROUND};
+`;
+
+const CancelText = styled.p`
+  border-bottom: 2px solid ${COLOR.BLACK};
+  margin: 0px;
 `;
 
 export default ({ id, hackathons }) => {
@@ -62,8 +66,7 @@ export default ({ id, hackathons }) => {
   // TODO need functionality to display data based on what event is currently being viewed
 
   // TODO need to substitute the value at .doc(ID) with current website
-  const getHackathonData = async () => {
-    const doc = await getHackathon(id);
+  const getHackathonData = async doc => {
     const data = doc.data().WebsiteData;
     setWebsiteData(data);
 
@@ -87,7 +90,8 @@ export default ({ id, hackathons }) => {
   };
 
   useEffect(() => {
-    getHackathonData();
+    const unsubscribe = getHackathonSnapShot(id, getHackathonData);
+    return () => unsubscribe();
   }, []);
 
   const handleEdit = type => {
@@ -123,9 +127,8 @@ export default ({ id, hackathons }) => {
         }
       }
     };
-    // TODO need to substitute the value at .doc(ID) with current website
     try {
-      await updateHackathonField(id, updateObj);
+      updateHackathonField(id, updateObj);
       setWebsiteData({
         ...websiteData,
         [type]: {
@@ -158,12 +161,12 @@ export default ({ id, hackathons }) => {
     });
   };
 
-  // map over every text section in a hackathon's WebsiteData and adds the section name to isEditingObj state
   return (
     <Page currentPath={id} hackathons={hackathons}>
       <Card>
         <CardHeader>Intro</CardHeader>
         <CardContent>
+          {/* map over every text section in a hackathon's WebsiteData and adds the section name to isEditingObj state */}
           {Object.keys(websiteData).map(type => {
             return (
               <Card key={`card${type}`}>
@@ -181,12 +184,12 @@ export default ({ id, hackathons }) => {
                 <CardContent>
                   {isEditingObj[type] ? (
                     <div style={{ padding: '0px 40px 37px 40px' }}>
-                      <StyledHeader>Header</StyledHeader>
+                      <Label>Header</Label>
                       <TextBox
                         defaultValue={editingData[type].header}
                         onChange={event => handleEditChange(event, type, true)}
                       />
-                      <StyledHeader>Body</StyledHeader>
+                      <Label>Body</Label>
                       <TextBox
                         defaultValue={editingData[type].content}
                         resize
@@ -199,16 +202,9 @@ export default ({ id, hackathons }) => {
                           float: 'right'
                         }}
                       >
-                        <StyledCancel onClick={() => handleCancel(type)}>
-                          <p
-                            style={{
-                              borderBottom: `2px solid ${COLOR.BLACK}`,
-                              margin: '0px'
-                            }}
-                          >
-                            Cancel
-                          </p>
-                        </StyledCancel>
+                        <CancelButton onClick={() => handleCancel(type)}>
+                          <CancelText>Cancel</CancelText>
+                        </CancelButton>
                         <Button onClick={() => handleSave(type)}>Save</Button>
                       </div>
                     </div>

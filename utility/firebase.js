@@ -404,11 +404,11 @@ export const updateHackathonField = async (hackathonId, updateObj) => {
     .update(updateObj);
 };
 
-export const getHackathon = async hackathonId => {
+export const getHackathonSnapShot = async (hackathonId, callback) => {
   return db
     .collection(Hackathons)
     .doc(hackathonId)
-    .get();
+    .onSnapshot(doc => callback(doc));
 };
 
 export default fireDb;

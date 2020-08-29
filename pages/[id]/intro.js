@@ -113,7 +113,7 @@ export default ({ id, hackathons }) => {
    * reads the value of the header/content associated with the given type and updates the object in Firebase
    */
   const handleSave = async type => {
-    const time = new Date().getTime();
+    const time = new Date().toISOString();
     const { header, content } = editingData[type];
     const updateObj = {
       WebsiteData: {

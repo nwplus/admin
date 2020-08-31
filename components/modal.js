@@ -1,19 +1,3 @@
-<<<<<<< HEAD
-import React from "react";
-
-export default class Modal extends React.Component {
-  render() {
-      if(!this.props.show) {
-          return null;
-      }
-    return <div>
-        <div>{this.props.children}</div>
-
-        </div>
-
-  }
-}
-=======
 import React from 'react';
 import styled from 'styled-components';
 import { COLOR, VIEW, NEW, CLOSE, SPONSORSHIP } from '../constants';
@@ -52,6 +36,7 @@ export const InputField = styled.input`
     props.inline
       ? 'flex-grow: 1; width: 50%; border-radius: 2px 0 0 2px;'
       : 'width: 95%; border-radius: 2px;'}
+ 
   height: 40px;
   border: 1px solid ${COLOR.DARK_GRAY};
   box-sizing: border-box;
@@ -286,4 +271,3 @@ export default function Modal({
     </>
   );
 }
->>>>>>> master

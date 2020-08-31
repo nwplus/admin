@@ -1,11 +1,10 @@
 import Card, { CardHeader, CardTitle, CardContent, CardButtonContainer, CardDiv, TableDiv } from '../components/card'
 import styled from 'styled-components'
 import Button from '../components/button'
-import React, { useState } from 'react'
-import { EDIT, NEW, VIEW, DELETE, COLOR} from '../constants'
+import React, { useState, useRef } from 'react'
+import { EDIT, NEW, VIEW, DELETE, COLOR, SPONSORSHIP} from '../constants'
 import fireDb, { db } from "../utility/firebase"
-import Modal from '../components/modal'
-
+import Modal, { ModalButton, ModalContent, ModalField, LogoImage, UploadContainer } from '../components/modal'
 
 
 // TODO: move font family higher, reduce need to redefine
@@ -26,6 +25,9 @@ const Actions = styled.div`
 
 class SponsorshipPage extends React.Component {
 
+    
+    inputFile = React.createRef();
+
     constructor(){
         super();
 
@@ -34,18 +36,26 @@ class SponsorshipPage extends React.Component {
             newobj: {
                 "name": "",
                 "link": "",
-                "imgURL": "",
+                "imgURL": "", 
                 "lastmod": "",
                 "tier": "",
             },
+            imgObject: {}, // for frontend rendering
+            imgFile:{},    // for backend 
             showEditWindow: false,
+            modalAction: NEW,
         }
     }
 
     componentDidMount(){
-        this.loadFirebase();
+        this.loadFirebase();   
     }
 
+    async loadFirebase() {
+        const data = await fireDb.getSponsors(this.props.name);
+        this.setState({sponsors: data})
+        console.log(this.state.sponsors)
+    }
     
     handleEdit = (id) => {
         //TODO: pop-up window 
@@ -57,56 +67,64 @@ class SponsorshipPage extends React.Component {
                 "lastmod": this.state.sponsors[id].lastmod, 
                 "tier": this.state.sponsors[id].tier,
             },
+            // TODO: populate the 
             showEditWindow: true,
+            modalAction: EDIT
         })
     };
 
-    async loadFirebase() {
-        const data = await fireDb.getSponsors(this.props.name);
-        this.setState({sponsors: data})
-        console.log(this.state.sponsors)
+    handleView = (id) => {
+        this.setState({ 
+            newobj: {
+                "name": this.state.sponsors[id].name,
+                "link": this.state.sponsors[id].link, 
+                "imgURL": this.state.sponsors[id].imgURL, 
+                "lastmod": this.state.sponsors[id].lastmod, 
+                "tier": this.state.sponsors[id].tier,
+            },
+            showEditWindow: true,
+            modalAction: VIEW
+         })
         
     }
-
     
     handleNew = (e) => {
-        //TODO: pop-up window 
-        this.setState({ showEditWindow: true })
-        
+        this.setState({
+            newobj: {"name":"", 
+                    "link": "",
+                    "imgURL": "",
+                    "lastmod": "",
+                    "tier": "",
+            }, 
+            imgFile: {},
+            imgObject: {},
+            showEditWindow: true, 
+            modalAction: NEW,  
+        });          
     };
+
 
     handleDelete(id) {
         // 1. deletes from Firebase
         fireDb.deleteSponsor(this.props.name, id)
-        
-        
+        fireDb.deleteSponsorImagefromStorage(this.props.name, this.state.sponsors[id].imgURL)
         // 2. deletes from CMS
         delete this.state.sponsors[id];
         this.setState({sponsors: this.state.sponsors});
-
-      
     };
     
-    // allows a form with "saved state" so if users close the modal, it allows
-    handleChange = (event) => {
+    
+    handleChange = (property, value) => {
         var d = new Date();
-
         this.setState({ 
             newobj: {
                 ... this.state.newobj,
-                [event.target.name]: event.target.value,
+                [property]: value,
                 "lastmod": d.toLocaleString(),
             } 
         });
-        console.log(this.state.newobj);
+        console.log(this.state);
     }   
-
-    selectImageFile = e => {
-        if (e.target.files[0]) {
-            console.log("Files:", e.target.files[0])
-            
-        }
-    }
 
     handleCloseModal = () => { 
         this.setState({showEditWindow:false});
@@ -117,8 +135,9 @@ class SponsorshipPage extends React.Component {
         event.preventDefault(); // prevents page reload
 
         // 1. uploads to firebase
-        // no duplicate sponsors allowed, so old name means setting sponsor.. 
+        // newobj.imgURL is a file object
         fireDb.setSponsor(this.props.name, this.state.newobj); 
+        fireDb.uploadSponsorImageToStorage(this.props.name, this.state.imgFile); 
 
         // 2. renders on CMS
         this.state.sponsors[this.state.newobj.name] = this.state.newobj;
@@ -128,15 +147,38 @@ class SponsorshipPage extends React.Component {
         this.setState({
             newobj: {"name":"", 
                     "link": "",
-                    "umgURL": "",
+                    "imgURL": "",
                     "lastmod": "",
                     "tier": "",
             }, 
+            imgFile: {},
+            imgObject: {},
             showEditWindow: false,   
         });   
     }
+
+    // clicks the invisible <input type='file /> 
+    fileClick = e => {
+        this.inputFile.current.click();
+    }
+
+    selectImageFile = e => {
+        if (e.target.files[0]) {
+            this.setState({
+                newobj: {
+                    ...this.state.newobj,
+                    imgURL: e.target.files[0].name, // send this to name
+                },
+                imgObject: URL.createObjectURL(e.target.files[0]), // allows rendering
+                imgFile: e.target.files[0]
+            })
+        }
+        console.log(this.state.newobj)
+    }
+
     
     render() {
+
         return(
             <>
                 <Card>
@@ -184,7 +226,7 @@ class SponsorshipPage extends React.Component {
                                     </Text>
                                     <Actions>
                                         <Button type={DELETE} color={COLOR.TRANSPARENT} onClick={() => this.handleDelete(item.name)} /> 
-                                        <Button type={VIEW} color={COLOR.TRANSPARENT} onClick={()=> this.handleEdit(item.name)} />
+                                        <Button type={VIEW} color={COLOR.TRANSPARENT} onClick={()=> this.handleView(item.name)} />
                                         <Button type={EDIT} color={COLOR.TRANSPARENT} onClick={() => this.handleEdit(item.name)}/>
                                     </Actions>
                                 </CardDiv>
@@ -193,41 +235,57 @@ class SponsorshipPage extends React.Component {
                     </TableDiv>
                     </CardContent>
                 </Card> 
-                
-                <Modal show={this.state.showEditWindow}>
-                    <form onSubmit={this.handleSave}>
+
+
+                {/* EDIT MODAL*/}
+                <Modal
+                    isOpen={this.state.showEditWindow}
+                    handleClose={this.handleCloseModal}
+                    handleSave={this.handleSave}
+                    modalAction={this.state.modalAction}
+                    lastModified={this.state.newobj.lastmod}
+                >
+                    <ModalContent page={SPONSORSHIP}>
+                        <ModalField
+                            label="Sponsor Name"
+                            value={this.state.newobj.name}
+                            modalAction={this.state.modalAction}
+                            onChange={(event) => this.handleChange('name', event.target.value)}
+                        />
+                        <ModalField
+                            label="Link"
+                            value={this.state.newobj.link}
+                            modalAction={this.state.modalAction}
+                            onChange={(event) => this.handleChange('link', event.target.value)}
+                        />
+                        <LogoImage> {/* resize it to 200px */}
+                            <img src={this.state.imgObject} width='100%'/>
+                        </LogoImage>
+                            {/* input is hidden, button clicked referenced by inputFile */}
+                        <input type='file' id='file' ref={this.inputFile} accept="image/*" onChange={this.selectImageFile} style={{display: 'none'}} />
+                        <UploadContainer
+                            type='text'
+                            value={this.state.newobj.imgURL}
+                            onClick={this.fileClick}
+                        />
+                    </ModalContent>
+                </Modal>            
+            </>
+            )
+        }
+
+          
+    }
+    
+    export default SponsorshipPage;
+    
+
+            
+           
+
+                        {/*
                         
-                        <h3> Edit item </h3>
-                        <p>Sponsor Name</p>
-                        <input 
-                        type="text" 
-                        name='name'
-                        value={this.state.newobj.name} 
-                        onChange={this.handleChange}
-                        required
-                        />
-
-                        <p>Link</p>
-                        <input 
-                        type='text' 
-                        name='link' 
-                        value={this.state.newobj.link}
-                        onChange={this.handleChange}
-                        required
-                        />
-                        
-
-                        <p>Image File</p>
-                        <input 
-                        type='file' 
-                        name='imgURL' 
-                        value={this.state.newobj.imgURL}
-                        onChange={this.selectImageFile}
-                        required
-                        />
-
-
-                        <label>
+                    <label>
 
                         <p>Tier</p>
                         <select value={this.state.newobj.tier} onChange={this.handleChange} name="tier">
@@ -238,17 +296,13 @@ class SponsorshipPage extends React.Component {
                             <option value="platinum">Platinum / Title Sponsor </option>
                         </select>
                         </label>
-                    
-                        <button type='submit'> Submit! </button>
-                    
                     </form>
-                </Modal>
+                    
+                        */}
+                    
+             
         
+                
+                
+    
                
-            </>
-        )
-    }
-      
-}
-
-export default SponsorshipPage;

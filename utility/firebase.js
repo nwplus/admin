@@ -237,6 +237,18 @@ const fireDb = {
     refs.docs.forEach(doc => {A[doc.id] = doc.data()})
     return A;
   },
+  uploadSponsorImageToStorage: async(website, file) => {
+    try {
+      const ref = storage.ref(`sponsor/${website}/${file.name}`);
+      await ref.put(file);
+    } catch (e) {
+      alert(e);
+    }
+  },
+  deleteSponsorImagefromStorage: async(website, imgID) => {
+    const ref = storage.ref(`sponsor/${website}/${imgID}`);
+    await ref.delete();
+  },
   async uploadImages(website, files) {
     const failedUploads = [];
     for (const file of files) {

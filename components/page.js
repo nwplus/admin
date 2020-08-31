@@ -37,7 +37,6 @@ export default ({ hackathons, currentPath, children }) => {
   const [currPath, setCurrPath] = useState('intro');
   useEffect(() => {
     setCurrPath(window.location.pathname.split('/')[2]);
-    console.log(window.location.pathname.split('/')[2]);
   }, []);
 
   return (

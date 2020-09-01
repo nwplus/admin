@@ -60,9 +60,9 @@ export default ({ hackathons, currentPath, children }) => {
             FAQ
           </NavItem>
           <NavItem
-            key={`${currentPath}sponsors`}
-            href={`/${currentPath}/sponsors`}
-            selected={currPath === 'sponsors'}
+            key={`${currentPath}spocos`}
+            href={`/${currentPath}/spocos`}
+            selected={currPath === 'spocos'}
           >
             Sponsors
           </NavItem>

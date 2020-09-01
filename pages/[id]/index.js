@@ -23,7 +23,7 @@ export const getStaticProps = async ({ params }) => {
   return {
     props: {
       hackathons,
-      id: params.id
-    }
+      id: params.id,
+    },
   };
 };

@@ -29,8 +29,8 @@ const NavItem = styled.a`
   font-size: 24px;
   margin-right: 40px;
   text-decoration: none;
-  color: ${p => (p.selected ? COLOR.BLACK : COLOR.DARK_COPY)};
-  border-bottom: ${p => (p.selected ? '3px solid black' : 'none')};
+  color: ${(p) => (p.selected ? COLOR.BLACK : COLOR.DARK_COPY)};
+  border-bottom: ${(p) => (p.selected ? '3px solid black' : 'none')};
 `;
 
 export default ({ hackathons, currentPath, children }) => {
@@ -52,8 +52,8 @@ export default ({ hackathons, currentPath, children }) => {
           >
             Intro
           </NavItem>
-          <NavItem 
-            key={`${currentPath}faq`} 
+          <NavItem
+            key={`${currentPath}faq`}
             href={`/${currentPath}/faq`}
             selected={currPath === 'faq'}
           >

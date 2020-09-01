@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { fireDb } from '../utility/firebase';
+import { fireDb, formatDate, getTimestamp } from '../utility/firebase';
 import Card, {
   CardHeader,
   CardTitle,
@@ -126,7 +126,7 @@ export default function Faq({ currHackathon, hackathons }) {
   const handleNew = (faq) => {
     faq.hackathonIDs = [hackathon];
     fireDb.addFaq(faq);
-    faq.lastModified = fireDb.formatDate(fireDb.getTimestamp().seconds);
+    faq.lastModified = formatDate(getTimestamp().seconds);
     setFaqs({
       ...faqs,
       [faq.faqID]: {
@@ -146,7 +146,7 @@ export default function Faq({ currHackathon, hackathons }) {
 
   const handleUpdate = (faqID, faq) => {
     fireDb.updateFaq(faqID, faq);
-    faq.lastModified = fireDb.formatDate(fireDb.getTimestamp().seconds);
+    faq.lastModified = formatDate(getTimestamp().seconds);
     setFaqEditing(
       {
         ...faq,
@@ -167,7 +167,7 @@ export default function Faq({ currHackathon, hackathons }) {
     setFaqs(
       Object.keys(faqs)
         .filter((id) => {
-          id !== faqID;
+          return id !== faqID;
         })
         .reduce((obj, id) => {
           obj[id] = faqs[id];
@@ -235,39 +235,6 @@ export default function Faq({ currHackathon, hackathons }) {
             <Button type={NEW} onClick={() => setAddNew(true)}>
               New Question
             </Button>
-            <Modal
-              isOpen={addNew}
-              handleClose={() => setAddNew(false)}
-              handleSave={() => handleNew(faqEditing)}
-              modalAction={NEW}
-            >
-              <ModalContent page={FAQ} columns={2}>
-                <ModalField
-                  label="Question"
-                  modalAction={NEW}
-                  onChange={(event) =>
-                    handleInput('question', event.target.value, faqEditing)
-                  }
-                />
-                <ModalField
-                  label="Category"
-                  modalAction={NEW}
-                  onChange={(category) =>
-                    handleInput('category', category.label, faqEditing, true)
-                  }
-                  value={FAQCategory.GENERAL}
-                />
-              </ModalContent>
-              <ModalContent page={FAQ} columns={1}>
-                <ModalField
-                  label="Answer"
-                  modalAction={NEW}
-                  onChange={(event) =>
-                    handleInput('answer', event.target.value, faqEditing)
-                  }
-                />
-              </ModalContent>
-            </Modal>
           </CardButtonContainer>
         </CardHeader>
         <CardContent style={{ backgroundColor: `${COLOR.BACKGROUND}` }}>
@@ -318,6 +285,40 @@ export default function Faq({ currHackathon, hackathons }) {
               </FAQContent>
             )}
           </FAQWrapper>
+          {/* Modal for adding a new FAQ */}
+          <Modal
+            isOpen={addNew}
+            handleClose={() => setAddNew(false)}
+            handleSave={() => handleNew(faqEditing)}
+            modalAction={NEW}
+          >
+            <ModalContent page={FAQ} columns={2}>
+              <ModalField
+                label="Question"
+                modalAction={NEW}
+                onChange={(event) =>
+                  handleInput('question', event.target.value, faqEditing)
+                }
+              />
+              <ModalField
+                label="Category"
+                modalAction={NEW}
+                onChange={(category) =>
+                  handleInput('category', category.label, faqEditing, true)
+                }
+                value={FAQCategory.GENERAL}
+              />
+            </ModalContent>
+            <ModalContent page={FAQ} columns={1}>
+              <ModalField
+                label="Answer"
+                modalAction={NEW}
+                onChange={(event) =>
+                  handleInput('answer', event.target.value, faqEditing)
+                }
+              />
+            </ModalContent>
+          </Modal>
           {/* Modal for viewing a FAQ */}
           <Modal
             isOpen={Object.keys(faqViewing).length > 0}

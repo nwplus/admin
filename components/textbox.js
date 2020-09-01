@@ -38,7 +38,7 @@ export default function TextBox(props) {
     if (previousValue) {
       if (
         previousValue.props &&
-        previousValue.props.defaultValue != props.defaultValue
+        previousValue.props.defaultValue !== props.defaultValue
       ) {
         calculateTextAreaHeight();
       }

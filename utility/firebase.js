@@ -119,8 +119,8 @@ export const fireDb = {
             ? fireDb.getFaqCategory(faqData.category)
             : FAQCategory.MISC,
           lastModified: faqData.lastModified
-            ? fireDb.formatDate(faqData.lastModified.seconds)
-            : fireDb.formatDate(fireDb.getTimestamp().seconds),
+            ? formatDate(faqData.lastModified.seconds)
+            : formatDate(getTimestamp().seconds),
           hackathonIDs: faqData.hackathonIDs ? faqData.hackathonIDs : [],
         }
       : null;
@@ -137,18 +137,9 @@ export const fireDb = {
         return FAQCategory.GENERAL;
     }
   },
-  formatDate: (date) => {
-    date = new Date(date * 1000);
-    const timeZoneOffset = new Date().getTimezoneOffset() * 60000;
-    return new Date(date - timeZoneOffset)
-      .toISOString()
-      .slice(0, -1)
-      .slice(0, -4)
-      .replace('T', ' ');
-  },
   addFaq: async (faq) => {
     const ref = db.collection(faqCollection).doc();
-    const currDate = fireDb.getTimestamp();
+    const currDate = getTimestamp();
     await ref.set({
       question: faq.question,
       category: faq.category,
@@ -159,7 +150,7 @@ export const fireDb = {
   },
   updateFaq: async (faqID, faq) => {
     const ref = db.collection(faqCollection).doc(faqID);
-    const currDate = fireDb.getTimestamp();
+    const currDate = getTimestamp();
     // todo: need to add enum support for category, and add null check (before this update stage) to prevent empty data from being inserted
     await ref.update({
       question: faq.question || 'Empty Question Field',
@@ -293,117 +284,20 @@ export const fireDb = {
       SignUpText: signupText || '',
     });
   },
-  addSponsorInformation: async (website, sponsor) => {
-    const ref = db
-      .collection(webCollection)
-      .doc(website)
-      .collection('Sponsors');
-    await ref.add({
-      image: sponsor.image,
-      name: sponsor.name,
-      url: sponsor.url,
-      rank: sponsor.rank,
-      altImage: sponsor.altImage,
-    });
-  },
-  async deleteSponsor(website, image) {
-    let altImage = false;
-    try {
-      const sponsors = await db
-        .collection(webCollection)
-        .doc(website)
-        .collection('Sponsors')
-        .get();
-      sponsors.forEach(async (sponsor) => {
-        if (sponsor.data().image === image) {
-          altImage = !!sponsor.data().altImage;
-          await sponsor.ref.delete();
-        }
-      });
-    } catch (e) {
-      return false;
-    }
-    const ref = storage.ref(`${website}/${image}`);
-    await ref.delete();
-    if (altImage) {
-      const altRef = storage.ref(`${website}/alt${image}`);
-      await altRef.delete();
-    }
-    return true;
-  },
-  async uploadImages(website, files) {
-    const failedUploads = [];
-    for (const file of files) {
-      try {
-        const ref = storage.ref(`${website}/${file.name}`);
-        await ref.put(file);
-        if (file.altImage) {
-          const altRef = storage.ref(`${website}/alt${file.name}`);
-          await altRef.put(file.altImage);
-        }
-      } catch (e) {
-        console.log(e);
-        failedUploads.push(file.name);
-        continue;
-      }
-      try {
-        await this.addSponsorInformation(website, {
-          image: file.name,
-          name: file.sponsorName.trim(),
-          url: file.url.trim(),
-          rank: file.rank,
-          altImage: file.altImage ? `alt${file.name}` : null,
-        });
-      } catch (e) {
-        const ref = storage.ref(`${website}/${file.name}`);
-        await ref.delete();
-        if (file.altImage) {
-          const altRef = storage.ref(`${website}/alt${file.name}`);
-          await altRef.delete();
-        }
-        console.log(e);
-        failedUploads.push(file.name);
-      }
-    }
-    return failedUploads;
-  },
-  getSponsors: async () => {
-    const websites = await fireDb.getWebsites();
-    const sponsors = {};
-    for (const website of websites) {
-      const data = await fireDb.get(website, 'Sponsors');
-      if (data.length > 0) {
-        await Promise.all(
-          data.map(async (sponsor) => {
-            sponsor.data.imageUrl = await fireDb.getImageUrl(
-              website,
-              sponsor.data.image
-            );
-            if (sponsor.data.altImage) {
-              newSponsor.data.altImageUrl = await fireDb.getImageUrl(
-                website,
-                sponsor.data.altImage
-              );
-            }
-            return newSponsor;
-          })
-        );
-        sponsors[website] = data;
-      } else {
-        sponsors[website] = {};
-      }
-    }
-    return sponsors;
-  },
+};
 
-  getTimestamp: () => {
-    return firebase.firestore.Timestamp.now();
-  },
-  getImageUrl: async (WebDocument, imageref) => {
-    const image = storage.ref(`${WebDocument}/${imageref}`);
-    const url = await image.getDownloadURL();
-    return url;
-  },
+export const formatDate = (date) => {
+  date = new Date(date * 1000);
+  const timeZoneOffset = new Date().getTimezoneOffset() * 60000;
+  return new Date(date - timeZoneOffset)
+    .toISOString()
+    .slice(0, -1)
+    .slice(0, -4)
+    .replace('T', ' ');
+};
+
+export const getTimestamp = () => {
+  return firebase.firestore.Timestamp.now();
 };
 
 export const getDocument = async (hackathon, collection) => {

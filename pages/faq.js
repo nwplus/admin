@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
@@ -98,14 +98,13 @@ const PlaceHolderText = styled.td`
 
 export default function Faq({ currHackathon, hackathons }) {
   const router = useRouter();
-  // uncomment 'LHD2021' when integrated with sidebar to receive hackathon that is passed down
+  // remove'LHD2021' when integrated with sidebar to receive hackathon that is passed down
   const [hackathon, setHackathon] = useState(currHackathon || 'LHD2021');
   const [faqs, setFaqs] = useState([]);
   const [faqViewing, setFaqViewing] = useState({});
   const [faqEditing, setFaqEditing] = useState({});
   const [addNew, setAddNew] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const inputTimeout = useRef(null);
 
   useEffect(() => {
     if (Object.keys(faqs).length === 0) {
@@ -138,37 +137,19 @@ export default function Faq({ currHackathon, hackathons }) {
     handleClose();
   };
 
-  const handleInput = (property, value, faq, isDropdown = false) => {
-    if (isDropdown) {
-      setFaqEditing({
-        ...faq,
-        [property]: value,
-      });
-      return;
-    }
-    if (inputTimeout.current) {
-      if (inputTimeout.current[property] !== null)
-        clearTimeout(inputTimeout.current[property]);
-    } else {
-      inputTimeout.current = {};
-      inputTimeout.current[property] = null;
-    }
-
-    inputTimeout.current[property] = setTimeout(() => {
-      inputTimeout.current[property] = null;
-      setFaqEditing({
-        ...faq,
-        [property]: value,
-      });
-    }, 1000);
+  const handleInput = (property, value, faq) => {
+    setFaqEditing({
+      ...faq,
+      [property]: value,
+    });
   };
 
   const handleUpdate = (faqID, faq) => {
     fireDb.updateFaq(faqID, faq);
+    faq.lastModified = fireDb.formatDate(fireDb.getTimestamp().seconds);
     setFaqEditing(
       {
         ...faq,
-        lastModified: fireDb.formatDate(fireDb.getTimestamp().seconds),
       },
       setFaqs({
         ...faqs,
@@ -209,33 +190,6 @@ export default function Faq({ currHackathon, hackathons }) {
               color={COLOR.TRANSPARENT}
               onClick={() => setFaqViewing(faqs[props.faqID])}
             />
-            <Modal
-              isOpen={Object.keys(faqViewing).length > 0}
-              handleClose={() => handleClose({})}
-              handleSave={() => handleClose({})}
-              modalAction={VIEW}
-              lastModified={faqViewing.lastModified}
-            >
-              <ModalContent page={FAQ} columns={2}>
-                <ModalField
-                  label="Question"
-                  value={faqViewing.question}
-                  modalAction={VIEW}
-                />
-                <ModalField
-                  label="Category"
-                  value={faqViewing.category}
-                  modalAction={VIEW}
-                />
-              </ModalContent>
-              <ModalContent page={FAQ} columns={1}>
-                <ModalField
-                  label="Answer"
-                  value={faqViewing.answer}
-                  modalAction={VIEW}
-                />
-              </ModalContent>
-            </Modal>
           </ActionsButtonContainer>
           <ActionsButtonContainer>
             <Link
@@ -259,42 +213,6 @@ export default function Faq({ currHackathon, hackathons }) {
                 />
               </a>
             </Link>
-            <Modal
-              isOpen={!!router.query.faqID}
-              handleClose={() => router.push('/faq')}
-              handleSave={() => handleUpdate(router.query.faqID, faqEditing)}
-              modalAction={EDIT}
-              lastModified={faqEditing.lastModified}
-            >
-              <ModalContent page={FAQ} columns={2}>
-                <ModalField
-                  label="Question"
-                  value={faqEditing.question}
-                  modalAction={EDIT}
-                  onChange={(event) =>
-                    handleInput('question', event.target.value, faqEditing)
-                  }
-                />
-                <ModalField
-                  label="Category"
-                  value={faqEditing.category}
-                  modalAction={EDIT}
-                  onChange={(category) =>
-                    handleInput('category', category.label, faqEditing, true)
-                  }
-                />
-              </ModalContent>
-              <ModalContent page={FAQ} columns={1}>
-                <ModalField
-                  label="Answer"
-                  value={faqEditing.answer}
-                  modalAction={EDIT}
-                  onChange={(event) =>
-                    handleInput('answer', event.target.value, faqEditing)
-                  }
-                />
-              </ModalContent>
-            </Modal>
           </ActionsButtonContainer>
           <ActionsButtonContainer>
             <Button
@@ -400,6 +318,71 @@ export default function Faq({ currHackathon, hackathons }) {
               </FAQContent>
             )}
           </FAQWrapper>
+          {/* Modal for viewing a FAQ */}
+          <Modal
+            isOpen={Object.keys(faqViewing).length > 0}
+            handleClose={() => handleClose({})}
+            handleSave={() => handleClose({})}
+            modalAction={VIEW}
+            lastModified={faqViewing.lastModified}
+          >
+            <ModalContent page={FAQ} columns={2}>
+              <ModalField
+                label="Question"
+                value={faqViewing.question}
+                modalAction={VIEW}
+              />
+              <ModalField
+                label="Category"
+                value={faqViewing.category}
+                modalAction={VIEW}
+              />
+            </ModalContent>
+            <ModalContent page={FAQ} columns={1}>
+              <ModalField
+                label="Answer"
+                value={faqViewing.answer}
+                modalAction={VIEW}
+              />
+            </ModalContent>
+          </Modal>
+          {/* Modal for editing a FAQ */}
+          <Modal
+            isOpen={!!router.query.faqID}
+            handleClose={() => router.push('/faq')}
+            handleSave={() => handleUpdate(router.query.faqID, faqEditing)}
+            modalAction={EDIT}
+            lastModified={faqEditing.lastModified}
+          >
+            <ModalContent page={FAQ} columns={2}>
+              <ModalField
+                label="Question"
+                value={faqEditing.question}
+                modalAction={EDIT}
+                onChange={(event) =>
+                  handleInput('question', event.target.value, faqEditing)
+                }
+              />
+              <ModalField
+                label="Category"
+                value={faqEditing.category}
+                modalAction={EDIT}
+                onChange={(category) =>
+                  handleInput('category', category.label, faqEditing, true)
+                }
+              />
+            </ModalContent>
+            <ModalContent page={FAQ} columns={1}>
+              <ModalField
+                label="Answer"
+                value={faqEditing.answer}
+                modalAction={EDIT}
+                onChange={(event) =>
+                  handleInput('answer', event.target.value, faqEditing)
+                }
+              />
+            </ModalContent>
+          </Modal>
         </CardContent>
       </Card>
     </>

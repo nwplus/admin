@@ -4,6 +4,7 @@ import {
   COLOR,
   VIEW,
   NEW,
+  EDIT,
   CLOSE,
   SPONSORSHIP,
   FAQCategory,
@@ -182,9 +183,18 @@ const InlineButtonSpan = styled.div`
 
 export const ModalButton = ({ type, handleClose, handleSave }) => {
   let buttonText;
-  if (type !== CLOSE && type !== VIEW) {
-    buttonText = type === NEW ? 'Add New' : 'Save';
+  switch (type) {
+    case NEW:
+      buttonText = 'Add New';
+      break;
+    case EDIT:
+      buttonText = 'Save';
+      break;
+    default:
+      buttonText = 'Confirm';
+      break;
   }
+
   return (
     <>
       <ButtonContainer>
@@ -250,13 +260,14 @@ export default function Modal({
   modalAction,
   lastModified,
   children,
+  modalTitle,
 }) {
   if (!isOpen) {
     return null;
   }
 
-  const getTitle = (action) => {
-    switch (action) {
+  const getTitle = (title) => {
+    switch (title) {
       case VIEW:
         return (
           <>
@@ -270,10 +281,16 @@ export default function Modal({
             <ModalTitle>New Item</ModalTitle>
           </>
         );
-      default:
+      case EDIT:
         return (
           <>
             <ModalTitle>Edit Item</ModalTitle>
+          </>
+        );
+      default:
+        return (
+          <>
+            <ModalTitle>{title}</ModalTitle>
           </>
         );
     }
@@ -284,7 +301,7 @@ export default function Modal({
       {isOpen && <BackDropScreen />}
       <ModalBackground isOpen={isOpen}>
         <ModalButton type={CLOSE} handleClose={handleClose} />
-        {getTitle(modalAction)}
+        {(modalTitle && getTitle(modalTitle)) || getTitle(modalAction)}
         {children}
         <ModalButton
           type={modalAction}

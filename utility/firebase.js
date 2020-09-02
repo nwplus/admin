@@ -111,6 +111,7 @@ export const fireDb = {
     ).data();
     return faqData
       ? {
+          id: faqID,
           question: faqData.question
             ? faqData.question
             : 'Empty question field',
@@ -147,11 +148,11 @@ export const fireDb = {
       lastModified: currDate,
       hackathonIDs: faq.hackathonIDs,
     });
+    return ref.id;
   },
   updateFaq: async (faqID, faq) => {
     const ref = db.collection(faqCollection).doc(faqID);
     const currDate = getTimestamp();
-    // todo: need to add enum support for category, and add null check (before this update stage) to prevent empty data from being inserted
     await ref.update({
       question: faq.question || 'Empty Question Field',
       category: faq.category || 'None',

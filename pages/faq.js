@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useRouter } from 'next/router';
-import Link from 'next/link';
 import { fireDb, formatDate, getTimestamp } from '../utility/firebase';
 import Card, {
   CardHeader,
@@ -97,14 +95,16 @@ const PlaceHolderText = styled.td`
 `;
 
 export default function Faq({ currHackathon, hackathons }) {
-  const router = useRouter();
   // remove'LHD2021' when integrated with sidebar to receive hackathon that is passed down
   const [hackathon, setHackathon] = useState(currHackathon || 'LHD2021');
   const [faqs, setFaqs] = useState([]);
+  const [newFaq, setNewFaq] = useState({});
   const [faqViewing, setFaqViewing] = useState({});
   const [faqEditing, setFaqEditing] = useState({});
+  const [faqConfirm, setFaqConfirm] = useState({});
   const [addNew, setAddNew] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [alertMsg, setAlertMsg] = useState('');
 
   useEffect(() => {
     if (Object.keys(faqs).length === 0) {
@@ -117,52 +117,65 @@ export default function Faq({ currHackathon, hackathons }) {
     }
   }, []);
 
-  const handleClose = () => {
-    setFaqEditing({});
-    setFaqViewing({});
-    setAddNew(false);
-  };
+  useEffect(() => {
+    if (alertMsg.length > 0) alert(alertMsg);
+  }, [alertMsg]);
 
-  const handleNew = (faq) => {
-    faq.hackathonIDs = [hackathon];
-    fireDb.addFaq(faq);
-    faq.lastModified = formatDate(getTimestamp().seconds);
+  const handleNew = async () => {
+    newFaq.hackathonIDs = [hackathon];
+    newFaq.category = newFaq.category ? newFaq.category : FAQCategory.GENERAL;
+    const faqID = await fireDb.addFaq(newFaq);
+    newFaq.lastModified = formatDate(getTimestamp().seconds);
     setFaqs({
       ...faqs,
-      [faq.faqID]: {
-        ...faqEditing,
-        hackathonIDs: [hackathon],
+      [faqID]: {
+        ...newFaq,
+        id: faqID,
       },
     });
-    handleClose();
+    setNewFaq({});
+    setAddNew(false);
+    setAlertMsg(
+      `Successfully added the following question: \n${newFaq.question}`
+    );
   };
 
-  const handleInput = (property, value, faq) => {
-    setFaqEditing({
+  const handleInput = (property, value, faq, setState) => {
+    setState({
       ...faq,
       [property]: value,
     });
   };
 
-  const handleUpdate = (faqID, faq) => {
-    fireDb.updateFaq(faqID, faq);
-    faq.lastModified = formatDate(getTimestamp().seconds);
+  const handleUpdate = () => {
+    fireDb.updateFaq(faqEditing.id, faqEditing);
+    faqEditing.lastModified = formatDate(getTimestamp().seconds);
     setFaqEditing(
       {
-        ...faq,
+        ...faqEditing,
       },
       setFaqs({
         ...faqs,
-        [faqID]: {
-          ...faq,
+        [faqEditing.id]: {
+          ...faqEditing,
         },
       })
     );
-    router.push('/faq');
-    handleClose();
+    setFaqEditing(
+      {},
+      setAlertMsg(
+        `Successfully updated the following question: \n${faqEditing.question}`
+      )
+    );
   };
 
-  const handleDelete = (faqID) => {
+  const handleDelete = (faqID, confirmed = false) => {
+    if (!confirmed) {
+      setFaqConfirm({
+        ...faqs[faqID],
+      });
+      return;
+    }
     fireDb.deleteFaq(faqID);
     setFaqs(
       Object.keys(faqs)
@@ -174,7 +187,12 @@ export default function Faq({ currHackathon, hackathons }) {
           return obj;
         }, {})
     );
-    handleClose();
+    setFaqConfirm(
+      {},
+      setAlertMsg(
+        `Successfully deleted the following question: \n${faqs[faqID].question}`
+      )
+    );
   };
 
   function QuestionRow(props) {
@@ -192,27 +210,11 @@ export default function Faq({ currHackathon, hackathons }) {
             />
           </ActionsButtonContainer>
           <ActionsButtonContainer>
-            <Link
-              href={{
-                pathname: '/faq',
-                query: {
-                  faqID: props.faqID,
-                  question: faqs[props.faqID].question,
-                  category: faqs[props.faqID].category,
-                  answer: faqs[props.faqID].answer,
-                  lastModified: faqs[props.faqID].lastModified,
-                },
-              }}
-              as={`/faq/${props.faqID}`}
-            >
-              <a>
-                <Button
-                  type={EDIT}
-                  color={COLOR.TRANSPARENT}
-                  onClick={() => setFaqEditing(faqs[props.faqID])}
-                />
-              </a>
-            </Link>
+            <Button
+              type={EDIT}
+              color={COLOR.TRANSPARENT}
+              onClick={() => setFaqEditing(faqs[props.faqID])}
+            />
           </ActionsButtonContainer>
           <ActionsButtonContainer>
             <Button
@@ -285,11 +287,12 @@ export default function Faq({ currHackathon, hackathons }) {
               </FAQContent>
             )}
           </FAQWrapper>
+
           {/* Modal for adding a new FAQ */}
           <Modal
             isOpen={addNew}
             handleClose={() => setAddNew(false)}
-            handleSave={() => handleNew(faqEditing)}
+            handleSave={() => handleNew(newFaq)}
             modalAction={NEW}
           >
             <ModalContent page={FAQ} columns={2}>
@@ -297,14 +300,14 @@ export default function Faq({ currHackathon, hackathons }) {
                 label="Question"
                 modalAction={NEW}
                 onChange={(event) =>
-                  handleInput('question', event.target.value, faqEditing)
+                  handleInput('question', event.target.value, newFaq, setNewFaq)
                 }
               />
               <ModalField
                 label="Category"
                 modalAction={NEW}
                 onChange={(category) =>
-                  handleInput('category', category.label, faqEditing, true)
+                  handleInput('category', category.label, newFaq, setNewFaq)
                 }
                 value={FAQCategory.GENERAL}
               />
@@ -314,16 +317,17 @@ export default function Faq({ currHackathon, hackathons }) {
                 label="Answer"
                 modalAction={NEW}
                 onChange={(event) =>
-                  handleInput('answer', event.target.value, faqEditing)
+                  handleInput('answer', event.target.value, newFaq, setNewFaq)
                 }
               />
             </ModalContent>
           </Modal>
+
           {/* Modal for viewing a FAQ */}
           <Modal
             isOpen={Object.keys(faqViewing).length > 0}
-            handleClose={() => handleClose({})}
-            handleSave={() => handleClose({})}
+            handleClose={() => setFaqViewing({})}
+            handleSave={() => setFaqViewing({})}
             modalAction={VIEW}
             lastModified={faqViewing.lastModified}
           >
@@ -347,11 +351,12 @@ export default function Faq({ currHackathon, hackathons }) {
               />
             </ModalContent>
           </Modal>
+
           {/* Modal for editing a FAQ */}
           <Modal
-            isOpen={!!router.query.faqID}
-            handleClose={() => router.push('/faq')}
-            handleSave={() => handleUpdate(router.query.faqID, faqEditing)}
+            isOpen={Object.keys(faqEditing).length > 0}
+            handleClose={() => setFaqEditing({})}
+            handleSave={() => handleUpdate()}
             modalAction={EDIT}
             lastModified={faqEditing.lastModified}
           >
@@ -361,7 +366,12 @@ export default function Faq({ currHackathon, hackathons }) {
                 value={faqEditing.question}
                 modalAction={EDIT}
                 onChange={(event) =>
-                  handleInput('question', event.target.value, faqEditing)
+                  handleInput(
+                    'question',
+                    event.target.value,
+                    faqEditing,
+                    setFaqEditing
+                  )
                 }
               />
               <ModalField
@@ -369,7 +379,12 @@ export default function Faq({ currHackathon, hackathons }) {
                 value={faqEditing.category}
                 modalAction={EDIT}
                 onChange={(category) =>
-                  handleInput('category', category.label, faqEditing, true)
+                  handleInput(
+                    'category',
+                    category.label,
+                    faqEditing,
+                    setFaqEditing
+                  )
                 }
               />
             </ModalContent>
@@ -379,8 +394,42 @@ export default function Faq({ currHackathon, hackathons }) {
                 value={faqEditing.answer}
                 modalAction={EDIT}
                 onChange={(event) =>
-                  handleInput('answer', event.target.value, faqEditing)
+                  handleInput(
+                    'answer',
+                    event.target.value,
+                    faqEditing,
+                    setFaqEditing
+                  )
                 }
+              />
+            </ModalContent>
+          </Modal>
+
+          {/* Confirmation modal for deleting a FAQ */}
+          <Modal
+            isOpen={Object.keys(faqConfirm).length > 0}
+            handleClose={() => setFaqConfirm({})}
+            handleSave={() => handleDelete(faqConfirm.id, true)}
+            modalTitle="Are you sure you would like to delete the following FAQ?"
+            modalAction={DELETE}
+          >
+            <ModalContent page={FAQ} columns={2}>
+              <ModalField
+                label="Question"
+                value={faqConfirm.question}
+                modalAction={VIEW}
+              />
+              <ModalField
+                label="Category"
+                value={faqConfirm.category}
+                modalAction={VIEW}
+              />
+            </ModalContent>
+            <ModalContent page={FAQ} columns={1}>
+              <ModalField
+                label="Answer"
+                value={faqConfirm.answer}
+                modalAction={VIEW}
               />
             </ModalContent>
           </Modal>

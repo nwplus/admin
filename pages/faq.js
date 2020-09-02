@@ -94,9 +94,9 @@ const PlaceHolderText = styled.td`
   margin-bottom: 32px;
 `;
 
-export default function Faq({ currHackathon, hackathons }) {
+export default function Faq({ currHackathon }) {
   // remove'LHD2021' when integrated with sidebar to receive hackathon that is passed down
-  const [hackathon, setHackathon] = useState(currHackathon || 'LHD2021');
+  const [hackathon] = useState(currHackathon || 'LHD2021');
   const [faqs, setFaqs] = useState([]);
   const [newFaq, setNewFaq] = useState({});
   const [faqViewing, setFaqViewing] = useState({});
@@ -299,16 +299,21 @@ export default function Faq({ currHackathon, hackathons }) {
               <ModalField
                 label="Question"
                 modalAction={NEW}
-                onChange={(event) =>
-                  handleInput('question', event.target.value, newFaq, setNewFaq)
-                }
+                onChange={(event) => {
+                  handleInput(
+                    'question',
+                    event.target.value,
+                    newFaq,
+                    setNewFaq
+                  );
+                }}
               />
               <ModalField
                 label="Category"
                 modalAction={NEW}
-                onChange={(category) =>
-                  handleInput('category', category.label, newFaq, setNewFaq)
-                }
+                onChange={(category) => {
+                  handleInput('category', category.label, newFaq, setNewFaq);
+                }}
                 value={FAQCategory.GENERAL}
               />
             </ModalContent>
@@ -316,9 +321,9 @@ export default function Faq({ currHackathon, hackathons }) {
               <ModalField
                 label="Answer"
                 modalAction={NEW}
-                onChange={(event) =>
-                  handleInput('answer', event.target.value, newFaq, setNewFaq)
-                }
+                onChange={(event) => {
+                  handleInput('answer', event.target.value, newFaq, setNewFaq);
+                }}
               />
             </ModalContent>
           </Modal>
@@ -365,27 +370,27 @@ export default function Faq({ currHackathon, hackathons }) {
                 label="Question"
                 value={faqEditing.question}
                 modalAction={EDIT}
-                onChange={(event) =>
+                onChange={(event) => {
                   handleInput(
                     'question',
                     event.target.value,
                     faqEditing,
                     setFaqEditing
-                  )
-                }
+                  );
+                }}
               />
               <ModalField
                 label="Category"
                 value={faqEditing.category}
                 modalAction={EDIT}
-                onChange={(category) =>
+                onChange={(category) => {
                   handleInput(
                     'category',
                     category.label,
                     faqEditing,
                     setFaqEditing
-                  )
-                }
+                  );
+                }}
               />
             </ModalContent>
             <ModalContent page={FAQ} columns={1}>
@@ -393,14 +398,14 @@ export default function Faq({ currHackathon, hackathons }) {
                 label="Answer"
                 value={faqEditing.answer}
                 modalAction={EDIT}
-                onChange={(event) =>
+                onChange={(event) => {
                   handleInput(
                     'answer',
                     event.target.value,
                     faqEditing,
                     setFaqEditing
-                  )
-                }
+                  );
+                }}
               />
             </ModalContent>
           </Modal>

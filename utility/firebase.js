@@ -38,9 +38,90 @@ if (!firebase.apps.length) {
 
 export const db = firebase.firestore();
 
-const storage = firebase.storage();
 const webCollection = 'Website_content';
 const faqCollection = FAQ;
+
+export const formatDate = (date) => {
+  date = new Date(date * 1000);
+  const timeZoneOffset = new Date().getTimezoneOffset() * 60000;
+  return new Date(date - timeZoneOffset)
+    .toISOString()
+    .slice(0, -1)
+    .slice(0, -4)
+    .replace('T', ' ');
+};
+
+export const getTimestamp = () => {
+  return firebase.firestore.Timestamp.now();
+};
+
+export const getDocument = async (hackathon, collection) => {
+  if (collection === hackathon) {
+    const ref = db.collection(webCollection).doc(hackathon);
+    const data = await ref.get();
+    return data.data();
+  }
+  const ref = db
+    .collection(webCollection)
+    .doc(hackathon)
+    .collection(collection);
+  return (await ref.get()).docs.map((doc) => ({
+    id: doc.id,
+    data: doc.data(),
+  }));
+};
+
+export const updateDocument = (hackathon, collection, docId, object) => {
+  db.collection(webCollection)
+    .doc(hackathon)
+    .collection(collection)
+    .doc(docId)
+    .update(object);
+};
+
+export const addDocument = async (hackathon, collection, object) => {
+  const ref = await db
+    .collection(webCollection)
+    .doc(hackathon)
+    .collection(collection)
+    .add(object);
+  return ref.id;
+};
+
+export const deleteDocument = async (hackathon, collection, docId) => {
+  await db
+    .collection(webCollection)
+    .doc(hackathon)
+    .collection(collection)
+    .doc(docId)
+    .delete();
+};
+
+export const getHackathons = async () => {
+  return db
+    .collection('Hackathons')
+    .get()
+    .then((querySnapshot) => {
+      const hackathons = [];
+      querySnapshot.forEach((doc) => {
+        hackathons.push(doc.id);
+      });
+      return hackathons;
+    });
+};
+
+export const getHackathonPaths = async () => {
+  const hackathons = await getHackathons();
+  const paths = hackathons.map((id) => {
+    return {
+      params: { id },
+    };
+  });
+  return {
+    paths,
+    fallback: false,
+  };
+};
 
 export const fireDb = {
   getNumberOfApplicants: (callback) => {
@@ -285,88 +366,6 @@ export const fireDb = {
       SignUpText: signupText || '',
     });
   },
-};
-
-export const formatDate = (date) => {
-  date = new Date(date * 1000);
-  const timeZoneOffset = new Date().getTimezoneOffset() * 60000;
-  return new Date(date - timeZoneOffset)
-    .toISOString()
-    .slice(0, -1)
-    .slice(0, -4)
-    .replace('T', ' ');
-};
-
-export const getTimestamp = () => {
-  return firebase.firestore.Timestamp.now();
-};
-
-export const getDocument = async (hackathon, collection) => {
-  if (collection === hackathon) {
-    const ref = db.collection(webCollection).doc(hackathon);
-    const data = await ref.get();
-    return data.data();
-  }
-  const ref = db
-    .collection(webCollection)
-    .doc(hackathon)
-    .collection(collection);
-  return (await ref.get()).docs.map((doc) => ({
-    id: doc.id,
-    data: doc.data(),
-  }));
-};
-
-export const updateDocument = (hackathon, collection, docId, object) => {
-  db.collection(webCollection)
-    .doc(hackathon)
-    .collection(collection)
-    .doc(docId)
-    .update(object);
-};
-
-export const addDocument = async (hackathon, collection, object) => {
-  const ref = await db
-    .collection(webCollection)
-    .doc(hackathon)
-    .collection(collection)
-    .add(object);
-  return ref.id;
-};
-
-export const deleteDocument = async (hackathon, collection, docId) => {
-  await db
-    .collection(webCollection)
-    .doc(hackathon)
-    .collection(collection)
-    .doc(docId)
-    .delete();
-};
-
-export const getHackathons = async () => {
-  return db
-    .collection('Hackathons')
-    .get()
-    .then((querySnapshot) => {
-      const hackathons = [];
-      querySnapshot.forEach((doc) => {
-        hackathons.push(doc.id);
-      });
-      return hackathons;
-    });
-};
-
-export const getHackathonPaths = async () => {
-  const hackathons = await getHackathons();
-  const paths = hackathons.map((id) => {
-    return {
-      params: { id },
-    };
-  });
-  return {
-    paths,
-    fallback: false,
-  };
 };
 
 export default fireDb;

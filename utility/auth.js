@@ -2,6 +2,11 @@ import React, { createContext, useState, useContext, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import firebase from 'firebase'
 
+export const checkAdminClaim = async user => {
+    const token = await user.getIdTokenResult()
+    return token.claims.hasOwnProperty('admin')
+}
+
 const AuthContext = createContext({});
 
 const Auth = ({ children }) => {
@@ -9,17 +14,29 @@ const Auth = ({ children }) => {
     const [isLoading, setIsLoading] = useState(true)
     const router = useRouter()
 
-    useEffect(async () => {
-        await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
+    // const checkAdminClaim = async user => {
+    //     const token = await user.getIdTokenResult()
+    //     return token.claims.hasOwnProperty('admin')
+    // }
+
+    useEffect(() => {
+        const setPersistence = async () => {
+            await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
+        }
+        setPersistence()
     },[])
     
     useEffect(() => {
         const unsubscribe = firebase.auth().onAuthStateChanged(async user => {
-            if (user && /.+@nwplus\.io$/.test(user.email)) {
-                setUser(user)
-                if (router.pathname=='/') await router.push('/landing')
-            } else {
+            if (user === null) {
                 await router.push('/')
+            } else {
+                const isAdmin = await checkAdminClaim(user)
+                if (!isAdmin) {
+                    await router.push('/')
+                } else {
+                    setUser(user)
+                }
             }
             setIsLoading(false)
         })
@@ -28,8 +45,8 @@ const Auth = ({ children }) => {
     }, [])
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated: !!user, user }}>
-            {isLoading ? null : children}
+        <AuthContext.Provider value={{ isAuthenticated: !!user, user, checkAdminClaim }}>
+            {isLoading ? <h1>Authenticating...</h1> : children}
         </AuthContext.Provider>
     )
 }

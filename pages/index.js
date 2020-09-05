@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Button from '../components/button'
 import { useRouter } from 'next/router'
 import { COLOR } from '../constants'
+import { checkAdminClaim } from '../utility/auth'
 
 const Container = styled.div`
     display: flex;
@@ -22,19 +23,16 @@ const ErrorDiv = styled.div`
     top: 300px;
     color: ${COLOR.RED}
 `
+const AuthorizeDiv = styled.div`
+    position: absolute;
+    top: 300px;
+`
 
 export default function Home() {
   const router = useRouter()
   const [ showError, setShowError ] = useState(false)
+  const [ isAddingClaim, setIsAddingClaim ] = useState(false)
   const setAdmin = firebase.functions().httpsCallable('setAdmin')
-
-  const checkAddAdminClaim = async user => {
-    const token = await user.getIdTokenResult();
-    if (!token.claims.hasOwnProperty('admin')) {
-      await setAdmin()
-      await firebase.auth().currentUser.getIdToken(true)
-    }
-  }
 
   const googleSignIn = async () => {
     const provider = new firebase.auth.GoogleAuthProvider();
@@ -45,13 +43,22 @@ export default function Home() {
 
     try {
       await firebase.auth().signInWithPopup(provider)
-      const user = firebase.auth().currentUser
-      if (user && /.+@nwplus\.io$/.test(user.email)) {
-        router.push('/landing')
-        checkAddAdminClaim(user)
+      setShowError(false)
+      setIsAddingClaim(true)
+      const user = await firebase.auth().currentUser
+      const isAdmin = await checkAdminClaim(user)
+      if (isAdmin) {
+        await router.push('/landing')
       } else {
-        await firebase.auth().signOut()
-        setShowError(true)
+        const res = await setAdmin()
+        if (res.data.isAdmin) {
+          await user.getIdToken(true)
+          await router.push('/landing')
+        } else {
+          await firebase.auth().signOut()
+          setIsAddingClaim(false)
+          setShowError(true)
+        }
       }
     } catch (error) {
       console.log(error.message)
@@ -66,6 +73,7 @@ export default function Home() {
             <Button onClick={googleSignIn}>Login</Button>
           </ButtonWrapper>
           {showError ? <ErrorDiv>Unauthorized user! Please log in again.</ErrorDiv> : null}
+          {isAddingClaim ? <AuthorizeDiv>Authorizing user...</AuthorizeDiv> : null}
       </Container>
     </>
   )

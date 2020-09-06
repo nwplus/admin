@@ -8,12 +8,6 @@ import background from '../public/backgroundImage.png'
 import nwPlusLogo from '../public/nwPlusLogo.png'
 import signIn from '../public/signIn.png'
 
-// const Container = styled.div`
-//     display: flex;
-//     flex-direction: row;
-//     flex-wrap: wrap;
-// `
-
 const BackgroundContainer = styled.div`
     background-image: url(${background});
     background-size: cover;
@@ -26,7 +20,8 @@ const LeftContainer = styled.div`
     align-items: center;
     flex-direction: column;
     height: 100vh;
-    width: 23.3vw;
+    width: 337px;
+    background-color: white;
 `
 
 const LogoImage = styled.img`
@@ -108,6 +103,7 @@ export default function Home() {
             {isAddingClaim && <StatusDiv>Authorizing user...</StatusDiv>}
           </LeftContainer>
       </BackgroundContainer>
+      
     </>
   )
 }

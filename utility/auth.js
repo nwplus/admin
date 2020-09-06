@@ -1,6 +1,18 @@
 import React, { createContext, useState, useContext, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import firebase from 'firebase'
+import styled from 'styled-components'
+
+const LoadingScreenContainer = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+`
+
+const LoadingDiv = styled.div`
+    font-size: 50px;
+`
 
 export const checkAdminClaim = async user => {
     const token = await user.getIdTokenResult()
@@ -14,11 +26,6 @@ const Auth = ({ children }) => {
     const [isLoading, setIsLoading] = useState(true)
     const router = useRouter()
 
-    // const checkAdminClaim = async user => {
-    //     const token = await user.getIdTokenResult()
-    //     return token.claims.hasOwnProperty('admin')
-    // }
-
     useEffect(() => {
         const setPersistence = async () => {
             await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
@@ -29,11 +36,11 @@ const Auth = ({ children }) => {
     useEffect(() => {
         const unsubscribe = firebase.auth().onAuthStateChanged(async user => {
             if (user === null) {
-                await router.push('/')
+                await router.replace('/')
             } else {
                 const isAdmin = await checkAdminClaim(user)
                 if (!isAdmin) {
-                    await router.push('/')
+                    await router.replace('/')
                 } else {
                     setUser(user)
                 }
@@ -46,7 +53,14 @@ const Auth = ({ children }) => {
 
     return (
         <AuthContext.Provider value={{ isAuthenticated: !!user, user, checkAdminClaim }}>
-            {isLoading ? <h1>Authenticating...</h1> : children}
+            {
+            isLoading ? 
+                <LoadingScreenContainer>
+                    <LoadingDiv>Authenticating...</LoadingDiv>
+                </LoadingScreenContainer> 
+                : 
+                children
+            }
         </AuthContext.Provider>
     )
 }

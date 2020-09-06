@@ -1,31 +1,54 @@
 import firebase from 'firebase'
 import styled from 'styled-components'
 import { useState } from 'react'
-import Button from '../components/button'
 import { useRouter } from 'next/router'
 import { COLOR } from '../constants'
 import { checkAdminClaim } from '../utility/auth'
+import background from '../public/backgroundImage.png'
+import nwPlusLogo from '../public/nwPlusLogo.png'
+import SignIn from '../public/SignIn.png'
 
 const Container = styled.div`
     display: flex;
-    justify-content: center;
+    flex-direction: row;
 `
-const NameHeader = styled.h1`
-    position: absolute:
-    top: 100px;
+
+const BackgroundContainer = styled.div`
+    background-image: url(${background});
+    background-size: cover;
+    height: 100vh;
+    width: 76.7%;
 `
-const ButtonWrapper = styled.div`
-    position: absolute;
-    top: 200px;
+
+const LeftContainer = styled.div`
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    width: 23.3%;
 `
-const ErrorDiv = styled.div`
-    position: absolute;
-    top: 300px;
-    color: ${COLOR.RED}
+
+const LogoImage = styled.img`
+    align-self: center;
+    margin-top: 80px;
 `
-const AuthorizeDiv = styled.div`
-    position: absolute;
-    top: 300px;
+
+const LogInDiv = styled.div`
+    font-size: 28px;
+    margin-top: 48px;
+`
+
+const SignInImage = styled.img`
+    align-self: center;
+    margin-top: 34px;
+    cursor: pointer;
+`
+
+const StatusDiv = styled.div`
+    margin-top: 20px;
+    font-size: 26px;
+    text-align: center;
+    ${(props) => props.error && `color: ${COLOR.RED}`}
 `
 
 export default function Home() {
@@ -56,6 +79,7 @@ export default function Home() {
           await router.push('/landing')
         } else {
           await firebase.auth().signOut()
+          await router.push('/')
           setIsAddingClaim(false)
           setShowError(true)
         }
@@ -68,13 +92,23 @@ export default function Home() {
   return (
     <>
       <Container>
-        <NameHeader>nwPlus CMS</NameHeader>
-        <ButtonWrapper>
-            <Button onClick={googleSignIn}>Login</Button>
-          </ButtonWrapper>
-          {showError ? <ErrorDiv>Unauthorized user! Please log in again.</ErrorDiv> : null}
-          {isAddingClaim ? <AuthorizeDiv>Authorizing user...</AuthorizeDiv> : null}
+        <LeftContainer>
+          <LogoImage src={nwPlusLogo}/>
+          <LogInDiv>
+            Log into your account 
+          </LogInDiv>
+          <SignInImage src={SignIn} onClick={googleSignIn}/>
+          {showError && 
+            <StatusDiv error={true}>
+              <p>Unauthorized user!</p> 
+              <p>Please log in again with a valid account.</p>
+            </StatusDiv>
+          }
+          {isAddingClaim && <StatusDiv>Authorizing user...</StatusDiv>}
+        </LeftContainer>
+        <BackgroundContainer/>
       </Container>
+      
     </>
   )
 }

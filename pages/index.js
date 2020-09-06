@@ -8,16 +8,17 @@ import background from '../public/backgroundImage.png'
 import nwPlusLogo from '../public/nwPlusLogo.png'
 import signIn from '../public/signIn.png'
 
-const Container = styled.div`
-    display: flex;
-    flex-direction: row;
-`
+// const Container = styled.div`
+//     display: flex;
+//     flex-direction: row;
+//     flex-wrap: wrap;
+// `
 
 const BackgroundContainer = styled.div`
     background-image: url(${background});
     background-size: cover;
     height: 100vh;
-    width: 76.7%;
+    width: 100vw;
 `
 
 const LeftContainer = styled.div`
@@ -25,7 +26,7 @@ const LeftContainer = styled.div`
     align-items: center;
     flex-direction: column;
     height: 100vh;
-    width: 23.3%;
+    width: 23.3vw;
 `
 
 const LogoImage = styled.img`
@@ -91,24 +92,22 @@ export default function Home() {
 }
   return (
     <>
-      <Container>
-        <LeftContainer>
-          <LogoImage src={nwPlusLogo}/>
-          <LogInDiv>
-            Log into your account 
-          </LogInDiv>
-          <SignInImage src={signIn} onClick={googleSignIn}/>
-          {showError && 
-            <StatusDiv error={true}>
-              <p>Unauthorized user!</p> 
-              <p>Please log in again with a valid account.</p>
-            </StatusDiv>
-          }
-          {isAddingClaim && <StatusDiv>Authorizing user...</StatusDiv>}
-        </LeftContainer>
-        <BackgroundContainer/>
-      </Container>
-      
+      <BackgroundContainer>
+          <LeftContainer>
+            <LogoImage src={nwPlusLogo}/>
+            <LogInDiv>
+              Log into your account 
+            </LogInDiv>
+            <SignInImage src={signIn} onClick={googleSignIn}/>
+            {showError && 
+              <StatusDiv error={true}>
+                <p>Unauthorized user!</p> 
+                <p>Please log in again with a valid account.</p>
+              </StatusDiv>
+            }
+            {isAddingClaim && <StatusDiv>Authorizing user...</StatusDiv>}
+          </LeftContainer>
+      </BackgroundContainer>
     </>
   )
 }

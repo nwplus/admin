@@ -1,11 +1,24 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import Link from 'next/link';
 import Sidebar from './sidebar';
 import { COLOR } from '../constants';
+import LoadingGif from '../assets/nwplus.gif';
+
+const HomeHeaderDiv = styled.div`
+  display: flex;
+  padding: 60px 0 0 60px;
+  align-items: center;
+`;
+
+const LoadingImage = styled.img`
+  height: 50px;
+  width: 50px;
+  padding-left: 20px;
+`;
 
 const HomeHeader = styled.h1`
   color: ${COLOR.BLACK};
-  padding: 60px 0 0 60px;
 `;
 
 const Container = styled.div`
@@ -35,37 +48,48 @@ const NavItem = styled.a`
 
 export default ({ hackathons, currentPath, children }) => {
   const [currPath, setCurrPath] = useState('intro');
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     setCurrPath(window.location.pathname.split('/')[2]);
   }, []);
 
+  useEffect(() => {
+    setLoading(false);
+  }, [currPath]);
+
   return (
     <Container>
       <Sidebar currentPath={currentPath} hackathons={hackathons} />
-      <div>
-        <HomeHeader>{currentPath} Home</HomeHeader>
+      <div style={{ 'max-width': '80vw' }}>
+        <HomeHeaderDiv>
+          <HomeHeader>{currentPath}</HomeHeader>
+          {loading && <LoadingImage src={LoadingGif} />}
+        </HomeHeaderDiv>
         <HackathonNavBar>
-          <NavItem
-            key={`${currentPath}intro`}
-            href={`/${currentPath}/intro`}
-            selected={currPath === 'intro'}
-          >
-            Intro
-          </NavItem>
-          <NavItem
-            key={`${currentPath}faq`}
-            href={`/${currentPath}/faq`}
-            selected={currPath === 'faq'}
-          >
-            FAQ
-          </NavItem>
-          <NavItem
-            key={`${currentPath}spocos`}
-            href={`/${currentPath}/spocos`}
-            selected={currPath === 'spocos'}
-          >
-            Sponsors
-          </NavItem>
+          <Link href="/[id]/intro" as={`/${currentPath}/intro`}>
+            <NavItem
+              onClick={() => setLoading(true)}
+              selected={currPath === 'intro'}
+            >
+              Intro
+            </NavItem>
+          </Link>
+          <Link href="/[id]/faq" as={`/${currentPath}/faq`}>
+            <NavItem
+              onClick={() => setLoading(true)}
+              selected={currPath === 'faq'}
+            >
+              FAQ
+            </NavItem>
+          </Link>
+          <Link href="/[id]/spocos" as={`/${currentPath}/spocos`}>
+            <NavItem
+              onClick={() => setLoading(true)}
+              selected={currPath === 'spocos'}
+            >
+              Sponsors
+            </NavItem>
+          </Link>
         </HackathonNavBar>
         <Content>{children}</Content>
       </div>

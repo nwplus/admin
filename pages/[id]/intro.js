@@ -205,11 +205,11 @@ export default ({ id, hackathons }) => {
                     </div>
                   </div>
                 ) : (
-                    <>
-                      <HeaderText>{websiteData[type].header}</HeaderText>
-                      <ContentText>{websiteData[type].content}</ContentText>
-                    </>
-                  )}
+                  <>
+                    <HeaderText>{websiteData[type].header}</HeaderText>
+                    <ContentText>{websiteData[type].content}</ContentText>
+                  </>
+                )}
               </CardContent>
             </Container>
           </Card>

@@ -1,4 +1,6 @@
-module.exports = () => {
+const withImages = require('next-images');
+
+module.exports = withImages(() => {
   if (process.env.DEPLOY_ENV !== 'PRODUCTION')
     return {
       env: {
@@ -30,4 +32,4 @@ module.exports = () => {
       NEXT_PUBLIC_FIREBASE_APP_ID: '1:306881258768:web:bc922148732abee79f7195',
     },
   };
-};
+});

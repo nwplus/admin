@@ -16,6 +16,7 @@
     "firebase": "^7.15.5",
     "json2csv": "^5.0.1",
     "next": "9.4.4",
+    "next-images": "^1.4.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-modal": "^3.11.2",

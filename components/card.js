@@ -27,18 +27,21 @@ export const CardContent = styled.div`
   padding: 40px;
 `;
 
+// padding: top, right, bottom, left
+// jsutify contente space around
 export const CardDiv = styled.div`
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-around;
-    padding: 26px 28px;
+    align-items: center;
+    padding: ${props => props.padding};
     border-bottom: 2px solid #EDEDED;
 `
 export const TableDiv = styled.div`
     border: 1px solid #000000;
     border-radius: 3px;
     padding: 1px 1px;
-    background-color: #FFFFFF;
+    background-color: ${COLOR.WHITE};
 `
 
 

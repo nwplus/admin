@@ -12,7 +12,7 @@ const BackDropScreen = styled.div`
   left: 0;
   top: 0;
   background-color: ${COLOR.BLACK};
-  opacity: 10%;
+  opacity: 50%;
 `;
 
 export const ModalTitle = styled.h1`

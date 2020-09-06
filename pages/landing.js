@@ -1,11 +1,12 @@
+import React from 'react'
 import Card, { CardHeader, CardTitle, CardContent, CardButtonContainer } from '../components/card'
 import { EDIT } from '../constants'
 import Button from '../components/button'
 import firebase from 'firebase'
 
-export default () => {
+export default function Landing() {
   return (
-    <React.Fragment>
+    <>
       <div>Login Page</div>
 
       <Card>
@@ -20,7 +21,7 @@ export default () => {
         </CardHeader>
         <CardContent>Example usage of card component</CardContent>
       </Card>
-    </React.Fragment>
+    </>
 
   )
 }

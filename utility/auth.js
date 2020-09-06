@@ -16,7 +16,7 @@ const LoadingDiv = styled.div`
 
 export const checkAdminClaim = async user => {
     const token = await user.getIdTokenResult()
-    return token.claims.hasOwnProperty('admin')
+    return Object.prototype.hasOwnProperty.call(token.claims, 'admin')
 }
 
 const AuthContext = createContext({});

@@ -1,12 +1,12 @@
 import firebase from 'firebase'
 import styled from 'styled-components'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/router'
 import { COLOR } from '../constants'
 import { checkAdminClaim } from '../utility/auth'
 import background from '../public/backgroundImage.png'
 import nwPlusLogo from '../public/nwPlusLogo.png'
-import SignIn from '../public/SignIn.png'
+import signIn from '../public/signIn.png'
 
 const Container = styled.div`
     display: flex;
@@ -97,7 +97,7 @@ export default function Home() {
           <LogInDiv>
             Log into your account 
           </LogInDiv>
-          <SignInImage src={SignIn} onClick={googleSignIn}/>
+          <SignInImage src={signIn} onClick={googleSignIn}/>
           {showError && 
             <StatusDiv error={true}>
               <p>Unauthorized user!</p> 

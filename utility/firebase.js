@@ -396,7 +396,7 @@ export const updateHackathonField = async (hackathonId, updateObj) => {
   db.collection(Hackathons).doc(hackathonId).update(updateObj);
 };
 
-export const getHackathonSnapShot = async (hackathonId, callback) => {
+export const getHackathonSnapShot = (hackathonId, callback) => {
   return db
     .collection(Hackathons)
     .doc(hackathonId)

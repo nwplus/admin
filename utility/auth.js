@@ -25,13 +25,6 @@ const Auth = ({ children }) => {
     const [user, setUser] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
     const router = useRouter()
-
-    useEffect(() => {
-        const setPersistence = async () => {
-            await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
-        }
-        setPersistence()
-    },[])
     
     useEffect(() => {
         const unsubscribe = firebase.auth().onAuthStateChanged(async user => {
@@ -43,6 +36,7 @@ const Auth = ({ children }) => {
                     await router.replace('/')
                 } else {
                     setUser(user)
+                    if (router.pathname=='/') await router.push('/landing')
                 }
             }
             setIsLoading(false)

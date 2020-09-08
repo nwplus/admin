@@ -96,7 +96,7 @@ export default function Home() {
             <StatusDiv error>
               <p>Unauthorized user!</p>
               <p>Please log in again with a valid account.</p>
-            </StatusDiv>}
+            </StatusDiv>)}
           {isAddingClaim && <StatusDiv>Authorizing user...</StatusDiv>}
         </LeftContainer>
       </BackgroundContainer>

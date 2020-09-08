@@ -135,4 +135,72 @@ export const getHackathonSnapShot = (hackathonId, callback) => {
     .onSnapshot((doc) => callback(doc));
 };
 
-export default fireDb;
+const getFaqCategory = (faqCategory) => {
+  switch (faqCategory) {
+    case FAQCategory.LOGS:
+      return FAQCategory.LOGS;
+    case FAQCategory.TEAMS:
+      return FAQCategory.TEAMS;
+    case FAQCategory.MISC:
+      return FAQCategory.MISC;
+    default:
+      return FAQCategory.GENERAL;
+  }
+};
+
+const getFaq = async (faqID) => {
+  const faqData = (await db.collection(faqCollection).doc(faqID).get()).data();
+  return faqData
+    ? {
+        id: faqID,
+        question: faqData.question ? faqData.question : 'Empty question field',
+        answer: faqData.answer ? faqData.answer : 'Empty answer field',
+        category: faqData.category
+          ? getFaqCategory(faqData.category)
+          : FAQCategory.MISC,
+        lastModified: faqData.lastModified
+          ? formatDate(faqData.lastModified.seconds)
+          : formatDate(getTimestamp().seconds),
+        hackathonIDs: faqData.hackathonIDs ? faqData.hackathonIDs : [],
+      }
+    : null;
+};
+
+export const getFaqs = async (hackathon) => {
+  const faqIDs = await getfaqIDs();
+  const faqs = {};
+  for (const faqID of faqIDs) {
+    const currFaq = await getFaq(faqID);
+    if (currFaq) {
+      if (currFaq.hackathonIDs.includes(hackathon)) faqs[faqID] = currFaq;
+    }
+  }
+  return faqs;
+};
+
+export const addFaq = async (faq) => {
+  const ref = db.collection(faqCollection).doc();
+  const currDate = getTimestamp();
+  await ref.set({
+    question: faq.question,
+    category: faq.category,
+    answer: faq.answer,
+    lastModified: currDate,
+    hackathonIDs: faq.hackathonIDs,
+  });
+  return ref.id;
+};
+export const updateFaq = async (faqID, faq) => {
+  const ref = db.collection(faqCollection).doc(faqID);
+  const currDate = getTimestamp();
+  await ref.update({
+    question: faq.question || 'Empty Question Field',
+    category: faq.category || 'None',
+    answer: faq.answer || 'Empty Answer',
+    lastModified: currDate,
+    hackathonIDs: faq.hackathonIDs,
+  });
+};
+export const deleteFaq = async (faqID) => {
+  await db.collection(faqCollection).doc(faqID).delete();
+};

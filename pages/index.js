@@ -21,7 +21,7 @@ const LeftContainer = styled.div`
   flex-direction: column;
   height: 100vh;
   width: 337px;
-  background-color: white;
+  background-color: ${COLOR.WHITE};
 `;
 
 const LogoImage = styled.img`
@@ -97,6 +97,7 @@ export default function Home() {
               <p>Unauthorized user!</p>
               <p>Please log in again with a valid account.</p>
             </StatusDiv>)}
+
           {isAddingClaim && <StatusDiv>Authorizing user...</StatusDiv>}
         </LeftContainer>
       </BackgroundContainer>

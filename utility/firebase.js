@@ -166,6 +166,10 @@ const getFaq = async (faqID) => {
     : null;
 };
 
+const getfaqIDs = async () => {
+  return (await db.collection(faqCollection).get()).docs.map((doc) => doc.id);
+};
+
 export const getFaqs = async (hackathon) => {
   const faqIDs = await getfaqIDs();
   const faqs = {};

@@ -5,7 +5,7 @@ import Sidebar from './sidebar';
 import { COLOR } from '../constants';
 import LoadingGif from '../assets/nwplus.gif';
 
-const HomeHeaderDiv = styled.div`
+const HeaderContainer = styled.div`
   display: flex;
   padding: 60px 0 0 60px;
   align-items: center;
@@ -17,7 +17,7 @@ const LoadingImage = styled.img`
   padding-left: 20px;
 `;
 
-const HomeHeader = styled.h1`
+const Header = styled.h1`
   color: ${COLOR.BLACK};
 `;
 
@@ -61,10 +61,10 @@ export default ({ hackathons, currentPath, children }) => {
     <Container>
       <Sidebar currentPath={currentPath} hackathons={hackathons} />
       <div style={{ 'max-width': '80vw' }}>
-        <HomeHeaderDiv>
-          <HomeHeader>{currentPath}</HomeHeader>
+        <HeaderContainer>
+          <Header>{currentPath}</Header>
           {loading && <LoadingImage src={LoadingGif} />}
-        </HomeHeaderDiv>
+        </HeaderContainer>
         <HackathonNavBar>
           <Link href="/[id]/intro" as={`/${currentPath}/intro`}>
             <NavItem

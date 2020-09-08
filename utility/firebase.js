@@ -3,7 +3,6 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
 import 'firebase/storage';
-import * as Parser from 'json2csv';
 import { FAQ, FAQCategory } from '../constants';
 
 if (!firebase.apps.length) {

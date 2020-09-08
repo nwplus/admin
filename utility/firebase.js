@@ -40,8 +40,8 @@ const storage = firebase.storage();
 const webCollection = 'Website_content';
 
 const fireDb = {
-  getNumberOfApplicants: callback => {
-    db.collection('hacker_email_2020').onSnapshot(callback)
+  getNumberOfApplicants: (callback) => {
+    db.collection('hacker_email_2020').onSnapshot(callback);
   },
   getNumberOfAccepted: (callback) => {
     db.collection('hacker_info_2020')

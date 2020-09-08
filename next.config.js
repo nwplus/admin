@@ -1,4 +1,4 @@
-const withOptimizedImages = require('next-optimized-images')
+const withOptimizedImages = require('next-optimized-images');
 
 module.exports = () => {
   if (process.env.DEPLOY_ENV !== 'PRODUCTION')

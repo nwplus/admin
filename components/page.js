@@ -43,7 +43,7 @@ const NavItem = styled.a`
   margin-right: 40px;
   text-decoration: none;
   color: ${(p) => (p.selected ? COLOR.BLACK : COLOR.DARK_COPY)};
-  border-bottom: ${(p) => (p.selected ? '3px solid black' : 'none')};
+  border-bottom: ${(p) => (p.selected ? '3px solid COLOR.BLACK' : 'none')};
 `;
 
 export default ({ hackathons, currentPath, children }) => {

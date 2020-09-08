@@ -67,15 +67,15 @@ export default function Home() {
       const user = await firebase.auth().currentUser;
       const isAdmin = await checkAdminClaim(user);
       if (isAdmin) {
-        await router.push('/landing');
+        router.push('/landing');
       } else {
         const res = await setAdmin();
         if (res.data.isAdmin) {
           await user.getIdToken(true);
-          await router.push('/landing');
+          router.push('/landing');
         } else {
           await firebase.auth().signOut();
-          await router.push('/');
+          router.push('/');
           setIsAddingClaim(false);
           setShowError(true);
         }
@@ -96,8 +96,8 @@ export default function Home() {
             <StatusDiv error>
               <p>Unauthorized user!</p>
               <p>Please log in again with a valid account.</p>
-            </StatusDiv>)}
-
+            </StatusDiv>
+          )}
           {isAddingClaim && <StatusDiv>Authorizing user...</StatusDiv>}
         </LeftContainer>
       </BackgroundContainer>

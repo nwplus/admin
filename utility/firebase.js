@@ -3,6 +3,8 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
 import 'firebase/storage';
+import * as Parser from 'json2csv';
+import { FAQ, FAQCategory } from '../constants';
 
 if (!firebase.apps.length) {
   const config = {
@@ -36,11 +38,93 @@ if (!firebase.apps.length) {
 
 export const db = firebase.firestore();
 
-const storage = firebase.storage();
 const webCollection = 'Website_content';
+const faqCollection = FAQ;
 const Hackathons = 'Hackathons';
 
-const fireDb = {
+export const formatDate = (date) => {
+  date = new Date(date * 1000);
+  const timeZoneOffset = new Date().getTimezoneOffset() * 60000;
+  return new Date(date - timeZoneOffset)
+    .toISOString()
+    .slice(0, -1)
+    .slice(0, -4)
+    .replace('T', ' ');
+};
+
+export const getTimestamp = () => {
+  return firebase.firestore.Timestamp.now();
+};
+
+export const getDocument = async (hackathon, collection) => {
+  if (collection === hackathon) {
+    const ref = db.collection(webCollection).doc(hackathon);
+    const data = await ref.get();
+    return data.data();
+  }
+  const ref = db
+    .collection(webCollection)
+    .doc(hackathon)
+    .collection(collection);
+  return (await ref.get()).docs.map((doc) => ({
+    id: doc.id,
+    data: doc.data(),
+  }));
+};
+
+export const updateDocument = (hackathon, collection, docId, object) => {
+  db.collection(webCollection)
+    .doc(hackathon)
+    .collection(collection)
+    .doc(docId)
+    .update(object);
+};
+
+export const addDocument = async (hackathon, collection, object) => {
+  const ref = await db
+    .collection(webCollection)
+    .doc(hackathon)
+    .collection(collection)
+    .add(object);
+  return ref.id;
+};
+
+export const deleteDocument = async (hackathon, collection, docId) => {
+  await db
+    .collection(webCollection)
+    .doc(hackathon)
+    .collection(collection)
+    .doc(docId)
+    .delete();
+};
+
+export const getHackathons = async () => {
+  return db
+    .collection('Hackathons')
+    .get()
+    .then((querySnapshot) => {
+      const hackathons = [];
+      querySnapshot.forEach((doc) => {
+        hackathons.push(doc.id);
+      });
+      return hackathons;
+    });
+};
+
+export const getHackathonPaths = async () => {
+  const hackathons = await getHackathons();
+  const paths = hackathons.map((id) => {
+    return {
+      params: { id },
+    };
+  });
+  return {
+    paths,
+    fallback: false,
+  };
+};
+
+export const fireDb = {
   getNumberOfApplicants: (callback) => {
     db.collection('hacker_email_2020').onSnapshot(callback);
   },
@@ -54,14 +138,14 @@ const fireDb = {
       .where('score.finalScore', '>', -1)
       .onSnapshot(callback);
   },
-  // applicantToCSV: async () => {
-  //   const hackerReference = db.collection('hacker_info_2020');
-  //   const snapshot = await hackerReference.get();
-  //   const hackerInfo = snapshot.docs.map(doc => doc.data());
-  //   const parser = new Parser.Parser();
-  //   const csv = parser.parse(hackerInfo);
-  //   return csv;
-  // },
+  applicantToCSV: async () => {
+    const hackerReference = db.collection('hacker_info_2020');
+    const snapshot = await hackerReference.get();
+    const hackerInfo = snapshot.docs.map((doc) => doc.data());
+    const parser = new Parser.Parser();
+    const csv = parser.parse(hackerInfo);
+    return csv;
+  },
   isAdmin: async (email) => {
     const ref = db.collection('admins');
     const admins = (await ref.get()).docs;
@@ -88,6 +172,79 @@ const fireDb = {
   updateFlags: async (website, flags) => {
     const websiteDataRef = db.collection(webCollection).doc(website);
     await websiteDataRef.update({ featureFlags: flags });
+  },
+  getfaqIDs: async () => {
+    return (await db.collection(faqCollection).get()).docs.map((doc) => doc.id);
+  },
+  getFaqs: async (hackathon) => {
+    const faqIDs = await fireDb.getfaqIDs();
+    const faqs = {};
+    for (const faqID of faqIDs) {
+      const currFaq = await fireDb.getFaq(faqID);
+      if (currFaq) {
+        if (currFaq.hackathonIDs.includes(hackathon)) faqs[faqID] = currFaq;
+      }
+    }
+    return faqs;
+  },
+  getFaq: async (faqID) => {
+    const faqData = (
+      await db.collection(faqCollection).doc(faqID).get()
+    ).data();
+    return faqData
+      ? {
+          id: faqID,
+          question: faqData.question
+            ? faqData.question
+            : 'Empty question field',
+          answer: faqData.answer ? faqData.answer : 'Empty answer field',
+          category: faqData.category
+            ? fireDb.getFaqCategory(faqData.category)
+            : FAQCategory.MISC,
+          lastModified: faqData.lastModified
+            ? formatDate(faqData.lastModified.seconds)
+            : formatDate(getTimestamp().seconds),
+          hackathonIDs: faqData.hackathonIDs ? faqData.hackathonIDs : [],
+        }
+      : null;
+  },
+  getFaqCategory: (faqCategory) => {
+    switch (faqCategory) {
+      case FAQCategory.LOGS:
+        return FAQCategory.LOGS;
+      case FAQCategory.TEAMS:
+        return FAQCategory.TEAMS;
+      case FAQCategory.MISC:
+        return FAQCategory.MISC;
+      default:
+        return FAQCategory.GENERAL;
+    }
+  },
+  addFaq: async (faq) => {
+    const ref = db.collection(faqCollection).doc();
+    const currDate = getTimestamp();
+    await ref.set({
+      question: faq.question,
+      category: faq.category,
+      answer: faq.answer,
+      lastModified: currDate,
+      hackathonIDs: faq.hackathonIDs,
+    });
+    return ref.id;
+  },
+  updateFaq: async (faqID, faq) => {
+    const ref = db.collection(faqCollection).doc(faqID);
+    const currDate = getTimestamp();
+    await ref.update({
+      question: faq.question || 'Empty Question Field',
+      category: faq.category || 'None',
+      answer: faq.answer || 'Empty Answer',
+      lastModified: currDate,
+      hackathonIDs: faq.hackathonIDs,
+    });
+  },
+  deleteFaq: async (faqID) => {
+    await db.collection(faqCollection).doc(faqID).delete();
   },
   getWebsites: async () => {
     const ref = db.collection(webCollection);
@@ -209,118 +366,6 @@ const fireDb = {
       SignUpButtonText: signupButtonText || '',
       SignUpText: signupText || '',
     });
-  },
-  addSponsorInformation: async (website, sponsor) => {
-    const ref = db
-      .collection(webCollection)
-      .doc(website)
-      .collection('Sponsors');
-    await ref.add({
-      image: sponsor.image,
-      name: sponsor.name,
-      url: sponsor.url,
-      rank: sponsor.rank,
-      altImage: sponsor.altImage,
-    });
-  },
-  async deleteSponsor(website, image) {
-    let altImage = false;
-    try {
-      const sponsors = await db
-        .collection(webCollection)
-        .doc(website)
-        .collection('Sponsors')
-        .get();
-      sponsors.forEach(async (sponsor) => {
-        if (sponsor.data().image === image) {
-          altImage = !!sponsor.data().altImage;
-          await sponsor.ref.delete();
-        }
-      });
-    } catch (e) {
-      return false;
-    }
-    const ref = storage.ref(`${website}/${image}`);
-    await ref.delete();
-    if (altImage) {
-      const altRef = storage.ref(`${website}/alt${image}`);
-      await altRef.delete();
-    }
-    return true;
-  },
-  async uploadImages(website, files) {
-    const failedUploads = [];
-    for (const file of files) {
-      try {
-        const ref = storage.ref(`${website}/${file.name}`);
-        await ref.put(file);
-        if (file.altImage) {
-          const altRef = storage.ref(`${website}/alt${file.name}`);
-          await altRef.put(file.altImage);
-        }
-      } catch (e) {
-        console.log(e);
-        failedUploads.push(file.name);
-        continue;
-      }
-      try {
-        await this.addSponsorInformation(website, {
-          image: file.name,
-          name: file.sponsorName.trim(),
-          url: file.url.trim(),
-          rank: file.rank,
-          altImage: file.altImage ? `alt${file.name}` : null,
-        });
-      } catch (e) {
-        const ref = storage.ref(`${website}/${file.name}`);
-        await ref.delete();
-        if (file.altImage) {
-          const altRef = storage.ref(`${website}/alt${file.name}`);
-          await altRef.delete();
-        }
-        console.log(e);
-        failedUploads.push(file.name);
-      }
-    }
-    return failedUploads;
-  },
-  getSponsors: async () => {
-    const websites = await fireDb.getWebsites();
-    const sponsors = {};
-    for (const website of websites) {
-      const data = await fireDb.get(website, 'Sponsors');
-      if (data.length > 0) {
-        await Promise.all(
-          data.map(async (sponsor) => {
-            const newSponsor = sponsor;
-            newSponsor.data.imageUrl = await fireDb.getImageUrl(
-              website,
-              sponsor.data.image
-            );
-            if (sponsor.data.altImage) {
-              newSponsor.data.altImageUrl = await fireDb.getImageUrl(
-                website,
-                sponsor.data.altImage
-              );
-            }
-            return newSponsor;
-          })
-        );
-        sponsors[website] = data;
-      } else {
-        sponsors[website] = {};
-      }
-    }
-    return sponsors;
-  },
-
-  getTimestamp: () => {
-    return firebase.firestore.Timestamp.now();
-  },
-  getImageUrl: async (WebDocument, imageref) => {
-    const image = storage.ref(`${WebDocument}/${imageref}`);
-    const url = await image.getDownloadURL();
-    return url;
   },
 };
 

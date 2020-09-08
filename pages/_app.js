@@ -1,6 +1,8 @@
+import React from 'react';
+import Auth from '../utility/auth';
+
 // import App from 'next/app'
 import '../utility/firebase';
-import React from 'react';
 // import firebase from 'firebase/app';
 // import 'firebase/analytics';
 
@@ -16,7 +18,11 @@ import '../app.css';
 // }
 
 function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />;
+  return (
+    <Auth>
+      <Component {...pageProps} />
+    </Auth>
+  );
 }
 
 // Only uncomment this method if you have blocking data requirements for

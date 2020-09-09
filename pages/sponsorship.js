@@ -259,19 +259,10 @@ export default function SponsorshipPage(props) {
             <img src={imgObject} width="100%" alt={newobj.imgURL} />
           </LogoImage>
 
-          <input
-            type="file"
-            id="file"
-            ref={inputFile}
-            accept="image/*"
-            onChange={selectImageFile}
-            style={{ display: 'none' }}
-          />
-          <UploadContainer
-            type="text"
-            value={newobj.imgURL}
-            onClick={fileClick}
-          />
+          <div>
+
+          <Label>Tier</Label>
+
           <select
             value={newobj.tier}
             onChange={(event) => handleChange('tier', event.target.value)}
@@ -287,8 +278,22 @@ export default function SponsorshipPage(props) {
               Platinum / Title Sponsor
             </option>
           </select>
+          
+          <input
+            type="file"
+            id="file"
+            ref={inputFile}
+            accept="image/*"
+            onChange={selectImageFile}
+            style={{ display: 'none' }}
+          />
 
-          <Label>Tier</Label>
+          <UploadContainer
+            type="text"
+            value={newobj.imgURL}
+            onClick={fileClick}
+          />
+          </div>
         </ModalContent>
       </Modal>
     </>

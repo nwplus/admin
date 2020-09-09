@@ -81,7 +81,7 @@ export default ({ hackathons, currentPath }) => {
       </ItemContainer>
       {hackathons.map((id) => {
         return (
-          <Link key={id} href={`/${id}`} selected={currentPath === id}>
+          <Link key={id} href={`/${id}/intro`} selected={currentPath === id}>
             {id}
           </Link>
         );

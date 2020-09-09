@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { fireDb, formatDate, getTimestamp } from '../utility/firebase';
+import {
+  formatDate,
+  getTimestamp,
+  getFaqs,
+  addFaq,
+  updateFaq,
+  deleteFaq,
+} from '../utility/firebase';
 import Card, {
   CardHeader,
   CardTitle,
@@ -108,7 +115,7 @@ export default function Faq({ currHackathon }) {
 
   useEffect(() => {
     if (Object.keys(faqs).length === 0) {
-      fireDb.getFaqs(hackathon).then((res) => {
+      getFaqs(hackathon).then((res) => {
         if (Object.keys(res).length > 0) {
           setFaqs(res);
         }
@@ -124,7 +131,7 @@ export default function Faq({ currHackathon }) {
   const handleNew = async () => {
     newFaq.hackathonIDs = [hackathon];
     newFaq.category = newFaq.category ? newFaq.category : FAQCategory.GENERAL;
-    const faqID = await fireDb.addFaq(newFaq);
+    const faqID = await addFaq(newFaq);
     newFaq.lastModified = formatDate(getTimestamp().seconds);
     setFaqs({
       ...faqs,
@@ -148,7 +155,7 @@ export default function Faq({ currHackathon }) {
   };
 
   const handleUpdate = () => {
-    fireDb.updateFaq(faqEditing.id, faqEditing);
+    updateFaq(faqEditing.id, faqEditing);
     faqEditing.lastModified = formatDate(getTimestamp().seconds);
     setFaqEditing(
       {
@@ -176,7 +183,7 @@ export default function Faq({ currHackathon }) {
       });
       return;
     }
-    fireDb.deleteFaq(faqID);
+    deleteFaq(faqID);
     setFaqs(
       Object.keys(faqs)
         .filter((id) => {

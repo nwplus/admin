@@ -3,7 +3,6 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
 import 'firebase/storage';
-import * as Parser from 'json2csv';
 import { FAQ, FAQCategory } from '../constants';
 
 if (!firebase.apps.length) {
@@ -40,6 +39,7 @@ export const db = firebase.firestore();
 
 const webCollection = 'Website_content';
 const faqCollection = FAQ;
+const Hackathons = 'Hackathons';
 
 export const formatDate = (date) => {
   date = new Date(date * 1000);
@@ -123,249 +123,87 @@ export const getHackathonPaths = async () => {
   };
 };
 
-export const fireDb = {
-  getNumberOfApplicants: (callback) => {
-    db.collection('hacker_email_2020').onSnapshot(callback);
-  },
-  getNumberOfAccepted: (callback) => {
-    db.collection('hacker_info_2020')
-      .where('tags.accepted', '==', true)
-      .onSnapshot(callback);
-  },
-  getScored: (callback) => {
-    db.collection('hacker_info_2020')
-      .where('score.finalScore', '>', -1)
-      .onSnapshot(callback);
-  },
-  applicantToCSV: async () => {
-    const hackerReference = db.collection('hacker_info_2020');
-    const snapshot = await hackerReference.get();
-    const hackerInfo = snapshot.docs.map((doc) => doc.data());
-    const parser = new Parser.Parser();
-    const csv = parser.parse(hackerInfo);
-    return csv;
-  },
-  isAdmin: async (email) => {
-    const ref = db.collection('admins');
-    const admins = (await ref.get()).docs;
-    for (const admin of admins) {
-      const col = ref.doc(admin.id);
-      const userData = (await col.get()).data();
-      if (userData.email === email) return true;
-    }
-    return false;
-  },
-  getFlags: async () => {
-    const websites = await fireDb.getWebsites();
-    const featureFlags = {};
-    for (const website of websites) {
-      const websiteDataRef = await db
-        .collection(webCollection)
-        .doc(website)
-        .get();
-      const websiteData = websiteDataRef.data();
-      featureFlags[website] = websiteData.featureFlags;
-    }
-    return featureFlags;
-  },
-  updateFlags: async (website, flags) => {
-    const websiteDataRef = db.collection(webCollection).doc(website);
-    await websiteDataRef.update({ featureFlags: flags });
-  },
-  getfaqIDs: async () => {
-    return (await db.collection(faqCollection).get()).docs.map((doc) => doc.id);
-  },
-  getFaqs: async (hackathon) => {
-    const faqIDs = await fireDb.getfaqIDs();
-    const faqs = {};
-    for (const faqID of faqIDs) {
-      const currFaq = await fireDb.getFaq(faqID);
-      if (currFaq) {
-        if (currFaq.hackathonIDs.includes(hackathon)) faqs[faqID] = currFaq;
-      }
-    }
-    return faqs;
-  },
-  getFaq: async (faqID) => {
-    const faqData = (
-      await db.collection(faqCollection).doc(faqID).get()
-    ).data();
-    return faqData
-      ? {
-          id: faqID,
-          question: faqData.question
-            ? faqData.question
-            : 'Empty question field',
-          answer: faqData.answer ? faqData.answer : 'Empty answer field',
-          category: faqData.category
-            ? fireDb.getFaqCategory(faqData.category)
-            : FAQCategory.MISC,
-          lastModified: faqData.lastModified
-            ? formatDate(faqData.lastModified.seconds)
-            : formatDate(getTimestamp().seconds),
-          hackathonIDs: faqData.hackathonIDs ? faqData.hackathonIDs : [],
-        }
-      : null;
-  },
-  getFaqCategory: (faqCategory) => {
-    switch (faqCategory) {
-      case FAQCategory.LOGS:
-        return FAQCategory.LOGS;
-      case FAQCategory.TEAMS:
-        return FAQCategory.TEAMS;
-      case FAQCategory.MISC:
-        return FAQCategory.MISC;
-      default:
-        return FAQCategory.GENERAL;
-    }
-  },
-  addFaq: async (faq) => {
-    const ref = db.collection(faqCollection).doc();
-    const currDate = getTimestamp();
-    await ref.set({
-      question: faq.question,
-      category: faq.category,
-      answer: faq.answer,
-      lastModified: currDate,
-      hackathonIDs: faq.hackathonIDs,
-    });
-    return ref.id;
-  },
-  updateFaq: async (faqID, faq) => {
-    const ref = db.collection(faqCollection).doc(faqID);
-    const currDate = getTimestamp();
-    await ref.update({
-      question: faq.question || 'Empty Question Field',
-      category: faq.category || 'None',
-      answer: faq.answer || 'Empty Answer',
-      lastModified: currDate,
-      hackathonIDs: faq.hackathonIDs,
-    });
-  },
-  deleteFaq: async (faqID) => {
-    await db.collection(faqCollection).doc(faqID).delete();
-  },
-  getWebsites: async () => {
-    const ref = db.collection(webCollection);
-    return (await ref.get()).docs.map((doc) => doc.id);
-  },
-  getIntroText: async () => {
-    const websites = await fireDb.getWebsites();
-    const introTexts = {};
-    for (const website of websites) {
-      const websiteData = (
-        await db.collection(webCollection).doc(website).get()
-      ).data();
-      introTexts[website] = {
-        introText: websiteData.IntroText
-          ? websiteData.IntroText.toString()
-          : '',
-        introSubtext: websiteData.IntroSubtext
-          ? websiteData.IntroSubtext.toString()
-          : '',
-        introLastEditedBy: websiteData.IntroLastEditedBy || undefined,
-        introLastEditedDate: websiteData.IntroLastEditedDate || undefined,
-        introButtonEnabled: websiteData.IntroButtonEnabled,
-        introButtonLink: websiteData.IntroButtonLink,
-        introSignUpButtonText: websiteData.SignUpButtonText,
-        introSignUpText: websiteData.SignUpText,
-      };
-    }
-    return introTexts;
-  },
-  getEvents: async () => {
-    const websites = await fireDb.getWebsites();
-    const events = {};
-    for (const website of websites) {
-      const websiteData = await db
-        .collection(webCollection)
-        .doc(website)
-        .collection('Events')
-        .get();
-      events[website] = await websiteData.docs.map((doc) => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          title: data.title,
-          text: data.text || '',
-          order: data.order,
-          imageLink: data.imageLink || '',
-          eventLink: data.eventLink || '',
-          signupLink: data.signupLink || '',
-          eventLastEditedBy: data.eventLastEditedBy || undefined,
-          eventLastEditedDate: data.eventLastEditedDate || undefined,
-          enabled: data.enabled,
-        };
-      });
-    }
-    return events;
-  },
-  addEvent: async (website, event) => {
-    const ref = db.collection(webCollection).doc(website).collection('Events');
-    await ref.add({
-      title: event.title || '',
-      order: parseInt(event.order) || -1,
-      text: event.text || '',
-      eventLink: event.eventLink || '',
-      learnMoreLink: event.learnMoreLink || '',
-      signupLink: event.signupLink || '',
-      imageLink: event.imageLink || '',
-      enabled: true,
-      eventLastEditedBy: event.eventLastEditedBy,
-      eventLastEditedDate: event.eventLastEditedDate.toDateString(),
-    });
-  },
-  updateEvent: async (website, event) => {
-    const ref = db
-      .collection(webCollection)
-      .doc(website)
-      .collection('Events')
-      .doc(event.id);
-    await ref.update({
-      title: event.title || '',
-      order: parseInt(event.order) || -1,
-      text: event.text || '',
-      eventLink: event.eventLink || '',
-      learnMoreLink: event.learnMoreLink || '',
-      signupLink: event.signupLink || '',
-      imageLink: event.imageLink || '',
-      eventLastEditedBy: event.eventLastEditedBy,
-      eventLastEditedDate: event.eventLastEditedDate.toDateString(),
-    });
-  },
-  updateEventEnabled: async (website, event) => {
-    const ref = db
-      .collection(webCollection)
-      .doc(website)
-      .collection('Events')
-      .doc(event.id);
-    await ref.update({
-      enabled: event.enabled,
-    });
-  },
-  updateIntroText: async (
-    website,
-    introText,
-    introSubtext,
-    user,
-    date,
-    enabled = undefined,
-    signupLink = undefined,
-    signupButtonText = undefined,
-    signupText = undefined
-  ) => {
-    const ref = db.collection(webCollection).doc(website);
-    await ref.update({
-      IntroText: introText,
-      IntroSubtext: introSubtext,
-      IntroLastEditedBy: user,
-      IntroLastEditedDate: date,
-      IntroButtonEnabled: enabled || false,
-      IntroButtonLink: signupLink || '',
-      SignUpButtonText: signupButtonText || '',
-      SignUpText: signupText || '',
-    });
-  },
+export const updateHackathonField = async (hackathonId, updateObj) => {
+  db.collection(Hackathons).doc(hackathonId).update(updateObj);
 };
 
-export default fireDb;
+export const getHackathonSnapShot = (hackathonId, callback) => {
+  return db
+    .collection(Hackathons)
+    .doc(hackathonId)
+    .onSnapshot((doc) => callback(doc));
+};
+
+const getFaqCategory = (faqCategory) => {
+  switch (faqCategory) {
+    case FAQCategory.LOGS:
+      return FAQCategory.LOGS;
+    case FAQCategory.TEAMS:
+      return FAQCategory.TEAMS;
+    case FAQCategory.MISC:
+      return FAQCategory.MISC;
+    default:
+      return FAQCategory.GENERAL;
+  }
+};
+
+const getFaq = async (faqID) => {
+  const faqData = (await db.collection(faqCollection).doc(faqID).get()).data();
+  return faqData
+    ? {
+        id: faqID,
+        question: faqData.question ? faqData.question : 'Empty question field',
+        answer: faqData.answer ? faqData.answer : 'Empty answer field',
+        category: faqData.category
+          ? getFaqCategory(faqData.category)
+          : FAQCategory.MISC,
+        lastModified: faqData.lastModified
+          ? formatDate(faqData.lastModified.seconds)
+          : formatDate(getTimestamp().seconds),
+        hackathonIDs: faqData.hackathonIDs ? faqData.hackathonIDs : [],
+      }
+    : null;
+};
+
+const getfaqIDs = async () => {
+  return (await db.collection(faqCollection).get()).docs.map((doc) => doc.id);
+};
+
+export const getFaqs = async (hackathon) => {
+  const faqIDs = await getfaqIDs();
+  const faqs = {};
+  for (const faqID of faqIDs) {
+    const currFaq = await getFaq(faqID);
+    if (currFaq) {
+      if (currFaq.hackathonIDs.includes(hackathon)) faqs[faqID] = currFaq;
+    }
+  }
+  return faqs;
+};
+
+export const addFaq = async (faq) => {
+  const ref = db.collection(faqCollection).doc();
+  const currDate = getTimestamp();
+  await ref.set({
+    question: faq.question,
+    category: faq.category,
+    answer: faq.answer,
+    lastModified: currDate,
+    hackathonIDs: faq.hackathonIDs,
+  });
+  return ref.id;
+};
+export const updateFaq = async (faqID, faq) => {
+  const ref = db.collection(faqCollection).doc(faqID);
+  const currDate = getTimestamp();
+  await ref.update({
+    question: faq.question || 'Empty Question Field',
+    category: faq.category || 'None',
+    answer: faq.answer || 'Empty Answer',
+    lastModified: currDate,
+    hackathonIDs: faq.hackathonIDs,
+  });
+};
+export const deleteFaq = async (faqID) => {
+  await db.collection(faqCollection).doc(faqID).delete();
+};

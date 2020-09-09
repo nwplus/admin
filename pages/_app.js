@@ -1,13 +1,7 @@
 import React from 'react';
 import Auth from '../utility/auth';
 
-// import App from 'next/app'
 import '../utility/firebase';
-// import firebase from 'firebase/app';
-// import 'firebase/analytics';
-
-// Initialize firebase app
-// import fireDb from '../utility/firebase';
 
 import '../app.css';
 

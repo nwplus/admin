@@ -158,63 +158,67 @@ export default ({ id, hackathons }) => {
   return (
     <Page currentPath={id} hackathons={hackathons}>
       {/* map over every text section in a hackathon's WebsiteData and adds the section name to isEditingObj state */}
-      {Object.keys(websiteData).map((type) => {
-        return (
-          <Card key={`card${type}`}>
-            <Container>
-              <CardHeader>
-                <CardTitle>{websiteData[type].title}</CardTitle>
-                <p>
-                  {`Last edited by ${websiteData[type].editor} at ${new Date(
-                    websiteData[type].time
-                  ).toLocaleString()}`}
-                </p>
-                <CardButtonContainer>
-                  <Button type={EDIT} onClick={() => handleEdit(type)} />
-                </CardButtonContainer>
-              </CardHeader>
-              <CardContent>
-                {isEditingObj[type] ? (
-                  <div style={{ padding: '0px 40px 37px 40px' }}>
-                    <Label>Header</Label>
-                    <TextBox
-                      defaultValue={editingData[type].header}
-                      onChange={(event) => {
-                        handleEditChange(event, type, true);
-                      }}
-                    />
-                    <Label>Body</Label>
-                    <TextBox
-                      defaultValue={editingData[type].content}
-                      resize
-                      onChange={(event) => {
-                        handleEditChange(event, type, false);
-                      }}
-                    />
-                    <div
-                      style={{
-                        marginTop: '27px',
-                        display: 'flex',
-                        float: 'right',
-                      }}
-                    >
-                      <CancelButton onClick={() => handleCancel(type)}>
-                        <CancelText>Cancel</CancelText>
-                      </CancelButton>
-                      <Button onClick={() => handleSave(type)}>Save</Button>
+      {websiteData ? (
+        Object.keys(websiteData).map((type) => {
+          return (
+            <Card key={`card${type}`}>
+              <Container>
+                <CardHeader>
+                  <CardTitle>{websiteData[type].title}</CardTitle>
+                  <p>
+                    {`Last edited by ${websiteData[type].editor} at ${new Date(
+                      websiteData[type].time
+                    ).toLocaleString()}`}
+                  </p>
+                  <CardButtonContainer>
+                    <Button type={EDIT} onClick={() => handleEdit(type)} />
+                  </CardButtonContainer>
+                </CardHeader>
+                <CardContent>
+                  {isEditingObj[type] ? (
+                    <div style={{ padding: '0px 40px 37px 40px' }}>
+                      <Label>Header</Label>
+                      <TextBox
+                        defaultValue={editingData[type].header}
+                        onChange={(event) => {
+                          handleEditChange(event, type, true);
+                        }}
+                      />
+                      <Label>Body</Label>
+                      <TextBox
+                        defaultValue={editingData[type].content}
+                        resize
+                        onChange={(event) => {
+                          handleEditChange(event, type, false);
+                        }}
+                      />
+                      <div
+                        style={{
+                          marginTop: '27px',
+                          display: 'flex',
+                          float: 'right',
+                        }}
+                      >
+                        <CancelButton onClick={() => handleCancel(type)}>
+                          <CancelText>Cancel</CancelText>
+                        </CancelButton>
+                        <Button onClick={() => handleSave(type)}>Save</Button>
+                      </div>
                     </div>
-                  </div>
-                ) : (
-                  <>
-                    <HeaderText>{websiteData[type].header}</HeaderText>
-                    <ContentText>{websiteData[type].content}</ContentText>
-                  </>
-                )}
-              </CardContent>
-            </Container>
-          </Card>
-        );
-      })}
+                  ) : (
+                    <>
+                      <HeaderText>{websiteData[type].header}</HeaderText>
+                      <ContentText>{websiteData[type].content}</ContentText>
+                    </>
+                  )}
+                </CardContent>
+              </Container>
+            </Card>
+          );
+        })
+      ) : (
+        <span>No intro options for this page</span>
+      )}
     </Page>
   );
 };

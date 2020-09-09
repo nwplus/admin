@@ -1,10 +1,11 @@
 import React from 'react';
 import Page from '../../components/page';
 import { getHackathonPaths, getHackathons } from '../../utility/firebase';
+import Faq from '../faq';
 
 export default ({ id, hackathons }) => (
   <Page currentPath={id} hackathons={hackathons}>
-    FAQ
+    <Faq currHackathon={id} hackathons={hackathons} />
   </Page>
 );
 

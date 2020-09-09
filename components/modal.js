@@ -1,8 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
-import { COLOR, VIEW, NEW, CLOSE, SPONSORSHIP } from '../constants';
+import {
+  COLOR,
+  VIEW,
+  NEW,
+  EDIT,
+  CLOSE,
+  SPONSORSHIP,
+  FAQCategory,
+} from '../constants';
 import TextBox from './textbox';
 import Button from './button';
+import Dropdown from './dropdown';
 
 const BackDropScreen = styled.div`
   width: 100%;
@@ -26,7 +35,7 @@ export const ModalTitle = styled.h1`
 
 export const Label = styled.label`
   display: block;
-  margin: 14px 0;
+  margin: 14px 0 11px 0;
   font-size: 16px;
   line-height: 20px;
 `;
@@ -40,8 +49,8 @@ export const InputField = styled.input`
   height: 40px;
   border: 1px solid ${COLOR.DARK_GRAY};
   box-sizing: border-box;
-  margin-bottom: 0.5rem;
-  padding: 0 0.5rem;
+  margin-bottom: 0.75rem;
+  padding: 0 0.75rem;
   background: ${COLOR.WHITE};
 `;
 
@@ -63,7 +72,6 @@ export const ModalField = ({
   onChange,
   modalAction,
 }) => {
-  // TODO: add detect dropdown based on label === category?
   return (
     <>
       <div>
@@ -75,7 +83,24 @@ export const ModalField = ({
           <InputField type={type} defaultValue={value} onChange={onChange} />
         )}
         {label === 'Category' && modalAction !== VIEW && (
-          <InputField type={type} defaultValue={value} onChange={onChange} />
+          <Dropdown
+            options={[
+              {
+                label: FAQCategory.GENERAL,
+              },
+              {
+                label: FAQCategory.LOGS,
+              },
+              {
+                label: FAQCategory.TEAMS,
+              },
+              {
+                label: FAQCategory.MISC,
+              },
+            ]}
+            onChange={onChange}
+            defaultValue={value}
+          />
         )}
         {modalAction === VIEW && <GenericText>{value}</GenericText>}
       </div>
@@ -88,8 +113,8 @@ const UploadButton = styled(Button)`
   flex-grow: 1;
   width: 50%;
   padding: 24px 24px !important;
-  padding: 0 0.5rem;
-  margin-bottom: 0.5rem;
+  padding: 0 0.75rem;
+  margin-bottom: 0.75rem;
 `;
 
 const Inline = styled.div`
@@ -101,14 +126,14 @@ const Inline = styled.div`
 const ImageContainer = styled.div`
   width: 200px;
   height: 200px;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
   background: #c4c4c4;
 `;
 
-export const UploadContainer = ({ type, value, onClick, onChange }) => (
+export const UploadContainer = ({ type, value, onClick }) => (
   <>
     <Inline>
-      <InputField inline type={type} defaultValue={value} onChange={onChange} />
+      <InputField inline type={type} defaultValue={value} />
       <UploadButton onClick={onClick} inline>
         Upload Image
       </UploadButton>
@@ -137,6 +162,7 @@ const ModalBackground = styled.div`
   top: 50%;
   transform: translate(-50%, -50%);
   transition: all 0.3s ease-out;
+  /* TODO: add media queries to make width responsive */
   width: 740px;
   max-width: 100%;
   height: 480px;
@@ -158,9 +184,18 @@ const InlineButtonSpan = styled.div`
 
 export const ModalButton = ({ type, handleClose, handleSave }) => {
   let buttonText;
-  if (type !== CLOSE && type !== VIEW) {
-    buttonText = type === NEW ? 'Add New' : 'Save';
+  switch (type) {
+    case NEW:
+      buttonText = 'Add New';
+      break;
+    case EDIT:
+      buttonText = 'Save';
+      break;
+    default:
+      buttonText = 'Confirm';
+      break;
   }
+
   return (
     <>
       <ButtonContainer>
@@ -226,13 +261,14 @@ export default function Modal({
   modalAction,
   lastModified,
   children,
+  modalTitle,
 }) {
   if (!isOpen) {
     return null;
   }
 
-  const getTitle = (action) => {
-    switch (action) {
+  const getTitle = (title) => {
+    switch (title) {
       case VIEW:
         return (
           <>
@@ -246,10 +282,16 @@ export default function Modal({
             <ModalTitle>New Item</ModalTitle>
           </>
         );
-      default:
+      case EDIT:
         return (
           <>
             <ModalTitle>Edit Item</ModalTitle>
+          </>
+        );
+      default:
+        return (
+          <>
+            <ModalTitle>{title}</ModalTitle>
           </>
         );
     }
@@ -257,10 +299,10 @@ export default function Modal({
 
   return (
     <>
-      <BackDropScreen />
+      {isOpen && <BackDropScreen />}
       <ModalBackground isOpen={isOpen}>
         <ModalButton type={CLOSE} handleClose={handleClose} />
-        {getTitle(modalAction)}
+        {(modalTitle && getTitle(modalTitle)) || getTitle(modalAction)}
         {children}
         <ModalButton
           type={modalAction}

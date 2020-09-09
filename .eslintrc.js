@@ -10,7 +10,7 @@ module.exports = {
     es6: true,
   },
   plugins: ['react'],
-  extends: ['eslint:recommended', 'nextjs'],
+  extends: ['eslint:recommended', 'nextjs', 'prettier'],
   parser: 'babel-eslint',
   rules: {
     'react/prop-types': 0,

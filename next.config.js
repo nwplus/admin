@@ -1,6 +1,8 @@
+const withOptimizedImages = require('next-optimized-images');
+
 module.exports = () => {
   if (process.env.DEPLOY_ENV !== 'PRODUCTION')
-    return {
+    return withOptimizedImages({
       env: {
         NEXT_PUBLIC_FIREBASE_API_KEY: process.env.NUXT_ENV_FIREBASE_API_KEY,
         NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN:
@@ -17,8 +19,8 @@ module.exports = () => {
           process.env.NUXT_ENV_FIREBASE_MESSAGING_SENDER_ID,
         NEXT_PUBLIC_FIREBASE_APP_ID: process.env.NUXT_ENV_FIREBASE_APP_ID,
       },
-    };
-  return {
+    });
+  return withOptimizedImages({
     env: {
       NEXT_PUBLIC_FIREBASE_API_KEY: 'AIzaSyDGa7alU0NhfBATSQ6CalkY4Za9wWPrM7o',
       NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: 'nwplus-ubc.firebaseapp.com',
@@ -29,5 +31,5 @@ module.exports = () => {
       NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: '306881258768',
       NEXT_PUBLIC_FIREBASE_APP_ID: '1:306881258768:web:bc922148732abee79f7195',
     },
-  };
+  });
 };

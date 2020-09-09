@@ -30,23 +30,18 @@ export const CardContent = styled.div`
 // padding: top, right, bottom, left
 // jsutify contente space around
 export const CardDiv = styled.div`
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-around;
-    align-items: center;
-    padding: ${props => props.padding};
-    border-bottom: 2px solid #EDEDED;
-`
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
+  align-items: center;
+  padding: ${(props) => props.padding};
+  border-bottom: 2px solid #ededed;
+`;
 export const TableDiv = styled.div`
-    border: 1px solid #000000;
-    border-radius: 3px;
-    padding: 1px 1px;
-    background-color: ${COLOR.WHITE};
-`
+  border: 1px solid #000000;
+  border-radius: 3px;
+  padding: 1px 1px;
+  background-color: ${COLOR.WHITE};
+`;
 
-
-export default ({children}) => (
-    <Card>
-        {children}
-    </Card>
-)
+export default ({ children }) => <Card>{children}</Card>;

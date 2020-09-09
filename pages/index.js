@@ -18,12 +18,15 @@ export default function Home() {
           <CardTitle>Hi</CardTitle>
           <p>Some extra text</p>
           <CardButtonContainer>
-            <Button type={EDIT} isText={true}> Hi there</Button>
+            <Button type={EDIT} isText>
+              {' '}
+              Hi there
+            </Button>
           </CardButtonContainer>
         </CardHeader>
         <CardContent>Example usage of card component</CardContent>
       </Card>
-      <SponsorshipPage name='LHD'/>
+      <SponsorshipPage name="LHD" />
     </>
   );
 }

@@ -211,7 +211,7 @@ const fireDb = {
   },
   setSponsor: async (website, sponsor) => {
     const ref = db
-      .collection("Hackathons")
+      .collection('Hackathons')
       .doc(website)
       .collection('Sponsors')
       .doc(sponsor.name);
@@ -220,24 +220,30 @@ const fireDb = {
       name: sponsor.name,
       link: sponsor.link,
       tier: sponsor.tier,
-      lastmod: sponsor.lastmod
-    })
+      lastmod: sponsor.lastmod,
+    });
   },
-  deleteSponsor: async(website, sponsorName) => {
+  deleteSponsor: async (website, sponsorName) => {
     const ref = db
-      .collection("Hackathons")
+      .collection('Hackathons')
       .doc(website)
-      .collection("Sponsors")
+      .collection('Sponsors')
       .doc(sponsorName);
     await ref.delete();
   },
-  getSponsors: async(website) => { 
-    var A = {};
-    const refs = await db.collection("Hackathons").doc(website).collection("Sponsors").get();
-    refs.docs.forEach(doc => {A[doc.id] = doc.data()})
+  getSponsors: async (website) => {
+    const A = {};
+    const refs = await db
+      .collection('Hackathons')
+      .doc(website)
+      .collection('Sponsors')
+      .get();
+    refs.docs.forEach((doc) => {
+      A[doc.id] = doc.data();
+    });
     return A;
   },
-  uploadSponsorImageToStorage: async(website, file) => {
+  uploadSponsorImageToStorage: async (website, file) => {
     try {
       const ref = storage.ref(`sponsor/${website}/${file.name}`);
       await ref.put(file);
@@ -245,7 +251,14 @@ const fireDb = {
       alert(e);
     }
   },
-  deleteSponsorImagefromStorage: async(website, imgID) => {
+  getImageFilebyName: async (website, imgID) => {
+    const ref = await storage
+      .ref(`sponsor/${website}`)
+      .child(imgID)
+      .getDownloadURL();
+    return ref;
+  },
+  deleteSponsorImagefromStorage: async (website, imgID) => {
     const ref = storage.ref(`sponsor/${website}/${imgID}`);
     await ref.delete();
   },

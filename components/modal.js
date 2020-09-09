@@ -36,7 +36,7 @@ export const InputField = styled.input`
     props.inline
       ? 'flex-grow: 1; width: 50%; border-radius: 2px 0 0 2px;'
       : 'width: 95%; border-radius: 2px;'}
- 
+
   height: 40px;
   border: 1px solid ${COLOR.DARK_GRAY};
   box-sizing: border-box;

@@ -248,7 +248,7 @@ const fireDb = {
       const ref = storage.ref(`sponsor/${website}/${file.name}`);
       await ref.put(file);
     } catch (e) {
-      alert(e);
+        alert(e);
     }
   },
   getImageFilebyName: async (website, imgID) => {

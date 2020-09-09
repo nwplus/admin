@@ -143,9 +143,9 @@ export default function SponsorshipPage(props) {
     fireDb.uploadSponsorImageToStorage(props.name, imgFile);
 
     // 2. renders on CMS
-    setSponsors((sponsors) => ({
-      ...sponsors,
+    setSponsors((oldSponsors) => ({
       [`${newobj.name}`]: newobj,
+      ...oldSponsors,
     }));
 
     // 3. refreshes form
@@ -233,7 +233,6 @@ export default function SponsorshipPage(props) {
         </CardContent>
       </Card>
 
-
       <Modal
         isOpen={showEditWindow}
         handleClose={handleCloseModal}
@@ -278,13 +277,14 @@ export default function SponsorshipPage(props) {
             onChange={(event) => handleChange('tier', event.target.value)}
           >
             <option default value="Inkind">
-              In-kind
+              {' '}
+              In-kind{' '}
             </option>
             <option value="Bronze">Bronze</option>
             <option value="Silver">Silver</option>
             <option value="Gold">Gold</option>
             <option value="Platinum/Title Sponsor">
-              Platinum / Title Sponsor{' '}
+              Platinum / Title Sponsor
             </option>
           </select>
 

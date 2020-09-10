@@ -48,6 +48,7 @@ const Link = styled.a`
     color: ${COLOR.WHITE};
   }
   ${(p) => p.selected && 'background-color: #1b1821'}
+  cursor: pointer;
 `;
 
 const Logout = styled.button`

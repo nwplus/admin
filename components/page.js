@@ -60,7 +60,7 @@ export default ({ hackathons, currentPath, children }) => {
   return (
     <Container>
       <Sidebar currentPath={currentPath} hackathons={hackathons} />
-      <div style={{ 'max-width': '80vw' }}>
+      <div style={{ width: '80vw' }}>
         <HeaderContainer>
           <Header>{currentPath}</Header>
           {loading && <LoadingImage src={LoadingGif} />}

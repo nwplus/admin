@@ -159,7 +159,7 @@ export default function Faq({ currHackathon }) {
   const handleUpdate = () => {
     updateFaq(faqEditing.id, faqEditing);
     faqEditing.lastModified = formatDate(getTimestamp().seconds);
-    newFaq.lastModifiedBy = user;
+    faqEditing.lastModifiedBy = user;
     setFaqEditing(
       {
         ...faqEditing,

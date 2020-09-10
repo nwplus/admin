@@ -104,7 +104,11 @@ export default ({ hackathons, currentPath }) => {
         return (
           <NextLink key={id} href="/[id]/intro" as={`/${id}/intro`}>
             <Link
-              onClick={() => setLoading(true)}
+              onClick={() => {
+                if (currentPath !== id) {
+                  setLoading(true);
+                }
+              }}
               selected={currentPath === id}
             >
               {id}

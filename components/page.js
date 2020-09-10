@@ -68,7 +68,11 @@ export default ({ hackathons, currentPath, children }) => {
         <HackathonNavBar>
           <Link href="/[id]/intro" as={`/${currentPath}/intro`}>
             <NavItem
-              onClick={() => setLoading(true)}
+              onClick={() => {
+                if (!window.location.href.includes('intro')) {
+                  setLoading(true);
+                }
+              }}
               selected={currPath === 'intro'}
             >
               Intro
@@ -76,7 +80,11 @@ export default ({ hackathons, currentPath, children }) => {
           </Link>
           <Link href="/[id]/faq" as={`/${currentPath}/faq`}>
             <NavItem
-              onClick={() => setLoading(true)}
+              onClick={() => {
+                if (!window.location.href.includes('faq')) {
+                  setLoading(true);
+                }
+              }}
               selected={currPath === 'faq'}
             >
               FAQ
@@ -84,7 +92,11 @@ export default ({ hackathons, currentPath, children }) => {
           </Link>
           <Link href="/[id]/spocos" as={`/${currentPath}/spocos`}>
             <NavItem
-              onClick={() => setLoading(true)}
+              onClick={() => {
+                if (!window.location.href.includes('spocos')) {
+                  setLoading(true);
+                }
+              }}
               selected={currPath === 'spocos'}
             >
               Sponsors

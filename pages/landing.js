@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Sidebar from '../components/sidebar';
 import { getHackathons } from '../utility/firebase';
 import nwPlusLogo from '../assets/nwplus.svg';
+import { useAuth } from '../utility/auth';
 
 const Container = styled.div`
   display: flex;
@@ -26,16 +27,15 @@ const InfoMessage = styled.p`
 `;
 
 export default function Landing({ hackathons, id }) {
+  const { user } = useAuth();
   return (
     <Container>
       <Sidebar currentPath={id} hackathons={hackathons} />
       <div style={{ width: '80vw' }}>
         <div style={{ width: '100%', textAlign: 'center' }}>
           <NwPlusImage src={nwPlusLogo} />
-          <WelcomeTitle>Welcome to the CMS!</WelcomeTitle>
-          <InfoMessage>
-            {'<'} Please choose a hackathon from the sidebar.
-          </InfoMessage>
+          <WelcomeTitle>Welcome to the CMS {user.displayName}!</WelcomeTitle>
+          <InfoMessage>Please choose a hackathon from the sidebar.</InfoMessage>
         </div>
       </div>
     </Container>

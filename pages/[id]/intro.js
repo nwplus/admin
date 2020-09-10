@@ -96,7 +96,7 @@ export default ({ id, hackathons }) => {
   useEffect(() => {
     const unsubscribe = getHackathonSnapShot(id, getHackathonData);
     return () => unsubscribe();
-  }, []);
+  }, [window.location.pathname]);
 
   const handleEdit = (type) => {
     setIsEditingObj({
@@ -206,19 +206,19 @@ export default ({ id, hackathons }) => {
                       </div>
                     </div>
                   ) : (
-                    <>
-                      <HeaderText>{websiteData[type].header}</HeaderText>
-                      <ContentText>{websiteData[type].content}</ContentText>
-                    </>
-                  )}
+                      <>
+                        <HeaderText>{websiteData[type].header}</HeaderText>
+                        <ContentText>{websiteData[type].content}</ContentText>
+                      </>
+                    )}
                 </CardContent>
               </Container>
             </Card>
           );
         })
       ) : (
-        <span>No intro options for this page</span>
-      )}
+          <span>No intro options for this page</span>
+        )}
     </Page>
   );
 };

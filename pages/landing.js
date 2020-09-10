@@ -19,11 +19,11 @@ const NwPlusImage = styled.img`
 `;
 
 const WelcomeTitle = styled.h1`
-  font-size: 60px;
+  font-size: 48px;
 `;
 
 const InfoMessage = styled.p`
-  font-size: 40px;
+  font-size: 32px;
 `;
 
 export default function Landing({ hackathons, id }) {

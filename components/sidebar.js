@@ -114,7 +114,10 @@ export default ({ hackathons, currentPath }) => {
       })}
       <Logout
         // TODO: logout
-        onClick={() => logout()}
+        onClick={() => {
+          setLoading(true);
+          logout();
+        }}
       >
         <ItemContainer>
           <Power />

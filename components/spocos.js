@@ -91,8 +91,6 @@ export default function SponsorshipPage(props) {
   };
 
   const handleView = async (id) => {
-    console.log(id);
-    console.log(sponsors);
     setnewobj({
       name: sponsors[id].name,
       link: sponsors[id].link,

@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/auth';
 import styled from 'styled-components';
 import nwPlusReversed from '../assets/nwplus-reversed.gif';
 
@@ -65,8 +66,8 @@ const Auth = ({ children }) => {
           </div>
         </LoadingScreenContainer>
       ) : (
-        children
-      )}
+          children
+        )}
     </AuthContext.Provider>
   );
 };

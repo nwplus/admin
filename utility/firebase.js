@@ -151,18 +151,18 @@ const getFaq = async (faqID) => {
   const faqData = (await db.collection(faqCollection).doc(faqID).get()).data();
   return faqData
     ? {
-        id: faqID,
-        question: faqData.question ? faqData.question : 'Empty question field',
-        answer: faqData.answer ? faqData.answer : 'Empty answer field',
-        category: faqData.category
-          ? getFaqCategory(faqData.category)
-          : FAQCategory.MISC,
-        lastModified: faqData.lastModified
-          ? formatDate(faqData.lastModified.seconds)
-          : formatDate(getTimestamp().seconds),
-        lastModifiedBy: faqData.lastModifiedBy || 'Unknown user',
-        hackathonIDs: faqData.hackathonIDs ? faqData.hackathonIDs : [],
-      }
+      id: faqID,
+      question: faqData.question ? faqData.question : 'Empty question field',
+      answer: faqData.answer ? faqData.answer : 'Empty answer field',
+      category: faqData.category
+        ? getFaqCategory(faqData.category)
+        : FAQCategory.MISC,
+      lastModified: faqData.lastModified
+        ? formatDate(faqData.lastModified.seconds)
+        : formatDate(getTimestamp().seconds),
+      lastModifiedBy: faqData.lastModifiedBy || 'Unknown user',
+      hackathonIDs: faqData.hackathonIDs ? faqData.hackathonIDs : [],
+    }
     : null;
 };
 

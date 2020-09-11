@@ -132,9 +132,9 @@ export default function Faq({ currHackathon }) {
   const handleNew = async () => {
     newFaq.hackathonIDs = [hackathon];
     newFaq.category = newFaq.category ? newFaq.category : FAQCategory.GENERAL;
+    newFaq.lastModifiedBy = user;
     const faqID = await addFaq(newFaq);
     newFaq.lastModified = formatDate(getTimestamp().seconds);
-    newFaq.lastModifiedBy = user;
     setFaqs({
       ...faqs,
       [faqID]: {
@@ -157,9 +157,9 @@ export default function Faq({ currHackathon }) {
   };
 
   const handleUpdate = () => {
+    faqEditing.lastModifiedBy = user;
     updateFaq(faqEditing.id, faqEditing);
     faqEditing.lastModified = formatDate(getTimestamp().seconds);
-    faqEditing.lastModifiedBy = user;
     setFaqEditing(
       {
         ...faqEditing,

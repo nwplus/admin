@@ -8,6 +8,7 @@ import { COLOR, EDIT, VIEW, NEW, CLOSE, DELETE } from '../constants';
 
 const StyledButton = styled.button`
   border: none;
+  font-family: 'HK Grotesk';
   ${(props) => props.isText && 'padding: 6px 24px; height: 40px;'}
   ${(props) =>
     !props.isText && props.contentColor === COLOR.BLACK && 'padding: 10px;'}

@@ -3,6 +3,7 @@ import Auth from '../utility/auth';
 
 import '../utility/firebase';
 
+import '../assets/fonts/style.css';
 import '../app.css';
 
 // // Only execute on client side

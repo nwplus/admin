@@ -17,6 +17,7 @@ import Card, {
 import Button from '../components/button';
 import Modal, { ModalContent, ModalField } from '../components/modal';
 import { COLOR, EDIT, VIEW, NEW, DELETE, FAQ, FAQCategory } from '../constants';
+import { useAuth } from '../utility/auth';
 
 const FAQWrapper = styled.div`
   max-height: 512px;
@@ -112,7 +113,7 @@ export default function Faq({ currHackathon }) {
   const [addNew, setAddNew] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [alertMsg, setAlertMsg] = useState('');
-
+  const { email: user } = useAuth().user;
   useEffect(() => {
     if (Object.keys(faqs).length === 0) {
       getFaqs(hackathon).then((res) => {
@@ -131,6 +132,7 @@ export default function Faq({ currHackathon }) {
   const handleNew = async () => {
     newFaq.hackathonIDs = [hackathon];
     newFaq.category = newFaq.category ? newFaq.category : FAQCategory.GENERAL;
+    newFaq.lastModifiedBy = user;
     const faqID = await addFaq(newFaq);
     newFaq.lastModified = formatDate(getTimestamp().seconds);
     setFaqs({
@@ -155,6 +157,7 @@ export default function Faq({ currHackathon }) {
   };
 
   const handleUpdate = () => {
+    faqEditing.lastModifiedBy = user;
     updateFaq(faqEditing.id, faqEditing);
     faqEditing.lastModified = formatDate(getTimestamp().seconds);
     setFaqEditing(
@@ -286,7 +289,7 @@ export default function Faq({ currHackathon }) {
                       question={faqs[id].question}
                       category={faqs[id].category}
                       answer={faqs[id].answer}
-                      lastModified={faqs[id].lastModified}
+                      lastModified={`${faqs[id].lastModified} by ${faqs[id].lastModifiedBy}`}
                       hackathonIDs={faqs[id].hackathonIDs}
                     />
                   ))}
@@ -341,7 +344,7 @@ export default function Faq({ currHackathon }) {
             handleClose={() => setFaqViewing({})}
             handleSave={() => setFaqViewing({})}
             modalAction={VIEW}
-            lastModified={faqViewing.lastModified}
+            lastModified={`${faqViewing.lastModified} by ${faqViewing.lastModifiedBy}`}
           >
             <ModalContent page={FAQ} columns={2}>
               <ModalField
@@ -370,7 +373,7 @@ export default function Faq({ currHackathon }) {
             handleClose={() => setFaqEditing({})}
             handleSave={() => handleUpdate()}
             modalAction={EDIT}
-            lastModified={faqEditing.lastModified}
+            lastModified={`${faqEditing.lastModified} by ${faqEditing.lastModifiedBy}`}
           >
             <ModalContent page={FAQ} columns={2}>
               <ModalField

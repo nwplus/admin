@@ -49,18 +49,20 @@ const NavItem = styled.a`
 export default ({ hackathons, currentPath, children }) => {
   const [currPath, setCurrPath] = useState('intro');
   const [loading, setLoading] = useState(false);
+  const [timeOut, setTimeOut] = useState();
   useEffect(() => {
     setCurrPath(window.location.pathname.split('/')[2]);
   }, []);
 
   useEffect(() => {
     setLoading(false);
+    clearTimeout(timeOut);
   }, [currPath]);
 
   return (
     <Container>
       <Sidebar currentPath={currentPath} hackathons={hackathons} />
-      <div style={{ 'max-width': '80vw' }}>
+      <div style={{ width: '80vw' }}>
         <HeaderContainer>
           <Header>{currentPath}</Header>
           {loading && <LoadingImage src={LoadingGif} />}
@@ -68,7 +70,15 @@ export default ({ hackathons, currentPath, children }) => {
         <HackathonNavBar>
           <Link href="/[id]/intro" as={`/${currentPath}/intro`}>
             <NavItem
-              onClick={() => setLoading(true)}
+              onClick={() => {
+                if (!window.location.href.includes('intro')) {
+                  setTimeOut(
+                    setTimeout(() => {
+                      setLoading(true);
+                    }, 750)
+                  );
+                }
+              }}
               selected={currPath === 'intro'}
             >
               Intro
@@ -76,7 +86,15 @@ export default ({ hackathons, currentPath, children }) => {
           </Link>
           <Link href="/[id]/faq" as={`/${currentPath}/faq`}>
             <NavItem
-              onClick={() => setLoading(true)}
+              onClick={() => {
+                if (!window.location.href.includes('faq')) {
+                  setTimeOut(
+                    setTimeout(() => {
+                      setLoading(true);
+                    }, 750)
+                  );
+                }
+              }}
               selected={currPath === 'faq'}
             >
               FAQ
@@ -84,7 +102,15 @@ export default ({ hackathons, currentPath, children }) => {
           </Link>
           <Link href="/[id]/spocos" as={`/${currentPath}/spocos`}>
             <NavItem
-              onClick={() => setLoading(true)}
+              onClick={() => {
+                if (!window.location.href.includes('spocos')) {
+                  setTimeOut(
+                    setTimeout(() => {
+                      setLoading(true);
+                    }, 750)
+                  );
+                }
+              }}
               selected={currPath === 'spocos'}
             >
               Sponsors

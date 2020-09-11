@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import NextLink from 'next/link';
 import { COLOR } from '../constants';
 import Website from './icons/website';
 import Power from './icons/power';
+import { logout } from '../utility/firebase';
+import LoadingGif from '../assets/nwplus.gif';
 
 const SidebarContainer = styled.div`
   background-color: ${COLOR.PRIMARY};
@@ -10,6 +13,10 @@ const SidebarContainer = styled.div`
   box-sizing: border-box;
   width: 300px;
   padding: 30px;
+`;
+
+const HeaderContainer = styled.div`
+  display: flex;
 `;
 
 const Header = styled.h1`
@@ -41,6 +48,7 @@ const Link = styled.a`
     color: ${COLOR.WHITE};
   }
   ${(p) => p.selected && 'background-color: #1b1821'}
+  cursor: pointer;
 `;
 
 const Logout = styled.button`
@@ -71,24 +79,59 @@ const Logout = styled.button`
   }
 `;
 
+const LoadingImage = styled.img`
+  height: 50px;
+  width: 50px;
+  padding-left: 10px;
+`;
+
 export default ({ hackathons, currentPath }) => {
+  const [loading, setLoading] = useState(false);
+  const [ifTimeOut, setIfTimeOut] = useState();
+  useEffect(() => {
+    setLoading(false);
+    clearTimeout(ifTimeOut);
+  }, [window.location.pathname]);
   return (
     <SidebarContainer>
-      <Header>nwPlus CMS</Header>
+      <HeaderContainer>
+        <Header>nwPlus CMS</Header>
+        {loading && <LoadingImage src={LoadingGif} />}
+      </HeaderContainer>
       <ItemContainer>
         <Website />
         <Item>Websites</Item>
       </ItemContainer>
       {hackathons.map((id) => {
         return (
-          <Link key={id} href={`/${id}/intro`} selected={currentPath === id}>
-            {id}
-          </Link>
+          <NextLink key={id} href="/[id]/intro" as={`/${id}/intro`}>
+            <Link
+              onClick={() => {
+                if (currentPath !== id) {
+                  setIfTimeOut(
+                    setTimeout(() => {
+                      setLoading(true);
+                    }, 750)
+                  );
+                }
+              }}
+              selected={currentPath === id}
+            >
+              {id}
+            </Link>
+          </NextLink>
         );
       })}
       <Logout
         // TODO: logout
-        onClick={() => console.log('LOGOUT')}
+        onClick={() => {
+          setIfTimeOut(
+            setTimeout(() => {
+              setLoading(true);
+            }, 750)
+          );
+          logout();
+        }}
       >
         <ItemContainer>
           <Power />

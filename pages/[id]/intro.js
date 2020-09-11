@@ -16,6 +16,7 @@ import {
   getHackathonPaths,
   getHackathons,
 } from '../../utility/firebase';
+import { useAuth } from '../../utility/auth';
 
 const HeaderText = styled.h2`
   border: none;
@@ -66,7 +67,7 @@ export default ({ id, hackathons }) => {
   const [isEditingObj, setIsEditingObj] = useState({});
   const [websiteData, setWebsiteData] = useState({});
   const [editingData, setEditingData] = useState({});
-  const currUserName = 'SOME_HARD_CODED_USER';
+  const { email: currUserName } = useAuth().user;
   // TODO need functionality to display data based on what event is currently being viewed
 
   // TODO need to substitute the value at .doc(ID) with current website
@@ -96,7 +97,7 @@ export default ({ id, hackathons }) => {
   useEffect(() => {
     const unsubscribe = getHackathonSnapShot(id, getHackathonData);
     return () => unsubscribe();
-  }, []);
+  }, [window.location.pathname]);
 
   const handleEdit = (type) => {
     setIsEditingObj({

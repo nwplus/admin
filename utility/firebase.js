@@ -160,6 +160,7 @@ const getFaq = async (faqID) => {
         lastModified: faqData.lastModified
           ? formatDate(faqData.lastModified.seconds)
           : formatDate(getTimestamp().seconds),
+        lastModifiedBy: faqData.lastModifiedBy || 'Unknown user',
         hackathonIDs: faqData.hackathonIDs ? faqData.hackathonIDs : [],
       }
     : null;
@@ -189,6 +190,7 @@ export const addFaq = async (faq) => {
     category: faq.category,
     answer: faq.answer,
     lastModified: currDate,
+    lastModifiedBy: faq.lastModifiedBy,
     hackathonIDs: faq.hackathonIDs,
   });
   return ref.id;
@@ -201,9 +203,14 @@ export const updateFaq = async (faqID, faq) => {
     category: faq.category || 'None',
     answer: faq.answer || 'Empty Answer',
     lastModified: currDate,
+    lastModifiedBy: faq.lastModifiedBy,
     hackathonIDs: faq.hackathonIDs,
   });
 };
 export const deleteFaq = async (faqID) => {
   await db.collection(faqCollection).doc(faqID).delete();
+};
+
+export const logout = async () => {
+  await firebase.auth().signOut();
 };

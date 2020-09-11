@@ -58,6 +58,7 @@ export default function SponsorshipPage(props) {
     tier: '',
   });
   const [imgObject, setimgObject] = useState({});
+  const [isLoading, setLoading] = useState(true);
   const [imgFile, setimgFile] = useState(null);
   const [showEditWindow, setShowEditWindow] = useState(false);
   const [modalAction, setmodalAction] = useState({});
@@ -70,6 +71,7 @@ export default function SponsorshipPage(props) {
 
   useEffect(() => {
     loadFirebase();
+    setLoading(false);
   }, []);
 
   const handleEdit = async (id) => {
@@ -223,6 +225,8 @@ export default function SponsorshipPage(props) {
               <Text>Last Modified</Text>
               <Text>Actions</Text>
             </CardDiv>
+            {isLoading && <CardDiv padding='10px 28px'> Loading... </CardDiv> }
+          
 
             <div>
               {Object.entries(sponsors).map(([key, item]) => (

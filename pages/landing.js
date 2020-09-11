@@ -42,12 +42,11 @@ export default function Landing({ hackathons, id }) {
   );
 }
 
-export const getStaticProps = async ({ params }) => {
+export const getStaticProps = async () => {
   const hackathons = await getHackathons();
   return {
     props: {
       hackathons,
-      id: params?.id ?? null,
     },
   };
 };

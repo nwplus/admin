@@ -27,8 +27,6 @@ export default function Landing() {
         </CardHeader>
         <CardContent>Example usage of card component</CardContent>
       </Card>
-
-      <SponsorshipPage name="HealthX" />
     </>
   );
 }

@@ -130,11 +130,11 @@ const ImageContainer = styled.div`
   background: #c4c4c4;
 `;
 
-export const UploadContainer = ({ type, value, onClick }) => (
+export const UploadContainer = ({ type, value, onClick, disabled }) => (
   <>
     <Inline>
-      <InputField inline type={type} defaultValue={value} />
-      <UploadButton onClick={onClick} inline>
+      <InputField inline disabled={disabled} type={type} defaultValue={value} />
+      <UploadButton disabled={disabled} onClick={onClick} inline>
         Upload Image
       </UploadButton>
     </Inline>

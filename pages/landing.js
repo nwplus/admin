@@ -26,11 +26,11 @@ const InfoMessage = styled.p`
   font-size: 32px;
 `;
 
-export default function Landing({ hackathons, id }) {
+export default function Landing({ hackathons }) {
   const { user } = useAuth();
   return (
     <Container>
-      <Sidebar currentPath={id} hackathons={hackathons} />
+      <Sidebar hackathons={hackathons} />
       <div style={{ width: '80vw' }}>
         <div style={{ width: '100%', textAlign: 'center' }}>
           <NwPlusImage src={nwPlusLogo} />

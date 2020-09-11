@@ -8,7 +8,7 @@ import Card, {
 } from '../components/card';
 import { EDIT } from '../constants';
 import Button from '../components/button';
-import SponsorshipPage from '../components/spocos'
+import SponsorshipPage from '../components/spocos';
 
 export default function Landing() {
   return (
@@ -28,7 +28,7 @@ export default function Landing() {
         <CardContent>Example usage of card component</CardContent>
       </Card>
 
-      <SponsorshipPage name= 'HealthX' />
+      <SponsorshipPage name="HealthX" />
     </>
   );
 }

@@ -225,8 +225,7 @@ export default function SponsorshipPage(props) {
               <Text>Last Modified</Text>
               <Text>Actions</Text>
             </CardDiv>
-            {isLoading && <CardDiv padding='10px 28px'> Loading... </CardDiv> }
-          
+            {isLoading && <CardDiv padding="10px 28px"> Loading... </CardDiv>}
 
             <div>
               {Object.entries(sponsors).map(([key, item]) => (

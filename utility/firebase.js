@@ -152,17 +152,17 @@ const getFaq = async (faqID) => {
   const faqData = (await db.collection(faqCollection).doc(faqID).get()).data();
   return faqData
     ? {
-        id: faqID,
-        question: faqData.question ? faqData.question : 'Empty question field',
-        answer: faqData.answer ? faqData.answer : 'Empty answer field',
-        category: faqData.category
-          ? getFaqCategory(faqData.category)
-          : FAQCategory.MISC,
-        lastModified: faqData.lastModified
-          ? formatDate(faqData.lastModified.seconds)
-          : formatDate(getTimestamp().seconds),
-        hackathonIDs: faqData.hackathonIDs ? faqData.hackathonIDs : [],
-      }
+      id: faqID,
+      question: faqData.question ? faqData.question : 'Empty question field',
+      answer: faqData.answer ? faqData.answer : 'Empty answer field',
+      category: faqData.category
+        ? getFaqCategory(faqData.category)
+        : FAQCategory.MISC,
+      lastModified: faqData.lastModified
+        ? formatDate(faqData.lastModified.seconds)
+        : formatDate(getTimestamp().seconds),
+      hackathonIDs: faqData.hackathonIDs ? faqData.hackathonIDs : [],
+    }
     : null;
 };
 
@@ -220,7 +220,6 @@ export const updateSponsor = async (website, sponsor) => {
     return sponsor.id;
   }
   delete sponsor.id;
-  console.log(sponsor);
   const ref = db
     .collection('Hackathons')
     .doc(website)
@@ -270,7 +269,6 @@ export const getImageFilebyName = async (website, imgURL) => {
   return ref;
 };
 export const deleteSponsorImagefromStorage = async (website, imgName) => {
-  console.log(imgName);
   const ref = storage.ref(`sponsor/${website}/${imgName}`);
   await ref.delete();
 };

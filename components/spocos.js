@@ -69,8 +69,8 @@ export default function SponsorshipPage(props) {
     setSponsors(data);
   };
 
-  useEffect(() => {
-    loadFirebase();
+  useEffect(async () => {
+    await loadFirebase();
     setLoading(false);
   }, []);
 

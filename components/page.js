@@ -49,12 +49,14 @@ const NavItem = styled.a`
 export default ({ hackathons, currentPath, children }) => {
   const [currPath, setCurrPath] = useState('intro');
   const [loading, setLoading] = useState(false);
+  const [timeOut, setTimeOut] = useState();
   useEffect(() => {
     setCurrPath(window.location.pathname.split('/')[2]);
   }, []);
 
   useEffect(() => {
     setLoading(false);
+    clearTimeout(timeOut);
   }, [currPath]);
 
   return (
@@ -70,7 +72,11 @@ export default ({ hackathons, currentPath, children }) => {
             <NavItem
               onClick={() => {
                 if (!window.location.href.includes('intro')) {
-                  setLoading(true);
+                  setTimeOut(
+                    setTimeout(() => {
+                      setLoading(true);
+                    }, 750)
+                  );
                 }
               }}
               selected={currPath === 'intro'}
@@ -82,7 +88,11 @@ export default ({ hackathons, currentPath, children }) => {
             <NavItem
               onClick={() => {
                 if (!window.location.href.includes('faq')) {
-                  setLoading(true);
+                  setTimeOut(
+                    setTimeout(() => {
+                      setLoading(true);
+                    }, 750)
+                  );
                 }
               }}
               selected={currPath === 'faq'}
@@ -94,7 +104,11 @@ export default ({ hackathons, currentPath, children }) => {
             <NavItem
               onClick={() => {
                 if (!window.location.href.includes('spocos')) {
-                  setLoading(true);
+                  setTimeOut(
+                    setTimeout(() => {
+                      setLoading(true);
+                    }, 750)
+                  );
                 }
               }}
               selected={currPath === 'spocos'}

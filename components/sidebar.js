@@ -87,9 +87,10 @@ const LoadingImage = styled.img`
 
 export default ({ hackathons, currentPath }) => {
   const [loading, setLoading] = useState(false);
-
+  const [ifTimeOut, setIfTimeOut] = useState();
   useEffect(() => {
     setLoading(false);
+    clearTimeout(ifTimeOut);
   }, [window.location.pathname]);
   return (
     <SidebarContainer>
@@ -107,7 +108,11 @@ export default ({ hackathons, currentPath }) => {
             <Link
               onClick={() => {
                 if (currentPath !== id) {
-                  setLoading(true);
+                  setIfTimeOut(
+                    setTimeout(() => {
+                      setLoading(true);
+                    }, 750)
+                  );
                 }
               }}
               selected={currentPath === id}
@@ -120,7 +125,11 @@ export default ({ hackathons, currentPath }) => {
       <Logout
         // TODO: logout
         onClick={() => {
-          setLoading(true);
+          setIfTimeOut(
+            setTimeout(() => {
+              setLoading(true);
+            }, 750)
+          );
           logout();
         }}
       >

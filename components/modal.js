@@ -14,8 +14,8 @@ import Button from './button';
 import Dropdown from './dropdown';
 
 const BackDropScreen = styled.div`
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: ${() => `${document.body.scrollHeight}px;`};
   position: absolute;
   z-index: 100;
   left: 0;

@@ -73,24 +73,24 @@ export default ({ id, hackathons }) => {
   // TODO need to substitute the value at .doc(ID) with current website
   const getHackathonData = async (doc) => {
     const data = doc.data().WebsiteData;
-    if (!data) return;
     setWebsiteData(data);
 
     let editingDataObj = {};
     let isEditing = {};
-    Object.keys(data).forEach((type) => {
-      isEditing = {
-        ...isEditingObj,
-        [type]: false,
-      };
-      editingDataObj = {
-        ...editingDataObj,
-        [type]: {
-          header: data[type].header,
-          content: data[type].content,
-        },
-      };
-    });
+    data &&
+      Object.keys(data).forEach((type) => {
+        isEditing = {
+          ...isEditingObj,
+          [type]: false,
+        };
+        editingDataObj = {
+          ...editingDataObj,
+          [type]: {
+            header: data[type].header,
+            content: data[type].content,
+          },
+        };
+      });
     setIsEditingObj(isEditing);
     setEditingData(editingDataObj);
   };

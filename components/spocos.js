@@ -35,7 +35,7 @@ const Text = styled.p`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: ${COLOR.BODY_TEXT}
+  color: ${COLOR.BODY_TEXT};
 `;
 const Actions = styled.div`
   padding-right: 20px;
@@ -44,7 +44,7 @@ const Actions = styled.div`
   justify-content: flex-start;
 `;
 
-export default function SponsorshipPage({name}) {
+export default function SponsorshipPage({ name }) {
   const inputFile = React.createRef();
 
   const [sponsors, setSponsors] = useState({});
@@ -60,7 +60,7 @@ export default function SponsorshipPage({name}) {
   });
   const [imgObject, setimgObject] = useState({});
   const [isLoading, setLoading] = useState(true);
-  const [showItems, setShowItems]= useState(false);
+  const [showItems, setShowItems] = useState(false);
   const [imgFile, setimgFile] = useState(null);
   const [showEditWindow, setShowEditWindow] = useState(false);
   const [modalAction, setmodalAction] = useState({});
@@ -228,20 +228,26 @@ export default function SponsorshipPage({name}) {
         </CardHeader>
 
         <CardContent>
-          <TableContainer >
-            {isLoading && <CardContainer padding="10px 28px"> Loading... </CardContainer>}
-            {!isLoading && showItems && <CardContainer padding="22px 28px">
-              <Text>Sponsor Name</Text>
-              <Text>Link</Text>
-              <Text>Logo Image File</Text>
-              <Text>Tier</Text>
-              <Text>Last Modified</Text>
-              <Actions>Actions</Actions>
-            </CardContainer>}
-            {!isLoading && !showItems && <CardContainer padding='22px 28px'>
-              No sponsorships for {name} :(
-            </CardContainer>}
-           
+          <TableContainer>
+            {isLoading && (
+              <CardContainer padding="10px 28px"> Loading... </CardContainer>
+            )}
+            {!isLoading && showItems && (
+              <CardContainer padding="22px 28px">
+                <Text>Sponsor Name</Text>
+                <Text>Link</Text>
+                <Text>Logo Image File</Text>
+                <Text>Tier</Text>
+                <Text>Last Modified</Text>
+                <Actions>Actions</Actions>
+              </CardContainer>
+            )}
+            {!isLoading && !showItems && (
+              <CardContainer padding="22px 28px">
+                No sponsorships for {name} :(
+              </CardContainer>
+            )}
+
             <div>
               {Object.entries(sponsors).map(([key, item]) => (
                 <CardContainer key={key} padding="10px 28px">
@@ -273,7 +279,7 @@ export default function SponsorshipPage({name}) {
               ))}
             </div>
           </TableContainer>
-        </CardContent> 
+        </CardContent>
       </Card>
 
       <Modal

@@ -35,7 +35,7 @@ export const CardDiv = styled.div`
   justify-content: space-around;
   align-items: center;
   padding: ${(props) => props.padding};
-  border-bottom: 2px solid #ededed;
+  border-bottom: 2px solid ${COLOR.GRAY};
 `;
 export const TableDiv = styled.div`
   border: 1px solid #000000;

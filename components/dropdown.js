@@ -45,11 +45,12 @@ const SelectContent = styled.button`
   background: ${COLOR.WHITE};
   text-align: left;
   cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
 `;
 
 const OptionsContainer = styled.div`
   width: 32%;
-  radius: 3px;
   color: ${COLOR.WHITE};
   padding: 0.25rem 0;
   position: fixed;

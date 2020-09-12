@@ -25,7 +25,7 @@ const BackDropScreen = styled.div`
 `;
 
 export const ModalTitle = styled.h1`
-  margin: 0;
+  margin: 0 0 16px 0;
   text-align: left;
   font-size: 24px;
   line-height: 30px;
@@ -51,6 +51,8 @@ export const InputField = styled.input`
   margin-bottom: 0.75rem;
   padding: 0 0.75rem;
   background: ${COLOR.WHITE};
+  font-family: inherit;
+  font-size: 16px;
 `;
 
 const GenericText = styled.p`

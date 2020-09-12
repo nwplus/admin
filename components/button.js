@@ -8,7 +8,7 @@ import { COLOR, EDIT, VIEW, NEW, CLOSE, DELETE } from '../constants';
 
 const StyledButton = styled.button`
   border: none;
-  font-family: 'HK Grotesk';
+  font-weight: bold;
   ${(props) => props.isText && 'padding: 6px 24px; height: 40px;'}
   ${(props) =>
     !props.isText && props.contentColor === COLOR.BLACK && 'padding: 10px;'}
@@ -21,7 +21,6 @@ const StyledButton = styled.button`
   align-items: center;
   font-size: 16px;
   border-radius: ${(props) => (props.inline ? '0 3px 3px 0' : '3px;')}
-  
 `;
 
 const StyledEditIcon = styled(EditIcon)`

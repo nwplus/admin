@@ -29,7 +29,7 @@ export const CardContent = styled.div`
 
 // padding: top, right, bottom, left
 // jsutify contente space around
-export const CardDiv = styled.div`
+export const CardContainer = styled.div`
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-around;
@@ -37,7 +37,7 @@ export const CardDiv = styled.div`
   padding: ${(props) => props.padding};
   border-bottom: 2px solid ${COLOR.GRAY};
 `;
-export const TableDiv = styled.div`
+export const TableContainer = styled.div`
   border: 1px solid ${COLOR.BLACK};
   border-radius: 3px;
   padding: 1px 1px;

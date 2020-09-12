@@ -5,8 +5,8 @@ import Card, {
   CardTitle,
   CardContent,
   CardButtonContainer,
-  CardDiv,
-  TableDiv,
+  CardContainer,
+  TableContainer,
 } from './card';
 import Button from './button';
 import { EDIT, NEW, VIEW, DELETE, COLOR, SPONSORSHIP } from '../constants';
@@ -29,21 +29,22 @@ import Modal, {
 // TODO: move font family higher, reduce need to redefine
 
 const Text = styled.p`
-  padding-right: 80px;
+  padding-right: 40px;
   flex: 1;
   font-size: 16px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: ${COLOR.BODY_TEXT}
 `;
 const Actions = styled.div`
-  padding-right: 80px;
+  padding-right: 20px;
   flex: 1;
   display: flex;
   justify-content: flex-start;
 `;
 
-export default function SponsorshipPage(props) {
+export default function SponsorshipPage({name}) {
   const inputFile = React.createRef();
 
   const [sponsors, setSponsors] = useState({});
@@ -59,23 +60,28 @@ export default function SponsorshipPage(props) {
   });
   const [imgObject, setimgObject] = useState({});
   const [isLoading, setLoading] = useState(true);
+  const [showItems, setShowItems]= useState(false);
   const [imgFile, setimgFile] = useState(null);
   const [showEditWindow, setShowEditWindow] = useState(false);
   const [modalAction, setmodalAction] = useState({});
   const { email: user } = useAuth().user;
 
   const loadFirebase = async () => {
-    const data = await getSponsors(props.name);
+    const data = await getSponsors(name);
     setSponsors(data);
+    if (Object.keys(data).length >= 1) {
+      setShowItems(true);
+    }
+    console.log(data);
   };
 
   useEffect(() => {
     const initializeFirebase = async () => {
-       await loadFirebase()
-       setLoading(false)
-    }
-    
-    initializeFirebase()
+      await loadFirebase();
+      setLoading(false);
+    };
+
+    initializeFirebase();
   }, []);
 
   const handleEdit = async (id) => {
@@ -133,9 +139,9 @@ export default function SponsorshipPage(props) {
 
   const handleDelete = async (id) => {
     if (sponsors[id].imgURL) {
-      await deleteSponsorImagefromStorage(props.name, sponsors[id].imgName);
+      await deleteSponsorImagefromStorage(name, sponsors[id].imgName);
     }
-    await deleteSponsor(props.name, id);
+    await deleteSponsor(name, id);
     setSponsors((oldSponsors) => {
       delete oldSponsors[id];
       return { ...oldSponsors };
@@ -162,14 +168,16 @@ export default function SponsorshipPage(props) {
   const handleSave = async (event) => {
     event.preventDefault(); // prevents page reload
 
+    setShowEditWindow(false); // hides edit to prevent clicking submit twice
+
     // 1. uploads to firebase
     // newobj.imgURL is a file object
     if (imgFile) {
-      const url = await uploadSponsorImageToStorage(props.name, imgFile);
+      const url = await uploadSponsorImageToStorage(name, imgFile);
       newobj.imgURL = url;
       newobj.imgName = imgFile.name;
     }
-    const id = await updateSponsor(props.name, newobj);
+    const id = await updateSponsor(name, newobj);
     // 2. renders on CMS
     setSponsors((oldSponsors) => {
       return {
@@ -189,9 +197,9 @@ export default function SponsorshipPage(props) {
       tier: 'Inkind',
     });
 
-    setShowEditWindow(false);
     setimgFile(null);
     setimgObject({});
+    setShowItems(true);
   };
 
   // clicks the invisible <input type='file />
@@ -211,7 +219,7 @@ export default function SponsorshipPage(props) {
     <>
       <Card>
         <CardHeader>
-          <CardTitle> Sponsors: {props.name} </CardTitle>
+          <CardTitle> Sponsors: {name} </CardTitle>
           <CardButtonContainer>
             <Button type={NEW} onClick={handleNew}>
               New Sponsor
@@ -220,20 +228,23 @@ export default function SponsorshipPage(props) {
         </CardHeader>
 
         <CardContent>
-          <TableDiv>
-            <CardDiv padding="22px 28px">
+          <TableContainer >
+            {isLoading && <CardContainer padding="10px 28px"> Loading... </CardContainer>}
+            {!isLoading && showItems && <CardContainer padding="22px 28px">
               <Text>Sponsor Name</Text>
               <Text>Link</Text>
               <Text>Logo Image File</Text>
               <Text>Tier</Text>
               <Text>Last Modified</Text>
-              <Text>Actions</Text>
-            </CardDiv>
-            {isLoading && <CardDiv padding="10px 28px"> Loading... </CardDiv>}
-
+              <Actions>Actions</Actions>
+            </CardContainer>}
+            {!isLoading && !showItems && <CardContainer padding='22px 28px'>
+              No sponsorships for {name} :(
+            </CardContainer>}
+           
             <div>
               {Object.entries(sponsors).map(([key, item]) => (
-                <CardDiv key={key} padding="10px 28px">
+                <CardContainer key={key} padding="10px 28px">
                   <Text>{item.name}</Text>
                   <Text>{item.link}</Text>
                   <Text>{item.imgName}</Text>
@@ -258,11 +269,11 @@ export default function SponsorshipPage(props) {
                       onClick={() => handleEdit(key)}
                     />
                   </Actions>
-                </CardDiv>
+                </CardContainer>
               ))}
             </div>
-          </TableDiv>
-        </CardContent>
+          </TableContainer>
+        </CardContent> 
       </Card>
 
       <Modal

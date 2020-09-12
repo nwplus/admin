@@ -77,7 +77,7 @@ export default ({ id, hackathons }) => {
 
     let editingDataObj = {};
     let isEditing = {};
-    data &&
+    if (data)
       Object.keys(data).forEach((type) => {
         isEditing = {
           ...isEditingObj,

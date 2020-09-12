@@ -72,6 +72,7 @@ export default ({ id, hackathons }) => {
   // TODO need to substitute the value at .doc(ID) with current website
   const getHackathonData = async (doc) => {
     const data = doc.data().WebsiteData;
+    if (!data) return;
     setWebsiteData(data);
 
     let editingDataObj = {};

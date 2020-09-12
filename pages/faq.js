@@ -49,7 +49,6 @@ const TableHeader = styled.th`
   width: 95px;
   height: 12px;
 
-  font-family: Apercu Pro;
   font-size: 16px;
   line-height: 11px;
 
@@ -66,7 +65,6 @@ const TableData = styled.td`
   height: 12px;
   vertical-align: middle !important;
 
-  font-family: Apercu Pro;
   font-size: 16px;
   line-height: 11px;
 
@@ -93,7 +91,6 @@ const PlaceHolderText = styled.td`
   height: 24px;
   color: ${COLOR.BODY_TEXT};
 
-  font-family: Apercu Pro;
   font-size: 18px;
   line-height: 24px;
 

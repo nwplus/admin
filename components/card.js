@@ -38,7 +38,7 @@ export const CardDiv = styled.div`
   border-bottom: 2px solid ${COLOR.GRAY};
 `;
 export const TableDiv = styled.div`
-  border: 1px solid #000000;
+  border: 1px solid ${COLOR.BLACK};
   border-radius: 3px;
   padding: 1px 1px;
   background-color: ${COLOR.WHITE};

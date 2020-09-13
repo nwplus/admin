@@ -234,12 +234,12 @@ export default function SponsorshipPage({ name }) {
             )}
             {!isLoading && showItems && (
               <CardContainer padding="22px 28px">
-                <Text>Sponsor Name</Text>
-                <Text>Link</Text>
-                <Text>Logo Image File</Text>
-                <Text>Tier</Text>
-                <Text>Last Modified</Text>
-                <Actions>Actions</Actions>
+                <Text><strong>Sponsor Name</strong></Text>
+                <Text><strong>Link</strong></Text>
+                <Text><strong>Logo Image File</strong></Text>
+                <Text><strong>Tier</strong></Text>
+                <Text><strong>Last Modified</strong></Text>
+                <Actions><strong>Actions</strong></Actions>
               </CardContainer>
             )}
             {!isLoading && !showItems && (

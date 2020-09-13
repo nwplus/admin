@@ -259,12 +259,7 @@ export default function SponsorshipPage({ name }) {
                     {item.lastmod} by {item.lastmodBy}
                   </Text>
                   <Actions>
-                    <Button
-                      type={DELETE}
-                      color={COLOR.TRANSPARENT}
-                      onClick={() => handleDelete(key)}
-                    />
-                    <Button
+                  <Button
                       type={VIEW}
                       color={COLOR.TRANSPARENT}
                       onClick={() => handleView(key)}
@@ -273,6 +268,11 @@ export default function SponsorshipPage({ name }) {
                       type={EDIT}
                       color={COLOR.TRANSPARENT}
                       onClick={() => handleEdit(key)}
+                    />
+                    <Button
+                      type={DELETE}
+                      color={COLOR.TRANSPARENT}
+                      onClick={() => handleDelete(key)}
                     />
                   </Actions>
                 </CardContainer>

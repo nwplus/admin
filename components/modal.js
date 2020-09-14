@@ -25,9 +25,8 @@ const BackDropScreen = styled.div`
 `;
 
 export const ModalTitle = styled.h1`
-  margin: 0;
+  margin: 0 0 16px 0;
   text-align: left;
-  font-family: Apercu Pro;
   font-size: 24px;
   line-height: 30px;
   color: ${COLOR.BLACK};
@@ -38,6 +37,7 @@ export const Label = styled.label`
   margin: 14px 0 11px 0;
   font-size: 16px;
   line-height: 20px;
+  font-weight: bold;
 `;
 
 export const InputField = styled.input`
@@ -52,6 +52,8 @@ export const InputField = styled.input`
   margin-bottom: 0.75rem;
   padding: 0 0.75rem;
   background: ${COLOR.WHITE};
+  font-family: inherit;
+  font-size: 16px;
 `;
 
 const GenericText = styled.p`

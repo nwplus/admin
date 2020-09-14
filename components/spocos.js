@@ -29,7 +29,7 @@ import Modal, {
 // TODO: move font family higher, reduce need to redefine
 
 const Text = styled.p`
-  padding-right: 40px;
+  padding-right: 12px;
   flex: 1;
   font-size: 16px;
   white-space: nowrap;
@@ -37,8 +37,8 @@ const Text = styled.p`
   text-overflow: ellipsis;
   color: ${COLOR.BODY_TEXT};
 `;
+
 const Actions = styled.div`
-  padding-right: 20px;
   flex: 1;
   display: flex;
   justify-content: flex-start;
@@ -150,12 +150,24 @@ export default function SponsorshipPage({ name }) {
 
   const handleChange = (property, value) => {
     const d = new Date();
+    let hours = d.getHours();
+    let minutes = d.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours %= 12;
+    hours = hours || 12;
+    minutes = minutes < 10 ? `0${minutes}` : minutes;
+
+    const de = `${d.getFullYear()}-${
+      d.getMonth() + 1
+    }-${d.getDate()} ${hours}:${minutes} ${ampm}`;
+
     setnewobj({
       ...newobj,
       [property]: value,
-      lastmod: d.toLocaleString(),
+      lastmod: de,
       lastmodBy: user,
     });
+    console.log(de);
   };
 
   const handleCloseModal = () => {
@@ -233,13 +245,25 @@ export default function SponsorshipPage({ name }) {
               <CardContainer padding="10px 28px"> Loading... </CardContainer>
             )}
             {!isLoading && showItems && (
-              <CardContainer padding="22px 28px">
-                <Text><strong>Sponsor Name</strong></Text>
-                <Text><strong>Link</strong></Text>
-                <Text><strong>Logo Image File</strong></Text>
-                <Text><strong>Tier</strong></Text>
-                <Text><strong>Last Modified</strong></Text>
-                <Actions><strong>Actions</strong></Actions>
+              <CardContainer padding="10px 0px 10px 20px">
+                <Text>
+                  <strong>Sponsor Name</strong>
+                </Text>
+                <Text>
+                  <strong>Link</strong>
+                </Text>
+                <Text>
+                  <strong>Logo Image File</strong>
+                </Text>
+                <Text>
+                  <strong>Tier</strong>
+                </Text>
+                <Text>
+                  <strong>Last Modified</strong>
+                </Text>
+                <Text>
+                  <strong>Actions</strong>
+                </Text>
               </CardContainer>
             )}
             {!isLoading && !showItems && (
@@ -250,16 +274,14 @@ export default function SponsorshipPage({ name }) {
 
             <div>
               {Object.entries(sponsors).map(([key, item]) => (
-                <CardContainer key={key} padding="10px 28px">
+                <CardContainer key={key} padding="10px 0px 10px 20px">
                   <Text>{item.name}</Text>
                   <Text>{item.link}</Text>
                   <Text>{item.imgName}</Text>
                   <Text>{item.tier}</Text>
-                  <Text>
-                    {item.lastmod} by {item.lastmodBy}
-                  </Text>
+                  <Text>{item.lastmod}</Text>
                   <Actions>
-                  <Button
+                    <Button
                       type={VIEW}
                       color={COLOR.TRANSPARENT}
                       onClick={() => handleView(key)}

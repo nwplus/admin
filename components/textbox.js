@@ -11,6 +11,8 @@ const EditingText = styled.textarea`
   padding: 10px 16px 0px 16px;
   height: 0px;
   width: ${(props) => (props.width ? `${props.width};` : '100%;')};
+  font-family: inherit;
+  font-size: 16px;
 `;
 
 export default function TextBox(props) {

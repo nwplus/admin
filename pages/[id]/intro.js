@@ -77,19 +77,20 @@ export default ({ id, hackathons }) => {
 
     let editingDataObj = {};
     let isEditing = {};
-    Object.keys(data).forEach((type) => {
-      isEditing = {
-        ...isEditingObj,
-        [type]: false,
-      };
-      editingDataObj = {
-        ...editingDataObj,
-        [type]: {
-          header: data[type].header,
-          content: data[type].content,
-        },
-      };
-    });
+    if (data)
+      Object.keys(data).forEach((type) => {
+        isEditing = {
+          ...isEditingObj,
+          [type]: false,
+        };
+        editingDataObj = {
+          ...editingDataObj,
+          [type]: {
+            header: data[type].header,
+            content: data[type].content,
+          },
+        };
+      });
     setIsEditingObj(isEditing);
     setEditingData(editingDataObj);
   };

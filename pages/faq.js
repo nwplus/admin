@@ -116,7 +116,7 @@ export default function Faq({ currHackathon }) {
       if (Object.keys(res).length > 0) {
         setFaqs(res);
       } else {
-        setFaqs({});
+        setFaqs([]);
       }
       setIsLoading(false);
     });

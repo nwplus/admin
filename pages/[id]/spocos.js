@@ -1,10 +1,11 @@
 import React from 'react';
 import Page from '../../components/page';
 import { getHackathonPaths, getHackathons } from '../../utility/firebase';
+import SpocosPage from '../../components/spocos';
 
 export default ({ id, hackathons }) => (
   <Page currentPath={id} hackathons={hackathons}>
-    Sponsors
+    <SpocosPage hackathonId={id} />
   </Page>
 );
 

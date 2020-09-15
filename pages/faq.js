@@ -101,7 +101,6 @@ const PlaceHolderText = styled.td`
 
 export default function Faq({ currHackathon }) {
   // remove'LHD2021' when integrated with sidebar to receive hackathon that is passed down
-  const [hackathon] = useState(currHackathon || 'LHD2021');
   const [faqs, setFaqs] = useState([]);
   const [newFaq, setNewFaq] = useState({});
   const [faqViewing, setFaqViewing] = useState({});
@@ -112,22 +111,23 @@ export default function Faq({ currHackathon }) {
   const [alertMsg, setAlertMsg] = useState('');
   const { email: user } = useAuth().user;
   useEffect(() => {
-    if (Object.keys(faqs).length === 0) {
-      getFaqs(hackathon).then((res) => {
-        if (Object.keys(res).length > 0) {
-          setFaqs(res);
-        }
-        setIsLoading(false);
-      });
-    }
-  }, []);
+    setIsLoading(true);
+    getFaqs(currHackathon).then((res) => {
+      if (Object.keys(res).length > 0) {
+        setFaqs(res);
+      } else {
+        setFaqs([]);
+      }
+      setIsLoading(false);
+    });
+  }, [window.location.pathname]);
 
   useEffect(() => {
     if (alertMsg.length > 0) alert(alertMsg);
   }, [alertMsg]);
 
   const handleNew = async () => {
-    newFaq.hackathonIDs = [hackathon];
+    newFaq.hackathonIDs = [currHackathon];
     newFaq.category = newFaq.category ? newFaq.category : FAQCategory.GENERAL;
     newFaq.lastModifiedBy = user;
     const faqID = await addFaq(newFaq);
@@ -253,7 +253,7 @@ export default function Faq({ currHackathon }) {
                 <tbody>
                   <TableRow>
                     <PlaceHolderText>
-                      Loading FAQs for {hackathon}...
+                      Loading FAQs for {currHackathon}...
                     </PlaceHolderText>
                   </TableRow>
                 </tbody>
@@ -263,7 +263,9 @@ export default function Faq({ currHackathon }) {
               <FAQContent>
                 <tbody>
                   <TableRow>
-                    <PlaceHolderText>No FAQs for {hackathon}</PlaceHolderText>
+                    <PlaceHolderText>
+                      No FAQs for {currHackathon}
+                    </PlaceHolderText>
                   </TableRow>
                 </tbody>
               </FAQContent>

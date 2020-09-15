@@ -36,6 +36,7 @@ if (!firebase.apps.length) {
 }
 
 export const db = firebase.firestore();
+export const storage = firebase.storage();
 
 const webCollection = 'Website_content';
 const faqCollection = FAQ;
@@ -209,6 +210,70 @@ export const updateFaq = async (faqID, faq) => {
 };
 export const deleteFaq = async (faqID) => {
   await db.collection(faqCollection).doc(faqID).delete();
+};
+
+export const updateSponsor = async (website, sponsor) => {
+  if (sponsor.id) {
+    const ref = db
+      .collection('Hackathons')
+      .doc(website)
+      .collection('Sponsors')
+      .doc(sponsor.id);
+    await ref.set(sponsor);
+    return sponsor.id;
+  }
+  delete sponsor.id;
+  const ref = db
+    .collection('Hackathons')
+    .doc(website)
+    .collection('Sponsors')
+    .doc();
+  await ref.set(sponsor);
+  return ref.id;
+};
+
+export const deleteSponsor = async (website, sponsorId) => {
+  const ref = db
+    .collection('Hackathons')
+    .doc(website)
+    .collection('Sponsors')
+    .doc(sponsorId);
+  await ref.delete();
+};
+export const getSponsors = async (website) => {
+  const refs = await db
+    .collection('Hackathons')
+    .doc(website)
+    .collection('Sponsors')
+    .get();
+  const sponsors = {};
+  refs.docs.forEach((doc) => {
+    sponsors[doc.id] = doc.data();
+  });
+  return sponsors;
+};
+
+export const uploadSponsorImageToStorage = async (website, file) => {
+  try {
+    const ref = storage.ref(`sponsor/${website}/${file.name}`);
+    const uploadData = await ref.put(file);
+    return uploadData.ref.getDownloadURL();
+  } catch (e) {
+    alert(e);
+    return null;
+  }
+};
+export const getImageFilebyName = async (website, imgURL) => {
+  const imgId = imgURL.split('/').slice(-1)[0];
+  const ref = await storage
+    .ref(`sponsor/${website}`)
+    .child(imgId)
+    .getDownloadURL();
+  return ref;
+};
+export const deleteSponsorImagefromStorage = async (website, imgName) => {
+  const ref = storage.ref(`sponsor/${website}/${imgName}`);
+  await ref.delete();
 };
 
 export const logout = async () => {

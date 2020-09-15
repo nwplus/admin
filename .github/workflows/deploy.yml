@@ -17,17 +17,16 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
   steps: 
-    - run: yarn
-      shell: bash
-    - run: yarn build:prod
-      shell: bash
-    - run: git config user.name github-actions
-      shell: bash
-    - run: git config user.email github-actions@github.com
-      shell: bash
-    - run: git --work-tree build add --all
-      shell: bash
-    - run: git commit -m "Automatic Deploy action run by github-actions"
-      shell: bash
-    - run: git push origin HEAD:gh-pages --force
-      shell: bash
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: install
+      run: yarn
+    - name: build
+      run: yarn build:prod
+    - name: push to github
+      run: |
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        git --work-tree build add --all
+        git commit -m "Automatic Deploy action run by github-actions"
+        git push origin HEAD:gh-pages --force

@@ -72,11 +72,11 @@ export default function SponsorshipPage({ hackathonId }) {
     if (Object.keys(data).length >= 1) {
       setShowItems(true);
     }
-    console.log(data);
   };
 
   useEffect(() => {
     setLoading(true);
+    setShowItems(false);
     const initializeFirebase = async () => {
       await loadFirebase();
       setLoading(false);
@@ -167,7 +167,6 @@ export default function SponsorshipPage({ hackathonId }) {
       lastmod: de,
       lastmodBy: user,
     });
-    console.log(de);
   };
 
   const handleCloseModal = () => {

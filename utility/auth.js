@@ -66,8 +66,8 @@ const Auth = ({ children }) => {
           </div>
         </LoadingScreenContainer>
       ) : (
-          children
-        )}
+        children
+      )}
     </AuthContext.Provider>
   );
 };

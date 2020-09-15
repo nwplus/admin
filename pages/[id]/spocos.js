@@ -5,7 +5,7 @@ import SpocosPage from '../../components/spocos';
 
 export default ({ id, hackathons }) => (
   <Page currentPath={id} hackathons={hackathons}>
-    <SpocosPage name={id} />
+    <SpocosPage hackathonId={id} />
   </Page>
 );
 

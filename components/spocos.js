@@ -44,7 +44,7 @@ const Actions = styled.div`
   justify-content: flex-start;
 `;
 
-export default function SponsorshipPage({ name }) {
+export default function SponsorshipPage({ hackathonId }) {
   const inputFile = React.createRef();
 
   const [sponsors, setSponsors] = useState({});
@@ -67,7 +67,7 @@ export default function SponsorshipPage({ name }) {
   const { email: user } = useAuth().user;
 
   const loadFirebase = async () => {
-    const data = await getSponsors(name);
+    const data = await getSponsors(hackathonId);
     setSponsors(data);
     if (Object.keys(data).length >= 1) {
       setShowItems(true);
@@ -139,9 +139,9 @@ export default function SponsorshipPage({ name }) {
 
   const handleDelete = async (id) => {
     if (sponsors[id].imgURL) {
-      await deleteSponsorImagefromStorage(name, sponsors[id].imgName);
+      await deleteSponsorImagefromStorage(hackathonId, sponsors[id].imgName);
     }
-    await deleteSponsor(name, id);
+    await deleteSponsor(hackathonId, id);
     setSponsors((oldSponsors) => {
       delete oldSponsors[id];
       return { ...oldSponsors };
@@ -157,9 +157,8 @@ export default function SponsorshipPage({ name }) {
     hours = hours || 12;
     minutes = minutes < 10 ? `0${minutes}` : minutes;
 
-    const de = `${d.getFullYear()}-${
-      d.getMonth() + 1
-    }-${d.getDate()} ${hours}:${minutes} ${ampm}`;
+    const de = `${d.getFullYear()}-${d.getMonth() + 1
+      }-${d.getDate()} ${hours}:${minutes} ${ampm}`;
 
     setnewobj({
       ...newobj,
@@ -185,11 +184,11 @@ export default function SponsorshipPage({ name }) {
     // 1. uploads to firebase
     // newobj.imgURL is a file object
     if (imgFile) {
-      const url = await uploadSponsorImageToStorage(name, imgFile);
+      const url = await uploadSponsorImageToStorage(hackathonId, imgFile);
       newobj.imgURL = url;
       newobj.imgName = imgFile.name;
     }
-    const id = await updateSponsor(name, newobj);
+    const id = await updateSponsor(hackathonId, newobj);
     // 2. renders on CMS
     setSponsors((oldSponsors) => {
       return {
@@ -231,7 +230,7 @@ export default function SponsorshipPage({ name }) {
     <>
       <Card>
         <CardHeader>
-          <CardTitle> Sponsors: {name} </CardTitle>
+          <CardTitle> Sponsors: {hackathonId} </CardTitle>
           <CardButtonContainer>
             <Button type={NEW} onClick={handleNew}>
               New Sponsor
@@ -268,7 +267,7 @@ export default function SponsorshipPage({ name }) {
             )}
             {!isLoading && !showItems && (
               <CardContainer padding="22px 28px">
-                No sponsorships for {name} :(
+                No sponsorships for {hackathonId} :(
               </CardContainer>
             )}
 

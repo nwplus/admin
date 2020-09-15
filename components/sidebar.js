@@ -88,10 +88,32 @@ const LoadingImage = styled.img`
 export default ({ hackathons, currentPath }) => {
   const [loading, setLoading] = useState(false);
   const [ifTimeOut, setIfTimeOut] = useState();
+  const [trailingPath, setTrailingPath] = useState();
+
+  const getTrailingPath = () => {
+    const paths = window.location.href.split('/');
+    const pathIndex = paths.findIndex((val) => val === currentPath);
+    const trailingPathArray = paths.slice(pathIndex + 1);
+    if (pathIndex === -1 || trailingPathArray.length === 0) {
+      return 'intro';
+    }
+    return trailingPathArray.join('/');
+  };
+
   useEffect(() => {
     setLoading(false);
     clearTimeout(ifTimeOut);
+    setTrailingPath(getTrailingPath);
   }, [window.location.pathname]);
+
+  const generateLinkTemplate = () => {
+    return `/[id]/${trailingPath}`;
+  };
+
+  const generateLink = (id) => {
+    return `/${id}/${trailingPath}`;
+  };
+
   return (
     <SidebarContainer>
       <HeaderContainer>
@@ -103,8 +125,12 @@ export default ({ hackathons, currentPath }) => {
         <Item>Websites</Item>
       </ItemContainer>
       {hackathons.map((id) => {
+        const href = generateLinkTemplate(id);
+        const link = generateLink(id);
+        console.log(href);
+        console.log(link);
         return (
-          <NextLink key={id} href="/[id]/intro" as={`/${id}/intro`}>
+          <NextLink key={id} href={href} as={link}>
             <Link
               onClick={() => {
                 if (currentPath !== id) {

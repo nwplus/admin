@@ -76,13 +76,14 @@ export default function SponsorshipPage({ hackathonId }) {
   };
 
   useEffect(() => {
+    setLoading(true);
     const initializeFirebase = async () => {
       await loadFirebase();
       setLoading(false);
     };
 
     initializeFirebase();
-  }, []);
+  }, [window.location.pathname]);
 
   const handleEdit = async (id) => {
     setnewobj({
@@ -157,9 +158,8 @@ export default function SponsorshipPage({ hackathonId }) {
     hours = hours || 12;
     minutes = minutes < 10 ? `0${minutes}` : minutes;
 
-    const de = `${d.getFullYear()}-${
-      d.getMonth() + 1
-    }-${d.getDate()} ${hours}:${minutes} ${ampm}`;
+    const de = `${d.getFullYear()}-${d.getMonth() + 1
+      }-${d.getDate()} ${hours}:${minutes} ${ampm}`;
 
     setnewobj({
       ...newobj,

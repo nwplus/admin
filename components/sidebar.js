@@ -127,8 +127,6 @@ export default ({ hackathons, currentPath }) => {
       {hackathons.map((id) => {
         const href = generateLinkTemplate(id);
         const link = generateLink(id);
-        console.log(href);
-        console.log(link);
         return (
           <NextLink key={id} href={href} as={link}>
             <Link

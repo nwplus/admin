@@ -56,7 +56,7 @@ const Auth = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated: !!user, user, checkAdminClaim }}
+      value={{ isAuthenticated: !!user, user, setUser }}
     >
       {isLoading ? (
         <LoadingScreenContainer>

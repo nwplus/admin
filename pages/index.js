@@ -9,6 +9,7 @@ import { checkAdminClaim } from '../utility/auth';
 import background from '../public/backgroundImage.png';
 import nwPlusLogo from '../public/nwPlusLogo.png';
 import signIn from '../public/signIn.png';
+import { useAuth } from '../utility/auth';
 
 const BackgroundContainer = styled.div`
   background-image: url(${background});
@@ -50,6 +51,7 @@ const StatusDiv = styled.div`
 `;
 
 export default function Home() {
+  const { setUser } = useAuth();
   const router = useRouter();
   const [showError, setShowError] = useState(false);
   const [isAddingClaim, setIsAddingClaim] = useState(false);
@@ -75,6 +77,7 @@ export default function Home() {
         const res = await setAdmin();
         if (res.data.isAdmin) {
           await user.getIdToken(true);
+          setUser(user);
           router.push('/landing');
         } else {
           await firebase.auth().signOut();

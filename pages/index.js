@@ -56,6 +56,7 @@ export default function Home() {
   const setAdmin = firebase.functions().httpsCallable('setAdmin');
 
   const googleSignIn = async () => {
+    await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
     const provider = new firebase.auth.GoogleAuthProvider();
     provider.setCustomParameters({
       hd: 'nwplus.io',

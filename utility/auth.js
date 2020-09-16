@@ -55,9 +55,7 @@ const Auth = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider
-      value={{ isAuthenticated: !!user, user, setUser }}
-    >
+    <AuthContext.Provider value={{ isAuthenticated: !!user, user, setUser }}>
       {isLoading ? (
         <LoadingScreenContainer>
           <div>

@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { COLOR } from '../constants';
-import { checkAdminClaim } from '../utility/auth';
+import { checkAdminClaim, useAuth } from '../utility/auth';
 import background from '../public/backgroundImage.png';
 import nwPlusLogo from '../public/nwPlusLogo.png';
 import signIn from '../public/signIn.png';
@@ -50,6 +50,7 @@ const StatusDiv = styled.div`
 `;
 
 export default function Home() {
+  const { setUser } = useAuth();
   const router = useRouter();
   const [showError, setShowError] = useState(false);
   const [isAddingClaim, setIsAddingClaim] = useState(false);
@@ -75,6 +76,7 @@ export default function Home() {
         const res = await setAdmin();
         if (res.data.isAdmin) {
           await user.getIdToken(true);
+          setUser(user);
           router.push('/landing');
         } else {
           await firebase.auth().signOut();

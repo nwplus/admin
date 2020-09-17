@@ -66,6 +66,16 @@ export default ({ hackathons, currentPath, children }) => {
     clearTimeout(timeOut);
   }, [currPath]);
 
+  const onClick = ({ path }) => {
+    if (!window.location.href.includes(path)) {
+      setTimeOut(
+        setTimeout(() => {
+          setLoading(true);
+        }, 750)
+      );
+    }
+  };
+
   return (
     <Container>
       <Sidebar currentPath={currentPath} hackathons={hackathons} />
@@ -75,52 +85,25 @@ export default ({ hackathons, currentPath, children }) => {
           {loading && <LoadingImage src={LoadingGif} />}
         </HeaderContainer>
         <HackathonNavBar>
-          <Link href="/[id]/intro" as={`/${currentPath}/intro`}>
+          <Link href="/[id]/intro" as={`/${currentPath}/intro`} passHref>
             <NavItem
-              href="#!"
-              onClick={() => {
-                if (!window.location.href.includes('intro')) {
-                  setTimeOut(
-                    setTimeout(() => {
-                      setLoading(true);
-                    }, 750)
-                  );
-                }
-              }}
+              onClick={() => onClick('intro')}
               selected={currPath === 'intro'}
             >
               Intro
             </NavItem>
           </Link>
-          <Link href="/[id]/faq" as={`/${currentPath}/faq`}>
+          <Link href="/[id]/faq" as={`/${currentPath}/faq`} passHref>
             <NavItem
-              href="#!"
-              onClick={() => {
-                if (!window.location.href.includes('faq')) {
-                  setTimeOut(
-                    setTimeout(() => {
-                      setLoading(true);
-                    }, 750)
-                  );
-                }
-              }}
+              onClick={() => onClick('faq')}
               selected={currPath === 'faq'}
             >
               FAQ
             </NavItem>
           </Link>
-          <Link href="/[id]/spocos" as={`/${currentPath}/spocos`}>
+          <Link href="/[id]/spocos" as={`/${currentPath}/spocos`} passHref>
             <NavItem
-              href="#!"
-              onClick={() => {
-                if (!window.location.href.includes('spocos')) {
-                  setTimeOut(
-                    setTimeout(() => {
-                      setLoading(true);
-                    }, 750)
-                  );
-                }
-              }}
+              onClick={() => onClick('spocos')}
               selected={currPath === 'spocos'}
             >
               Sponsors

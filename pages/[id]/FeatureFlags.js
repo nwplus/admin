@@ -39,7 +39,6 @@ const FeatureFlagsContainer = styled.div`
   display: flex;
   width: 40%;
   border: 2px solid lightgray;
-  border-radius: 10px;
   margin-top: 10px;
   margin-bottom: 10px;
   justify-content: space-between;

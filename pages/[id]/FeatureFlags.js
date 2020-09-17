@@ -85,57 +85,62 @@ export default function FeatureFlags({ id, hackathons }) {
     setEditing(false);
   };
 
-  const FlagContent = () => {
-    return editing ? (
-      <>
-        {Object.entries(editedFlags).map(([key, value]) => {
-          if (key === 'lastEdited' || key === 'lastEditedBy') {
-            return null;
-          }
-          return (
-            <FeatureFlagsContainer key={key}>
-              <FeatureFlagName>{key}:</FeatureFlagName>
-              <FeatureFlagToggleContainer>
-                <FeatureFlagName>
-                  {value ? 'Activated' : 'Deactivated'}
-                </FeatureFlagName>
-                <FeatureFlagToggle
-                  type="checkbox"
-                  onChange={() => {
-                    setEditedFlags({
-                      ...editedFlags,
-                      [key]: !value,
-                    });
-                  }}
-                  checked={value}
-                />
-              </FeatureFlagToggleContainer>
-            </FeatureFlagsContainer>
-          );
-        })}
-      </>
-    ) : (
-      <>
-        {Object.entries(flags).map(([key, value]) => {
-          if (key === 'lastEdited' || key === 'lastEditedBy') {
-            return null;
-          }
-          return (
-            <FeatureFlagsContainer key={key}>
-              <FeatureFlagName>{key}:</FeatureFlagName>
-              <FeatureFlagToggleContainer>
-                <FeatureFlagName>
-                  {value ? 'Activated' : 'Deactivated'}
-                </FeatureFlagName>
+  const EditFlagsComponent = () => (
+    <>
+      {Object.entries(editedFlags).map(([key, value]) => {
+        if (key === 'lastEdited' || key === 'lastEditedBy') {
+          return null;
+        }
+        return (
+          <FeatureFlagsContainer key={key}>
+            <FeatureFlagName>{key}:</FeatureFlagName>
+            <FeatureFlagToggleContainer>
+              <FeatureFlagName>
+                {value ? 'Activated' : 'Deactivated'}
+              </FeatureFlagName>
+              <FeatureFlagToggle
+                type="checkbox"
+                onChange={() => {
+                  setEditedFlags({
+                    ...editedFlags,
+                    [key]: !value,
+                  });
+                }}
+                checked={value}
+              />
+            </FeatureFlagToggleContainer>
+          </FeatureFlagsContainer>
+        );
+      })}
+      <CancelButton onClick={() => setEditing(false)}>
+        <CancelText>Cancel</CancelText>
+      </CancelButton>
+      <Button onClick={() => saveFlags()}>Save</Button>
+    </>
+  );
 
-                <FeatureFlagToggle type="checkbox" disabled checked={value} />
-              </FeatureFlagToggleContainer>
-            </FeatureFlagsContainer>
-          );
-        })}
-      </>
-    );
-  };
+  const ViewFlagsComponent = () => (
+    <>
+      {Object.entries(flags).map(([key, value]) => {
+        if (key === 'lastEdited' || key === 'lastEditedBy') {
+          return null;
+        }
+        return (
+          <FeatureFlagsContainer key={key}>
+            <FeatureFlagName>{key}:</FeatureFlagName>
+            <FeatureFlagToggleContainer>
+              <FeatureFlagName>
+                {value ? 'Activated' : 'Deactivated'}
+              </FeatureFlagName>
+
+              <FeatureFlagToggle type="checkbox" disabled checked={value} />
+            </FeatureFlagToggleContainer>
+          </FeatureFlagsContainer>
+        );
+      })}
+    </>
+  );
+
   if (!flags) {
     return (
       <Page currentPath={id} hackathons={hackathons}>
@@ -173,15 +178,7 @@ export default function FeatureFlags({ id, hackathons }) {
           </CardButtonContainer>
         </CardHeader>
         <CardContent>
-          <FlagContent />
-          {editing && (
-            <>
-              <CancelButton onClick={() => setEditing(false)}>
-                <CancelText>Cancel</CancelText>
-              </CancelButton>
-              <Button onClick={() => saveFlags()}>Save</Button>
-            </>
-          )}
+          {editing ? <EditFlagsComponent /> : <ViewFlagsComponent />}
         </CardContent>
       </Card>
     </Page>

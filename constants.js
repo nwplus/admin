@@ -9,7 +9,7 @@ export const COLOR = {
   WHITE: '#FFFFFF',
   GRAY: '#EDEDED',
   PRIMARY: '#2D2937',
-  PRIMARY_DARK: "#1b1821",
+  PRIMARY_DARK: '#1b1821',
   TEXT: '#5A5A5A',
   BLACK: '#000000',
   DARK_COPY: '#A198A6',

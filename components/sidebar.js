@@ -43,7 +43,7 @@ const Item = styled.p`
 `;
 
 const Link = styled.a`
-  transition: color 0.4s cubic-bezier(.25,.8,.25,1);
+  transition: color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
   display: block;
   color: ${(p) => (p.selected ? COLOR.WHITE : COLOR.DARK_COPY)};
   text-decoration: none;
@@ -71,11 +71,11 @@ const Logout = styled.button`
   cursor: pointer;
   color: ${COLOR.DARK_COPY};
   p {
-    transition: color 0.4s cubic-bezier(.25,.8,.25,1);
-  };
+    transition: color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
   svg {
-    transition: fill 0.4s cubic-bezier(.25,.8,.25,1);
-  };
+    transition: fill 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
   &:hover {
     p {
       color: ${COLOR.WHITE};
@@ -145,7 +145,7 @@ export default ({ hackathons, currentPath }) => {
         return (
           <NextLink key={id} href={href} as={link}>
             <Link
-              href='#!'
+              href="#!"
               onClick={() => {
                 if (currentPath !== id) {
                   setIfTimeOut(

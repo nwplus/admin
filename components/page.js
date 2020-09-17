@@ -44,7 +44,7 @@ const NavItem = styled.a`
   text-decoration: none;
   color: ${(p) => (p.selected ? COLOR.BLACK : COLOR.DARK_COPY)};
   border-bottom: ${(p) => (p.selected ? `3px solid ${COLOR.BLACK}` : 'none')};
-  transition: color 0.4s cubic-bezier(.25,.8,.25,1);
+  transition: color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
   &:hover {
     color: ${COLOR.BLACK};
   }
@@ -77,7 +77,7 @@ export default ({ hackathons, currentPath, children }) => {
         <HackathonNavBar>
           <Link href="/[id]/intro" as={`/${currentPath}/intro`}>
             <NavItem
-              href='#!'
+              href="#!"
               onClick={() => {
                 if (!window.location.href.includes('intro')) {
                   setTimeOut(
@@ -94,7 +94,7 @@ export default ({ hackathons, currentPath, children }) => {
           </Link>
           <Link href="/[id]/faq" as={`/${currentPath}/faq`}>
             <NavItem
-              href='#!'
+              href="#!"
               onClick={() => {
                 if (!window.location.href.includes('faq')) {
                   setTimeOut(
@@ -111,7 +111,7 @@ export default ({ hackathons, currentPath, children }) => {
           </Link>
           <Link href="/[id]/spocos" as={`/${currentPath}/spocos`}>
             <NavItem
-              href='#!'
+              href="#!"
               onClick={() => {
                 if (!window.location.href.includes('spocos')) {
                   setTimeOut(

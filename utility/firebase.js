@@ -43,6 +43,9 @@ const faqCollection = FAQ;
 const Hackathons = 'Hackathons';
 
 export const formatDate = (date) => {
+  if (!date) {
+    return 'invalid date';
+  }
   date = new Date(date * 1000);
   const timeZoneOffset = new Date().getTimezoneOffset() * 60000;
   return new Date(date - timeZoneOffset)

@@ -79,7 +79,7 @@ export default function FeatureFlags({ id, hackathons }) {
 
   const saveFlags = async () => {
     const updateObj = editedFlags;
-    updateObj.lastEdited = formatDate(getTimestamp().seconds);
+    updateObj.lastEdited = getTimestamp();
     updateObj.lastEditedBy = user;
     await updateFlags(id, updateObj);
     setEditing(false);
@@ -158,11 +158,9 @@ export default function FeatureFlags({ id, hackathons }) {
       <Card>
         <CardHeader>
           <CardTitle>Feature Flags for {id}</CardTitle>
-          <p>
-            {`Last edited by ${flags.lastEditedBy} at ${new Date(
-              flags.lastEdited
-            ).toLocaleString()}`}
-          </p>
+          <p>{`Last edited by ${flags.lastEditedBy} at ${formatDate(
+            flags.lastEdited?.seconds
+          )}`}</p>
           <CardButtonContainer>
             <Button
               type={EDIT}

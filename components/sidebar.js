@@ -29,6 +29,13 @@ const ItemContainer = styled.div`
   align-items: center;
 `;
 
+const SelectedItem = styled.p`
+  padding-left: 10px;
+  display: inline-block;
+  font-weight: 700;
+  color: ${COLOR.WHITE};
+`;
+
 const Item = styled.p`
   padding-left: 10px;
   display: inline-block;
@@ -36,6 +43,7 @@ const Item = styled.p`
 `;
 
 const Link = styled.a`
+  transition: color 0.4s cubic-bezier(.25,.8,.25,1);
   display: block;
   color: ${(p) => (p.selected ? COLOR.WHITE : COLOR.DARK_COPY)};
   text-decoration: none;
@@ -48,10 +56,11 @@ const Link = styled.a`
     color: ${COLOR.WHITE};
   }
   ${(p) => p.selected && 'background-color: #1b1821'}
-  cursor: pointer;
 `;
 
 const Logout = styled.button`
+  font-family: 'HK Grotesk';
+  font-size: 1em;
   padding: 0;
   margin-top: 30px;
   display: block;
@@ -61,6 +70,12 @@ const Logout = styled.button`
   width: 100%;
   cursor: pointer;
   color: ${COLOR.DARK_COPY};
+  p {
+    transition: color 0.4s cubic-bezier(.25,.8,.25,1);
+  };
+  svg {
+    transition: fill 0.4s cubic-bezier(.25,.8,.25,1);
+  };
   &:hover {
     p {
       color: ${COLOR.WHITE};
@@ -122,7 +137,7 @@ export default ({ hackathons, currentPath }) => {
       </HeaderContainer>
       <ItemContainer>
         <Website />
-        <Item>Websites</Item>
+        <SelectedItem>Websites</SelectedItem>
       </ItemContainer>
       {hackathons.map((id) => {
         const href = generateLinkTemplate(id);
@@ -130,6 +145,7 @@ export default ({ hackathons, currentPath }) => {
         return (
           <NextLink key={id} href={href} as={link}>
             <Link
+              href='#!'
               onClick={() => {
                 if (currentPath !== id) {
                   setIfTimeOut(

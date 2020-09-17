@@ -116,6 +116,22 @@ export default ({ hackathons, currentPath, children }) => {
               Sponsors
             </NavItem>
           </Link>
+          <Link href="/[id]/FeatureFlags" as={`/${currentPath}/FeatureFlags`}>
+            <NavItem
+              onClick={() => {
+                if (!window.location.href.includes('FeatureFlags')) {
+                  setTimeOut(
+                    setTimeout(() => {
+                      setLoading(true);
+                    }, 750)
+                  );
+                }
+              }}
+              selected={currPath === 'FeatureFlags'}
+            >
+              FeatureFlags
+            </NavItem>
+          </Link>
         </HackathonNavBar>
         <Content>{children}</Content>
       </div>

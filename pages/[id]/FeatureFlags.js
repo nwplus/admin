@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import Page from '../../components/page';
 import Card, {
@@ -9,12 +8,14 @@ import Card, {
     CardContent,
 } from '../../components/card';
 import Button from '../../components/button';
-import { EDIT } from '../../constants';
+import { COLOR, EDIT } from '../../constants';
 import {
     getTimestamp,
     subscribeToFlags,
     formatDate,
     updateFlags,
+    getHackathonPaths,
+    getHackathons,
 } from '../../utility/firebase';
 import { useAuth } from '../../utility/auth';
 
@@ -35,64 +36,168 @@ const CancelButton = styled.button`
 `;
 
 const FeatureFlagsContainer = styled.div`
-    display: flex;
-    width: 50%;
-    align-content: space-space-between;
-`
+  display: flex;
+  width: 40%;
+  border: 2px solid lightgray;
+  border-radius: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  justify-content: space-between;
+  background-color: #ededed;
+`;
+
+const FeatureFlagToggle = styled.input`
+  width: 18px;
+  height: 18px;
+  margin-top: 10px;
+`;
+
+const FeatureFlagName = styled.p`
+  font-weight: bold;
+  font-size: 12px;
+  margin: 15px;
+`;
+
+const FeatureFlagToggleContainer = styled.div`
+  display: flex;
+`;
 
 export default function FeatureFlags({ id, hackathons }) {
     const [editing, setEditing] = useState(false);
     const [flags, setFlags] = useState({});
     const [editedFlags, setEditedFlags] = useState({});
-    const { email: user } = useAuth();
-
+    const { email: user } = useAuth().user;
     useEffect(() => {
-        return subscribeToFlags(setFlags);
+        return subscribeToFlags(id, setFlags);
     }, [window.location.href]);
 
     useEffect(() => {
-        if (editing) {
-            setEditedFlags(flags);
-        } else {
+        if (!editing) {
             setEditedFlags({});
         }
-    }, [editeding])
+    }, [editing]);
 
     const saveFlags = async () => {
-        const updateObj = flags;
+        const updateObj = editedFlags;
         updateObj.lastEdited = formatDate(getTimestamp().seconds);
         updateObj.lastEditedBy = user;
-        await updateFlags(updateObj);
+        await updateFlags(id, updateObj);
         setEditing(false);
     };
 
-    const CardContent = editing ? (
-        <>
-            {Object.entries(editedFlags).map(([key, entry]) => (
-                
-            ))}
-        </>
-    )
+    const FlagContent = () => {
+        return editing ? (
+            <>
+                {Object.entries(editedFlags).map(([key, value]) => {
+                    if (key === 'lastEdited' || key === 'lastEditedBy') {
+                        return null;
+                    }
+                    return (
+                        <FeatureFlagsContainer key={key}>
+                            <FeatureFlagName>{key}:</FeatureFlagName>
+                            <FeatureFlagToggleContainer>
+                                <FeatureFlagName>
+                                    {value ? 'Activated' : 'Deactivated'}
+                                </FeatureFlagName>
+                                <FeatureFlagToggle
+                                    type="checkbox"
+                                    onChange={(e) => {
+                                        setEditedFlags({
+                                            ...editedFlags,
+                                            [key]: !value,
+                                        });
+                                    }}
+                                    checked={value}
+                                />
+                            </FeatureFlagToggleContainer>
+                        </FeatureFlagsContainer>
+                    );
+                })}
+            </>
+        ) : (
+                <>
+                    {Object.entries(flags).map(([key, value]) => {
+                        if (key === 'lastEdited' || key === 'lastEditedBy') {
+                            return null;
+                        }
+                        return (
+                            <FeatureFlagsContainer key={key}>
+                                <FeatureFlagName>{key}:</FeatureFlagName>
+                                <FeatureFlagToggleContainer>
+                                    <FeatureFlagName>
+                                        {value ? 'Activated' : 'Deactivated'}
+                                    </FeatureFlagName>
+
+                                    <FeatureFlagToggle type="checkbox" disabled checked={value} />
+                                </FeatureFlagToggleContainer>
+                            </FeatureFlagsContainer>
+                        );
+                    })}
+                </>
+            );
+    };
+    if (!flags) {
+        return (
+            <Page currentPath={id} hackathons={hackathons}>
+                <Card>
+                    <CardHeader>
+                        <CardTitle>No Features Flags for {id}</CardTitle>
+                    </CardHeader>
+                </Card>
+            </Page>
+        );
+    }
 
     return (
         <Page currentPath={id} hackathons={hackathons}>
             <Card>
                 <CardHeader>
                     <CardTitle>Feature Flags for {id}</CardTitle>
+                    <p>
+                        {`Last edited by ${flags.lastEditedBy} at ${new Date(
+                            flags.lastEdited
+                        ).toLocaleString()}`}
+                    </p>
                     <CardButtonContainer>
                         <Button
                             type={EDIT}
-                            onClick={() => (editing ? setEditing(false) : setEditing(true))}
+                            onClick={() => {
+                                if (editing) {
+                                    setEditing(false);
+                                } else {
+                                    setEditedFlags(flags);
+                                    setEditing(true);
+                                }
+                            }}
                         />
                     </CardButtonContainer>
                 </CardHeader>
                 <CardContent>
-                    <CancelButton onClick={() => setEditing(false)}>
-                        <CancelText>Cancel</CancelText>
-                    </CancelButton>
-                    <Button onClick={() => handleSave(type)}>Save</Button>
+                    <FlagContent />
+                    {editing && (
+                        <>
+                            <CancelButton onClick={() => setEditing(false)}>
+                                <CancelText>Cancel</CancelText>
+                            </CancelButton>
+                            <Button onClick={() => saveFlags()}>Save</Button>
+                        </>
+                    )}
                 </CardContent>
             </Card>
         </Page>
     );
 }
+
+export const getStaticPaths = async () => {
+    return getHackathonPaths();
+};
+
+export const getStaticProps = async ({ params }) => {
+    const hackathons = await getHackathons();
+    return {
+        props: {
+            hackathons,
+            id: params.id,
+        },
+    };
+};

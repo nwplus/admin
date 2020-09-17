@@ -281,7 +281,12 @@ export const logout = async () => {
 };
 
 export const subscribeToFlags = (id, cb) => {
-  return db.collection(Hackathons).doc(id).onSnapshot(cb);
+  return db
+    .collection(Hackathons)
+    .doc(id)
+    .onSnapshot((snap) => {
+      cb(snap.data().featureFlags);
+    });
 };
 
 export const updateFlags = async (id, flags) => {

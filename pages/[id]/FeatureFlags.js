@@ -1,3 +1,5 @@
+import styled from 'styled-components';
+import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import Page from '../../components/page';
 import Card, {
@@ -16,14 +18,45 @@ import {
 } from '../../utility/firebase';
 import { useAuth } from '../../utility/auth';
 
+const CancelText = styled.p`
+  border-bottom: 2px solid ${COLOR.BLACK};
+  margin: 0px;
+`;
+
+const CancelButton = styled.button`
+  font-size: 16px;
+  cursor: pointer;
+  border-bottom: 2px solid ${COLOR.BLACK};
+  margin-left: 675px;
+  margin-right: 40px;
+  border: none;
+  outline: none;
+  background-color: ${COLOR.BACKGROUND};
+`;
+
+const FeatureFlagsContainer = styled.div`
+    display: flex;
+    width: 50%;
+    align-content: space-space-between;
+`
+
 export default function FeatureFlags({ id, hackathons }) {
     const [editing, setEditing] = useState(false);
     const [flags, setFlags] = useState({});
+    const [editedFlags, setEditedFlags] = useState({});
     const { email: user } = useAuth();
 
     useEffect(() => {
         return subscribeToFlags(setFlags);
     }, [window.location.href]);
+
+    useEffect(() => {
+        if (editing) {
+            setEditedFlags(flags);
+        } else {
+            setEditedFlags({});
+        }
+    }, [editeding])
 
     const saveFlags = async () => {
         const updateObj = flags;
@@ -32,6 +65,14 @@ export default function FeatureFlags({ id, hackathons }) {
         await updateFlags(updateObj);
         setEditing(false);
     };
+
+    const CardContent = editing ? (
+        <>
+            {Object.entries(editedFlags).map(([key, entry]) => (
+                
+            ))}
+        </>
+    )
 
     return (
         <Page currentPath={id} hackathons={hackathons}>
@@ -45,7 +86,12 @@ export default function FeatureFlags({ id, hackathons }) {
                         />
                     </CardButtonContainer>
                 </CardHeader>
-                <CardContent />
+                <CardContent>
+                    <CancelButton onClick={() => setEditing(false)}>
+                        <CancelText>Cancel</CancelText>
+                    </CancelButton>
+                    <Button onClick={() => handleSave(type)}>Save</Button>
+                </CardContent>
             </Card>
         </Page>
     );

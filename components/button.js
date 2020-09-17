@@ -22,6 +22,13 @@ const StyledButton = styled.button`
   align-items: center;
   font-size: 16px;
   border-radius: ${(props) => (props.inline ? '0 3px 3px 0' : '3px;')}
+  transition: background 0.4s cubic-bezier(.25,.8,.25,1);
+  &:hover {
+    background: ${COLOR.PRIMARY_DARK}
+  };
+  &:focus {
+    background: ${COLOR.PRIMARY_DARK}
+  };
 `;
 
 const StyledEditIcon = styled(EditIcon)`

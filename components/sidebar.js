@@ -55,7 +55,7 @@ const Link = styled.a`
   &:focus {
     color: ${COLOR.WHITE};
   }
-  ${(p) => p.selected && 'background-color: #1b1821'}
+  ${(p) => p.selected && `background-color: ${COLOR.PRIMARY_DARK}`}
 `;
 
 const Logout = styled.button`

@@ -47,6 +47,7 @@ const FeatureFlagToggle = styled.input`
   width: 18px;
   height: 18px;
   margin: 14px 15px 14px 0;
+  ${(props) => !props.disabled && 'cursor: pointer;'}
 `;
 
 const FeatureFlagName = styled.p`

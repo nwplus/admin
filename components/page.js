@@ -109,6 +109,14 @@ export default ({ hackathons, currentPath, children }) => {
               Sponsors
             </NavItem>
           </Link>
+          <Link href="/[id]/FeatureFlags" as={`/${currentPath}/FeatureFlags`}>
+            <NavItem
+              onClick={() => onClick('FeatureFlags')}
+              selected={currPath === 'FeatureFlags'}
+            >
+              FeatureFlags
+            </NavItem>
+          </Link>
         </HackathonNavBar>
         <Content>{children}</Content>
       </div>

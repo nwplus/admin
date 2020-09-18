@@ -38,23 +38,25 @@ const CancelButton = styled.button`
 const FeatureFlagsContainer = styled.div`
   display: flex;
   width: 40%;
-  border: 2px solid lightgray;
+  border: 1px solid lightgray;
   margin-top: 10px;
   margin-bottom: 10px;
   justify-content: space-between;
-  background-color: #ededed;
+  background-color: ${COLOR.WHITE};
+  border-radius: 3px;
 `;
 
 const FeatureFlagToggle = styled.input`
   width: 18px;
   height: 18px;
-  margin-top: 10px;
+  margin: 14px 15px 14px 0;
 `;
 
 const FeatureFlagName = styled.p`
-  font-weight: bold;
-  font-size: 12px;
+  font-weight: ${(props) => (props.heading ? '600' : '400')};
+  font-size: 16px;
   margin: 15px;
+  color: ${COLOR.BODY_TEXT};
 `;
 
 const FeatureFlagToggleContainer = styled.div`
@@ -92,7 +94,7 @@ export default function FeatureFlags({ id, hackathons }) {
         }
         return (
           <FeatureFlagsContainer key={key}>
-            <FeatureFlagName>{key}:</FeatureFlagName>
+            <FeatureFlagName heading>{key}</FeatureFlagName>
             <FeatureFlagToggleContainer>
               <FeatureFlagName>
                 {value ? 'Activated' : 'Deactivated'}
@@ -126,7 +128,7 @@ export default function FeatureFlags({ id, hackathons }) {
         }
         return (
           <FeatureFlagsContainer key={key}>
-            <FeatureFlagName>{key}:</FeatureFlagName>
+            <FeatureFlagName heading>{key}</FeatureFlagName>
             <FeatureFlagToggleContainer>
               <FeatureFlagName>
                 {value ? 'Activated' : 'Deactivated'}

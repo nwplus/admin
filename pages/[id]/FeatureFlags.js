@@ -19,20 +19,17 @@ import {
 } from '../../utility/firebase';
 import { useAuth } from '../../utility/auth';
 
-const CancelText = styled.p`
-  border-bottom: 2px solid ${COLOR.BLACK};
-  margin: 0px;
+const InlineButton = styled.span`
+  display: inline;
+  float: right;
+  margin: 0 16px;
+  padding-bottom: 32px;
 `;
 
-const CancelButton = styled.button`
-  font-size: 16px;
-  cursor: pointer;
-  border-bottom: 2px solid ${COLOR.BLACK};
-  margin-left: 675px;
-  margin-right: 40px;
-  border: none;
-  outline: none;
-  background-color: ${COLOR.BACKGROUND};
+const InlineButtonContainer = styled.div`
+  display: inline-block;
+  float: right;
+  margin-top: -40px;
 `;
 
 const FeatureFlagsContainer = styled.div`
@@ -53,7 +50,7 @@ const FeatureFlagToggle = styled.input`
 `;
 
 const FeatureFlagName = styled.p`
-  font-weight: ${(props) => (props.label ? '600' : '400')};
+  font-weight: ${(props) => (props.isLabel ? '600' : '400')};
   font-size: 16px;
   margin: 15px;
   color: ${COLOR.BODY_TEXT};
@@ -94,7 +91,7 @@ export default function FeatureFlags({ id, hackathons }) {
         }
         return (
           <FeatureFlagsContainer key={key}>
-            <FeatureFlagName label>{key}</FeatureFlagName>
+            <FeatureFlagName isLabel>{key}</FeatureFlagName>
             <FeatureFlagToggleContainer>
               <FeatureFlagName>
                 {value ? 'Activated' : 'Deactivated'}
@@ -113,10 +110,20 @@ export default function FeatureFlags({ id, hackathons }) {
           </FeatureFlagsContainer>
         );
       })}
-      <CancelButton onClick={() => setEditing(false)}>
-        <CancelText>Cancel</CancelText>
-      </CancelButton>
-      <Button onClick={() => saveFlags()}>Save</Button>
+      <InlineButtonContainer>
+        <InlineButton>
+          <Button
+            onClick={() => setEditing(false)}
+            color="linear-gradient(180deg, #FF4E4E 0%, #FFEBEB 289.71%)"
+            contentColor={COLOR.WHITE}
+          >
+            Cancel
+          </Button>
+        </InlineButton>
+        <InlineButton>
+          <Button onClick={() => saveFlags()}>Save</Button>
+        </InlineButton>
+      </InlineButtonContainer>
     </>
   );
 
@@ -128,7 +135,7 @@ export default function FeatureFlags({ id, hackathons }) {
         }
         return (
           <FeatureFlagsContainer key={key}>
-            <FeatureFlagName label>{key}</FeatureFlagName>
+            <FeatureFlagName isLabel>{key}</FeatureFlagName>
             <FeatureFlagToggleContainer>
               <FeatureFlagName>
                 {value ? 'Activated' : 'Deactivated'}

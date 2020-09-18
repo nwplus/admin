@@ -19,5 +19,12 @@ module.exports = {
     'no-restricted-syntax': 0,
     radix: 0,
     'no-param-reassign': 0,
+    'prettier/prettier': [
+      'error',
+      {
+        singleQuote: true,
+        endOfLine: 'auto',
+      },
+    ],
   },
 };

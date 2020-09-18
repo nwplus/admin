@@ -111,15 +111,7 @@ export default ({ hackathons, currentPath, children }) => {
           </Link>
           <Link href="/[id]/FeatureFlags" as={`/${currentPath}/FeatureFlags`}>
             <NavItem
-              onClick={() => {
-                if (!window.location.href.includes('FeatureFlags')) {
-                  setTimeOut(
-                    setTimeout(() => {
-                      setLoading(true);
-                    }, 750)
-                  );
-                }
-              }}
+              onClick={() => onClick('FeatureFlags')}
               selected={currPath === 'FeatureFlags'}
             >
               FeatureFlags

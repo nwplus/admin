@@ -109,7 +109,11 @@ export default ({ hackathons, currentPath, children }) => {
               Sponsors
             </NavItem>
           </Link>
-          <Link href="/[id]/FeatureFlags" as={`/${currentPath}/FeatureFlags`} passHref>
+          <Link
+            href="/[id]/FeatureFlags"
+            as={`/${currentPath}/FeatureFlags`}
+            passHref
+          >
             <NavItem
               onClick={() => onClick('FeatureFlags')}
               selected={currPath === 'FeatureFlags'}

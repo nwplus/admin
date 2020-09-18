@@ -112,6 +112,9 @@ export default function FeatureFlags({ id, hackathons }) {
       })}
       <InlineButtonContainer>
         <InlineButton>
+          <Button onClick={() => saveFlags()}>Save</Button>
+        </InlineButton>
+        <InlineButton>
           <Button
             onClick={() => setEditing(false)}
             color="linear-gradient(180deg, #FF4E4E 0%, #FFEBEB 289.71%)"
@@ -119,9 +122,6 @@ export default function FeatureFlags({ id, hackathons }) {
           >
             Cancel
           </Button>
-        </InlineButton>
-        <InlineButton>
-          <Button onClick={() => saveFlags()}>Save</Button>
         </InlineButton>
       </InlineButtonContainer>
     </>

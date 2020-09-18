@@ -53,7 +53,7 @@ const FeatureFlagToggle = styled.input`
 `;
 
 const FeatureFlagName = styled.p`
-  font-weight: ${(props) => (props.heading ? '600' : '400')};
+  font-weight: ${(props) => (props.label ? '600' : '400')};
   font-size: 16px;
   margin: 15px;
   color: ${COLOR.BODY_TEXT};
@@ -94,7 +94,7 @@ export default function FeatureFlags({ id, hackathons }) {
         }
         return (
           <FeatureFlagsContainer key={key}>
-            <FeatureFlagName heading>{key}</FeatureFlagName>
+            <FeatureFlagName label>{key}</FeatureFlagName>
             <FeatureFlagToggleContainer>
               <FeatureFlagName>
                 {value ? 'Activated' : 'Deactivated'}
@@ -128,7 +128,7 @@ export default function FeatureFlags({ id, hackathons }) {
         }
         return (
           <FeatureFlagsContainer key={key}>
-            <FeatureFlagName heading>{key}</FeatureFlagName>
+            <FeatureFlagName label>{key}</FeatureFlagName>
             <FeatureFlagToggleContainer>
               <FeatureFlagName>
                 {value ? 'Activated' : 'Deactivated'}

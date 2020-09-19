@@ -43,6 +43,9 @@ const faqCollection = FAQ;
 const Hackathons = 'Hackathons';
 
 export const formatDate = (date) => {
+  if (!date) {
+    return 'invalid date';
+  }
   date = new Date(date * 1000);
   const timeZoneOffset = new Date().getTimezoneOffset() * 60000;
   return new Date(date - timeZoneOffset)
@@ -278,4 +281,20 @@ export const deleteSponsorImagefromStorage = async (website, imgName) => {
 
 export const logout = async () => {
   await firebase.auth().signOut();
+};
+
+export const subscribeToFlags = (id, cb) => {
+  return db
+    .collection(Hackathons)
+    .doc(id)
+    .onSnapshot((snap) => {
+      cb(snap.data().featureFlags);
+    });
+};
+
+export const updateFlags = async (id, flags) => {
+  const doc = {
+    featureFlags: flags,
+  };
+  return db.collection(Hackathons).doc(id).update(doc);
 };

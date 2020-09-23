@@ -54,7 +54,7 @@ const IndentedLink = styled.a`
   ${(p) => p.selected && `background-color: ${COLOR.PRIMARY_DARK}`}
 `;
 
-const Link = styled.button`
+const Link = styled.a`
   font-family: 'HK Grotesk';
   font-size: 1em;
   padding: 0;
@@ -131,7 +131,7 @@ export default ({ hackathons, currentPath }) => {
         <Header>nwPlus CMS</Header>
         {loading && <LoadingImage src={LoadingGif} />}
       </HeaderContainer>
-      <NextLink href="/livesite" as="/livesite">
+      <NextLink href="/livesite" as="/livesite" passHref>
         <Link>
           <ItemContainer>
             <Live color={currentPath === 'livesite' && COLOR.WHITE} />
@@ -167,6 +167,7 @@ export default ({ hackathons, currentPath }) => {
         );
       })}
       <Link
+        href="#!"
         onClick={() => {
           setIfTimeOut(
             setTimeout(() => {

@@ -41,6 +41,8 @@ export const storage = firebase.storage();
 const webCollection = 'Website_content';
 const faqCollection = FAQ;
 const Hackathons = 'Hackathons';
+const InternalWebsitesCollection = 'InternalWebsites';
+const CMSCollection = 'CMS';
 
 export const formatDate = (date) => {
   if (!date) {
@@ -298,9 +300,6 @@ export const updateFlags = async (id, flags) => {
   };
   return db.collection(Hackathons).doc(id).update(doc);
 };
-
-const InternalWebsitesCollection = 'InternalWebsites';
-const CMSCollection = 'cms';
 
 export const SubscribeToCMSStatus = (statuscb, datecb) => {
   return db

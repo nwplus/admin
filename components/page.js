@@ -44,16 +44,18 @@ export default ({ hackathons, currentPath, children, includeNavbar }) => {
     <Container>
       <Sidebar currentPath={currentPath} hackathons={hackathons} />
       <div style={{ width: '80vw' }}>
-        <HeaderContainer>
-          <Header>{currentPath}</Header>
-          {loading && <LoadingImage src={LoadingGif} />}
-        </HeaderContainer>
         {includeNavbar && (
-          <Navbar
-            setLoading={setLoading}
-            currentPath={currentPath}
-            setTimeOut={setTimeOut}
-          />
+          <>
+            <HeaderContainer>
+              <Header>{currentPath}</Header>
+              {loading && <LoadingImage src={LoadingGif} />}
+            </HeaderContainer>
+            <Navbar
+              setLoading={setLoading}
+              currentPath={currentPath}
+              setTimeOut={setTimeOut}
+            />
+          </>
         )}
         <Content>{children}</Content>
       </div>

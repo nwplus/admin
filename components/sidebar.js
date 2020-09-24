@@ -5,6 +5,7 @@ import { COLOR } from '../constants';
 import Website from './icons/website';
 import Power from './icons/power';
 import Live from './icons/live';
+import FAQIcon from './icons/faq';
 import { logout } from '../utility/firebase';
 import LoadingGif from '../assets/nwplus.gif';
 
@@ -178,7 +179,7 @@ export default ({ hackathons, currentPath }) => {
       <NextLink href="/faq" as="/faq" passHref>
         <MiddleLink>
           <ItemContainer>
-            <Live color={currentPath === 'faq' && COLOR.WHITE} />
+            <FAQIcon color={currentPath === 'faq' && COLOR.WHITE} />
             <Label selected={currentPath === 'faq'}>FAQs</Label>
           </ItemContainer>
         </MiddleLink>

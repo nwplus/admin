@@ -47,14 +47,6 @@ export default ({ setTimeOut, setLoading, currentPath }) => {
           Intro
         </NavItem>
       </Link>
-      <Link href="/[id]/faq" as={`/${currentPath}/faq`} passHref>
-        <NavItem
-          onClick={() => onClick('faq')}
-          selected={currentPage === 'faq'}
-        >
-          FAQ
-        </NavItem>
-      </Link>
       <Link href="/[id]/spocos" as={`/${currentPath}/spocos`} passHref>
         <NavItem
           onClick={() => onClick('spocos')}

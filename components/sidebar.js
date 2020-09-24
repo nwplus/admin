@@ -90,6 +90,42 @@ const Link = styled.a`
   }
 `;
 
+const MiddleLink = styled.a`
+  font-family: 'HK Grotesk';
+  font-size: 1em;
+  padding: 0;
+  margin-top: 5px;
+  display: block;
+  background: none;
+  border: none;
+  text-decoration: none;
+  width: 100%;
+  cursor: pointer;
+  color: ${COLOR.DARK_COPY};
+  p {
+    transition: color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+  svg {
+    transition: fill 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+  &:hover {
+    p {
+      color: ${COLOR.WHITE};
+    }
+    svg {
+      fill: ${COLOR.WHITE};
+    }
+  }
+  &:focus {
+    p {
+      color: ${COLOR.WHITE};
+    }
+    svg {
+      fill: ${COLOR.WHITE};
+    }
+  }
+`;
+
 const LoadingImage = styled.img`
   height: 50px;
   width: 50px;
@@ -139,9 +175,17 @@ export default ({ hackathons, currentPath }) => {
           </ItemContainer>
         </Link>
       </NextLink>
+      <NextLink href="/faq" as="/faq" passHref>
+        <MiddleLink>
+          <ItemContainer>
+            <Live color={currentPath === 'livesite' && COLOR.WHITE} />
+            <Label selected={currentPath === 'faq'}>FAQs</Label>
+          </ItemContainer>
+        </MiddleLink>
+      </NextLink>
       <ItemContainer>
-        <Website color={currentPath !== 'livesite' && COLOR.WHITE} />
-        <Label selected={currentPath !== 'livesite'}>Websites</Label>
+        <Website color={hackathons.includes(currentPath) && COLOR.WHITE} />
+        <Label selected={hackathons.includes(currentPath)}>Websites</Label>
       </ItemContainer>
       {hackathons.map((id) => {
         const href = generateLinkTemplate(id);
@@ -166,6 +210,7 @@ export default ({ hackathons, currentPath }) => {
           </NextLink>
         );
       })}
+
       <Link
         href="#!"
         onClick={() => {

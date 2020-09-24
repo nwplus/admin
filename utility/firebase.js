@@ -298,3 +298,17 @@ export const updateFlags = async (id, flags) => {
   };
   return db.collection(Hackathons).doc(id).update(doc);
 };
+
+const InternalWebsitesCollection = 'InternalWebsites';
+const CMSCollection = 'cms';
+
+export const SubscribeToCMSStatus = (statuscb, datecb) => {
+  return db
+    .collection(InternalWebsitesCollection)
+    .doc(CMSCollection)
+    .onSnapshot((snap) => {
+      const { OffForMaintenance, OffUntilDate } = snap.data();
+      statuscb(OffForMaintenance);
+      datecb(OffUntilDate);
+    });
+};

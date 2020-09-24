@@ -4,6 +4,8 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import styled from 'styled-components';
 import nwPlusReversed from '../assets/nwplus-reversed.gif';
+import { SubscribeToCMSStatus } from './firebase';
+import CMSUnderConstructionPage from '../components/CMSUnderConstructionPage';
 
 const LoadingScreenContainer = styled.div`
   display: flex;
@@ -34,6 +36,12 @@ const Auth = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  const [CMSOff, setCMSOff] = useState(false);
+  const [CMSOffDate, setCMSOffDate] = useState();
+  useEffect(() => {
+    const unsubscribe = SubscribeToCMSStatus(setCMSOff, setCMSOffDate);
+    return unsubscribe;
+  }, []);
 
   useEffect(() => {
     const unsubscribe = firebase.auth().onAuthStateChanged(async (currUser) => {
@@ -54,7 +62,9 @@ const Auth = ({ children }) => {
     return () => unsubscribe();
   }, []);
 
-  return (
+  return CMSOff ? (
+    <CMSUnderConstructionPage date={CMSOffDate} />
+  ) : (
     <AuthContext.Provider value={{ isAuthenticated: !!user, user, setUser }}>
       {isLoading ? (
         <LoadingScreenContainer>

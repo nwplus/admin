@@ -338,15 +338,13 @@ export default function SponsorshipPage({ hackathonId }) {
               disabled={modalAction === VIEW}
               onChange={(event) => handleChange('tier', event.target.value)}
             >
-              <option default value="Inkind">
+              <option default value="inKind">
                 In-kind
               </option>
-              <option value="Bronze">Bronze</option>
-              <option value="Silver">Silver</option>
-              <option value="Gold">Gold</option>
-              <option value="Platinum/Title Sponsor">
-                Platinum / Title Sponsor
-              </option>
+              <option value="bronze">Bronze</option>
+              <option value="silver">Silver</option>
+              <option value="gold">Gold</option>
+              <option value="platinum">Platinum/Title Sponsor</option>
             </select>
 
             <input

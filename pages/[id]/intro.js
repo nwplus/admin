@@ -160,7 +160,7 @@ export default ({ id, hackathons }) => {
   };
 
   return (
-    <Page currentPath={id} hackathons={hackathons}>
+    <Page currentPath={id} hackathons={hackathons} includeNavbar>
       {/* map over every text section in a hackathon's WebsiteData and adds the section name to isEditingObj state */}
       {websiteData ? (
         Object.keys(websiteData).map((type) => {

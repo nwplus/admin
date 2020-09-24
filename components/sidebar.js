@@ -178,7 +178,7 @@ export default ({ hackathons, currentPath }) => {
       <NextLink href="/faq" as="/faq" passHref>
         <MiddleLink>
           <ItemContainer>
-            <Live color={currentPath === 'livesite' && COLOR.WHITE} />
+            <Live color={currentPath === 'faq' && COLOR.WHITE} />
             <Label selected={currentPath === 'faq'}>FAQs</Label>
           </ItemContainer>
         </MiddleLink>

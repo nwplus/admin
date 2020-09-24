@@ -177,7 +177,17 @@ export default ({ hackathons, currentPath }) => {
         </Link>
       </NextLink>
       <NextLink href="/faq" as="/faq" passHref>
-        <MiddleLink>
+        <MiddleLink
+          onClick={() => {
+            if (currentPath !== 'faq') {
+              setIfTimeOut(
+                setTimeout(() => {
+                  setLoading(true);
+                }, 750)
+              );
+            }
+          }}
+        >
           <ItemContainer>
             <FAQIcon color={currentPath === 'faq' && COLOR.WHITE} />
             <Label selected={currentPath === 'faq'}>FAQs</Label>

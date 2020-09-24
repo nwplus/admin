@@ -136,7 +136,9 @@ export default ({ id, hackathons }) => {
     try {
       updateHackathonField(id, updateObj);
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error(error);
+      // eslint-disable-next-line no-alert
       alert('An error occured while trying to update the text section');
     } finally {
       setIsEditingObj({

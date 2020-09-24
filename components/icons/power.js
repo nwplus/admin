@@ -5,8 +5,8 @@ import { COLOR } from '../../constants';
 // eslint-disable-next-line no-unused-vars
 const PowerIcon = ({ className, color }) => (
   <svg
-    width="24"
-    height="24"
+    width="20"
+    height="20"
     viewBox="0 0 28 28"
     fill={color || COLOR.DARK_COPY}
     xmlns="http://www.w3.org/2000/svg"

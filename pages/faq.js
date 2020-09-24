@@ -7,6 +7,7 @@ import {
   addFaq,
   updateFaq,
   deleteFaq,
+  getHackathons,
 } from '../utility/firebase';
 import Card, {
   CardHeader,
@@ -18,6 +19,7 @@ import Button from '../components/button';
 import Modal, { ModalContent, ModalField } from '../components/modal';
 import { COLOR, EDIT, VIEW, NEW, DELETE, FAQ, FAQCategory } from '../constants';
 import { useAuth } from '../utility/auth';
+import Sidebar from '../components/sidebar';
 
 const FAQWrapper = styled.div`
   max-height: 512px;
@@ -99,7 +101,18 @@ const PlaceHolderText = styled.td`
   margin-bottom: 32px;
 `;
 
-export default function Faq({ currHackathon }) {
+const FAQContainer = styled.div`
+  width: 80vw;
+  margin: 25px;
+`;
+
+const Container = styled.div`
+  display: flex;
+  align-items: stretch;
+  min-height: 100vh;
+`;
+
+export default function Faq({ hackathons }) {
   // remove'LHD2021' when integrated with sidebar to receive hackathon that is passed down
   const [faqs, setFaqs] = useState([]);
   const [newFaq, setNewFaq] = useState({});
@@ -112,7 +125,7 @@ export default function Faq({ currHackathon }) {
   const { email: user } = useAuth().user;
   useEffect(() => {
     setIsLoading(true);
-    getFaqs(currHackathon).then((res) => {
+    getFaqs().then((res) => {
       if (Object.keys(res).length > 0) {
         setFaqs(res);
       } else {
@@ -127,7 +140,8 @@ export default function Faq({ currHackathon }) {
   }, [alertMsg]);
 
   const handleNew = async () => {
-    newFaq.hackathonIDs = [currHackathon];
+    // TODO jenny please add proper hackathonID handling
+    newFaq.hackathonIDs = [];
     newFaq.category = newFaq.category ? newFaq.category : FAQCategory.GENERAL;
     newFaq.lastModifiedBy = user;
     const faqID = await addFaq(newFaq);
@@ -236,219 +250,232 @@ export default function Faq({ currHackathon }) {
   }
 
   return (
-    <>
-      <Card>
-        <CardHeader>
-          <CardTitle>Frequently Asked Questions</CardTitle>
-          <CardButtonContainer>
-            <Button type={NEW} onClick={() => setAddNew(true)}>
-              New Question
-            </Button>
-          </CardButtonContainer>
-        </CardHeader>
-        <CardContent style={{ backgroundColor: `${COLOR.BACKGROUND}` }}>
-          <FAQWrapper>
-            {isLoading && (
-              <FAQContent>
-                <tbody>
-                  <TableRow>
-                    <PlaceHolderText>
-                      Loading FAQs for {currHackathon}...
-                    </PlaceHolderText>
-                  </TableRow>
-                </tbody>
-              </FAQContent>
-            )}
-            {Object.keys(faqs).length === 0 && !isLoading && (
-              <FAQContent>
-                <tbody>
-                  <TableRow>
-                    <PlaceHolderText>
-                      No FAQs for {currHackathon}
-                    </PlaceHolderText>
-                  </TableRow>
-                </tbody>
-              </FAQContent>
-            )}
-            {Object.keys(faqs).length > 0 && !isLoading && (
-              <FAQContent>
-                <thead>
-                  <TableRow>
-                    <TableHeader>Question</TableHeader>
-                    <TableHeader>Category</TableHeader>
-                    <TableHeader>Last Modified</TableHeader>
-                    <TableHeader>Actions</TableHeader>
-                  </TableRow>
-                </thead>
-                <tbody>
-                  {Object.keys(faqs).map((id) => (
-                    <QuestionRow
-                      key={id}
-                      faqID={id}
-                      question={faqs[id].question}
-                      category={faqs[id].category}
-                      answer={faqs[id].answer}
-                      lastModified={`${faqs[id].lastModified} by ${faqs[id].lastModifiedBy}`}
-                      hackathonIDs={faqs[id].hackathonIDs}
-                    />
-                  ))}
-                </tbody>
-              </FAQContent>
-            )}
-          </FAQWrapper>
+    <Container>
+      <Sidebar hackathons={hackathons} currentPath="faq" />
+      <FAQContainer>
+        <Card>
+          <CardHeader>
+            <CardTitle>Frequently Asked Questions</CardTitle>
+            <CardButtonContainer>
+              <Button type={NEW} onClick={() => setAddNew(true)}>
+                New Question
+              </Button>
+            </CardButtonContainer>
+          </CardHeader>
+          <CardContent style={{ backgroundColor: `${COLOR.BACKGROUND}` }}>
+            <FAQWrapper>
+              {isLoading && (
+                <FAQContent>
+                  <tbody>
+                    <TableRow>
+                      <PlaceHolderText>Loading FAQs...</PlaceHolderText>
+                    </TableRow>
+                  </tbody>
+                </FAQContent>
+              )}
+              {Object.keys(faqs).length === 0 && !isLoading && (
+                <FAQContent>
+                  <tbody>
+                    <TableRow>
+                      <PlaceHolderText>No FAQs found.</PlaceHolderText>
+                    </TableRow>
+                  </tbody>
+                </FAQContent>
+              )}
+              {Object.keys(faqs).length > 0 && !isLoading && (
+                <FAQContent>
+                  <thead>
+                    <TableRow>
+                      <TableHeader>Question</TableHeader>
+                      <TableHeader>Category</TableHeader>
+                      <TableHeader>Last Modified</TableHeader>
+                      <TableHeader>Actions</TableHeader>
+                    </TableRow>
+                  </thead>
+                  <tbody>
+                    {Object.keys(faqs).map((id) => (
+                      <QuestionRow
+                        key={id}
+                        faqID={id}
+                        question={faqs[id].question}
+                        category={faqs[id].category}
+                        answer={faqs[id].answer}
+                        lastModified={`${faqs[id].lastModified} by ${faqs[id].lastModifiedBy}`}
+                        hackathonIDs={faqs[id].hackathonIDs}
+                      />
+                    ))}
+                  </tbody>
+                </FAQContent>
+              )}
+            </FAQWrapper>
 
-          {/* Modal for adding a new FAQ */}
-          <Modal
-            isOpen={addNew}
-            handleClose={() => setAddNew(false)}
-            handleSave={() => handleNew(newFaq)}
-            modalAction={NEW}
-          >
-            <ModalContent page={FAQ} columns={2}>
-              <ModalField
-                label="Question"
-                modalAction={NEW}
-                onChange={(event) => {
-                  handleInput(
-                    'question',
-                    event.target.value,
-                    newFaq,
-                    setNewFaq
-                  );
-                }}
-              />
-              <ModalField
-                label="Category"
-                modalAction={NEW}
-                onChange={(category) => {
-                  handleInput('category', category.label, newFaq, setNewFaq);
-                }}
-                value={FAQCategory.GENERAL}
-              />
-            </ModalContent>
-            <ModalContent page={FAQ} columns={1}>
-              <ModalField
-                label="Answer"
-                modalAction={NEW}
-                onChange={(event) => {
-                  handleInput('answer', event.target.value, newFaq, setNewFaq);
-                }}
-              />
-            </ModalContent>
-          </Modal>
+            {/* Modal for adding a new FAQ */}
+            <Modal
+              isOpen={addNew}
+              handleClose={() => setAddNew(false)}
+              handleSave={() => handleNew(newFaq)}
+              modalAction={NEW}
+            >
+              <ModalContent page={FAQ} columns={2}>
+                <ModalField
+                  label="Question"
+                  modalAction={NEW}
+                  onChange={(event) => {
+                    handleInput(
+                      'question',
+                      event.target.value,
+                      newFaq,
+                      setNewFaq
+                    );
+                  }}
+                />
+                <ModalField
+                  label="Category"
+                  modalAction={NEW}
+                  onChange={(category) => {
+                    handleInput('category', category.label, newFaq, setNewFaq);
+                  }}
+                  value={FAQCategory.GENERAL}
+                />
+              </ModalContent>
+              <ModalContent page={FAQ} columns={1}>
+                <ModalField
+                  label="Answer"
+                  modalAction={NEW}
+                  onChange={(event) => {
+                    handleInput(
+                      'answer',
+                      event.target.value,
+                      newFaq,
+                      setNewFaq
+                    );
+                  }}
+                />
+              </ModalContent>
+            </Modal>
 
-          {/* Modal for viewing a FAQ */}
-          <Modal
-            isOpen={Object.keys(faqViewing).length > 0}
-            handleClose={() => setFaqViewing({})}
-            handleSave={() => setFaqViewing({})}
-            modalAction={VIEW}
-            lastModified={`${faqViewing.lastModified} by ${faqViewing.lastModifiedBy}`}
-          >
-            <ModalContent page={FAQ} columns={2}>
-              <ModalField
-                label="Question"
-                value={faqViewing.question}
-                modalAction={VIEW}
-              />
-              <ModalField
-                label="Category"
-                value={faqViewing.category}
-                modalAction={VIEW}
-              />
-            </ModalContent>
-            <ModalContent page={FAQ} columns={1}>
-              <ModalField
-                label="Answer"
-                value={faqViewing.answer}
-                modalAction={VIEW}
-              />
-            </ModalContent>
-          </Modal>
+            {/* Modal for viewing a FAQ */}
+            <Modal
+              isOpen={Object.keys(faqViewing).length > 0}
+              handleClose={() => setFaqViewing({})}
+              handleSave={() => setFaqViewing({})}
+              modalAction={VIEW}
+              lastModified={`${faqViewing.lastModified} by ${faqViewing.lastModifiedBy}`}
+            >
+              <ModalContent page={FAQ} columns={2}>
+                <ModalField
+                  label="Question"
+                  value={faqViewing.question}
+                  modalAction={VIEW}
+                />
+                <ModalField
+                  label="Category"
+                  value={faqViewing.category}
+                  modalAction={VIEW}
+                />
+              </ModalContent>
+              <ModalContent page={FAQ} columns={1}>
+                <ModalField
+                  label="Answer"
+                  value={faqViewing.answer}
+                  modalAction={VIEW}
+                />
+              </ModalContent>
+            </Modal>
 
-          {/* Modal for editing a FAQ */}
-          <Modal
-            isOpen={Object.keys(faqEditing).length > 0}
-            handleClose={() => setFaqEditing({})}
-            handleSave={() => handleUpdate()}
-            modalAction={EDIT}
-            lastModified={`${faqEditing.lastModified} by ${faqEditing.lastModifiedBy}`}
-          >
-            <ModalContent page={FAQ} columns={2}>
-              <ModalField
-                label="Question"
-                value={faqEditing.question}
-                modalAction={EDIT}
-                onChange={(event) => {
-                  handleInput(
-                    'question',
-                    event.target.value,
-                    faqEditing,
-                    setFaqEditing
-                  );
-                }}
-              />
-              <ModalField
-                label="Category"
-                value={faqEditing.category}
-                modalAction={EDIT}
-                onChange={(category) => {
-                  handleInput(
-                    'category',
-                    category.label,
-                    faqEditing,
-                    setFaqEditing
-                  );
-                }}
-              />
-            </ModalContent>
-            <ModalContent page={FAQ} columns={1}>
-              <ModalField
-                label="Answer"
-                value={faqEditing.answer}
-                modalAction={EDIT}
-                onChange={(event) => {
-                  handleInput(
-                    'answer',
-                    event.target.value,
-                    faqEditing,
-                    setFaqEditing
-                  );
-                }}
-              />
-            </ModalContent>
-          </Modal>
+            {/* Modal for editing a FAQ */}
+            <Modal
+              isOpen={Object.keys(faqEditing).length > 0}
+              handleClose={() => setFaqEditing({})}
+              handleSave={() => handleUpdate()}
+              modalAction={EDIT}
+              lastModified={`${faqEditing.lastModified} by ${faqEditing.lastModifiedBy}`}
+            >
+              <ModalContent page={FAQ} columns={2}>
+                <ModalField
+                  label="Question"
+                  value={faqEditing.question}
+                  modalAction={EDIT}
+                  onChange={(event) => {
+                    handleInput(
+                      'question',
+                      event.target.value,
+                      faqEditing,
+                      setFaqEditing
+                    );
+                  }}
+                />
+                <ModalField
+                  label="Category"
+                  value={faqEditing.category}
+                  modalAction={EDIT}
+                  onChange={(category) => {
+                    handleInput(
+                      'category',
+                      category.label,
+                      faqEditing,
+                      setFaqEditing
+                    );
+                  }}
+                />
+              </ModalContent>
+              <ModalContent page={FAQ} columns={1}>
+                <ModalField
+                  label="Answer"
+                  value={faqEditing.answer}
+                  modalAction={EDIT}
+                  onChange={(event) => {
+                    handleInput(
+                      'answer',
+                      event.target.value,
+                      faqEditing,
+                      setFaqEditing
+                    );
+                  }}
+                />
+              </ModalContent>
+            </Modal>
 
-          {/* Confirmation modal for deleting a FAQ */}
-          <Modal
-            isOpen={Object.keys(faqConfirm).length > 0}
-            handleClose={() => setFaqConfirm({})}
-            handleSave={() => handleDelete(faqConfirm.id, true)}
-            modalTitle="Are you sure you would like to delete the following FAQ?"
-            modalAction={DELETE}
-          >
-            <ModalContent page={FAQ} columns={2}>
-              <ModalField
-                label="Question"
-                value={faqConfirm.question}
-                modalAction={VIEW}
-              />
-              <ModalField
-                label="Category"
-                value={faqConfirm.category}
-                modalAction={VIEW}
-              />
-            </ModalContent>
-            <ModalContent page={FAQ} columns={1}>
-              <ModalField
-                label="Answer"
-                value={faqConfirm.answer}
-                modalAction={VIEW}
-              />
-            </ModalContent>
-          </Modal>
-        </CardContent>
-      </Card>
-    </>
+            {/* Confirmation modal for deleting a FAQ */}
+            <Modal
+              isOpen={Object.keys(faqConfirm).length > 0}
+              handleClose={() => setFaqConfirm({})}
+              handleSave={() => handleDelete(faqConfirm.id, true)}
+              modalTitle="Are you sure you would like to delete the following FAQ?"
+              modalAction={DELETE}
+            >
+              <ModalContent page={FAQ} columns={2}>
+                <ModalField
+                  label="Question"
+                  value={faqConfirm.question}
+                  modalAction={VIEW}
+                />
+                <ModalField
+                  label="Category"
+                  value={faqConfirm.category}
+                  modalAction={VIEW}
+                />
+              </ModalContent>
+              <ModalContent page={FAQ} columns={1}>
+                <ModalField
+                  label="Answer"
+                  value={faqConfirm.answer}
+                  modalAction={VIEW}
+                />
+              </ModalContent>
+            </Modal>
+          </CardContent>
+        </Card>
+      </FAQContainer>
+    </Container>
   );
 }
+
+export const getStaticProps = async () => {
+  const hackathons = await getHackathons();
+  return {
+    props: {
+      hackathons,
+    },
+  };
+};

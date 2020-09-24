@@ -155,18 +155,18 @@ const getFaq = async (faqID) => {
   const faqData = (await db.collection(faqCollection).doc(faqID).get()).data();
   return faqData
     ? {
-        id: faqID,
-        question: faqData.question ? faqData.question : 'Empty question field',
-        answer: faqData.answer ? faqData.answer : 'Empty answer field',
-        category: faqData.category
-          ? getFaqCategory(faqData.category)
-          : FAQCategory.MISC,
-        lastModified: faqData.lastModified
-          ? formatDate(faqData.lastModified.seconds)
-          : formatDate(getTimestamp().seconds),
-        lastModifiedBy: faqData.lastModifiedBy || 'Unknown user',
-        hackathonIDs: faqData.hackathonIDs ? faqData.hackathonIDs : [],
-      }
+      id: faqID,
+      question: faqData.question ? faqData.question : 'Empty question field',
+      answer: faqData.answer ? faqData.answer : 'Empty answer field',
+      category: faqData.category
+        ? getFaqCategory(faqData.category)
+        : FAQCategory.MISC,
+      lastModified: faqData.lastModified
+        ? formatDate(faqData.lastModified.seconds)
+        : formatDate(getTimestamp().seconds),
+      lastModifiedBy: faqData.lastModifiedBy || 'Unknown user',
+      hackathonIDs: faqData.hackathonIDs ? faqData.hackathonIDs : [],
+    }
     : null;
 };
 
@@ -174,13 +174,13 @@ const getfaqIDs = async () => {
   return (await db.collection(faqCollection).get()).docs.map((doc) => doc.id);
 };
 
-export const getFaqs = async (hackathon) => {
+export const getFaqs = async () => {
   const faqIDs = await getfaqIDs();
   const faqs = {};
   for (const faqID of faqIDs) {
     const currFaq = await getFaq(faqID);
     if (currFaq) {
-      if (currFaq.hackathonIDs.includes(hackathon)) faqs[faqID] = currFaq;
+      faqs[faqID] = currFaq;
     }
   }
   return faqs;

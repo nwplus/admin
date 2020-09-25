@@ -1,15 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import Sidebar from '../components/sidebar';
+import Page from '../components/page';
 import { getHackathons } from '../utility/firebase';
 import nwPlusLogo from '../assets/nwplus.svg';
 import { useAuth } from '../utility/auth';
-
-const Container = styled.div`
-  display: flex;
-  align-items: stretch;
-  min-height: 100vh;
-`;
 
 const NwPlusImage = styled.img`
   margin-top: 5%;
@@ -29,16 +23,13 @@ const InfoMessage = styled.p`
 export default function Landing({ hackathons }) {
   const { user } = useAuth();
   return (
-    <Container>
-      <Sidebar hackathons={hackathons} />
-      <div style={{ width: '80vw' }}>
-        <div style={{ width: '100%', textAlign: 'center' }}>
-          <NwPlusImage src={nwPlusLogo} />
-          <WelcomeTitle>Welcome to the CMS {user.displayName}!</WelcomeTitle>
-          <InfoMessage>Please choose a hackathon from the sidebar.</InfoMessage>
-        </div>
+    <Page hackathons={hackathons}>
+      <div style={{ width: '100%', textAlign: 'center' }}>
+        <NwPlusImage src={nwPlusLogo} />
+        <WelcomeTitle>Welcome to the CMS {user.displayName}!</WelcomeTitle>
+        <InfoMessage>Please choose a hackathon from the sidebar.</InfoMessage>
       </div>
-    </Container>
+    </Page>
   );
 }
 

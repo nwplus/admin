@@ -152,7 +152,7 @@ export default function FeatureFlags({ id, hackathons }) {
 
   if (!flags) {
     return (
-      <Page currentPath={id} hackathons={hackathons}>
+      <Page currentPath={id} hackathons={hackathons} includeNavbar>
         <Card>
           <CardHeader>
             <CardTitle>No Features Flags for {id}</CardTitle>

@@ -4,7 +4,7 @@ import { getHackathonPaths, getHackathons } from '../../utility/firebase';
 import SpocosPage from '../../components/spocos';
 
 export default ({ id, hackathons }) => (
-  <Page currentPath={id} hackathons={hackathons}>
+  <Page currentPath={id} hackathons={hackathons} includeNavbar>
     <SpocosPage hackathonId={id} />
   </Page>
 );

@@ -5,7 +5,7 @@ import { LIVESITE_NAVBAR } from '../../constants';
 
 export default ({ hackathons }) => (
   <Page
-    currentPath="schedule"
+    currentPath="livesite"
     hackathons={hackathons}
     navbarItems={LIVESITE_NAVBAR}
   />

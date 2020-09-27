@@ -7,7 +7,7 @@ import Card, {
   CardContent,
   CardButtonContainer,
 } from '../../components/card';
-import { COLOR, EDIT } from '../../constants';
+import { COLOR, EDIT, HACKATHON_NAVBAR } from '../../constants';
 import Button from '../../components/button';
 import TextBox from '../../components/textbox';
 import {
@@ -160,7 +160,11 @@ export default ({ id, hackathons }) => {
   };
 
   return (
-    <Page currentPath={id} hackathons={hackathons} includeNavbar>
+    <Page
+      currentPath={id}
+      hackathons={hackathons}
+      navbarItems={HACKATHON_NAVBAR}
+    >
       {/* map over every text section in a hackathon's WebsiteData and adds the section name to isEditingObj state */}
       {websiteData ? (
         Object.keys(websiteData).map((type) => {

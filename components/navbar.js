@@ -3,12 +3,12 @@ import styled from 'styled-components';
 import Link from 'next/link';
 import { COLOR } from '../constants';
 
-const HackathonNavBar = styled.div`
+const Container = styled.div`
   display: flex;
   padding-left: 60px;
 `;
 
-const NavItem = styled.a`
+const NavLink = styled.a`
   display: block;
   font-size: 24px;
   font-weight: 600;
@@ -25,7 +25,7 @@ const NavItem = styled.a`
   }
 `;
 
-export default ({ setTimeOut, setLoading, currentPath }) => {
+export default ({ items, setTimeOut, setLoading, currentPath }) => {
   const currentPage = window.location.pathname.split('/')[2];
   const onClick = ({ path }) => {
     if (!window.location.href.includes(path)) {
@@ -38,43 +38,19 @@ export default ({ setTimeOut, setLoading, currentPath }) => {
   };
 
   return (
-    <HackathonNavBar>
-      <Link href="/[id]/intro" as={`/${currentPath}/intro`} passHref>
-        <NavItem
-          onClick={() => onClick('intro')}
-          selected={currentPage === 'intro'}
+    <Container>
+      {Object.entries(items).map(([key, value]) => (
+        <Link
+          key={key}
+          href={`/[id]/${key}`}
+          as={`/${currentPath}/${key}`}
+          passHref
         >
-          Intro
-        </NavItem>
-      </Link>
-      <Link href="/[id]/faq" as={`/${currentPath}/faq`} passHref>
-        <NavItem
-          onClick={() => onClick('faq')}
-          selected={currentPage === 'faq'}
-        >
-          FAQ
-        </NavItem>
-      </Link>
-      <Link href="/[id]/spocos" as={`/${currentPath}/spocos`} passHref>
-        <NavItem
-          onClick={() => onClick('spocos')}
-          selected={currentPage === 'spocos'}
-        >
-          Sponsors
-        </NavItem>
-      </Link>
-      <Link
-        href="/[id]/FeatureFlags"
-        as={`/${currentPath}/FeatureFlags`}
-        passHref
-      >
-        <NavItem
-          onClick={() => onClick('FeatureFlags')}
-          selected={currentPage === 'FeatureFlags'}
-        >
-          FeatureFlags
-        </NavItem>
-      </Link>
-    </HackathonNavBar>
+          <NavLink onClick={() => onClick(key)} selected={currentPage === key}>
+            {value}
+          </NavLink>
+        </Link>
+      ))}
+    </Container>
   );
 };

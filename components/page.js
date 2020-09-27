@@ -31,7 +31,7 @@ const Content = styled.div`
   padding: 60px;
 `;
 
-export default ({ hackathons, currentPath, children, includeNavbar }) => {
+export default ({ hackathons, currentPath, children, navbarItems }) => {
   const [loading, setLoading] = useState(false);
   const [timeOut, setTimeOut] = useState();
 
@@ -44,13 +44,14 @@ export default ({ hackathons, currentPath, children, includeNavbar }) => {
     <Container>
       <Sidebar currentPath={currentPath} hackathons={hackathons} />
       <div style={{ width: '80vw' }}>
-        {includeNavbar && (
+        {navbarItems && (
           <>
             <HeaderContainer>
               <Header>{currentPath}</Header>
               {loading && <LoadingImage src={LoadingGif} />}
             </HeaderContainer>
             <Navbar
+              items={navbarItems}
               setLoading={setLoading}
               currentPath={currentPath}
               setTimeOut={setTimeOut}

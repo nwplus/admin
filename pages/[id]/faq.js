@@ -2,9 +2,10 @@ import React from 'react';
 import Page from '../../components/page';
 import { getHackathonPaths, getHackathons } from '../../utility/firebase';
 import Faq from '../faq';
+import { HACKATHON_NAVBAR } from '../../constants';
 
 export default ({ id, hackathons }) => (
-  <Page currentPath={id} hackathons={hackathons}>
+  <Page currentPath={id} hackathons={hackathons} navbarItems={HACKATHON_NAVBAR}>
     <Faq currHackathon={id} hackathons={hackathons} />
   </Page>
 );

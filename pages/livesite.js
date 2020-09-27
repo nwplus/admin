@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Page from '../components/page';
 import { getHackathons } from '../utility/firebase';
+import { LIVESITE_NAVBAR } from '../constants';
 
 const WelcomeTitle = styled.h1`
   font-size: 48px;
@@ -13,7 +14,11 @@ const InfoMessage = styled.p`
 
 export default function Landing({ hackathons }) {
   return (
-    <Page hackathons={hackathons} currentPath="livesite">
+    <Page
+      hackathons={hackathons}
+      currentPath="livesite"
+      navbarItems={LIVESITE_NAVBAR}
+    >
       <div style={{ width: '100%', textAlign: 'center' }}>
         <WelcomeTitle>Welcome to LIVESITE!</WelcomeTitle>
         <img

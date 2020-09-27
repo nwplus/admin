@@ -5,7 +5,6 @@ import { COLOR } from '../constants';
 
 const Container = styled.div`
   display: flex;
-  padding-left: 60px;
 `;
 
 const NavLink = styled.a`

@@ -15,7 +15,7 @@ export default ({ hackathons }) => (
       height="362"
       alt="panik"
     />
-    <p>This area under construction.</p>
+    <p>Announcements - This area under construction.</p>
   </Page>
 );
 

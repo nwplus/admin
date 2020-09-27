@@ -16,7 +16,7 @@ export default function Landing({ hackathons }) {
   return (
     <Page
       hackathons={hackathons}
-      currentPath="livesite"
+      currentPath="Livesite"
       navbarItems={LIVESITE_NAVBAR}
     >
       <div style={{ width: '100%', textAlign: 'center' }}>

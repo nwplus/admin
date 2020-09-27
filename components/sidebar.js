@@ -105,8 +105,8 @@ export default ({ hackathons, currentPath }) => {
     clearTimeout(ifTimeOut);
   }, [window.location.pathname]);
 
-  const generateLinkTemplate = (id) => {
-    return `/${id}/intro`;
+  const generateLinkTemplate = () => {
+    return `/[id]/intro`;
   };
 
   const generateLink = (id) => {

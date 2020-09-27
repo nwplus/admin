@@ -119,17 +119,17 @@ export default ({ hackathons, currentPath }) => {
         <Header>nwPlus CMS</Header>
         {loading && <LoadingImage src={LoadingGif} />}
       </HeaderContainer>
-      <NextLink href="/livesite" as="/livesite" passHref>
+      <NextLink href="/Livesite" as="/Livesite" passHref>
         <Link>
           <ItemContainer>
-            <Live color={currentPath === 'livesite' && COLOR.WHITE} />
-            <Label selected={currentPath === 'livesite'}>Livesite</Label>
+            <Live color={currentPath === 'Livesite' && COLOR.WHITE} />
+            <Label selected={currentPath === 'Livesite'}>Livesite</Label>
           </ItemContainer>
         </Link>
       </NextLink>
       <ItemContainer>
-        <Website color={currentPath !== 'livesite' && COLOR.WHITE} />
-        <Label selected={currentPath !== 'livesite'}>Websites</Label>
+        <Website color={currentPath !== 'Livesite' && COLOR.WHITE} />
+        <Label selected={currentPath !== 'Livesite'}>Websites</Label>
       </ItemContainer>
       {hackathons.map((id) => {
         const href = generateLinkTemplate(id);

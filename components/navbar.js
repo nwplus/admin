@@ -24,6 +24,10 @@ const NavLink = styled.a`
   }
 `;
 
+const getHref = (currentPath, key) => {
+  return currentPath.includes('Livesite') ? `/Livesite/${key}` : `/[id]/${key}`;
+};
+
 export default ({ items, setTimeOut, setLoading, currentPath }) => {
   const currentPage = window.location.pathname.split('/')[2];
   const onClick = ({ path }) => {
@@ -41,7 +45,7 @@ export default ({ items, setTimeOut, setLoading, currentPath }) => {
       {Object.entries(items).map(([key, value]) => (
         <Link
           key={key}
-          href={`/[id]/${key}`}
+          href={getHref(currentPath, key)}
           as={`/${currentPath}/${key}`}
           passHref
         >

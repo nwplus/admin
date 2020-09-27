@@ -113,8 +113,6 @@ export default ({ hackathons, currentPath }) => {
     return `/${id}/intro`;
   };
 
-  console.log(currentPath)
-
   return (
     <SidebarContainer>
       <HeaderContainer>

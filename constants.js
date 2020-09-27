@@ -33,7 +33,7 @@ export const HACKATHON_NAVBAR = {
   FeatureFlags: 'Feature Flags',
 };
 export const LIVESITE_NAVBAR = {
-  announcements: 'Anouncements',
+  announcements: 'Announcements',
   quicklinks: 'Quicklinks',
   schedule: 'Schedule',
 };

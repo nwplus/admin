@@ -113,13 +113,19 @@ export default ({ hackathons, currentPath }) => {
     return `/${id}/intro`;
   };
 
+  console.log(currentPath)
+
   return (
     <SidebarContainer>
       <HeaderContainer>
         <Header>nwPlus CMS</Header>
         {loading && <LoadingImage src={LoadingGif} />}
       </HeaderContainer>
-      <NextLink href="/Livesite" as="/Livesite" passHref>
+      <NextLink
+        href="/Livesite/announcements"
+        as="/Livesite/announcements"
+        passHref
+      >
         <Link>
           <ItemContainer>
             <Live color={currentPath === 'Livesite' && COLOR.WHITE} />

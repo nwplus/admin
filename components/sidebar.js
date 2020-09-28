@@ -96,6 +96,20 @@ const LoadingImage = styled.img`
   padding-left: 10px;
 `;
 
+const getTrailingPath = (currentPath) => {
+  const paths = window.location.href.split('/');
+  const pathIndex = paths.findIndex((val) => val === currentPath);
+  const trailingPathArray = paths.slice(pathIndex + 1);
+  if (
+    pathIndex === -1 ||
+    trailingPathArray.length === 0 ||
+    paths.includes('Livesite')
+  ) {
+    return 'intro';
+  }
+  return trailingPathArray.join('/');
+};
+
 export default ({ hackathons, currentPath }) => {
   const [loading, setLoading] = useState(false);
   const [ifTimeOut, setIfTimeOut] = useState();
@@ -106,11 +120,11 @@ export default ({ hackathons, currentPath }) => {
   }, [window.location.pathname]);
 
   const generateLinkTemplate = () => {
-    return `/[id]/intro`;
+    return `/[id]/${getTrailingPath(currentPath)}`;
   };
 
   const generateLink = (id) => {
-    return `/${id}/intro`;
+    return `/${id}/${getTrailingPath(currentPath)}`;
   };
 
   return (

@@ -239,7 +239,7 @@ export default function Faq({ hackathons }) {
   }
 
   return (
-    <Page hackathons={hackathons} currentPath="faq" navbarItems={null}>
+    <Page hackathons={hackathons} currentPath="faq">
       <Card>
         <CardHeader>
           <CardTitle>Frequently Asked Questions</CardTitle>

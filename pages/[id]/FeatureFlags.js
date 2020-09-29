@@ -8,7 +8,7 @@ import Card, {
   CardContent,
 } from '../../components/card';
 import Button from '../../components/button';
-import { COLOR, EDIT } from '../../constants';
+import { COLOR, EDIT, HACKATHON_NAVBAR } from '../../constants';
 import {
   getTimestamp,
   subscribeToFlags,
@@ -152,10 +152,14 @@ export default function FeatureFlags({ id, hackathons }) {
 
   if (!flags) {
     return (
-      <Page currentPath={id} hackathons={hackathons} includeNavbar>
+      <Page
+        currentPath={id}
+        hackathons={hackathons}
+        navbarItems={HACKATHON_NAVBAR}
+      >
         <Card>
           <CardHeader>
-            <CardTitle>No Features Flags for {id}</CardTitle>
+            <CardTitle>No Feature Flags for {id}</CardTitle>
           </CardHeader>
         </Card>
       </Page>
@@ -163,7 +167,11 @@ export default function FeatureFlags({ id, hackathons }) {
   }
 
   return (
-    <Page currentPath={id} hackathons={hackathons}>
+    <Page
+      currentPath={id}
+      hackathons={hackathons}
+      navbarItems={HACKATHON_NAVBAR}
+    >
       <Card>
         <CardHeader>
           <CardTitle>Feature Flags for {id}</CardTitle>

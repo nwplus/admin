@@ -26,3 +26,15 @@ export const FAQCategory = Object.freeze({
   MISC: 'Miscellaneous',
 });
 export const SPONSORSHIP = 'SPONSORSHIP';
+export const HACKATHON_NAVBAR = {
+  intro: 'Intro',
+  faq: 'FAQ',
+  spocos: 'Sponsors',
+  FeatureFlags: 'Feature Flags',
+};
+export const LIVESITE_NAVBAR = {
+  announcements: 'Announcements',
+  quicklinks: 'Quicklinks',
+  schedule: 'Schedule',
+  settings: 'Settings',
+};

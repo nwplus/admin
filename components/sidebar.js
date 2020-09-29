@@ -5,6 +5,7 @@ import { COLOR } from '../constants';
 import Website from './icons/website';
 import Power from './icons/power';
 import Live from './icons/live';
+import FAQIcon from './icons/faq';
 import { logout } from '../utility/firebase';
 import LoadingGif from '../assets/nwplus.gif';
 
@@ -58,7 +59,6 @@ const Link = styled.a`
   font-family: 'HK Grotesk';
   font-size: 1em;
   padding: 0;
-  margin-top: 30px;
   display: block;
   background: none;
   border: none;
@@ -145,9 +145,27 @@ export default ({ hackathons, currentPath }) => {
           </ItemContainer>
         </Link>
       </NextLink>
+      <NextLink href="/faq" as="/faq" passHref>
+        <Link
+          onClick={() => {
+            if (currentPath !== 'faq') {
+              setIfTimeOut(
+                setTimeout(() => {
+                  setLoading(true);
+                }, 750)
+              );
+            }
+          }}
+        >
+          <ItemContainer>
+            <FAQIcon color={currentPath === 'faq' && COLOR.WHITE} />
+            <Label selected={currentPath === 'faq'}>FAQs</Label>
+          </ItemContainer>
+        </Link>
+      </NextLink>
       <ItemContainer>
-        <Website color={currentPath !== 'Livesite' && COLOR.WHITE} />
-        <Label selected={currentPath !== 'Livesite'}>Websites</Label>
+        <Website color={hackathons.includes(currentPath) && COLOR.WHITE} />
+        <Label selected={hackathons.includes(currentPath)}>Websites</Label>
       </ItemContainer>
       {hackathons.map((id) => {
         const href = generateLinkTemplate(id);
@@ -171,6 +189,7 @@ export default ({ hackathons, currentPath }) => {
           </NextLink>
         );
       })}
+
       <Link
         href="#!"
         onClick={() => {

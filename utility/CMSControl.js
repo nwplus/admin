@@ -1,21 +1,20 @@
 import { useEffect, useState } from 'react';
-import { SubscribeToCMSStatus } from './firebase';
+import { subscribeToCMSStatus } from './firebase';
 import CMSUnderConstructionPage from '../components/CMSUnderConstructionPage';
 import LoadingPage from '../components/LoadingPage';
 
 export default function CMSControl({ children }) {
-  const [CMSOff, setCMSOff] = useState(null);
-  const [CMSOffDate, setCMSOffDate] = useState();
+  const [CMSOffDate, setCMSOffDate] = useState(null);
   useEffect(() => {
-    const unsubscribe = SubscribeToCMSStatus(setCMSOff, setCMSOffDate);
+    const unsubscribe = subscribeToCMSStatus(setCMSOffDate);
     return unsubscribe;
   }, []);
 
-  return CMSOff === null ? (
+  return CMSOffDate === null ? (
     <LoadingPage />
-  ) : CMSOff ? (
+  ) : CMSOffDate ? (
     <CMSUnderConstructionPage date={CMSOffDate} />
   ) : (
-    <>{children} </>
-  );
+        <>{children} </>
+      );
 }

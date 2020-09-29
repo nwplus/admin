@@ -301,13 +301,12 @@ export const updateFlags = async (id, flags) => {
   return db.collection(Hackathons).doc(id).update(doc);
 };
 
-export const subscribeToCMSStatus = (statusCallback, dateCallback) => {
+export const subscribeToCMSStatus = (dateCallback) => {
   return db
     .collection(InternalWebsitesCollection)
     .doc(CMSCollection)
     .onSnapshot((snap) => {
-      const { CMSOff, OffUntilDate } = snap.data();
-      statuscb(CMSOff);
-      datecb(OffUntilDate);
+      const { offUntilDate } = snap.data();
+      dateCallback(offUntilDate);
     });
 };

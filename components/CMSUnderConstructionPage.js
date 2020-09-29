@@ -46,7 +46,7 @@ export default function CMSUnderConstructionPage({ date }) {
         <BoldedTextLine>nwPlus CMS</BoldedTextLine>
         <TextLine> The CMS is under maintainance. </TextLine>
         <TextLine>
-          {date
+          {typeof date !== 'boolean'
             ? `It will be back up at ${formatDate(date.seconds)}`
             : 'It will be back up soon!'}
         </TextLine>

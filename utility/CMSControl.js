@@ -15,6 +15,6 @@ export default function CMSControl({ children }) {
   ) : CMSOffDate ? (
     <CMSUnderConstructionPage date={CMSOffDate} />
   ) : (
-        <>{children} </>
-      );
+    <>{children} </>
+  );
 }

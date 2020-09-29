@@ -7,6 +7,7 @@ import {
   addFaq,
   updateFaq,
   deleteFaq,
+  getHackathons,
 } from '../utility/firebase';
 import Card, {
   CardHeader,
@@ -18,6 +19,7 @@ import Button from '../components/button';
 import Modal, { ModalContent, ModalField } from '../components/modal';
 import { COLOR, EDIT, VIEW, NEW, DELETE, FAQ, FAQCategory } from '../constants';
 import { useAuth } from '../utility/auth';
+import Page from '../components/page';
 
 const FAQWrapper = styled.div`
   max-height: 512px;
@@ -99,7 +101,7 @@ const PlaceHolderText = styled.td`
   margin-bottom: 32px;
 `;
 
-export default function Faq({ currHackathon }) {
+export default function Faq({ hackathons }) {
   // remove'LHD2021' when integrated with sidebar to receive hackathon that is passed down
   const [faqs, setFaqs] = useState([]);
   const [newFaq, setNewFaq] = useState({});
@@ -112,7 +114,7 @@ export default function Faq({ currHackathon }) {
   const { email: user } = useAuth().user;
   useEffect(() => {
     setIsLoading(true);
-    getFaqs(currHackathon).then((res) => {
+    getFaqs().then((res) => {
       if (Object.keys(res).length > 0) {
         setFaqs(res);
       } else {
@@ -127,7 +129,8 @@ export default function Faq({ currHackathon }) {
   }, [alertMsg]);
 
   const handleNew = async () => {
-    newFaq.hackathonIDs = [currHackathon];
+    // TODO jenny please add proper hackathonID handling
+    newFaq.hackathonIDs = [];
     newFaq.category = newFaq.category ? newFaq.category : FAQCategory.GENERAL;
     newFaq.lastModifiedBy = user;
     const faqID = await addFaq(newFaq);
@@ -236,7 +239,7 @@ export default function Faq({ currHackathon }) {
   }
 
   return (
-    <>
+    <Page hackathons={hackathons} currentPath="faq">
       <Card>
         <CardHeader>
           <CardTitle>Frequently Asked Questions</CardTitle>
@@ -252,9 +255,7 @@ export default function Faq({ currHackathon }) {
               <FAQContent>
                 <tbody>
                   <TableRow>
-                    <PlaceHolderText>
-                      Loading FAQs for {currHackathon}...
-                    </PlaceHolderText>
+                    <PlaceHolderText>Loading FAQs...</PlaceHolderText>
                   </TableRow>
                 </tbody>
               </FAQContent>
@@ -263,9 +264,7 @@ export default function Faq({ currHackathon }) {
               <FAQContent>
                 <tbody>
                   <TableRow>
-                    <PlaceHolderText>
-                      No FAQs for {currHackathon}
-                    </PlaceHolderText>
+                    <PlaceHolderText>No FAQs found.</PlaceHolderText>
                   </TableRow>
                 </tbody>
               </FAQContent>
@@ -449,6 +448,15 @@ export default function Faq({ currHackathon }) {
           </Modal>
         </CardContent>
       </Card>
-    </>
+    </Page>
   );
 }
+
+export const getStaticProps = async () => {
+  const hackathons = await getHackathons();
+  return {
+    props: {
+      hackathons,
+    },
+  };
+};

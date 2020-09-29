@@ -65,19 +65,19 @@ const Auth = ({ children }) => {
   return CMSOff ? (
     <CMSUnderConstructionPage date={CMSOffDate} />
   ) : (
-    <AuthContext.Provider value={{ isAuthenticated: !!user, user, setUser }}>
-      {isLoading ? (
-        <LoadingScreenContainer>
-          <div>
-            <LoadingImage src={nwPlusReversed} />
-            <LoadingDiv>Authenticating...</LoadingDiv>
-          </div>
-        </LoadingScreenContainer>
-      ) : (
-        children
-      )}
-    </AuthContext.Provider>
-  );
+      <AuthContext.Provider value={{ isAuthenticated: !!user, user, setUser }}>
+        {isLoading ? (
+          <LoadingScreenContainer>
+            <div>
+              <LoadingImage src={nwPlusReversed} />
+              <LoadingDiv>Authenticating...</LoadingDiv>
+            </div>
+          </LoadingScreenContainer>
+        ) : (
+            children
+          )}
+      </AuthContext.Provider>
+    );
 };
 
 export const useAuth = () => {

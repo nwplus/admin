@@ -176,13 +176,13 @@ const getfaqIDs = async () => {
   return (await db.collection(faqCollection).get()).docs.map((doc) => doc.id);
 };
 
-export const getFaqs = async (hackathon) => {
+export const getFaqs = async () => {
   const faqIDs = await getfaqIDs();
   const faqs = {};
   for (const faqID of faqIDs) {
     const currFaq = await getFaq(faqID);
     if (currFaq) {
-      if (currFaq.hackathonIDs.includes(hackathon)) faqs[faqID] = currFaq;
+      faqs[faqID] = currFaq;
     }
   }
   return faqs;

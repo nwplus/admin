@@ -301,7 +301,7 @@ export const updateFlags = async (id, flags) => {
   return db.collection(Hackathons).doc(id).update(doc);
 };
 
-export const SubscribeToCMSStatus = (statuscb, datecb) => {
+export const subscribeToCMSStatus = (statusCallback, dateCallback) => {
   return db
     .collection(InternalWebsitesCollection)
     .doc(CMSCollection)

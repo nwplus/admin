@@ -41,6 +41,8 @@ export const storage = firebase.storage();
 const webCollection = 'Website_content';
 const faqCollection = FAQ;
 const Hackathons = 'Hackathons';
+const InternalWebsitesCollection = 'InternalWebsites';
+const CMSCollection = 'CMS';
 
 export const formatDate = (date) => {
   if (!date) {
@@ -297,4 +299,14 @@ export const updateFlags = async (id, flags) => {
     featureFlags: flags,
   };
   return db.collection(Hackathons).doc(id).update(doc);
+};
+
+export const subscribeToCMSStatus = (dateCallback) => {
+  return db
+    .collection(InternalWebsitesCollection)
+    .doc(CMSCollection)
+    .onSnapshot((snap) => {
+      const { offUntilDate } = snap.data();
+      dateCallback(offUntilDate);
+    });
 };

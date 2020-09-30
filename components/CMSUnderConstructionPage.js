@@ -44,7 +44,7 @@ export default function CMSUnderConstructionPage({ date }) {
       <MainContent>
         <NwplusImage src={nwplusLogo} />
         <BoldedTextLine>nwPlus CMS</BoldedTextLine>
-        <TextLine> The CMS is under maintainance. </TextLine>
+        <TextLine> The CMS is under maintenance. </TextLine>
         <TextLine>
           {typeof date !== 'boolean'
             ? `It will be back up at ${formatDate(date.seconds)}`

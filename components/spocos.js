@@ -16,6 +16,8 @@ import {
   deleteSponsor,
   updateSponsor,
   uploadSponsorImageToStorage,
+  getTimestamp, 
+  formatDate
 } from '../utility/firebase';
 import { useAuth } from '../utility/auth';
 import Modal, {
@@ -149,7 +151,13 @@ export default function SponsorshipPage({ hackathonId }) {
     });
   };
 
+
   const handleChange = (property, value) => {
+    var de = getTimestamp()
+    de = formatDate(de)
+    console.log(de);
+
+    /*
     const d = new Date();
     let hours = d.getHours();
     let minutes = d.getMinutes();
@@ -161,6 +169,7 @@ export default function SponsorshipPage({ hackathonId }) {
     const de = `${d.getFullYear()}-${
       d.getMonth() + 1
     }-${d.getDate()} ${hours}:${minutes} ${ampm}`;
+    */
 
     setnewobj({
       ...newobj,

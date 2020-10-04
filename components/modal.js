@@ -78,12 +78,16 @@ export const ModalField = ({
     <>
       <div>
         <Label>{label}</Label>
-        {label === 'Answer' && modalAction !== VIEW && (
-          <TextBox width="95%" defaultValue={value} onChange={onChange} />
-        )}
-        {label !== 'Answer' && label !== 'Category' && modalAction !== VIEW && (
-          <InputField type={type} defaultValue={value} onChange={onChange} />
-        )}
+        {(label === 'Answer' || label === 'Description') &&
+          modalAction !== VIEW && (
+            <TextBox width="95%" defaultValue={value} onChange={onChange} />
+          )}
+        {label !== 'Answer' &&
+          label !== 'Description' &&
+          label !== 'Category' &&
+          modalAction !== VIEW && (
+            <InputField type={type} defaultValue={value} onChange={onChange} />
+          )}
         {label === 'Category' && modalAction !== VIEW && (
           <Dropdown
             options={[

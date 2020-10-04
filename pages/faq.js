@@ -102,7 +102,6 @@ const PlaceHolderText = styled.td`
 `;
 
 export default function Faq({ hackathons }) {
-  // remove'LHD2021' when integrated with sidebar to receive hackathon that is passed down
   const [faqs, setFaqs] = useState([]);
   const [newFaq, setNewFaq] = useState({});
   const [faqViewing, setFaqViewing] = useState({});
@@ -418,12 +417,12 @@ export default function Faq({ hackathons }) {
             </ModalContent>
           </Modal>
 
-          {/* Confirmation modal for deleting a FAQ */}
+          {/* Confirmation modal before deleting a FAQ */}
           <Modal
             isOpen={Object.keys(faqConfirm).length > 0}
             handleClose={() => setFaqConfirm({})}
             handleSave={() => handleDelete(faqConfirm.id, true)}
-            modalTitle="Are you sure you would like to delete the following FAQ?"
+            modalTitle="Are you sure you want to delete this FAQ?"
             modalAction={DELETE}
           >
             <ModalContent page={FAQ} columns={2}>

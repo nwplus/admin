@@ -140,6 +140,82 @@ export const getHackathonSnapShot = (hackathonId, callback) => {
     .onSnapshot((doc) => callback(doc));
 };
 
+export const getEvent = (eventID, data) => {
+  return data
+    ? {
+        eventID: eventID,
+        title: data.title || 'Empty event field',
+        text: data.text || 'Empty text description for event',
+        date: data.date
+          ? formatDate(data.date.seconds)
+          : formatDate(getTimestamp().seconds),
+        order: data.order >= 0 ? data.order : -1,
+        lastModified: data.lastModified
+          ? formatDate(data.lastModified.seconds)
+          : formatDate(getTimestamp().seconds),
+        lastModifiedBy: data.lastModifiedBy || 'Unknown user',
+      }
+    : null;
+};
+
+export const getEvents = async (hackathon) => {
+  const eventIDs = await db
+    .collection('Hackathons')
+    .doc(hackathon)
+    .collection('Events')
+    .get();
+  const events = {};
+  eventIDs.docs.forEach((doc) => {
+    const currEvent = getEvent(doc.id, doc.data());
+    if (currEvent) events[doc.id] = currEvent;
+  });
+  return events;
+};
+
+export const addEvent = async (hackathon, event) => {
+  const ref = db
+    .collection('Hackathons')
+    .doc(hackathon)
+    .collection('Events')
+    .doc();
+  const currDate = getTimestamp();
+  await ref.set({
+    title: event.title,
+    text: event.text,
+    date: event.date,
+    order: event.order,
+    lastModified: currDate,
+    lastModifiedBy: event.lastModifiedBy,
+  });
+  return ref.id;
+};
+
+export const updateEvent = async (hackathon, eventID, event) => {
+  const ref = db
+    .collection('Hackathons')
+    .doc(hackathon)
+    .collection('Events')
+    .doc(eventID);
+  const currDate = getTimestamp();
+  await ref.update({
+    title: event.title || 'Empty event field',
+    text: event.text || 'Empty text description for event',
+    date: event.date || currDate,
+    order: event.order || -1,
+    lastModified: currDate,
+    lastModifiedBy: event.lastModifiedBy,
+  });
+};
+
+export const deleteEvent = async (hackathon, eventID) => {
+  await db
+    .collection('Hackathons')
+    .doc(hackathon)
+    .collection('Events')
+    .doc(eventID)
+    .delete();
+};
+
 const getFaqCategory = (faqCategory) => {
   switch (faqCategory) {
     case FAQCategory.LOGS:

@@ -16,14 +16,14 @@ import '../app.css';
 
 function MyApp({ Component, pageProps }) {
   return (
-    <CMSControl>
+    // <CMSControl>
       <Auth>
         <Head>
           <title>nwPlus CMS</title>
         </Head>
         <Component {...pageProps} />
       </Auth>
-    </CMSControl>
+    // </CMSControl>
   );
 }
 

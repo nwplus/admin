@@ -4,6 +4,8 @@ import NextLink from 'next/link';
 import { COLOR } from '../constants';
 import Website from './icons/website';
 import Power from './icons/power';
+import Live from './icons/live';
+import FAQIcon from './icons/faq';
 import { logout } from '../utility/firebase';
 import LoadingGif from '../assets/nwplus.gif';
 
@@ -29,20 +31,15 @@ const ItemContainer = styled.div`
   align-items: center;
 `;
 
-const SelectedItem = styled.p`
+const Label = styled.p`
   padding-left: 10px;
   display: inline-block;
-  font-weight: 700;
-  color: ${COLOR.WHITE};
+  transition: color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  ${(p) => p.selected && 'font-weight: 700;'}
+  color: ${(p) => (p.selected ? COLOR.WHITE : COLOR.DARK_COPY)};
 `;
 
-const Item = styled.p`
-  padding-left: 10px;
-  display: inline-block;
-  color: ${COLOR.DARK_COPY};
-`;
-
-const Link = styled.a`
+const IndentedLink = styled.a`
   transition: color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
   display: block;
   color: ${(p) => (p.selected ? COLOR.WHITE : COLOR.DARK_COPY)};
@@ -58,11 +55,10 @@ const Link = styled.a`
   ${(p) => p.selected && `background-color: ${COLOR.PRIMARY_DARK}`}
 `;
 
-const Logout = styled.button`
+const Link = styled.a`
   font-family: 'HK Grotesk';
   font-size: 1em;
   padding: 0;
-  margin-top: 30px;
   display: block;
   background: none;
   border: none;
@@ -100,33 +96,35 @@ const LoadingImage = styled.img`
   padding-left: 10px;
 `;
 
+const getTrailingPath = (currentPath) => {
+  const paths = window.location.href.split('/');
+  const pathIndex = paths.findIndex((val) => val === currentPath);
+  const trailingPathArray = paths.slice(pathIndex + 1);
+  if (
+    pathIndex === -1 ||
+    trailingPathArray.length === 0 ||
+    paths.includes('Livesite')
+  ) {
+    return 'intro';
+  }
+  return trailingPathArray.join('/');
+};
+
 export default ({ hackathons, currentPath }) => {
   const [loading, setLoading] = useState(false);
   const [ifTimeOut, setIfTimeOut] = useState();
-  const [trailingPath, setTrailingPath] = useState();
-
-  const getTrailingPath = () => {
-    const paths = window.location.href.split('/');
-    const pathIndex = paths.findIndex((val) => val === currentPath);
-    const trailingPathArray = paths.slice(pathIndex + 1);
-    if (pathIndex === -1 || trailingPathArray.length === 0) {
-      return 'intro';
-    }
-    return trailingPathArray.join('/');
-  };
 
   useEffect(() => {
     setLoading(false);
     clearTimeout(ifTimeOut);
-    setTrailingPath(getTrailingPath);
   }, [window.location.pathname]);
 
   const generateLinkTemplate = () => {
-    return `/[id]/${trailingPath}`;
+    return `/[id]/${getTrailingPath(currentPath)}`;
   };
 
   const generateLink = (id) => {
-    return `/${id}/${trailingPath}`;
+    return `/${id}/${getTrailingPath(currentPath)}`;
   };
 
   return (
@@ -135,17 +133,46 @@ export default ({ hackathons, currentPath }) => {
         <Header>nwPlus CMS</Header>
         {loading && <LoadingImage src={LoadingGif} />}
       </HeaderContainer>
+      <NextLink
+        href="/Livesite/announcements"
+        as="/Livesite/announcements"
+        passHref
+      >
+        <Link>
+          <ItemContainer>
+            <Live color={currentPath === 'Livesite' && COLOR.WHITE} />
+            <Label selected={currentPath === 'Livesite'}>Livesite</Label>
+          </ItemContainer>
+        </Link>
+      </NextLink>
+      <NextLink href="/faq" as="/faq" passHref>
+        <Link
+          onClick={() => {
+            if (currentPath !== 'faq') {
+              setIfTimeOut(
+                setTimeout(() => {
+                  setLoading(true);
+                }, 750)
+              );
+            }
+          }}
+        >
+          <ItemContainer>
+            <FAQIcon color={currentPath === 'faq' && COLOR.WHITE} />
+            <Label selected={currentPath === 'faq'}>FAQs</Label>
+          </ItemContainer>
+        </Link>
+      </NextLink>
       <ItemContainer>
-        <Website />
-        <SelectedItem>Websites</SelectedItem>
+        <Website color={hackathons.includes(currentPath) && COLOR.WHITE} />
+        <Label selected={hackathons.includes(currentPath)}>Websites</Label>
       </ItemContainer>
       {hackathons.map((id) => {
         const href = generateLinkTemplate(id);
         const link = generateLink(id);
         return (
-          <NextLink key={id} href={href} as={link}>
-            <Link
-              href="#!"
+          <NextLink key={id} href={href} as={link} passHref>
+            <IndentedLink
               onClick={() => {
                 if (currentPath !== id) {
                   setIfTimeOut(
@@ -158,12 +185,13 @@ export default ({ hackathons, currentPath }) => {
               selected={currentPath === id}
             >
               {id}
-            </Link>
+            </IndentedLink>
           </NextLink>
         );
       })}
-      <Logout
-        // TODO: logout
+
+      <Link
+        href="#!"
         onClick={() => {
           setIfTimeOut(
             setTimeout(() => {
@@ -175,9 +203,9 @@ export default ({ hackathons, currentPath }) => {
       >
         <ItemContainer>
           <Power />
-          <Item>Logout</Item>
+          <Label>Logout</Label>
         </ItemContainer>
-      </Logout>
+      </Link>
     </SidebarContainer>
   );
 };

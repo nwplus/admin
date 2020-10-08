@@ -41,6 +41,8 @@ export const storage = firebase.storage();
 const webCollection = 'Website_content';
 const faqCollection = FAQ;
 const Hackathons = 'Hackathons';
+const InternalWebsitesCollection = 'InternalWebsites';
+const CMSCollection = 'CMS';
 
 export const formatDate = (date) => {
   if (!date) {
@@ -174,13 +176,13 @@ const getfaqIDs = async () => {
   return (await db.collection(faqCollection).get()).docs.map((doc) => doc.id);
 };
 
-export const getFaqs = async (hackathon) => {
+export const getFaqs = async () => {
   const faqIDs = await getfaqIDs();
   const faqs = {};
   for (const faqID of faqIDs) {
     const currFaq = await getFaq(faqID);
     if (currFaq) {
-      if (currFaq.hackathonIDs.includes(hackathon)) faqs[faqID] = currFaq;
+      faqs[faqID] = currFaq;
     }
   }
   return faqs;
@@ -297,4 +299,14 @@ export const updateFlags = async (id, flags) => {
     featureFlags: flags,
   };
   return db.collection(Hackathons).doc(id).update(doc);
+};
+
+export const subscribeToCMSStatus = (dateCallback) => {
+  return db
+    .collection(InternalWebsitesCollection)
+    .doc(CMSCollection)
+    .onSnapshot((snap) => {
+      const { offUntilDate } = snap.data();
+      dateCallback(offUntilDate);
+    });
 };

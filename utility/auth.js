@@ -2,26 +2,7 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import styled from 'styled-components';
-import nwPlusReversed from '../assets/nwplus-reversed.gif';
-
-const LoadingScreenContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  text-align: center;
-`;
-
-const LoadingImage = styled.img`
-  height: 100px;
-  width: 100px;
-  margin: auto;
-`;
-
-const LoadingDiv = styled.div`
-  font-size: 40px;
-`;
+import LoadingPage from '../components/LoadingPage';
 
 export const checkAdminClaim = async (user) => {
   const token = await user.getIdTokenResult();
@@ -56,16 +37,7 @@ const Auth = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{ isAuthenticated: !!user, user, setUser }}>
-      {isLoading ? (
-        <LoadingScreenContainer>
-          <div>
-            <LoadingImage src={nwPlusReversed} />
-            <LoadingDiv>Authenticating...</LoadingDiv>
-          </div>
-        </LoadingScreenContainer>
-      ) : (
-        children
-      )}
+      {isLoading ? <LoadingPage /> : children}
     </AuthContext.Provider>
   );
 };

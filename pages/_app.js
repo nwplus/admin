@@ -1,6 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import Auth from '../utility/auth';
+import CMSControl from '../utility/CMSControl';
 
 import '../utility/firebase';
 
@@ -15,12 +16,14 @@ import '../app.css';
 
 function MyApp({ Component, pageProps }) {
   return (
-    <Auth>
-      <Head>
-        <title>nwPlus CMS</title>
-      </Head>
-      <Component {...pageProps} />
-    </Auth>
+    <CMSControl>
+      <Auth>
+        <Head>
+          <title>nwPlus CMS</title>
+        </Head>
+        <Component {...pageProps} />
+      </Auth>
+    </CMSControl>
   );
 }
 

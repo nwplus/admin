@@ -7,7 +7,7 @@ import Card, {
   CardContent,
   CardButtonContainer,
 } from '../../components/card';
-import { COLOR, EDIT } from '../../constants';
+import { COLOR, EDIT, HACKATHON_NAVBAR } from '../../constants';
 import Button from '../../components/button';
 import TextBox from '../../components/textbox';
 import {
@@ -15,6 +15,8 @@ import {
   getHackathonSnapShot,
   getHackathonPaths,
   getHackathons,
+  getTimestamp,
+  formatDate,
 } from '../../utility/firebase';
 import { useAuth } from '../../utility/auth';
 
@@ -119,7 +121,7 @@ export default ({ id, hackathons }) => {
    * reads the value of the header/content associated with the given type and updates the object in Firebase
    */
   const handleSave = async (type) => {
-    const time = new Date().toISOString();
+    const time = getTimestamp();
     const { header, content } = editingData[type];
     const updateObj = {
       WebsiteData: {
@@ -136,7 +138,9 @@ export default ({ id, hackathons }) => {
     try {
       updateHackathonField(id, updateObj);
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error(error);
+      // eslint-disable-next-line no-alert
       alert('An error occured while trying to update the text section');
     } finally {
       setIsEditingObj({
@@ -158,7 +162,11 @@ export default ({ id, hackathons }) => {
   };
 
   return (
-    <Page currentPath={id} hackathons={hackathons}>
+    <Page
+      currentPath={id}
+      hackathons={hackathons}
+      navbarItems={HACKATHON_NAVBAR}
+    >
       {/* map over every text section in a hackathon's WebsiteData and adds the section name to isEditingObj state */}
       {websiteData ? (
         Object.keys(websiteData).map((type) => {
@@ -168,9 +176,9 @@ export default ({ id, hackathons }) => {
                 <CardHeader>
                   <CardTitle>{websiteData[type].title}</CardTitle>
                   <p>
-                    {`Last edited by ${websiteData[type].editor} at ${new Date(
-                      websiteData[type].time
-                    ).toLocaleString()}`}
+                    {`Last edited by ${
+                      websiteData[type].editor
+                    } at ${formatDate(websiteData[type].time.seconds)}`}
                   </p>
                   <CardButtonContainer>
                     <Button type={EDIT} onClick={() => handleEdit(type)} />

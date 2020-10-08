@@ -15,6 +15,8 @@ import {
   getHackathonSnapShot,
   getHackathonPaths,
   getHackathons,
+  getTimestamp,
+  formatDate,
 } from '../../utility/firebase';
 import { useAuth } from '../../utility/auth';
 
@@ -119,7 +121,7 @@ export default ({ id, hackathons }) => {
    * reads the value of the header/content associated with the given type and updates the object in Firebase
    */
   const handleSave = async (type) => {
-    const time = new Date().toISOString();
+    const time = getTimestamp();
     const { header, content } = editingData[type];
     const updateObj = {
       WebsiteData: {
@@ -174,9 +176,8 @@ export default ({ id, hackathons }) => {
                 <CardHeader>
                   <CardTitle>{websiteData[type].title}</CardTitle>
                   <p>
-                    {`Last edited by ${websiteData[type].editor} at ${new Date(
-                      websiteData[type].time
-                    ).toLocaleString()}`}
+                    {`Last edited by ${websiteData[type].editor
+                      } at ${formatDate(websiteData[type].time)}`}
                   </p>
                   <CardButtonContainer>
                     <Button type={EDIT} onClick={() => handleEdit(type)} />
@@ -214,19 +215,19 @@ export default ({ id, hackathons }) => {
                       </div>
                     </div>
                   ) : (
-                    <>
-                      <HeaderText>{websiteData[type].header}</HeaderText>
-                      <ContentText>{websiteData[type].content}</ContentText>
-                    </>
-                  )}
+                      <>
+                        <HeaderText>{websiteData[type].header}</HeaderText>
+                        <ContentText>{websiteData[type].content}</ContentText>
+                      </>
+                    )}
                 </CardContent>
               </Container>
             </Card>
           );
         })
       ) : (
-        <span>No intro options for this page</span>
-      )}
+          <span>No intro options for this page</span>
+        )}
     </Page>
   );
 };

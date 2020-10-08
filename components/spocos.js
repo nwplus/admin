@@ -176,13 +176,16 @@ export default function SponsorshipPage({ hackathonId }) {
       newobj.imgURL = url;
       newobj.imgName = imgFile.name;
     }
-    const id = await updateSponsor(hackathonId, newobj);
     const de = getTimestamp();
+    newobj.lastmod = de;
+    newobj.lastmodBy = user;
+
+    const id = await updateSponsor(hackathonId, newobj);
     // 2. renders on CMS
     setSponsors((oldSponsors) => {
       return {
         ...oldSponsors,
-        [id]: { ...newobj, lastmod: de, lastmodBy: user },
+        [id]: newobj,
       };
     });
 
@@ -297,9 +300,7 @@ export default function SponsorshipPage({ hackathonId }) {
         handleClose={handleCloseModal}
         handleSave={handleSave}
         modalAction={modalAction}
-        lastModified={`${newobj.lastmod} by ${formatDate(
-          newobj.lastmod.seconds
-        )}`}
+        lastModified={`${formatDate(newobj.lastmod.seconds)} by ${user}`}
       >
         <ModalContent page={SPONSORSHIP}>
           <ModalField

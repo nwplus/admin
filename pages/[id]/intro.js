@@ -176,8 +176,9 @@ export default ({ id, hackathons }) => {
                 <CardHeader>
                   <CardTitle>{websiteData[type].title}</CardTitle>
                   <p>
-                    {`Last edited by ${websiteData[type].editor
-                      } at ${formatDate(websiteData[type].time.seconds)}`}
+                    {`Last edited by ${
+                      websiteData[type].editor
+                    } at ${formatDate(websiteData[type].time.seconds)}`}
                   </p>
                   <CardButtonContainer>
                     <Button type={EDIT} onClick={() => handleEdit(type)} />
@@ -215,19 +216,19 @@ export default ({ id, hackathons }) => {
                       </div>
                     </div>
                   ) : (
-                      <>
-                        <HeaderText>{websiteData[type].header}</HeaderText>
-                        <ContentText>{websiteData[type].content}</ContentText>
-                      </>
-                    )}
+                    <>
+                      <HeaderText>{websiteData[type].header}</HeaderText>
+                      <ContentText>{websiteData[type].content}</ContentText>
+                    </>
+                  )}
                 </CardContent>
               </Container>
             </Card>
           );
         })
       ) : (
-          <span>No intro options for this page</span>
-        )}
+        <span>No intro options for this page</span>
+      )}
     </Page>
   );
 };

@@ -177,7 +177,7 @@ export default ({ id, hackathons }) => {
                   <CardTitle>{websiteData[type].title}</CardTitle>
                   <p>
                     {`Last edited by ${websiteData[type].editor
-                      } at ${formatDate(websiteData[type].time)}`}
+                      } at ${formatDate(websiteData[type].time.seconds)}`}
                   </p>
                   <CardButtonContainer>
                     <Button type={EDIT} onClick={() => handleEdit(type)} />

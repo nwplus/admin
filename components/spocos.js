@@ -16,8 +16,8 @@ import {
   deleteSponsor,
   updateSponsor,
   uploadSponsorImageToStorage,
-  getTimestamp, 
-  formatDate
+  getTimestamp,
+  formatDate,
 } from '../utility/firebase';
 import { useAuth } from '../utility/auth';
 import Modal, {
@@ -151,31 +151,10 @@ export default function SponsorshipPage({ hackathonId }) {
     });
   };
 
-
   const handleChange = (property, value) => {
-    var de = getTimestamp()
-    de = formatDate(de)
-    console.log(de);
-
-    /*
-    const d = new Date();
-    let hours = d.getHours();
-    let minutes = d.getMinutes();
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-    hours %= 12;
-    hours = hours || 12;
-    minutes = minutes < 10 ? `0${minutes}` : minutes;
-
-    const de = `${d.getFullYear()}-${
-      d.getMonth() + 1
-    }-${d.getDate()} ${hours}:${minutes} ${ampm}`;
-    */
-
     setnewobj({
       ...newobj,
       [property]: value,
-      lastmod: de,
-      lastmodBy: user,
     });
   };
 
@@ -188,7 +167,6 @@ export default function SponsorshipPage({ hackathonId }) {
   // MODAL SUBMIT BUTTON CLICKED (NEW + EDIT)
   const handleSave = async (event) => {
     event.preventDefault(); // prevents page reload
-
     setShowEditWindow(false); // hides edit to prevent clicking submit twice
 
     // 1. uploads to firebase
@@ -199,11 +177,12 @@ export default function SponsorshipPage({ hackathonId }) {
       newobj.imgName = imgFile.name;
     }
     const id = await updateSponsor(hackathonId, newobj);
+    const de = getTimestamp();
     // 2. renders on CMS
     setSponsors((oldSponsors) => {
       return {
         ...oldSponsors,
-        [id]: newobj,
+        [id]: { ...newobj, lastmod: de, lastmodBy: user },
       };
     });
 
@@ -288,7 +267,7 @@ export default function SponsorshipPage({ hackathonId }) {
                   <Text>{item.link}</Text>
                   <Text>{item.imgName}</Text>
                   <Text>{item.tier}</Text>
-                  <Text>{item.lastmod}</Text>
+                  <Text>{formatDate(item.lastmod.seconds)}</Text>
                   <Actions>
                     <Button
                       type={VIEW}
@@ -318,7 +297,9 @@ export default function SponsorshipPage({ hackathonId }) {
         handleClose={handleCloseModal}
         handleSave={handleSave}
         modalAction={modalAction}
-        lastModified={`${newobj.lastmod} by ${newobj.lastmodBy}`}
+        lastModified={`${newobj.lastmod} by ${formatDate(
+          newobj.lastmod.seconds
+        )}`}
       >
         <ModalContent page={SPONSORSHIP}>
           <ModalField

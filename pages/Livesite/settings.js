@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 import Page from '../../components/page';
 import Card, {
   CardHeader,
@@ -6,10 +7,26 @@ import Card, {
   CardTitle,
   CardContent,
 } from '../../components/card';
-import { ModalField, ModalButton } from '../../components/modal';
+import { ModalField } from '../../components/modal';
 import Button from '../../components/button';
 import { formatDate, getHackathons } from '../../utility/firebase';
-import { LIVESITE_NAVBAR, VIEW, EDIT } from '../../constants';
+import { LIVESITE_NAVBAR, COLOR, EDIT } from '../../constants';
+
+const CancelButton = styled.button`
+  font-size: 16px;
+  cursor: pointer;
+  border-bottom: 2px solid ${COLOR.BLACK};
+  margin-left: 675px;
+  margin-right: 40px;
+  border: none;
+  outline: none;
+  background-color: ${COLOR.BACKGROUND};
+`;
+
+const CancelText = styled.p`
+  border-bottom: 2px solid ${COLOR.BLACK};
+  margin: 0px;
+`;
 
 export default ({ hackathons }) => (
   <Page
@@ -42,10 +59,10 @@ export default ({ hackathons }) => (
         >
           GHuuuuhashd
         </ModalField>
-        <ModalButton
-          type={EDIT}
-          handleSave={() => console.log('save')}
-        />
+        <CancelButton onClick={() => console.log("cancel")}>
+          <CancelText>Cancel</CancelText>
+        </CancelButton>
+        <Button onClick={() => console.log("save")}>Save</Button>
       </CardContent>
     </Card>
   </Page>

@@ -49,7 +49,6 @@ const Container = styled.div`
   margin-bottom: 40px;
 `;
 
-
 export default ({ id, hackathons }) => {
   const [isEditingObj, setIsEditingObj] = useState({});
   const [websiteData, setWebsiteData] = useState({});

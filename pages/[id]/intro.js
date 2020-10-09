@@ -21,6 +21,7 @@ import {
 import { useAuth } from '../../utility/auth';
 
 const HeaderText = styled.h2`
+  margin: 0;
   border: none;
   overflow: hidden;
   background-color: ${COLOR.BACKGROUND};
@@ -42,7 +43,6 @@ const CancelButton = styled.button`
   font-size: 16px;
   cursor: pointer;
   border-bottom: 2px solid ${COLOR.BLACK};
-  margin-left: 675px;
   margin-right: 40px;
   border: none;
   outline: none;
@@ -50,9 +50,6 @@ const CancelButton = styled.button`
 `;
 
 const Label = styled.p`
-  padding-bottom: 13px;
-  padding-top: 17px;
-  margin: 0px;
   background-color: ${COLOR.BACKGROUND};
 `;
 
@@ -63,6 +60,12 @@ const CancelText = styled.p`
 
 const Container = styled.div`
   margin-bottom: 40px;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  margin-top: 12px;
+  justify-content: flex-end;
 `;
 
 export default ({ id, hackathons }) => {
@@ -176,9 +179,8 @@ export default ({ id, hackathons }) => {
                 <CardHeader>
                   <CardTitle>{websiteData[type].title}</CardTitle>
                   <p>
-                    {`Last edited by ${
-                      websiteData[type].editor
-                    } at ${formatDate(websiteData[type].time.seconds)}`}
+                    {`Last edited by ${websiteData[type].editor
+                      } at ${formatDate(websiteData[type].time.seconds)}`}
                   </p>
                   <CardButtonContainer>
                     <Button type={EDIT} onClick={() => handleEdit(type)} />
@@ -186,7 +188,7 @@ export default ({ id, hackathons }) => {
                 </CardHeader>
                 <CardContent>
                   {isEditingObj[type] ? (
-                    <div style={{ padding: '0px 40px 37px 40px' }}>
+                    <>
                       <Label>Header</Label>
                       <TextBox
                         defaultValue={editingData[type].header}
@@ -202,33 +204,27 @@ export default ({ id, hackathons }) => {
                           handleEditChange(event, type, false);
                         }}
                       />
-                      <div
-                        style={{
-                          marginTop: '27px',
-                          display: 'flex',
-                          float: 'right',
-                        }}
-                      >
+                      <ButtonContainer>
                         <CancelButton onClick={() => handleCancel(type)}>
                           <CancelText>Cancel</CancelText>
                         </CancelButton>
                         <Button onClick={() => handleSave(type)}>Save</Button>
-                      </div>
-                    </div>
-                  ) : (
-                    <>
-                      <HeaderText>{websiteData[type].header}</HeaderText>
-                      <ContentText>{websiteData[type].content}</ContentText>
+                      </ButtonContainer>
                     </>
-                  )}
+                  ) : (
+                      <>
+                        <HeaderText>{websiteData[type].header}</HeaderText>
+                        <ContentText>{websiteData[type].content}</ContentText>
+                      </>
+                    )}
                 </CardContent>
               </Container>
             </Card>
           );
         })
       ) : (
-        <span>No intro options for this page</span>
-      )}
+          <span>No intro options for this page</span>
+        )}
     </Page>
   );
 };

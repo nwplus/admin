@@ -24,6 +24,7 @@ export const CardButtonContainer = styled.div`
 `;
 
 export const CardContent = styled.div`
+  box-sizing: border-box;
   padding: 40px;
 `;
 

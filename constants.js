@@ -28,7 +28,6 @@ export const FAQCategory = Object.freeze({
 export const SPONSORSHIP = 'SPONSORSHIP';
 export const HACKATHON_NAVBAR = {
   intro: 'Intro',
-  faq: 'FAQ',
   spocos: 'Sponsors',
   FeatureFlags: 'Feature Flags',
 };

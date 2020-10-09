@@ -6,6 +6,8 @@ import Card, {
   CardTitle,
   CardContent,
   CardButtonContainer,
+  CardContentButtonContainer,
+  CancelButton,
 } from '../../components/card';
 import { COLOR, EDIT, HACKATHON_NAVBAR } from '../../constants';
 import Button from '../../components/button';
@@ -39,34 +41,14 @@ const ContentText = styled.p`
   color: ${COLOR.TEXT};
 `;
 
-const CancelButton = styled.button`
-  font-size: 16px;
-  cursor: pointer;
-  border-bottom: 2px solid ${COLOR.BLACK};
-  margin-right: 40px;
-  border: none;
-  outline: none;
-  background-color: ${COLOR.BACKGROUND};
-`;
-
 const Label = styled.p`
   background-color: ${COLOR.BACKGROUND};
-`;
-
-const CancelText = styled.p`
-  border-bottom: 2px solid ${COLOR.BLACK};
-  margin: 0px;
 `;
 
 const Container = styled.div`
   margin-bottom: 40px;
 `;
 
-const ButtonContainer = styled.div`
-  display: flex;
-  margin-top: 12px;
-  justify-content: flex-end;
-`;
 
 export default ({ id, hackathons }) => {
   const [isEditingObj, setIsEditingObj] = useState({});
@@ -179,8 +161,9 @@ export default ({ id, hackathons }) => {
                 <CardHeader>
                   <CardTitle>{websiteData[type].title}</CardTitle>
                   <p>
-                    {`Last edited by ${websiteData[type].editor
-                      } at ${formatDate(websiteData[type].time.seconds)}`}
+                    {`Last edited by ${
+                      websiteData[type].editor
+                    } at ${formatDate(websiteData[type].time.seconds)}`}
                   </p>
                   <CardButtonContainer>
                     <Button type={EDIT} onClick={() => handleEdit(type)} />
@@ -204,27 +187,25 @@ export default ({ id, hackathons }) => {
                           handleEditChange(event, type, false);
                         }}
                       />
-                      <ButtonContainer>
-                        <CancelButton onClick={() => handleCancel(type)}>
-                          <CancelText>Cancel</CancelText>
-                        </CancelButton>
+                      <CardContentButtonContainer>
+                        <CancelButton onClick={() => handleCancel(type)} />
                         <Button onClick={() => handleSave(type)}>Save</Button>
-                      </ButtonContainer>
+                      </CardContentButtonContainer>
                     </>
                   ) : (
-                      <>
-                        <HeaderText>{websiteData[type].header}</HeaderText>
-                        <ContentText>{websiteData[type].content}</ContentText>
-                      </>
-                    )}
+                    <>
+                      <HeaderText>{websiteData[type].header}</HeaderText>
+                      <ContentText>{websiteData[type].content}</ContentText>
+                    </>
+                  )}
                 </CardContent>
               </Container>
             </Card>
           );
         })
       ) : (
-          <span>No intro options for this page</span>
-        )}
+        <span>No intro options for this page</span>
+      )}
     </Page>
   );
 };

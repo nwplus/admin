@@ -15,6 +15,7 @@ import { LIVESITE_NAVBAR, EDIT } from '../../constants';
 
 export default ({ hackathons }) => {
   const [hackathonID, setHackathonID] = useState();
+  const [isEditing, setisEditing] = useState(false);
   return (
     <Page
       currentPath="Livesite"
@@ -26,24 +27,25 @@ export default ({ hackathons }) => {
           <CardTitle>Livesite Settings</CardTitle>
           <p>{`Last edited by ${"asd"} at ${formatDate(123)}`}</p>
           <CardButtonContainer>
-            <Button
-              type={EDIT}
-              onClick={() => {
-                console.log('hey');
-              }}
-            />
+            <Button type={EDIT} onClick={() => setisEditing(true)} />
           </CardButtonContainer>
         </CardHeader>
         <CardContent>
-          <ModalField
-            label="Hackathon ID"
-            modalAction={EDIT}
-            onChange={(event) => setHackathonID(event.target.value)}
-          />
-          <CardContentButtonContainer>
-            <CancelButton onClick={() => console.log("cancel")} />
-            <Button onClick={() => console.log("save")}>Save</Button>
-          </CardContentButtonContainer>
+          {isEditing ? (
+            <>
+              <ModalField
+                label="Hackathon ID"
+                modalAction={EDIT}
+                onChange={(event) => setHackathonID(event.target.value)}
+              />
+              <CardContentButtonContainer>
+                <CancelButton onClick={() => setisEditing(false)} />
+                <Button onClick={() => setisEditing(false)}>Save</Button>
+              </CardContentButtonContainer>
+            </>
+          ) : (
+              <> nothing to see here </>
+            )}
         </CardContent>
       </Card>
     </Page>

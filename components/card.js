@@ -28,6 +28,35 @@ export const CardContent = styled.div`
   padding: 40px;
 `;
 
+export const CardContentButtonContainer = styled.div`
+  display: flex;
+  margin-top: 12px;
+  justify-content: flex-end;
+`;
+
+const StyledCancelButton = styled.button`
+  font-size: 16px;
+  cursor: pointer;
+  border-bottom: 2px solid ${COLOR.BLACK};
+  margin-right: 40px;
+  border: none;
+  outline: none;
+  background-color: ${COLOR.BACKGROUND};
+`;
+
+const CancelText = styled.p`
+  border-bottom: 2px solid ${COLOR.BLACK};
+  margin: 0px;
+`;
+
+export const CancelButton = ({ onClick }) => {
+  return (
+    <StyledCancelButton onClick={onClick}>
+      <CancelText>Cancel</CancelText>
+    </StyledCancelButton>
+  );
+};
+
 // padding: top, right, bottom, left
 // jsutify contente space around
 export const CardContainer = styled.div`

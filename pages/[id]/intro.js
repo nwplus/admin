@@ -6,6 +6,8 @@ import Card, {
   CardTitle,
   CardContent,
   CardButtonContainer,
+  CardContentButtonContainer,
+  CancelButton
 } from '../../components/card';
 import { COLOR, EDIT, HACKATHON_NAVBAR } from '../../constants';
 import Button from '../../components/button';
@@ -39,34 +41,16 @@ const ContentText = styled.p`
   color: ${COLOR.TEXT};
 `;
 
-const CancelButton = styled.button`
-  font-size: 16px;
-  cursor: pointer;
-  border-bottom: 2px solid ${COLOR.BLACK};
-  margin-right: 40px;
-  border: none;
-  outline: none;
-  background-color: ${COLOR.BACKGROUND};
-`;
 
 const Label = styled.p`
   background-color: ${COLOR.BACKGROUND};
 `;
 
-const CancelText = styled.p`
-  border-bottom: 2px solid ${COLOR.BLACK};
-  margin: 0px;
-`;
 
 const Container = styled.div`
   margin-bottom: 40px;
 `;
 
-const ButtonContainer = styled.div`
-  display: flex;
-  margin-top: 12px;
-  justify-content: flex-end;
-`;
 
 export default ({ id, hackathons }) => {
   const [isEditingObj, setIsEditingObj] = useState({});
@@ -204,12 +188,10 @@ export default ({ id, hackathons }) => {
                           handleEditChange(event, type, false);
                         }}
                       />
-                      <ButtonContainer>
-                        <CancelButton onClick={() => handleCancel(type)}>
-                          <CancelText>Cancel</CancelText>
-                        </CancelButton>
+                      <CardContentButtonContainer>
+                        <CancelButton onClick={() => handleCancel(type)} />
                         <Button onClick={() => handleSave(type)}>Save</Button>
-                      </ButtonContainer>
+                      </CardContentButtonContainer>
                     </>
                   ) : (
                       <>

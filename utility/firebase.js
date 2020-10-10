@@ -43,6 +43,7 @@ const faqCollection = FAQ;
 const Hackathons = 'Hackathons';
 const InternalWebsitesCollection = 'InternalWebsites';
 const CMSCollection = 'CMS';
+const LivesiteCollection = 'Livesite';
 
 export const formatDate = (date) => {
   if (!date) {
@@ -309,4 +310,10 @@ export const subscribeToCMSStatus = (dateCallback) => {
       const { offUntilDate } = snap.data();
       dateCallback(offUntilDate);
     });
+};
+
+export const getLivesiteData = async () => {
+  const ref = db.collection(InternalWebsitesCollection).doc(LivesiteCollection);
+  const doc = await ref.get();
+  return doc.data();
 };

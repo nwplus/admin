@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Page from '../../components/page';
 import Card, {
   CardHeader,
@@ -10,12 +10,22 @@ import Card, {
 } from '../../components/card';
 import { ModalField } from '../../components/modal';
 import Button from '../../components/button';
-import { formatDate, getHackathons } from '../../utility/firebase';
+import {
+  formatDate,
+  getHackathons,
+  getLivesiteData,
+} from '../../utility/firebase';
 import { LIVESITE_NAVBAR, EDIT } from '../../constants';
 
 export default ({ hackathons }) => {
-  const [hackathonID, setHackathonID] = useState();
+  const [livesiteData, setLivesiteData] = useState({});
   const [isEditing, setisEditing] = useState(false);
+
+  useEffect(async () => {
+    const data = await getLivesiteData();
+    setLivesiteData(data);
+  }, []);
+
   return (
     <Page
       currentPath="Livesite"
@@ -36,7 +46,12 @@ export default ({ hackathons }) => {
               <ModalField
                 label="Hackathon ID"
                 modalAction={EDIT}
-                onChange={(event) => setHackathonID(event.target.value)}
+                onChange={(event) =>
+                  setLivesiteData({
+                    ...livesiteData,
+                    hackathonID: event.target.value,
+                  })
+                }
               />
               <CardContentButtonContainer>
                 <CancelButton onClick={() => setisEditing(false)} />
@@ -44,7 +59,7 @@ export default ({ hackathons }) => {
               </CardContentButtonContainer>
             </>
           ) : (
-              <> nothing to see here </>
+              <> {livesiteData.activeHackathon} </>
             )}
         </CardContent>
       </Card>

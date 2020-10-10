@@ -7,7 +7,7 @@ import Card, {
   CardContent,
   CardButtonContainer,
   CardContentButtonContainer,
-  CancelButton
+  CancelButton,
 } from '../../components/card';
 import { COLOR, EDIT, HACKATHON_NAVBAR } from '../../constants';
 import Button from '../../components/button';
@@ -41,16 +41,13 @@ const ContentText = styled.p`
   color: ${COLOR.TEXT};
 `;
 
-
 const Label = styled.p`
   background-color: ${COLOR.BACKGROUND};
 `;
 
-
 const Container = styled.div`
   margin-bottom: 40px;
 `;
-
 
 export default ({ id, hackathons }) => {
   const [isEditingObj, setIsEditingObj] = useState({});
@@ -163,8 +160,9 @@ export default ({ id, hackathons }) => {
                 <CardHeader>
                   <CardTitle>{websiteData[type].title}</CardTitle>
                   <p>
-                    {`Last edited by ${websiteData[type].editor
-                      } at ${formatDate(websiteData[type].time.seconds)}`}
+                    {`Last edited by ${
+                      websiteData[type].editor
+                    } at ${formatDate(websiteData[type].time.seconds)}`}
                   </p>
                   <CardButtonContainer>
                     <Button type={EDIT} onClick={() => handleEdit(type)} />
@@ -194,19 +192,19 @@ export default ({ id, hackathons }) => {
                       </CardContentButtonContainer>
                     </>
                   ) : (
-                      <>
-                        <HeaderText>{websiteData[type].header}</HeaderText>
-                        <ContentText>{websiteData[type].content}</ContentText>
-                      </>
-                    )}
+                    <>
+                      <HeaderText>{websiteData[type].header}</HeaderText>
+                      <ContentText>{websiteData[type].content}</ContentText>
+                    </>
+                  )}
                 </CardContent>
               </Container>
             </Card>
           );
         })
       ) : (
-          <span>No intro options for this page</span>
-        )}
+        <span>No intro options for this page</span>
+      )}
     </Page>
   );
 };

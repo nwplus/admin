@@ -1,5 +1,5 @@
+/* eslint-disable no-alert */
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
 import { format } from 'timeago.js';
 import ReactMarkdown from 'react-markdown';
 import AnnouncementsCard from '../../components/announcementsCard';
@@ -7,13 +7,13 @@ import Modal from '../../components/modal';
 import TextBox from '../../components/textbox';
 import Page from '../../components/page';
 import {
-  formatDate,
   getActiveHackathon,
   getHackathons,
   updateAnnouncement,
   subscribeToLivesiteAnnouncements,
 } from '../../utility/firebase';
-import { EDIT, LIVESITE_NAVBAR } from '../../constants';
+import { EDIT, NEW, LIVESITE_NAVBAR } from '../../constants';
+import { useAuth } from '../../utility/auth';
 
 const Markdown = ({ content }) => (
   <ReactMarkdown
@@ -48,8 +48,9 @@ export default ({ hackathons }) => {
   const [announcements, setAnnouncements] = useState([]);
   const [activeHackathon, setActiveHackathon] = useState('');
   const [isLoading, setIsLoading] = useState(true);
-  const [editWindow, showEditWindow] = useState(false);
+  const [activeModal, setActiveModal] = useState('');
   const [currentAnnouncement, setCurrentAnnouncement] = useState({});
+  const { email: user } = useAuth().user;
 
   const getAsyncData = async () => {
     setActiveHackathon(await getActiveHackathon);
@@ -70,11 +71,8 @@ export default ({ hackathons }) => {
   }, [activeHackathon, setAnnouncements]);
 
   const handleNew = () => {
-    // TODO
-  };
-
-  const handleView = () => {
-    // TODO
+    setCurrentAnnouncement({ editor: user });
+    setActiveModal(NEW);
   };
 
   const handleDelete = () => {
@@ -82,17 +80,24 @@ export default ({ hackathons }) => {
   };
 
   const handleEdit = (key) => {
-    setCurrentAnnouncement({ ...announcements[key], id: key });
-    showEditWindow(true);
+    setCurrentAnnouncement({ ...announcements[key], editor: user, id: key });
+    setActiveModal(EDIT);
   };
 
   const handleCloseModal = () => {
-    showEditWindow(false);
+    if (currentAnnouncement.content) {
+      // eslint-disable-next-line no-restricted-globals
+      if (confirm('Are you sure? You will lose all progress')) {
+        setActiveModal('');
+      }
+    } else {
+      setActiveModal('');
+    }
   };
 
-  const handleSaveEdit = () => {
+  const handleSave = () => {
     updateAnnouncement(activeHackathon, currentAnnouncement);
-    showEditWindow(false);
+    setActiveModal('');
   };
 
   const changeCurrentAnnouncement = (content) => {
@@ -109,16 +114,15 @@ export default ({ hackathons }) => {
         isLoading={isLoading}
         announcements={announcements}
         handleNew={handleNew}
-        handleView={handleView}
         handleDelete={handleDelete}
         handleEdit={handleEdit}
       />
+
       <Modal
-        isOpen={editWindow}
+        isOpen={activeModal === EDIT}
         handleClose={handleCloseModal}
-        handleSave={handleSaveEdit}
+        handleSave={handleSave}
         modalAction={EDIT}
-        lastModified={`${formatDate(123)} by ${'user'}`}
       >
         <div>
           <strong>Announcement Content</strong>
@@ -133,45 +137,34 @@ export default ({ hackathons }) => {
           <Markdown content={currentAnnouncement.content} />
           <p>
             {format(currentAnnouncement.timestamp)} @{' '}
-            {announcementDateFormat(currentAnnouncement.timestamp)} • edited
+            {announcementDateFormat(currentAnnouncement.timestamp)}
           </p>
         </div>
       </Modal>
-      {Object.values(announcements).map((announcement) => {
-        const timeAgo = format(announcement.timestamp);
-        const options = {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-        };
-        const date = new Date(announcement.timestamp).toLocaleDateString(
-          'en-US',
-          options
-        );
-        return (
-          <>
-            <ReactMarkdown
-              linkTarget="_blank"
-              allowedTypes={[
-                'text',
-                'paragraph',
-                'strong',
-                'emphasis',
-                'link',
-                'break',
-                'list',
-                'listItem',
-              ]}
-              source={announcement.content}
-            />
-            <p>
-              {timeAgo} @ {date}
-            </p>
-          </>
-        );
-      })}
+
+      <Modal
+        isOpen={activeModal === NEW}
+        handleClose={handleCloseModal}
+        handleSave={handleSave}
+        modalAction={NEW}
+      >
+        <div>
+          <strong>Announcement Content</strong>
+          <TextBox
+            defaultValue={currentAnnouncement.content}
+            modalAction={NEW}
+            onChange={(event) => changeCurrentAnnouncement(event.target.value)}
+          />
+          <br />
+          <br />
+          <strong>Preview:</strong>
+          <Markdown content={currentAnnouncement.content} />
+          <p>
+            {format(currentAnnouncement.timestamp)} @{' '}
+            {announcementDateFormat(Date.now())}
+          </p>
+        </div>
+      </Modal>
     </Page>
   );
 };

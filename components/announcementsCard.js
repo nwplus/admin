@@ -10,7 +10,7 @@ import Card, {
   TableContainer,
 } from './card';
 import Button from './button';
-import { VIEW, NEW, EDIT, DELETE, COLOR } from '../constants';
+import { NEW, EDIT, DELETE, COLOR } from '../constants';
 
 const Text = styled.p`
   padding-right: 12px;
@@ -31,7 +31,6 @@ const Actions = styled.div`
 export default ({
   isLoading,
   handleNew,
-  handleView,
   handleEdit,
   handleDelete,
   announcements,
@@ -74,11 +73,6 @@ export default ({
                 <Text style={{ flex: '3 3 0' }}>{announcement.content}</Text>
                 <Text>{format(announcement.timestamp)}</Text>
                 <Actions>
-                  <Button
-                    type={VIEW}
-                    color={COLOR.TRANSPARENT}
-                    onClick={() => handleView(key)}
-                  />
                   <Button
                     type={EDIT}
                     color={COLOR.TRANSPARENT}

@@ -344,10 +344,13 @@ export const updateAnnouncement = async (hackathon, announcement) => {
     await ref.set(announcement);
     return announcement.id;
   }
+  announcement.timestamp = Date.now();
   const ref = await db
     .collection(Hackathons)
     .doc(hackathon)
     .collection('Announcements')
+    .doc()
     .set(announcement);
-  return ref.id;
+  console.log(ref);
+  return ref;
 };

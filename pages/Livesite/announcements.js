@@ -10,6 +10,7 @@ import {
   formatDate,
   getActiveHackathon,
   getHackathons,
+  updateAnnouncement,
   subscribeToLivesiteAnnouncements,
 } from '../../utility/firebase';
 import { EDIT, LIVESITE_NAVBAR } from '../../constants';
@@ -31,6 +32,17 @@ const Markdown = ({ content }) => (
     {content}
   </ReactMarkdown>
 );
+
+const announcementDateFormat = (timestamp) => {
+  const options = {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  };
+  return new Date(timestamp).toLocaleDateString('en-US', options);
+};
 
 export default ({ hackathons }) => {
   const [announcements, setAnnouncements] = useState([]);
@@ -70,7 +82,7 @@ export default ({ hackathons }) => {
   };
 
   const handleEdit = (key) => {
-    setCurrentAnnouncement(announcements[key]);
+    setCurrentAnnouncement({ ...announcements[key], id: key });
     showEditWindow(true);
   };
 
@@ -78,7 +90,8 @@ export default ({ hackathons }) => {
     showEditWindow(false);
   };
 
-  const handleSave = () => {
+  const handleSaveEdit = () => {
+    updateAnnouncement(activeHackathon, currentAnnouncement);
     showEditWindow(false);
   };
 
@@ -103,7 +116,7 @@ export default ({ hackathons }) => {
       <Modal
         isOpen={editWindow}
         handleClose={handleCloseModal}
-        handleSave={handleSave}
+        handleSave={handleSaveEdit}
         modalAction={EDIT}
         lastModified={`${formatDate(123)} by ${'user'}`}
       >
@@ -118,6 +131,10 @@ export default ({ hackathons }) => {
           <br />
           <strong>Preview:</strong>
           <Markdown content={currentAnnouncement.content} />
+          <p>
+            {format(currentAnnouncement.timestamp)} @{' '}
+            {announcementDateFormat(currentAnnouncement.timestamp)} • edited
+          </p>
         </div>
       </Modal>
       {Object.values(announcements).map((announcement) => {

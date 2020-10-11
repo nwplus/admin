@@ -332,3 +332,22 @@ export const subscribeToLivesiteAnnouncements = (hackathon, callback) => {
       callback(announcements);
     });
 };
+
+export const updateAnnouncement = async (hackathon, announcement) => {
+  if (announcement.id) {
+    const ref = db
+      .collection(Hackathons)
+      .doc(hackathon)
+      .collection('Announcements')
+      .doc(announcement.id);
+    delete announcement.id;
+    await ref.set(announcement);
+    return announcement.id;
+  }
+  const ref = await db
+    .collection(Hackathons)
+    .doc(hackathon)
+    .collection('Announcements')
+    .set(announcement);
+  return ref.id;
+};

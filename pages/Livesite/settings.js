@@ -87,7 +87,7 @@ export default ({ hackathons }) => {
           <CardTitle>Livesite Settings</CardTitle>
           <p>
             {`Last edited by ${livesiteData.lastEditedBy} at ${formatDate(
-              livesiteData.lastEdited
+              livesiteData.lastEdited?.seconds
             )}`}
           </p>
           <CardButtonContainer>

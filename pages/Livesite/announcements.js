@@ -3,19 +3,41 @@ import styled from 'styled-components';
 import { format } from 'timeago.js';
 import ReactMarkdown from 'react-markdown';
 import AnnouncementsCard from '../../components/announcementsCard';
-import Modal, { ModalContent, ModalField } from '../../components/modal';
+import Modal from '../../components/modal';
+import TextBox from '../../components/textbox';
 import Page from '../../components/page';
 import {
+  formatDate,
   getActiveHackathon,
   getHackathons,
   subscribeToLivesiteAnnouncements,
 } from '../../utility/firebase';
-import { LIVESITE_NAVBAR } from '../../constants';
+import { EDIT, LIVESITE_NAVBAR } from '../../constants';
+
+const Markdown = ({ content }) => (
+  <ReactMarkdown
+    linkTarget="_blank"
+    allowedTypes={[
+      'text',
+      'paragraph',
+      'strong',
+      'emphasis',
+      'link',
+      'break',
+      'list',
+      'listItem',
+    ]}
+  >
+    {content}
+  </ReactMarkdown>
+);
 
 export default ({ hackathons }) => {
   const [announcements, setAnnouncements] = useState([]);
   const [activeHackathon, setActiveHackathon] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [editWindow, showEditWindow] = useState(false);
+  const [currentAnnouncement, setCurrentAnnouncement] = useState({});
 
   const getAsyncData = async () => {
     setActiveHackathon(await getActiveHackathon);
@@ -47,8 +69,21 @@ export default ({ hackathons }) => {
     // TODO
   };
 
-  const handleEdit = () => {
-    // TODO
+  const handleEdit = (key) => {
+    setCurrentAnnouncement(announcements[key]);
+    showEditWindow(true);
+  };
+
+  const handleCloseModal = () => {
+    showEditWindow(false);
+  };
+
+  const handleSave = () => {
+    showEditWindow(false);
+  };
+
+  const changeCurrentAnnouncement = (content) => {
+    setCurrentAnnouncement({ ...currentAnnouncement, content });
   };
 
   return (
@@ -65,30 +100,26 @@ export default ({ hackathons }) => {
         handleDelete={handleDelete}
         handleEdit={handleEdit}
       />
-
-      {/* <Modal
-        isOpen={showEditWindow}
+      <Modal
+        isOpen={editWindow}
         handleClose={handleCloseModal}
         handleSave={handleSave}
-        modalAction={modalAction}
-        lastModified={`${formatDate(newobj.lastmod.seconds)} by ${user}`}
+        modalAction={EDIT}
+        lastModified={`${formatDate(123)} by ${'user'}`}
       >
-        <ModalContent page={SPONSORSHIP}>
-          <ModalField
-            label="Sponsor Name"
-            value={newobj.name}
-            modalAction={modalAction}
-            onChange={(event) => handleChange('name', event.target.value)}
+        <div>
+          <strong>Announcement Content</strong>
+          <TextBox
+            defaultValue={currentAnnouncement.content}
+            modalAction={EDIT}
+            onChange={(event) => changeCurrentAnnouncement(event.target.value)}
           />
-
-          <ModalField
-            label="Link"
-            value={newobj.link}
-            modalAction={modalAction}
-            onChange={(event) => handleChange('link', event.target.value)}
-          />
-        </ModalContent>
-      </Modal> */}
+          <br />
+          <br />
+          <strong>Preview:</strong>
+          <Markdown content={currentAnnouncement.content} />
+        </div>
+      </Modal>
       {Object.values(announcements).map((announcement) => {
         const timeAgo = format(announcement.timestamp);
         const options = {

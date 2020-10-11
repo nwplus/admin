@@ -43,6 +43,7 @@ const faqCollection = FAQ;
 const Hackathons = 'Hackathons';
 const InternalWebsitesCollection = 'InternalWebsites';
 const CMSCollection = 'CMS';
+const LivesiteCollection = 'Livesite';
 
 export const formatDate = (date) => {
   if (!date) {
@@ -308,5 +309,25 @@ export const subscribeToCMSStatus = (dateCallback) => {
     .onSnapshot((snap) => {
       const { offUntilDate } = snap.data();
       dateCallback(offUntilDate);
+    });
+};
+
+export const getActiveHackathon = db
+  .collection(InternalWebsitesCollection)
+  .doc(LivesiteCollection)
+  .get()
+  .then((doc) => doc.data()?.activeHackathon);
+
+export const subscribeToLivesiteAnnouncements = (hackathon, callback) => {
+  return db
+    .collection(Hackathons)
+    .doc(hackathon)
+    .collection('Announcements')
+    .orderBy('timestamp', 'desc')
+    .onSnapshot((querySnapshot) => {
+      const announcements = Object.values(
+        querySnapshot.docs.map((doc) => doc.data())
+      );
+      callback(announcements);
     });
 };

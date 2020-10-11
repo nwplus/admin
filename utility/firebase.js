@@ -269,6 +269,18 @@ export const uploadSponsorImageToStorage = async (website, file) => {
     return null;
   }
 };
+
+export const uploadLivesiteLogoToStorage = async (file) => {
+  try {
+    const ref = storage.ref(`logo.svg`);
+    const uploadData = await ref.put(file);
+    return uploadData.ref.getDownloadURL();
+  } catch (e) {
+    alert(e);
+    return null;
+  }
+};
+
 export const getImageFilebyName = async (website, imgURL) => {
   const imgId = imgURL.split('/').slice(-1)[0];
   const ref = await storage
@@ -316,4 +328,14 @@ export const getLivesiteData = async () => {
   const ref = db.collection(InternalWebsitesCollection).doc(LivesiteCollection);
   const doc = await ref.get();
   return doc.data();
+};
+
+export const updateLivesiteData = async (data) => {
+  const doc = {
+    ...data,
+  };
+  return db
+    .collection(InternalWebsitesCollection)
+    .doc(LivesiteCollection)
+    .update(doc);
 };

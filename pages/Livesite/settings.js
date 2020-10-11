@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
 import Page from '../../components/page';
 import Card, {
   CardHeader,
@@ -8,22 +9,58 @@ import Card, {
   CardContentButtonContainer,
   CancelButton,
 } from '../../components/card';
-import { ModalField } from '../../components/modal';
+import { ModalField, UploadContainer } from '../../components/modal';
 import Button from '../../components/button';
 import {
   formatDate,
   getHackathons,
   getLivesiteData,
+  uploadLivesiteLogoToStorage,
 } from '../../utility/firebase';
 import { LIVESITE_NAVBAR, EDIT } from '../../constants';
 
+const Label = styled.p`
+  font-weight: bold;
+`;
+
 export default ({ hackathons }) => {
+  const inputFile = React.createRef();
   const [livesiteData, setLivesiteData] = useState({});
   const [isEditing, setisEditing] = useState(false);
+  const [imgFile, setImgFile] = useState();
+  const [fileUpload] = useState({});
 
-  useEffect(async () => {
+  // MODAL SUBMIT BUTTON CLICKED (NEW + EDIT)
+  const handleSave = async () => {
+    setisEditing(false);
+    // 1. uploads to firebase
+    // newobj.imgURL is a file object
+    if (imgFile) {
+      const url = await uploadLivesiteLogoToStorage(imgFile);
+      fileUpload.imgURL = url;
+      fileUpload.imgName = imgFile.name;
+    }
+  };
+
+  const selectImageFile = (e) => {
+    if (e.target.files[0]) {
+      setImgFile(e.target.files[0]);
+      fileUpload.imgName = e.target.files[0].name;
+    }
+  };
+
+  // clicks the invisible <input type='file />
+  const fileClick = () => {
+    inputFile.current.click();
+  };
+
+  const asyncGetLivesiteData = async () => {
     const data = await getLivesiteData();
     setLivesiteData(data);
+  };
+
+  useEffect(() => {
+    asyncGetLivesiteData();
   }, []);
 
   return (
@@ -44,7 +81,7 @@ export default ({ hackathons }) => {
           {isEditing ? (
             <>
               <ModalField
-                label="Hackathon ID"
+                label="Active Hackathon ID"
                 modalAction={EDIT}
                 onChange={(event) =>
                   setLivesiteData({
@@ -53,14 +90,33 @@ export default ({ hackathons }) => {
                   })
                 }
               />
+              <input
+                type="file"
+                id="file"
+                ref={inputFile}
+                accept="image/*"
+                onChange={selectImageFile}
+                style={{ display: 'none' }}
+              />
+              <Label>Livesite Logo</Label>
+              <UploadContainer
+                type="text"
+                value={fileUpload.imgName}
+                onClick={fileClick}
+              />
               <CardContentButtonContainer>
                 <CancelButton onClick={() => setisEditing(false)} />
-                <Button onClick={() => setisEditing(false)}>Save</Button>
+                <Button onClick={() => handleSave()}>Save</Button>
               </CardContentButtonContainer>
             </>
           ) : (
-              <> {livesiteData.activeHackathon} </>
-            )}
+            <>
+              <Label>Active Hackathon ID</Label>
+              {livesiteData.activeHackathon}
+              <Label>Livesite Logo</Label>
+              <img src={livesiteData.imgUrl} alt="logo" />
+            </>
+          )}
         </CardContent>
       </Card>
     </Page>

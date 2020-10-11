@@ -10,6 +10,7 @@ import {
   getActiveHackathon,
   getHackathons,
   updateAnnouncement,
+  deleteAnnouncement,
   subscribeToLivesiteAnnouncements,
 } from '../../utility/firebase';
 import { EDIT, NEW, LIVESITE_NAVBAR } from '../../constants';
@@ -75,8 +76,11 @@ export default ({ hackathons }) => {
     setActiveModal(NEW);
   };
 
-  const handleDelete = () => {
-    // TODO
+  const handleDelete = (key) => {
+    // eslint-disable-next-line no-restricted-globals
+    if (confirm('Are you sure? This cannot be undone')) {
+      deleteAnnouncement(activeHackathon, key);
+    }
   };
 
   const handleEdit = (key) => {

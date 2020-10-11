@@ -354,3 +354,12 @@ export const updateAnnouncement = async (hackathon, announcement) => {
   console.log(ref);
   return ref;
 };
+
+export const deleteAnnouncement = async (hackathon, id) => {
+  await db
+    .collection(Hackathons)
+    .doc(hackathon)
+    .collection('Announcements')
+    .doc(id)
+    .delete();
+};

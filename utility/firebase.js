@@ -265,6 +265,7 @@ export const uploadSponsorImageToStorage = async (website, file) => {
     const uploadData = await ref.put(file);
     return uploadData.ref.getDownloadURL();
   } catch (e) {
+    // eslint-disable-next-line no-alert
     alert(e);
     return null;
   }
@@ -276,6 +277,7 @@ export const uploadLivesiteLogoToStorage = async (file) => {
     const uploadData = await ref.put(file);
     return uploadData.ref.getDownloadURL();
   } catch (e) {
+    // eslint-disable-next-line no-alert
     alert(e);
     return null;
   }

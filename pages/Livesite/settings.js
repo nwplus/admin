@@ -31,8 +31,6 @@ export default ({ hackathons }) => {
   const [imgFile, setImgFile] = useState();
   const [fileUpload] = useState({});
 
-  console.log(livesiteData);
-
   // MODAL SUBMIT BUTTON CLICKED (NEW + EDIT)
   const handleSave = async () => {
     setisEditing(false);
@@ -60,15 +58,13 @@ export default ({ hackathons }) => {
     }
   };
 
-  const asyncGetLivesiteData = async () => {
-    const data = await getLivesiteData();
-    setLivesiteData(data);
+  const getAsyncData = async () => {
+    setLivesiteData(await getLivesiteData());
   };
 
   useEffect(() => {
-    asyncGetLivesiteData();
+    getAsyncData();
   }, []);
-
   return (
     <Page
       currentPath="Livesite"
@@ -78,7 +74,7 @@ export default ({ hackathons }) => {
       <Card>
         <CardHeader>
           <CardTitle>Livesite Settings</CardTitle>
-          <p>{`Last edited by ${"asd"} at ${formatDate(123)}`}</p>
+          <p>{`Last edited by ${'asd'} at ${formatDate(123)}`}</p>
           <CardButtonContainer>
             <Button type={EDIT} onClick={() => setisEditing(true)} />
           </CardButtonContainer>
@@ -86,7 +82,7 @@ export default ({ hackathons }) => {
         <CardContent>
           {isEditing ? (
             <>
-              <ModalField
+              {/* <ModalField
                 label="Active Hackathon ID"
                 modalAction={EDIT}
                 value={livesiteData.activeHackathon}
@@ -96,7 +92,26 @@ export default ({ hackathons }) => {
                     activeHackathon: event.target.value,
                   })
                 }
-              />
+              /> */}
+              <Label>Active Hackathon</Label>
+              <select
+                value={livesiteData.activeHackathon}
+                onChange={(event) =>
+                  setLivesiteData({
+                    ...livesiteData,
+                    activeHackathon: event.target.value,
+                  })
+                }
+              >
+                {hackathons.map((hackathon) => {
+                  return (
+                    <option key={hackathon} value={hackathon}>
+                      {hackathon}
+                    </option>
+                  );
+                })}
+              </select>
+              <Label>Livesite Logo</Label>
               <input
                 type="file"
                 id="file"
@@ -105,7 +120,6 @@ export default ({ hackathons }) => {
                 onChange={selectImageFile}
                 style={{ display: 'none' }}
               />
-              <Label>Livesite Logo</Label>
               <UploadContainer
                 type="text"
                 value={fileUpload.imgName}
@@ -118,7 +132,7 @@ export default ({ hackathons }) => {
             </>
           ) : (
             <>
-              <Label>Active Hackathon ID</Label>
+              <Label>Active Hackathon</Label>
               {livesiteData.activeHackathon}
               <Label>Livesite Logo</Label>
               <img src={livesiteData.imgUrl} alt="logo" />

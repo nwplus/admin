@@ -1,5 +1,6 @@
 /* eslint-disable no-alert */
 import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
 import { format } from 'timeago.js';
 import ReactMarkdown from 'react-markdown';
 import AnnouncementsCard from '../../components/announcementsCard';
@@ -15,6 +16,10 @@ import {
 } from '../../utility/firebase';
 import { EDIT, NEW, LIVESITE_NAVBAR } from '../../constants';
 import { useAuth } from '../../utility/auth';
+
+const StyledTextBox = styled(TextBox)`
+  margin-bottom: 12px;
+`;
 
 const Markdown = ({ content }) => (
   <ReactMarkdown
@@ -53,13 +58,11 @@ export default ({ hackathons }) => {
   const [currentAnnouncement, setCurrentAnnouncement] = useState({});
   const { email: user } = useAuth().user;
 
-  const getAsyncData = async () => {
-    setActiveHackathon(await getActiveHackathon);
-    setIsLoading(false);
-  };
-
   useEffect(() => {
-    getAsyncData();
+    (async () => {
+      setActiveHackathon(await getActiveHackathon);
+      setIsLoading(false);
+    })();
   });
 
   // eslint-disable-next-line consistent-return
@@ -130,13 +133,11 @@ export default ({ hackathons }) => {
       >
         <div>
           <strong>Announcement Content</strong>
-          <TextBox
+          <StyledTextBox
             defaultValue={currentAnnouncement.content}
             modalAction={EDIT}
             onChange={(event) => changeCurrentAnnouncement(event.target.value)}
           />
-          <br />
-          <br />
           <strong>Preview:</strong>
           <Markdown content={currentAnnouncement.content} />
           <p>
@@ -154,19 +155,14 @@ export default ({ hackathons }) => {
       >
         <div>
           <strong>Announcement Content</strong>
-          <TextBox
+          <StyledTextBox
             defaultValue={currentAnnouncement.content}
             modalAction={NEW}
             onChange={(event) => changeCurrentAnnouncement(event.target.value)}
           />
-          <br />
-          <br />
           <strong>Preview:</strong>
           <Markdown content={currentAnnouncement.content} />
-          <p>
-            {format(currentAnnouncement.timestamp)} @{' '}
-            {announcementDateFormat(Date.now())}
-          </p>
+          <p>just now @ {announcementDateFormat(Date.now())}</p>
         </div>
       </Modal>
     </Page>

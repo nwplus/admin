@@ -318,11 +318,12 @@ export const getActiveHackathon = db
   .get()
   .then((doc) => doc.data()?.activeHackathon);
 
+const announcementsRef = (hackathon) => {
+  return db.collection(Hackathons).doc(hackathon).collection('Announcements');
+};
+
 export const subscribeToLivesiteAnnouncements = (hackathon, callback) => {
-  return db
-    .collection(Hackathons)
-    .doc(hackathon)
-    .collection('Announcements')
+  return announcementsRef(hackathon)
     .orderBy('timestamp', 'desc')
     .onSnapshot((querySnapshot) => {
       const announcements = {};
@@ -335,31 +336,17 @@ export const subscribeToLivesiteAnnouncements = (hackathon, callback) => {
 
 export const updateAnnouncement = async (hackathon, announcement) => {
   if (announcement.id) {
-    const ref = db
-      .collection(Hackathons)
-      .doc(hackathon)
-      .collection('Announcements')
-      .doc(announcement.id);
+    const ref = announcementsRef(hackathon).doc(announcement.id);
     delete announcement.id;
     await ref.set(announcement);
     return announcement.id;
   }
   announcement.timestamp = Date.now();
-  const ref = await db
-    .collection(Hackathons)
-    .doc(hackathon)
-    .collection('Announcements')
-    .doc()
-    .set(announcement);
+  const ref = await announcementsRef(hackathon).doc().set(announcement);
   console.log(ref);
   return ref;
 };
 
 export const deleteAnnouncement = async (hackathon, id) => {
-  await db
-    .collection(Hackathons)
-    .doc(hackathon)
-    .collection('Announcements')
-    .doc(id)
-    .delete();
+  await announcementsRef(hackathon).doc(id).delete();
 };

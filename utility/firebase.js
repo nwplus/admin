@@ -325,9 +325,10 @@ export const subscribeToLivesiteAnnouncements = (hackathon, callback) => {
     .collection('Announcements')
     .orderBy('timestamp', 'desc')
     .onSnapshot((querySnapshot) => {
-      const announcements = Object.values(
-        querySnapshot.docs.map((doc) => doc.data())
-      );
+      const announcements = {};
+      querySnapshot.docs.forEach((doc) => {
+        announcements[doc.id] = doc.data();
+      });
       callback(announcements);
     });
 };

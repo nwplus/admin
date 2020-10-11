@@ -9,15 +9,17 @@ import Card, {
   CardContentButtonContainer,
   CancelButton,
 } from '../../components/card';
-import { ModalField, UploadContainer } from '../../components/modal';
+import { UploadContainer } from '../../components/modal';
 import Button from '../../components/button';
 import {
   formatDate,
+  getTimestamp,
   getHackathons,
   getLivesiteData,
   updateLivesiteData,
   uploadLivesiteLogoToStorage,
 } from '../../utility/firebase';
+import { useAuth } from '../../utility/auth';
 import { LIVESITE_NAVBAR, EDIT } from '../../constants';
 
 const Label = styled.p`
@@ -30,25 +32,34 @@ export default ({ hackathons }) => {
   const [isEditing, setisEditing] = useState(false);
   const [imgFile, setImgFile] = useState();
   const [fileUpload] = useState({});
+  const { email: user } = useAuth().user;
 
   // MODAL SUBMIT BUTTON CLICKED (NEW + EDIT)
   const handleSave = async () => {
-    setisEditing(false);
     // 1. uploads to firebase
     // newobj.imgURL is a file object
     if (imgFile) {
       const url = await uploadLivesiteLogoToStorage(imgFile);
       setLivesiteData({
         ...livesiteData,
+        lastEdited: getTimestamp(),
+        lastEditedBy: user,
         imgUrl: url,
       });
       updateLivesiteData({
         ...livesiteData,
+        lastEdited: getTimestamp(),
+        lastEditedBy: user,
         imgUrl: url,
       });
     } else {
-      updateLivesiteData(livesiteData);
+      await updateLivesiteData({
+        ...livesiteData,
+        lastEdited: getTimestamp(),
+        lastEditedBy: user,
+      });
     }
+    setisEditing(false);
   };
 
   const selectImageFile = (e) => {
@@ -74,7 +85,11 @@ export default ({ hackathons }) => {
       <Card>
         <CardHeader>
           <CardTitle>Livesite Settings</CardTitle>
-          <p>{`Last edited by ${'asd'} at ${formatDate(123)}`}</p>
+          <p>
+            {`Last edited by ${livesiteData.lastEditedBy} at ${formatDate(
+              livesiteData.lastEdited
+            )}`}
+          </p>
           <CardButtonContainer>
             <Button type={EDIT} onClick={() => setisEditing(true)} />
           </CardButtonContainer>
@@ -82,17 +97,6 @@ export default ({ hackathons }) => {
         <CardContent>
           {isEditing ? (
             <>
-              {/* <ModalField
-                label="Active Hackathon ID"
-                modalAction={EDIT}
-                value={livesiteData.activeHackathon}
-                onChange={(event) =>
-                  setLivesiteData({
-                    ...livesiteData,
-                    activeHackathon: event.target.value,
-                  })
-                }
-              /> */}
               <Label>Active Hackathon</Label>
               <select
                 value={livesiteData.activeHackathon}

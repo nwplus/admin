@@ -15,6 +15,7 @@ import {
   formatDate,
   getHackathons,
   getLivesiteData,
+  updateLivesiteData,
   uploadLivesiteLogoToStorage,
 } from '../../utility/firebase';
 import { LIVESITE_NAVBAR, EDIT } from '../../constants';
@@ -30,6 +31,8 @@ export default ({ hackathons }) => {
   const [imgFile, setImgFile] = useState();
   const [fileUpload] = useState({});
 
+  console.log(livesiteData);
+
   // MODAL SUBMIT BUTTON CLICKED (NEW + EDIT)
   const handleSave = async () => {
     setisEditing(false);
@@ -37,8 +40,16 @@ export default ({ hackathons }) => {
     // newobj.imgURL is a file object
     if (imgFile) {
       const url = await uploadLivesiteLogoToStorage(imgFile);
-      fileUpload.imgURL = url;
-      fileUpload.imgName = imgFile.name;
+      setLivesiteData({
+        ...livesiteData,
+        imgUrl: url,
+      });
+      updateLivesiteData({
+        ...livesiteData,
+        imgUrl: url,
+      });
+    } else {
+      updateLivesiteData(livesiteData);
     }
   };
 
@@ -47,11 +58,6 @@ export default ({ hackathons }) => {
       setImgFile(e.target.files[0]);
       fileUpload.imgName = e.target.files[0].name;
     }
-  };
-
-  // clicks the invisible <input type='file />
-  const fileClick = () => {
-    inputFile.current.click();
   };
 
   const asyncGetLivesiteData = async () => {
@@ -83,10 +89,11 @@ export default ({ hackathons }) => {
               <ModalField
                 label="Active Hackathon ID"
                 modalAction={EDIT}
+                value={livesiteData.activeHackathon}
                 onChange={(event) =>
                   setLivesiteData({
                     ...livesiteData,
-                    hackathonID: event.target.value,
+                    activeHackathon: event.target.value,
                   })
                 }
               />
@@ -102,7 +109,7 @@ export default ({ hackathons }) => {
               <UploadContainer
                 type="text"
                 value={fileUpload.imgName}
-                onClick={fileClick}
+                onClick={() => inputFile.current.click()}
               />
               <CardContentButtonContainer>
                 <CancelButton onClick={() => setisEditing(false)} />

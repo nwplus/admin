@@ -265,10 +265,24 @@ export const uploadSponsorImageToStorage = async (website, file) => {
     const uploadData = await ref.put(file);
     return uploadData.ref.getDownloadURL();
   } catch (e) {
+    // eslint-disable-next-line no-alert
     alert(e);
     return null;
   }
 };
+
+export const uploadLivesiteLogoToStorage = async (file) => {
+  try {
+    const ref = storage.ref(`logo.svg`);
+    const uploadData = await ref.put(file);
+    return uploadData.ref.getDownloadURL();
+  } catch (e) {
+    // eslint-disable-next-line no-alert
+    alert(e);
+    return null;
+  }
+};
+
 export const getImageFilebyName = async (website, imgURL) => {
   const imgId = imgURL.split('/').slice(-1)[0];
   const ref = await storage
@@ -349,4 +363,20 @@ export const updateAnnouncement = async (hackathon, announcement) => {
 
 export const deleteAnnouncement = async (hackathon, id) => {
   await announcementsRef(hackathon).doc(id).delete();
+};
+
+export const getLivesiteData = async () => {
+  const ref = db.collection(InternalWebsitesCollection).doc(LivesiteCollection);
+  const doc = await ref.get();
+  return doc.data();
+};
+
+export const updateLivesiteData = async (data) => {
+  const doc = {
+    ...data,
+  };
+  return db
+    .collection(InternalWebsitesCollection)
+    .doc(LivesiteCollection)
+    .update(doc);
 };

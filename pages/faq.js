@@ -125,6 +125,7 @@ export default function Faq({ hackathons }) {
   }, [window.location.pathname]);
 
   useEffect(() => {
+    // eslint-disable-next-line no-alert
     if (alertMsg.length > 0) alert(alertMsg);
   }, [alertMsg]);
 

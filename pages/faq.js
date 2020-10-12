@@ -16,7 +16,13 @@ import Card, {
   CardContent,
 } from '../components/card';
 import Button from '../components/button';
-import Modal, { ModalContent, ModalField } from '../components/modal';
+import Modal, {
+  GenericText,
+  Label,
+  ModalContent,
+  ModalField,
+} from '../components/modal';
+import Checkbox from '../components/checkbox';
 import { COLOR, EDIT, VIEW, NEW, DELETE, FAQ, FAQCategory } from '../constants';
 import { useAuth } from '../utility/auth';
 import Page from '../components/page';
@@ -128,6 +134,10 @@ export default function Faq({ hackathons }) {
     if (alertMsg.length > 0) alert(alertMsg);
   }, [alertMsg]);
 
+  useEffect(() => {
+    console.log(faqEditing);
+  }, [faqEditing]);
+
   const handleNew = async () => {
     // TODO jenny please add proper hackathonID handling
     newFaq.hackathonIDs = [];
@@ -154,6 +164,22 @@ export default function Faq({ hackathons }) {
       ...faq,
       [property]: value,
     });
+  };
+
+  const handleToggle = (hackathon) => {
+    if (faqEditing.hackathonIDs.includes(hackathon)) {
+      setFaqEditing({
+        ...faqEditing,
+        hackathonIDs: faqEditing.hackathonIDs.filter(
+          (item) => item !== hackathon
+        ),
+      });
+    } else {
+      setFaqEditing({
+        ...faqEditing,
+        hackathonIDs: faqEditing.hackathonIDs.push(hackathon),
+      });
+    }
   };
 
   const handleUpdate = () => {
@@ -402,19 +428,35 @@ export default function Faq({ hackathons }) {
               />
             </ModalContent>
             <ModalContent page={FAQ} columns={1}>
-              <ModalField
-                label="Answer"
-                value={faqEditing.answer}
-                modalAction={EDIT}
-                onChange={(event) => {
-                  handleInput(
-                    'answer',
-                    event.target.value,
-                    faqEditing,
-                    setFaqEditing
-                  );
-                }}
-              />
+              <div>
+                <ModalField
+                  label="Answer"
+                  value={faqEditing.answer}
+                  modalAction={EDIT}
+                  onChange={(event) => {
+                    handleInput(
+                      'answer',
+                      event.target.value,
+                      faqEditing,
+                      setFaqEditing
+                    );
+                  }}
+                />
+                <Label>Hackathons this FAQ applies to</Label>
+                {faqEditing.hackathonIDs &&
+                  hackathons.map((hackathon) => (
+                    <Checkbox
+                      key={hackathon}
+                      id={hackathon}
+                      label={hackathon}
+                      checked={
+                        faqEditing.hackathonIDs &&
+                        faqEditing.hackathonIDs.indexOf(hackathon) != -1
+                      }
+                      onClick={() => handleToggle(hackathon)}
+                    />
+                  ))}
+              </div>
             </ModalContent>
           </Modal>
 

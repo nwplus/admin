@@ -326,6 +326,45 @@ export const subscribeToCMSStatus = (dateCallback) => {
     });
 };
 
+export const getActiveHackathon = db
+  .collection(InternalWebsitesCollection)
+  .doc(LivesiteCollection)
+  .get()
+  .then((doc) => doc.data()?.activeHackathon);
+
+const announcementsRef = (hackathon) => {
+  return db.collection(Hackathons).doc(hackathon).collection('Announcements');
+};
+
+export const subscribeToLivesiteAnnouncements = (hackathon, callback) => {
+  return announcementsRef(hackathon)
+    .orderBy('timestamp', 'desc')
+    .onSnapshot((querySnapshot) => {
+      const announcements = {};
+      querySnapshot.docs.forEach((doc) => {
+        announcements[doc.id] = doc.data();
+      });
+      callback(announcements);
+    });
+};
+
+export const updateAnnouncement = async (hackathon, announcement) => {
+  if (announcement.id) {
+    const ref = announcementsRef(hackathon).doc(announcement.id);
+    delete announcement.id;
+    await ref.set(announcement);
+    return announcement.id;
+  }
+  announcement.timestamp = Date.now();
+  const ref = await announcementsRef(hackathon).doc().set(announcement);
+  console.log(ref);
+  return ref;
+};
+
+export const deleteAnnouncement = async (hackathon, id) => {
+  await announcementsRef(hackathon).doc(id).delete();
+};
+
 export const getLivesiteData = async () => {
   const ref = db.collection(InternalWebsitesCollection).doc(LivesiteCollection);
   const doc = await ref.get();

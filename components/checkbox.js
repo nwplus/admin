@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { COLOR } from '../constants';
 
 const CheckboxContainer = styled.div`
-  margin: 8px 8px;
+  margin: 8px;
 `;
 const HiddenCheckbox = styled.input.attrs({ type: 'checkbox' })`
   border: 0;

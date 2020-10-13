@@ -56,7 +56,7 @@ export const InputField = styled.input`
   font-size: 16px;
 `;
 
-export const GenericText = styled.p`
+const GenericText = styled.p`
   font-size: 16px;
   line-height: 20px;
   color: ${COLOR.BODY_TEXT};

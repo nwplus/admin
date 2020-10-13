@@ -16,12 +16,7 @@ import Card, {
   CardContent,
 } from '../components/card';
 import Button from '../components/button';
-import Modal, {
-  GenericText,
-  Label,
-  ModalContent,
-  ModalField,
-} from '../components/modal';
+import Modal, { Label, ModalContent, ModalField } from '../components/modal';
 import Checkbox from '../components/checkbox';
 import { COLOR, EDIT, VIEW, NEW, DELETE, FAQ, FAQCategory } from '../constants';
 import { useAuth } from '../utility/auth';
@@ -122,10 +117,10 @@ export default function Faq({ hackathons }) {
   const fetchFaqs = async () => {
     const faqsFetched = await getFaqs();
     Object.keys(faqsFetched).length > 0 && setFaqs(faqsFetched);
-    setIsLoading(false);
   };
   useEffect(() => {
     fetchFaqs();
+    setIsLoading(false);
   }, [window.location.pathname]);
 
   useEffect(() => {
@@ -144,7 +139,7 @@ export default function Faq({ hackathons }) {
         id: faqID,
       },
     });
-    setNewFaq({});
+    setNewFaq({ hackathonIDs: [] });
     setAddNew(false);
     setAlertMsg(
       `Successfully added the following question: \n${newFaq.question}`
@@ -358,15 +353,16 @@ export default function Faq({ hackathons }) {
                   }}
                 />
                 <Label>Hackathons this FAQ applies to</Label>
-                {newFaq.hackathonIDs && hackathons.map((hackathon) => (
-                  <Checkbox
-                    key={hackathon}
-                    id={hackathon}
-                    label={hackathon}
-                    checked={newFaq.hackathonIDs.includes(hackathon)}
-                    onClick={() => handleToggle(hackathon, newFaq, setNewFaq)}
-                  />
-                ))}
+                {newFaq.hackathonIDs &&
+                  hackathons.map((hackathon) => (
+                    <Checkbox
+                      key={hackathon}
+                      id={hackathon}
+                      label={hackathon}
+                      checked={newFaq.hackathonIDs.includes(hackathon)}
+                      onClick={() => handleToggle(hackathon, newFaq, setNewFaq)}
+                    />
+                  ))}
               </div>
             </ModalContent>
           </Modal>

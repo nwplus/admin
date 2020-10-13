@@ -19,13 +19,15 @@ const HiddenCheckbox = styled.input.attrs({ type: 'checkbox' })`
 `;
 
 const StyledCheckbox = styled.div`
-  cursor: pointer;
+  cursor: ${(props) => (!props.disabled ? 'pointer' : 'not-allowed')};
   vertical-align: middle;
   float: left;
   display: inline-block;
   width: 16px;
   height: 16px;
   background: ${(props) => (props.checked ? 'salmon' : COLOR.GRAY)};
+  background: ${(props) =>
+    props.checked && props.disabled && COLOR.PRIMARY_DARK};
   border-radius: 3px;
   transition: all 150ms;
   ${HiddenCheckbox}:focus + & {
@@ -45,16 +47,23 @@ const StyledLabel = styled.label`
   margin: 0 8px;
 `;
 
-export default function Checkbox({ id, label, checked, onClick }) {
+export default function Checkbox({
+  id,
+  label,
+  checked,
+  onClick,
+  disabled = false,
+}) {
   return (
     <CheckboxContainer>
       <HiddenCheckbox id={id} type="checkbox" />
-      <StyledCheckbox checked={checked} onClick={onClick}>
-        <Icon viewBox="0 0 24 24">
-          <polyline points="20 6 9 17 4 12" />
-        </Icon>
+      <StyledCheckbox checked={checked} onClick={onClick} disabled={disabled}>
+        {checked && !disabled && (
+          <Icon viewBox="0 0 24 24">
+            <polyline points="20 6 9 17 4 12" />
+          </Icon>
+        )}
       </StyledCheckbox>
-      {/* <input type="checkbox" onChange={onChange} checked={checked} /> */}
       <StyledLabel>{label}</StyledLabel>
     </CheckboxContainer>
   );

@@ -139,7 +139,6 @@ export default function Faq({ hackathons }) {
   }, [faqEditing]);
 
   const handleNew = async () => {
-    // TODO jenny please add proper hackathonID handling
     newFaq.hackathonIDs = [];
     newFaq.category = newFaq.category ? newFaq.category : FAQCategory.GENERAL;
     newFaq.lastModifiedBy = user;
@@ -166,18 +165,18 @@ export default function Faq({ hackathons }) {
     });
   };
 
-  const handleToggle = (hackathon) => {
-    if (faqEditing.hackathonIDs.includes(hackathon)) {
-      setFaqEditing({
-        ...faqEditing,
-        hackathonIDs: faqEditing.hackathonIDs.filter(
-          (item) => item !== hackathon
-        ),
+  const handleToggle = (hackathon, faq, setState) => {
+    if (faq.hackathonIDs.includes(hackathon)) {
+      setState({
+        ...faq,
+        hackathonIDs: faq.hackathonIDs.filter((item) => {
+          return item !== hackathon;
+        }),
       });
     } else {
-      setFaqEditing({
-        ...faqEditing,
-        hackathonIDs: faqEditing.hackathonIDs.push(hackathon),
+      setState({
+        ...faq,
+        hackathonIDs: [...faq.hackathonIDs, hackathon],
       });
     }
   };
@@ -352,13 +351,31 @@ export default function Faq({ hackathons }) {
               />
             </ModalContent>
             <ModalContent page={FAQ} columns={1}>
-              <ModalField
-                label="Answer"
-                modalAction={NEW}
-                onChange={(event) => {
-                  handleInput('answer', event.target.value, newFaq, setNewFaq);
-                }}
-              />
+              <div>
+                <ModalField
+                  label="Answer"
+                  modalAction={NEW}
+                  onChange={(event) => {
+                    handleInput(
+                      'answer',
+                      event.target.value,
+                      newFaq,
+                      setNewFaq
+                    );
+                  }}
+                />
+                <Label>Hackathons this FAQ applies to</Label>
+                {newFaq.hackathonIDs &&
+                  hackathons.map((hackathon) => (
+                    <Checkbox
+                      key={hackathon}
+                      id={hackathon}
+                      label={hackathon}
+                      checked={newFaq.hackathonIDs.includes(hackathon)}
+                      onClick={() => handleToggle(hackathon, newFaq, setNewFaq)}
+                    />
+                  ))}
+              </div>
             </ModalContent>
           </Modal>
 
@@ -383,11 +400,24 @@ export default function Faq({ hackathons }) {
               />
             </ModalContent>
             <ModalContent page={FAQ} columns={1}>
-              <ModalField
-                label="Answer"
-                value={faqViewing.answer}
-                modalAction={VIEW}
-              />
+              <div>
+                <ModalField
+                  label="Answer"
+                  value={faqViewing.answer}
+                  modalAction={VIEW}
+                />
+                <Label>Hackathons this FAQ applies to</Label>
+                {faqViewing.hackathonIDs &&
+                  hackathons.map((hackathon) => (
+                    <Checkbox
+                      key={hackathon}
+                      id={hackathon}
+                      label={hackathon}
+                      checked={faqViewing.hackathonIDs.includes(hackathon)}
+                      disabled
+                    />
+                  ))}
+              </div>
             </ModalContent>
           </Modal>
 
@@ -449,11 +479,10 @@ export default function Faq({ hackathons }) {
                       key={hackathon}
                       id={hackathon}
                       label={hackathon}
-                      checked={
-                        faqEditing.hackathonIDs &&
-                        faqEditing.hackathonIDs.indexOf(hackathon) != -1
+                      checked={faqEditing.hackathonIDs.includes(hackathon)}
+                      onClick={() =>
+                        handleToggle(hackathon, faqEditing, setFaqEditing)
                       }
-                      onClick={() => handleToggle(hackathon)}
                     />
                   ))}
               </div>
@@ -481,11 +510,24 @@ export default function Faq({ hackathons }) {
               />
             </ModalContent>
             <ModalContent page={FAQ} columns={1}>
-              <ModalField
-                label="Answer"
-                value={faqConfirm.answer}
-                modalAction={VIEW}
-              />
+              <div>
+                <ModalField
+                  label="Answer"
+                  value={faqConfirm.answer}
+                  modalAction={VIEW}
+                />
+                <Label>Hackathons this FAQ applies to</Label>
+                {faqEditing.hackathonIDs &&
+                  hackathons.map((hackathon) => (
+                    <Checkbox
+                      key={hackathon}
+                      id={hackathon}
+                      label={hackathon}
+                      checked={faqEditing.hackathonIDs.includes(hackathon)}
+                      disabled
+                    />
+                  ))}
+              </div>
             </ModalContent>
           </Modal>
         </CardContent>

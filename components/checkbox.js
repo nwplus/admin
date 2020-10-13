@@ -26,8 +26,7 @@ const StyledCheckbox = styled.div`
   width: 16px;
   height: 16px;
   background: ${(props) => (props.checked ? 'salmon' : COLOR.GRAY)};
-  background: ${(props) =>
-    props.checked && props.disabled && COLOR.PRIMARY_DARK};
+  background: ${(props) => props.checked && props.disabled && COLOR.DARK_GRAY};
   border-radius: 3px;
   transition: all 150ms;
   ${HiddenCheckbox}:focus + & {
@@ -58,7 +57,7 @@ export default function Checkbox({
     <CheckboxContainer>
       <HiddenCheckbox id={id} type="checkbox" />
       <StyledCheckbox checked={checked} onClick={onClick} disabled={disabled}>
-        {checked && !disabled && (
+        {checked && (
           <Icon viewBox="0 0 24 24">
             <polyline points="20 6 9 17 4 12" />
           </Icon>

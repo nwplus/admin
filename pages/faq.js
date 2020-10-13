@@ -116,7 +116,7 @@ export default function Faq({ hackathons }) {
 
   const fetchFaqs = async () => {
     const faqsFetched = await getFaqs();
-    Object.keys(faqsFetched).length > 0 && setFaqs(faqsFetched);
+    if (Object.keys(faqsFetched).length > 0) setFaqs(faqsFetched);
   };
   useEffect(() => {
     fetchFaqs();

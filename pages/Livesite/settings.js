@@ -141,6 +141,15 @@ export default ({ hackathons }) => {
     </>
   );
 
+  const LocalDate = ({ date }) => {
+    if (date) {
+      return new Date(
+        date.slice(0, -1).replace('T', ' ').replace('-', '/')
+      ).toLocaleString();
+    }
+    return null;
+  };
+
   return (
     <Page
       currentPath="Livesite"
@@ -180,6 +189,7 @@ export default ({ hackathons }) => {
               </Group>
               <Group>
                 <Label>Hacking Period End Time</Label>
+                <DatePicker field="hackingEnd" />
               </Group>
               <Group>
                 <Label>Livesite Logo</Label>
@@ -198,19 +208,19 @@ export default ({ hackathons }) => {
               </Group>
               <Group>
                 <Label>{livesiteData.activeHackathon} Start Time</Label>
-                {livesiteData.hackathonStart}
+                <LocalDate date={livesiteData.hackathonStart} />
               </Group>
               <Group>
                 <Label>{livesiteData.activeHackathon} End Time</Label>
-                {livesiteData.hackathonEnd}
+                <LocalDate date={livesiteData.hackathonEnd} />
               </Group>
               <Group>
                 <Label>Hacking Period Start Time</Label>
-                {livesiteData.hackingStart}
+                <LocalDate date={livesiteData.hackingEnd} />
               </Group>
               <Group>
                 <Label>Hacking Period End Time</Label>
-                {livesiteData.hackingEnd}
+                <LocalDate date={livesiteData.hackingStart} />
               </Group>
               <Group>
                 <Label>Livesite Logo</Label>

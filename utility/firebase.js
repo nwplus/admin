@@ -367,7 +367,7 @@ export const deleteAnnouncement = async (hackathon, id) => {
   await announcementsRef(hackathon).doc(id).delete();
 };
 
-export const subscribeToLivesiteData = async (callback) => {
+export const subscribeToLivesiteData = (callback) => {
   return livesiteDocRef.onSnapshot((doc) => callback(doc.data()));
 };
 

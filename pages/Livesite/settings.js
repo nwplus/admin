@@ -78,7 +78,8 @@ export default ({ hackathons }) => {
   };
 
   useEffect(() => {
-    return subscribeToLivesiteData(setLivesiteData);
+    const unsubscribe = subscribeToLivesiteData(setLivesiteData);
+    return unsubscribe;
   }, []);
 
   const HackathonChooser = () => (
@@ -100,6 +101,27 @@ export default ({ hackathons }) => {
       })}
     </select>
   );
+
+  const DatePicker = ({ field }) => {
+    const handleDateChange = (event) => {
+      // State: Contains ISO string of the date
+      const dateToSave = new Date(event.target.value);
+      const timeZoneOffset = new Date().getTimezoneOffset() * 60000;
+      const UTCDate = new Date(dateToSave - timeZoneOffset).toISOString();
+      setLivesiteData({ ...livesiteData, [field]: UTCDate });
+    };
+
+    // View: Converts ISO string to datetime string
+    // https://developer.mozilla.org/en-US/docs/Web/HTML/Date_and_time_formats#Local_date_and_time_strings
+    const domStringDate = livesiteData[field].slice(0, -1);
+    return (
+      <input
+        type="datetime-local"
+        value={domStringDate}
+        onChange={(e) => handleDateChange(e)}
+      />
+    );
+  };
 
   const LogoUpload = () => (
     <>
@@ -145,8 +167,19 @@ export default ({ hackathons }) => {
                 <HackathonChooser />
               </Group>
               <Group>
-                <Label>Active Hackathon</Label>
-                <HackathonChooser />
+                <Label>{livesiteData.activeHackathon} Start Time</Label>
+                <DatePicker field="hackathonStart" />
+              </Group>
+              <Group>
+                <Label>{livesiteData.activeHackathon} End Time</Label>
+                <DatePicker field="hackathonEnd" />
+              </Group>
+              <Group>
+                <Label>Hacking Period Start Time</Label>
+                <DatePicker field="hackingStart" />
+              </Group>
+              <Group>
+                <Label>Hacking Period End Time</Label>
               </Group>
               <Group>
                 <Label>Livesite Logo</Label>
@@ -164,11 +197,11 @@ export default ({ hackathons }) => {
                 {livesiteData.activeHackathon}
               </Group>
               <Group>
-                <Label>Hackathon Start Time</Label>
+                <Label>{livesiteData.activeHackathon} Start Time</Label>
                 {livesiteData.hackathonStart}
               </Group>
               <Group>
-                <Label>Hackathon End Time</Label>
+                <Label>{livesiteData.activeHackathon} End Time</Label>
                 {livesiteData.hackathonEnd}
               </Group>
               <Group>

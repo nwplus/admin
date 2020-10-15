@@ -326,9 +326,11 @@ export const subscribeToCMSStatus = (dateCallback) => {
     });
 };
 
-export const getActiveHackathon = db
+const livesiteDocRef = db
   .collection(InternalWebsitesCollection)
-  .doc(LivesiteCollection)
+  .doc(LivesiteCollection);
+
+export const getActiveHackathon = livesiteDocRef
   .get()
   .then((doc) => doc.data()?.activeHackathon);
 
@@ -365,18 +367,10 @@ export const deleteAnnouncement = async (hackathon, id) => {
   await announcementsRef(hackathon).doc(id).delete();
 };
 
-export const getLivesiteData = async () => {
-  const ref = db.collection(InternalWebsitesCollection).doc(LivesiteCollection);
-  const doc = await ref.get();
-  return doc.data();
+export const subscribeToLivesiteData = async (callback) => {
+  return livesiteDocRef.onSnapshot((doc) => callback(doc.data()));
 };
 
 export const updateLivesiteData = async (data) => {
-  const doc = {
-    ...data,
-  };
-  return db
-    .collection(InternalWebsitesCollection)
-    .doc(LivesiteCollection)
-    .update(doc);
+  return livesiteDocRef.update(data);
 };

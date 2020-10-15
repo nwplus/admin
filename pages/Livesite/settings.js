@@ -15,7 +15,7 @@ import {
   formatDate,
   getTimestamp,
   getHackathons,
-  getLivesiteData,
+  subscribeToLivesiteData,
   updateLivesiteData,
   uploadLivesiteLogoToStorage,
 } from '../../utility/firebase';
@@ -24,6 +24,14 @@ import { LIVESITE_NAVBAR, EDIT } from '../../constants';
 
 const Label = styled.p`
   font-weight: bold;
+  margin: 10px 0;
+`;
+
+const Group = styled.div`
+  margin: 32px 0;
+  &:nth-child(1) {
+    margin-top: 0;
+  }
 `;
 
 export default ({ hackathons }) => {
@@ -69,13 +77,48 @@ export default ({ hackathons }) => {
     }
   };
 
-  const getAsyncData = async () => {
-    setLivesiteData(await getLivesiteData());
-  };
-
   useEffect(() => {
-    getAsyncData();
+    return subscribeToLivesiteData(setLivesiteData);
   }, []);
+
+  const HackathonChooser = () => (
+    <select
+      value={livesiteData.activeHackathon}
+      onChange={(event) =>
+        setLivesiteData({
+          ...livesiteData,
+          activeHackathon: event.target.value,
+        })
+      }
+    >
+      {hackathons.map((hackathon) => {
+        return (
+          <option key={hackathon} value={hackathon}>
+            {hackathon}
+          </option>
+        );
+      })}
+    </select>
+  );
+
+  const LogoUpload = () => (
+    <>
+      <input
+        type="file"
+        id="file"
+        ref={inputFile}
+        accept="image/*"
+        onChange={selectImageFile}
+        style={{ display: 'none' }}
+      />
+      <UploadContainer
+        type="text"
+        value={fileUpload.imgName}
+        onClick={() => inputFile.current.click()}
+      />
+    </>
+  );
+
   return (
     <Page
       currentPath="Livesite"
@@ -97,38 +140,18 @@ export default ({ hackathons }) => {
         <CardContent>
           {isEditing ? (
             <>
-              <Label>Active Hackathon</Label>
-              <select
-                value={livesiteData.activeHackathon}
-                onChange={(event) =>
-                  setLivesiteData({
-                    ...livesiteData,
-                    activeHackathon: event.target.value,
-                  })
-                }
-              >
-                {hackathons.map((hackathon) => {
-                  return (
-                    <option key={hackathon} value={hackathon}>
-                      {hackathon}
-                    </option>
-                  );
-                })}
-              </select>
-              <Label>Livesite Logo</Label>
-              <input
-                type="file"
-                id="file"
-                ref={inputFile}
-                accept="image/*"
-                onChange={selectImageFile}
-                style={{ display: 'none' }}
-              />
-              <UploadContainer
-                type="text"
-                value={fileUpload.imgName}
-                onClick={() => inputFile.current.click()}
-              />
+              <Group>
+                <Label>Active Hackathon</Label>
+                <HackathonChooser />
+              </Group>
+              <Group>
+                <Label>Active Hackathon</Label>
+                <HackathonChooser />
+              </Group>
+              <Group>
+                <Label>Livesite Logo</Label>
+                <LogoUpload />
+              </Group>
               <CardContentButtonContainer>
                 <CancelButton onClick={() => setisEditing(false)} />
                 <Button onClick={() => handleSave()}>Save</Button>
@@ -136,10 +159,30 @@ export default ({ hackathons }) => {
             </>
           ) : (
             <>
-              <Label>Active Hackathon</Label>
-              {livesiteData.activeHackathon}
-              <Label>Livesite Logo</Label>
-              <img src={livesiteData.imgUrl} alt="logo" />
+              <Group>
+                <Label>Active Hackathon</Label>
+                {livesiteData.activeHackathon}
+              </Group>
+              <Group>
+                <Label>Hackathon Start Time</Label>
+                {livesiteData.hackathonStart}
+              </Group>
+              <Group>
+                <Label>Hackathon End Time</Label>
+                {livesiteData.hackathonEnd}
+              </Group>
+              <Group>
+                <Label>Hacking Period Start Time</Label>
+                {livesiteData.hackingStart}
+              </Group>
+              <Group>
+                <Label>Hacking Period End Time</Label>
+                {livesiteData.hackingEnd}
+              </Group>
+              <Group>
+                <Label>Livesite Logo</Label>
+                <img src={livesiteData.imgUrl} alt="logo" />
+              </Group>
             </>
           )}
         </CardContent>

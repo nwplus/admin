@@ -104,10 +104,19 @@ export default ({ hackathons }) => {
   );
 
   const DatePicker = ({ field }) => {
+    const [editingDate, setEditingDate] = useState();
+
     const handleDateChange = (event) => {
       // State: Contains UTC ISO string of the date
       const momentDate = moment(event.target.value);
-      setLivesiteData({ ...livesiteData, [field]: momentDate.toISOString() });
+      setEditingDate(momentDate.toISOString());
+    };
+
+    const handleBlur = () => {
+      if (editingDate) {
+        setLivesiteData({ ...livesiteData, [field]: editingDate });
+      }
+      setEditingDate('');
     };
 
     // View: Converts ISO UTC string to local date in format 2017-06-01T08:30
@@ -119,6 +128,7 @@ export default ({ hackathons }) => {
       <input
         type="datetime-local"
         value={domStringDate}
+        onBlur={() => handleBlur()}
         onChange={(e) => handleDateChange(e)}
       />
     );
@@ -144,9 +154,7 @@ export default ({ hackathons }) => {
 
   const LocalDate = ({ date }) => {
     if (date) {
-      return new Date(
-        date.slice(0, -1).replace('T', ' ').replace('-', '/')
-      ).toLocaleString();
+      return moment(date).format('MMMM Do YYYY, h:mm:ss a');
     }
     return null;
   };

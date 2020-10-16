@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import moment from 'moment';
 import Page from '../../components/page';
 import Card, {
   CardHeader,
@@ -104,16 +105,16 @@ export default ({ hackathons }) => {
 
   const DatePicker = ({ field }) => {
     const handleDateChange = (event) => {
-      // State: Contains ISO string of the date
-      const dateToSave = new Date(event.target.value);
-      const timeZoneOffset = new Date().getTimezoneOffset() * 60000;
-      const UTCDate = new Date(dateToSave - timeZoneOffset).toISOString();
-      setLivesiteData({ ...livesiteData, [field]: UTCDate });
+      // State: Contains UTC ISO string of the date
+      const momentDate = moment(event.target.value);
+      setLivesiteData({ ...livesiteData, [field]: momentDate.toISOString() });
     };
 
-    // View: Converts ISO string to datetime string
-    // https://developer.mozilla.org/en-US/docs/Web/HTML/Date_and_time_formats#Local_date_and_time_strings
-    const domStringDate = livesiteData[field].slice(0, -1);
+    // View: Converts ISO UTC string to local date in format 2017-06-01T08:30
+    const domStringDate = moment
+      .utc(livesiteData[field])
+      .local()
+      .format('YYYY-MM-DDTHH:mm');
     return (
       <input
         type="datetime-local"
@@ -216,11 +217,11 @@ export default ({ hackathons }) => {
               </Group>
               <Group>
                 <Label>Hacking Period Start Time</Label>
-                <LocalDate date={livesiteData.hackingEnd} />
+                <LocalDate date={livesiteData.hackingStart} />
               </Group>
               <Group>
                 <Label>Hacking Period End Time</Label>
-                <LocalDate date={livesiteData.hackingStart} />
+                <LocalDate date={livesiteData.hackingEnd} />
               </Group>
               <Group>
                 <Label>Livesite Logo</Label>

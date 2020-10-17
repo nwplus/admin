@@ -117,10 +117,10 @@ export default function Faq({ hackathons }) {
   const fetchFaqs = async () => {
     const faqsFetched = await getFaqs();
     if (Object.keys(faqsFetched).length > 0) setFaqs(faqsFetched);
-  };
-  useEffect(() => {
-    fetchFaqs();
     setIsLoading(false);
+  };
+  useEffect(async () => {
+    await fetchFaqs();
   }, [window.location.pathname]);
 
   useEffect(() => {

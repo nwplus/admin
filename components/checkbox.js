@@ -25,8 +25,10 @@ const StyledCheckbox = styled.div`
   display: inline-block;
   width: 16px;
   height: 16px;
-  background: ${(props) => (props.checked ? 'salmon' : COLOR.GRAY)};
-  background: ${(props) => props.checked && props.disabled && COLOR.DARK_GRAY};
+  background: ${(props) =>
+    props.checked
+      ? (props.disabled && COLOR.DARK_GRAY) || 'salmon'
+      : COLOR.GRAY};
   border-radius: 3px;
   transition: all 150ms;
   ${HiddenCheckbox}:focus + & {

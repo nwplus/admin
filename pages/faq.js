@@ -119,8 +119,8 @@ export default function Faq({ hackathons }) {
     if (Object.keys(faqsFetched).length > 0) setFaqs(faqsFetched);
     setIsLoading(false);
   };
-  useEffect(async () => {
-    await fetchFaqs();
+  useEffect(() => {
+    fetchFaqs();
   }, [window.location.pathname]);
 
   useEffect(() => {

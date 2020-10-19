@@ -11,8 +11,10 @@ const EditingText = styled.textarea`
   padding: 10px 16px 0px 16px;
   height: 0px;
   width: ${(props) => (props.width ? `${props.width};` : '100%;')};
+  box-sizing: border-box;
   font-family: inherit;
   font-size: 16px;
+  margin-bottom: 0.75rem;
 `;
 
 export default function TextBox(props) {
@@ -23,7 +25,7 @@ export default function TextBox(props) {
     const textareas = document.getElementsByClassName('textarea');
     Array.prototype.forEach.call(textareas, (textarea) => {
       textarea.style.height = 'auto';
-      textarea.style.height = `${textarea.scrollHeight - 5}px`;
+      textarea.style.height = `${textarea.scrollHeight + 5}px`;
     });
   };
 

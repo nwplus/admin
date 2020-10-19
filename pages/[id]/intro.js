@@ -6,6 +6,8 @@ import Card, {
   CardTitle,
   CardContent,
   CardButtonContainer,
+  CardContentButtonContainer,
+  CancelButton,
 } from '../../components/card';
 import { COLOR, EDIT, HACKATHON_NAVBAR } from '../../constants';
 import Button from '../../components/button';
@@ -15,10 +17,13 @@ import {
   getHackathonSnapShot,
   getHackathonPaths,
   getHackathons,
+  getTimestamp,
+  formatDate,
 } from '../../utility/firebase';
 import { useAuth } from '../../utility/auth';
 
 const HeaderText = styled.h2`
+  margin: 0;
   border: none;
   overflow: hidden;
   background-color: ${COLOR.BACKGROUND};
@@ -36,27 +41,8 @@ const ContentText = styled.p`
   color: ${COLOR.TEXT};
 `;
 
-const CancelButton = styled.button`
-  font-size: 16px;
-  cursor: pointer;
-  border-bottom: 2px solid ${COLOR.BLACK};
-  margin-left: 675px;
-  margin-right: 40px;
-  border: none;
-  outline: none;
-  background-color: ${COLOR.BACKGROUND};
-`;
-
 const Label = styled.p`
-  padding-bottom: 13px;
-  padding-top: 17px;
-  margin: 0px;
   background-color: ${COLOR.BACKGROUND};
-`;
-
-const CancelText = styled.p`
-  border-bottom: 2px solid ${COLOR.BLACK};
-  margin: 0px;
 `;
 
 const Container = styled.div`
@@ -119,7 +105,7 @@ export default ({ id, hackathons }) => {
    * reads the value of the header/content associated with the given type and updates the object in Firebase
    */
   const handleSave = async (type) => {
-    const time = new Date().toISOString();
+    const time = getTimestamp();
     const { header, content } = editingData[type];
     const updateObj = {
       WebsiteData: {
@@ -174,9 +160,9 @@ export default ({ id, hackathons }) => {
                 <CardHeader>
                   <CardTitle>{websiteData[type].title}</CardTitle>
                   <p>
-                    {`Last edited by ${websiteData[type].editor} at ${new Date(
-                      websiteData[type].time
-                    ).toLocaleString()}`}
+                    {`Last edited by ${
+                      websiteData[type].editor
+                    } at ${formatDate(websiteData[type].time.seconds)}`}
                   </p>
                   <CardButtonContainer>
                     <Button type={EDIT} onClick={() => handleEdit(type)} />
@@ -184,7 +170,7 @@ export default ({ id, hackathons }) => {
                 </CardHeader>
                 <CardContent>
                   {isEditingObj[type] ? (
-                    <div style={{ padding: '0px 40px 37px 40px' }}>
+                    <>
                       <Label>Header</Label>
                       <TextBox
                         defaultValue={editingData[type].header}
@@ -200,19 +186,11 @@ export default ({ id, hackathons }) => {
                           handleEditChange(event, type, false);
                         }}
                       />
-                      <div
-                        style={{
-                          marginTop: '27px',
-                          display: 'flex',
-                          float: 'right',
-                        }}
-                      >
-                        <CancelButton onClick={() => handleCancel(type)}>
-                          <CancelText>Cancel</CancelText>
-                        </CancelButton>
+                      <CardContentButtonContainer>
+                        <CancelButton onClick={() => handleCancel(type)} />
                         <Button onClick={() => handleSave(type)}>Save</Button>
-                      </div>
-                    </div>
+                      </CardContentButtonContainer>
+                    </>
                   ) : (
                     <>
                       <HeaderText>{websiteData[type].header}</HeaderText>

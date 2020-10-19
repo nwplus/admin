@@ -124,7 +124,7 @@ const UploadButton = styled(Button)`
 `;
 
 const Inline = styled.div`
-  margin-top: 48px;
+  margin-top: 18px;
   display: flex;
   align-items: top;
 `;

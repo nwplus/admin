@@ -53,9 +53,7 @@ export default function Events({ id, hackathons }) {
 
   const fetchEvents = async () => {
     const eventsFetched = await getEvents(id);
-    if (Object.keys(eventsFetched).length > 0) {
-      setEvents(eventsFetched);
-    }
+    if (Object.keys(eventsFetched).length > 0) setEvents(eventsFetched);
     setIsLoading(false);
   };
 

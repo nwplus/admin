@@ -218,16 +218,16 @@ export default function Events({ id, hackathons }) {
                     </TableRow>
                   </thead>
                   <tbody>
-                    {Object.keys(events).map((id) => (
+                    {Object.keys(events).map((curr) => (
                       <EventRow
-                        key={events[id].eventID}
-                        eventID={events[id].eventID}
-                        title={events[id].title}
-                        text={events[id].text}
-                        order={events[id].order}
-                        date={events[id].date}
-                        lastModified={events[id].lastModified}
-                        lastModifiedBy={events[id].lastModifiedBy}
+                        key={events[curr].eventID}
+                        eventID={events[curr].eventID}
+                        title={events[curr].title}
+                        text={events[curr].text}
+                        order={events[curr].order}
+                        date={events[curr].date}
+                        lastModified={events[curr].lastModified}
+                        lastModifiedBy={events[curr].lastModifiedBy}
                       />
                     ))}
                   </tbody>

@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import {
   formatDate,
   getTimestamp,
-  getHackathonSnapShot,
   getHackathonPaths,
   getHackathons,
   getEvents,
@@ -28,7 +27,7 @@ import {
   ActionsButtonContainer,
   TableEmptyText,
 } from '../../components/table';
-import Modal, { ModalContent, ModalField } from '../../components/modal';
+import Modal, { Label, ModalContent, ModalField } from '../../components/modal';
 import {
   COLOR,
   EDIT,
@@ -38,6 +37,9 @@ import {
   HACKATHON_NAVBAR,
 } from '../../constants';
 import { useAuth } from '../../utility/auth';
+import DateTimePicker from '../../components/DateTimePicker';
+import setHours from 'date-fns/setHours';
+import setMinutes from 'date-fns/setMinutes';
 
 export default function Events({ id, hackathons }) {
   const [events, setEvents] = useState([]);
@@ -45,33 +47,66 @@ export default function Events({ id, hackathons }) {
   const [eventViewing, setEventViewing] = useState({});
   const [eventEditing, setEventEditing] = useState({});
   const [eventConfirm, setEventConfirm] = useState({});
-  const [addNew, setAddNew] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [alertMsg, setAlertMsg] = useState('');
-  //   const [orderCache, setOrderCache] = useState([]);
   const { email: user } = useAuth().user;
 
   const fetchEvents = async () => {
     const eventsFetched = await getEvents(id);
-    if (Object.keys(eventsFetched).length > 0) setEvents(eventsFetched);
+    if (Object.keys(eventsFetched).length > 0) {
+      setEvents(eventsFetched);
+    }
     setIsLoading(false);
   };
 
   useEffect(() => {
-    console.log(events, eventViewing);
-  }, [events, eventViewing]);
+    console.log(events, newEvent, eventViewing, eventEditing);
+  }, [events, newEvent, eventViewing, eventEditing]);
 
   useEffect(() => {
-    if (alertMsg.length > 0) alert(alertMsg);
+    if (alertMsg.length > 0) {
+      alert(alertMsg);
+    }
   }, [alertMsg]);
 
   useEffect(() => {
     fetchEvents();
   }, [window.location.pathname]);
 
-  // TDOO: function for add new
-  // TODO: function for handleinput
-  // TODO: function for handleUpdate
+  const handleNew = async () => {
+    newEvent.lastModifiedBy = user;
+    newEvent.date = new Date(newEvent.date.toUTCString());
+    const eventID = await addEvent(id, newEvent);
+    newEvent.lastModified = formatDate(getTimestamp().seconds);
+    setEvents({
+      ...events,
+      [eventID]: {
+        ...newEvent,
+        date: formatDate(newEvent.date, true),
+        eventID: eventID,
+      },
+    });
+    setNewEvent({});
+    setAlertMsg(`Successfully added the following event: \n${newEvent.title}`);
+  };
+
+  const handleUpdate = async () => {
+    eventEditing.lastModified = user;
+    eventEditing.date = new Date(eventEditing.date);
+    await updateEvent(id, eventEditing);
+    eventEditing.lastModified = formatDate(getTimestamp().seconds);
+    setEvents({
+      ...events,
+      [eventEditing.eventID]: {
+        ...eventEditing,
+        date: formatDate(eventEditing.date, true),
+      },
+    });
+    setEventEditing({});
+    setAlertMsg(
+      `Successfully updated the following event: \n${eventEditing.title}`
+    );
+  };
 
   const handleDelete = (eventID, confirmed = false) => {
     if (!confirmed) {
@@ -105,7 +140,6 @@ export default function Events({ id, hackathons }) {
   };
 
   const EventRow = (props) => {
-    console.log(props);
     const { eventID, title, text, order, date, lastModified } = props;
     return (
       <TableRow>
@@ -148,7 +182,14 @@ export default function Events({ id, hackathons }) {
         <CardHeader>
           <CardTitle>Events</CardTitle>
           <CardButtonContainer>
-            <Button type={NEW} onClick={() => setAddNew(true)}>
+            <Button
+              type={NEW}
+              onClick={() =>
+                setNewEvent({
+                  date: setHours(setMinutes(new Date(), 0), 13),
+                })
+              }
+            >
               New Event
             </Button>
           </CardButtonContainer>
@@ -201,8 +242,9 @@ export default function Events({ id, hackathons }) {
 
           {/* Modal for adding new event */}
           <Modal
-            isOpen={addNew}
-            handleClose={() => setAddNew(false)}
+            isOpen={newEvent.date}
+            handleSave={() => handleNew()}
+            handleClose={() => setNewEvent({})}
             modalAction={NEW}
           >
             <ModalContent columns={1}>
@@ -211,7 +253,7 @@ export default function Events({ id, hackathons }) {
                 modalAction={NEW}
                 onChange={(event) =>
                   handleInput(
-                    'event',
+                    'title',
                     event.target.value,
                     newEvent,
                     setNewEvent
@@ -234,13 +276,15 @@ export default function Events({ id, hackathons }) {
               />
             </ModalContent>
             <ModalContent columns={2}>
-              <ModalField
-                label="Date"
-                modalAction={NEW}
-                onChange={(event) =>
-                  handleInput('date', event.target.value, newEvent, setNewEvent)
-                }
-              />
+              <div>
+                <Label>Date</Label>
+                <DateTimePicker
+                  selected={newEvent.date}
+                  onChange={(date) =>
+                    handleInput('date', date, newEvent, setNewEvent)
+                  }
+                />
+              </div>
               <ModalField
                 label="Order"
                 modalAction={NEW}
@@ -329,19 +373,15 @@ export default function Events({ id, hackathons }) {
               />
             </ModalContent>
             <ModalContent columns={2}>
-              <ModalField
-                label="Date"
-                value={eventEditing.date}
-                modalAction={EDIT}
-                onChange={(event) => {
-                  handleInput(
-                    'date',
-                    event.target.value,
-                    eventEditing,
-                    setEventEditing
-                  );
-                }}
-              />
+              <div>
+                <Label>Date</Label>
+                <DateTimePicker
+                  selected={new Date(eventEditing.date)}
+                  onChange={(date) =>
+                    handleInput('date', date, eventEditing, setEventEditing)
+                  }
+                />
+              </div>
               <ModalField
                 label="Order"
                 value={eventEditing.order}

@@ -115,7 +115,9 @@ export default function Faq({ hackathons }) {
 
   const fetchFaqs = async () => {
     const faqsFetched = await getFaqs();
-    if (Object.keys(faqsFetched).length > 0) setFaqs(faqsFetched);
+    if (Object.keys(faqsFetched).length > 0) {
+      setFaqs(faqsFetched);
+    }
     setIsLoading(false);
   };
   useEffect(() => {
@@ -124,7 +126,9 @@ export default function Faq({ hackathons }) {
 
   useEffect(() => {
     // eslint-disable-next-line no-alert
-    if (alertMsg.length > 0) alert(alertMsg);
+    if (alertMsg.length > 0) {
+      alert(alertMsg);
+    }
   }, [alertMsg]);
 
   const handleNew = async () => {

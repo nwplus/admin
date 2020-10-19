@@ -12,6 +12,7 @@ import {
 import TextBox from './textbox';
 import Button from './button';
 import Dropdown from './dropdown';
+import InputField from './input';
 
 const BackDropScreen = styled.div`
   width: 100vw;
@@ -38,22 +39,6 @@ export const Label = styled.label`
   font-size: 16px;
   line-height: 20px;
   font-weight: bold;
-`;
-
-export const InputField = styled.input`
-  ${(props) =>
-    props.inline
-      ? 'flex-grow: 1; width: 50%; border-radius: 2px 0 0 2px;'
-      : 'width: 95%; border-radius: 2px;'}
-
-  height: 40px;
-  border: 1px solid ${COLOR.DARK_GRAY};
-  box-sizing: border-box;
-  margin-bottom: 0.75rem;
-  padding: 0 0.75rem;
-  background: ${COLOR.WHITE};
-  font-family: inherit;
-  font-size: 16px;
 `;
 
 const GenericText = styled.p`

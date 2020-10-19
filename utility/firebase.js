@@ -45,16 +45,24 @@ const InternalWebsitesCollection = 'InternalWebsites';
 const CMSCollection = 'CMS';
 const LivesiteCollection = 'Livesite';
 
-export const formatDate = (date) => {
+export const formatDate = (date, preProcessed = false) => {
   if (!date) {
     return 'invalid date';
   }
-  date = new Date(date * 1000);
   const timeZoneOffset = new Date().getTimezoneOffset() * 60000;
+  if (!preProcessed) {
+    date = new Date(date * 1000);
+  } else {
+    return new Date(date - timeZoneOffset)
+      .toISOString()
+      .slice(0, -1)
+      .slice(0, -7)
+      .replace('T', ' ');
+  }
   return new Date(date - timeZoneOffset)
     .toISOString()
     .slice(0, -1)
-    .slice(0, -4)
+    .slice(0, -7)
     .replace('T', ' ');
 };
 
@@ -179,24 +187,23 @@ export const addEvent = async (hackathon, event) => {
     .doc(hackathon)
     .collection('Events')
     .doc();
-  const currDate = getTimestamp();
   await ref.set({
     title: event.title,
     text: event.text,
     date: event.date,
     order: event.order,
-    lastModified: currDate,
+    lastModified: getTimestamp(),
     lastModifiedBy: event.lastModifiedBy,
   });
   return ref.id;
 };
 
-export const updateEvent = async (hackathon, eventID, event) => {
+export const updateEvent = async (hackathon, event) => {
   const ref = db
     .collection('Hackathons')
     .doc(hackathon)
     .collection('Events')
-    .doc(eventID);
+    .doc(event.eventID);
   const currDate = getTimestamp();
   await ref.update({
     title: event.title || 'Empty event field',

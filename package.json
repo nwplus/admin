@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "cross-env": "^7.0.2",
+    "date-fns": "^2.16.1",
     "dotenv": "^8.2.0",
     "firebase": "^7.15.5",
     "imagemin-optipng": "^8.0.0",

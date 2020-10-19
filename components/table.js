@@ -22,14 +22,13 @@ export const TableRow = styled.tr`
 `;
 
 export const TableHeader = styled.th`
-  position: -webkit-sticky; /* Safari */
   position: sticky;
   top: 0;
   z-index: 10;
   background-color: ${COLOR.WHITE};
 
   text-align: left !important;
-  width: 95px;
+  width: ${(props) => (props.narrow ? '40px' : '95px')};
   height: 12px;
 
   font-size: 16px;

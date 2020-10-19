@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import setHours from 'date-fns/setHours';
+import setMinutes from 'date-fns/setMinutes';
 import {
   formatDate,
   getTimestamp,
@@ -35,10 +37,8 @@ import {
   DELETE,
   HACKATHON_NAVBAR,
 } from '../../constants';
+import { DateTimePicker } from '../../components/DateTimePicker';
 import { useAuth } from '../../utility/auth';
-import DateTimePicker from '../../components/DateTimePicker';
-import setHours from 'date-fns/setHours';
-import setMinutes from 'date-fns/setMinutes';
 
 export default function Events({ id, hackathons }) {
   const [events, setEvents] = useState([]);
@@ -57,10 +57,6 @@ export default function Events({ id, hackathons }) {
     }
     setIsLoading(false);
   };
-
-  useEffect(() => {
-    console.log(events, newEvent, eventViewing, eventEditing);
-  }, [events, newEvent, eventViewing, eventEditing]);
 
   useEffect(() => {
     if (alertMsg.length > 0) {
@@ -82,7 +78,7 @@ export default function Events({ id, hackathons }) {
       [eventID]: {
         ...newEvent,
         date: formatDate(newEvent.date, true),
-        eventID: eventID,
+        eventID,
       },
     });
     setNewEvent({});
@@ -115,11 +111,11 @@ export default function Events({ id, hackathons }) {
     deleteEvent(id, eventID);
     setEvents(
       Object.keys(events)
-        .filter((id) => {
-          return id !== eventID;
+        .filter((curr) => {
+          return curr !== eventID;
         })
-        .reduce((obj, id) => {
-          obj[id] = events[id];
+        .reduce((obj, curr) => {
+          obj[curr] = events[curr];
           return obj;
         }, {})
     );
@@ -139,32 +135,32 @@ export default function Events({ id, hackathons }) {
   };
 
   const EventRow = (props) => {
-    const { eventID, title, text, order, date, lastModified } = props;
     return (
       <TableRow>
-        <TableData>{title}</TableData>
-        <TableData>{date}</TableData>
-        <TableData>{lastModified}</TableData>
+        <TableData>{props.title}</TableData>
+        <TableData>{props.date}</TableData>
+        <TableData>{props.order}</TableData>
+        <TableData>{props.lastModified}</TableData>
         <TableData actions>
           <ActionsButtonContainer>
             <Button
               type={VIEW}
               color={COLOR.TRANSPARENT}
-              onClick={() => setEventViewing(events[eventID])}
+              onClick={() => setEventViewing(events[props.eventID])}
             />
           </ActionsButtonContainer>
           <ActionsButtonContainer>
             <Button
               type={EDIT}
               color={COLOR.TRANSPARENT}
-              onClick={() => setEventEditing(events[eventID])}
+              onClick={() => setEventEditing(events[props.eventID])}
             />
           </ActionsButtonContainer>
           <ActionsButtonContainer>
             <Button
               type={DELETE}
               color={COLOR.TRANSPARENT}
-              onClick={() => handleDelete(eventID)}
+              onClick={() => handleDelete(props.eventID)}
             />
           </ActionsButtonContainer>
         </TableData>
@@ -216,6 +212,7 @@ export default function Events({ id, hackathons }) {
                     <TableRow>
                       <TableHeader>Event</TableHeader>
                       <TableHeader>Date</TableHeader>
+                      <TableHeader narrow>Order</TableHeader>
                       <TableHeader>Last Modified</TableHeader>
                       <TableHeader>Actions</TableHeader>
                     </TableRow>

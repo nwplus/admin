@@ -154,8 +154,7 @@ const getFaqCategory = (faqCategory) => {
   }
 };
 
-const getFaq = async (faqID) => {
-  const faqData = (await db.collection(faqCollection).doc(faqID).get()).data();
+const getFaq = (faqID, faqData) => {
   return faqData
     ? {
         id: faqID,
@@ -173,19 +172,15 @@ const getFaq = async (faqID) => {
     : null;
 };
 
-const getfaqIDs = async () => {
-  return (await db.collection(faqCollection).get()).docs.map((doc) => doc.id);
-};
-
 export const getFaqs = async () => {
-  const faqIDs = await getfaqIDs();
+  const faqIDs = await db.collection(faqCollection).get();
   const faqs = {};
-  for (const faqID of faqIDs) {
-    const currFaq = await getFaq(faqID);
+  faqIDs.docs.forEach((doc) => {
+    const currFaq = getFaq(doc.id, doc.data());
     if (currFaq) {
-      faqs[faqID] = currFaq;
+      faqs[doc.id] = currFaq;
     }
-  }
+  });
   return faqs;
 };
 

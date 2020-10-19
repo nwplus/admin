@@ -1,5 +1,5 @@
 import DatePicker from 'react-datepicker';
-import InputField from './input';
+import { InputField } from './input';
 
 export const DateTimePicker = ({ selected, onChange }) => {
   return (

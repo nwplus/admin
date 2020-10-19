@@ -12,7 +12,7 @@ import {
 import TextBox from './textbox';
 import Button from './button';
 import Dropdown from './dropdown';
-import InputField from './input';
+import { InputField } from './input';
 
 const BackDropScreen = styled.div`
   width: 100vw;

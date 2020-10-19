@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { COLOR } from '../constants';
+
 export const TableWrapper = styled.div`
   max-height: 512px;
   overflow-y: scroll;

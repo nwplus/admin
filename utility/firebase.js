@@ -43,6 +43,7 @@ const faqCollection = FAQ;
 const Hackathons = 'Hackathons';
 const InternalWebsitesCollection = 'InternalWebsites';
 const CMSCollection = 'CMS';
+const LivesiteCollection = 'Livesite';
 
 export const formatDate = (date) => {
   if (!date) {
@@ -259,10 +260,24 @@ export const uploadSponsorImageToStorage = async (website, file) => {
     const uploadData = await ref.put(file);
     return uploadData.ref.getDownloadURL();
   } catch (e) {
+    // eslint-disable-next-line no-alert
     alert(e);
     return null;
   }
 };
+
+export const uploadLivesiteLogoToStorage = async (file) => {
+  try {
+    const ref = storage.ref(`logo.svg`);
+    const uploadData = await ref.put(file);
+    return uploadData.ref.getDownloadURL();
+  } catch (e) {
+    // eslint-disable-next-line no-alert
+    alert(e);
+    return null;
+  }
+};
+
 export const getImageFilebyName = async (website, imgURL) => {
   const imgId = imgURL.split('/').slice(-1)[0];
   const ref = await storage
@@ -304,4 +319,59 @@ export const subscribeToCMSStatus = (dateCallback) => {
       const { offUntilDate } = snap.data();
       dateCallback(offUntilDate);
     });
+};
+
+export const getActiveHackathon = db
+  .collection(InternalWebsitesCollection)
+  .doc(LivesiteCollection)
+  .get()
+  .then((doc) => doc.data()?.activeHackathon);
+
+const announcementsRef = (hackathon) => {
+  return db.collection(Hackathons).doc(hackathon).collection('Announcements');
+};
+
+export const subscribeToLivesiteAnnouncements = (hackathon, callback) => {
+  return announcementsRef(hackathon)
+    .orderBy('timestamp', 'desc')
+    .onSnapshot((querySnapshot) => {
+      const announcements = {};
+      querySnapshot.docs.forEach((doc) => {
+        announcements[doc.id] = doc.data();
+      });
+      callback(announcements);
+    });
+};
+
+export const updateAnnouncement = async (hackathon, announcement) => {
+  if (announcement.id) {
+    const ref = announcementsRef(hackathon).doc(announcement.id);
+    delete announcement.id;
+    await ref.set(announcement);
+    return announcement.id;
+  }
+  announcement.timestamp = Date.now();
+  const ref = await announcementsRef(hackathon).doc().set(announcement);
+  console.log(ref);
+  return ref;
+};
+
+export const deleteAnnouncement = async (hackathon, id) => {
+  await announcementsRef(hackathon).doc(id).delete();
+};
+
+export const getLivesiteData = async () => {
+  const ref = db.collection(InternalWebsitesCollection).doc(LivesiteCollection);
+  const doc = await ref.get();
+  return doc.data();
+};
+
+export const updateLivesiteData = async (data) => {
+  const doc = {
+    ...data,
+  };
+  return db
+    .collection(InternalWebsitesCollection)
+    .doc(LivesiteCollection)
+    .update(doc);
 };

@@ -152,7 +152,7 @@ export const getHackathonSnapShot = (hackathonId, callback) => {
 export const getEvent = (eventID, data) => {
   return data
     ? {
-        eventID: eventID,
+        eventID,
         title: data.title || 'Empty event field',
         text: data.text || 'Empty text description for event',
         date: data.date

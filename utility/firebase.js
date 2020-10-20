@@ -153,6 +153,7 @@ export const getEvent = (eventID, data) => {
   return data
     ? {
         eventID,
+        key: data.key || eventID,
         title: data.title || 'Empty event field',
         text: data.text || 'Empty text description for event',
         date: data.date
@@ -189,6 +190,7 @@ export const addEvent = async (hackathon, event) => {
     .doc();
   await ref.set({
     title: event.title,
+    key: ref.id,
     text: event.text,
     date: event.date,
     order: event.order,
@@ -207,6 +209,7 @@ export const updateEvent = async (hackathon, event) => {
   const currDate = getTimestamp();
   await ref.update({
     title: event.title || 'Empty event field',
+    key: event.key || event.eventID,
     text: event.text || 'Empty text description for event',
     date: event.date || currDate,
     order: event.order || -1,

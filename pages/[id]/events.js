@@ -37,7 +37,7 @@ import {
   DELETE,
   HACKATHON_NAVBAR,
 } from '../../constants';
-import { DateTimePicker } from '../../components/DateTimePicker';
+import { DateTimePicker } from '../../components/dateTimePicker';
 import { useAuth } from '../../utility/auth';
 
 export default function Events({ id, hackathons }) {

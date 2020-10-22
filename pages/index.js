@@ -86,7 +86,7 @@ export default function Home() {
         }
       }
     } catch (error) {
-      console.log(error.message);
+      // eslint-disable-next-line no-alert
       alert(error.message);
     }
   };

@@ -27,11 +27,11 @@ const Container = styled.div`
 `;
 
 const Content = styled.div`
-  padding: 60px;
+  padding: 40px;
 `;
 
 const Children = styled.div`
-  padding: 60px 0;
+  padding: 40px 0;
 `;
 
 export default ({ hackathons, currentPath, children, navbarItems }) => {

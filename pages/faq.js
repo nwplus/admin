@@ -16,7 +16,8 @@ import Card, {
   CardContent,
 } from '../components/card';
 import Button from '../components/button';
-import Modal, { ModalContent, ModalField } from '../components/modal';
+import Modal, { Label, ModalContent, ModalField } from '../components/modal';
+import Checkbox from '../components/checkbox';
 import { COLOR, EDIT, VIEW, NEW, DELETE, FAQ, FAQCategory } from '../constants';
 import { useAuth } from '../utility/auth';
 import Page from '../components/page';
@@ -102,9 +103,8 @@ const PlaceHolderText = styled.td`
 `;
 
 export default function Faq({ hackathons }) {
-  // remove'LHD2021' when integrated with sidebar to receive hackathon that is passed down
   const [faqs, setFaqs] = useState([]);
-  const [newFaq, setNewFaq] = useState({});
+  const [newFaq, setNewFaq] = useState({ hackathonIDs: [] });
   const [faqViewing, setFaqViewing] = useState({});
   const [faqEditing, setFaqEditing] = useState({});
   const [faqConfirm, setFaqConfirm] = useState({});
@@ -112,25 +112,26 @@ export default function Faq({ hackathons }) {
   const [isLoading, setIsLoading] = useState(true);
   const [alertMsg, setAlertMsg] = useState('');
   const { email: user } = useAuth().user;
+
+  const fetchFaqs = async () => {
+    const faqsFetched = await getFaqs();
+    if (Object.keys(faqsFetched).length > 0) {
+      setFaqs(faqsFetched);
+    }
+    setIsLoading(false);
+  };
   useEffect(() => {
-    setIsLoading(true);
-    getFaqs().then((res) => {
-      if (Object.keys(res).length > 0) {
-        setFaqs(res);
-      } else {
-        setFaqs([]);
-      }
-      setIsLoading(false);
-    });
+    fetchFaqs();
   }, [window.location.pathname]);
 
   useEffect(() => {
-    if (alertMsg.length > 0) alert(alertMsg);
+    // eslint-disable-next-line no-alert
+    if (alertMsg.length > 0) {
+      alert(alertMsg);
+    }
   }, [alertMsg]);
 
   const handleNew = async () => {
-    // TODO jenny please add proper hackathonID handling
-    newFaq.hackathonIDs = [];
     newFaq.category = newFaq.category ? newFaq.category : FAQCategory.GENERAL;
     newFaq.lastModifiedBy = user;
     const faqID = await addFaq(newFaq);
@@ -142,7 +143,7 @@ export default function Faq({ hackathons }) {
         id: faqID,
       },
     });
-    setNewFaq({});
+    setNewFaq({ hackathonIDs: [] });
     setAddNew(false);
     setAlertMsg(
       `Successfully added the following question: \n${newFaq.question}`
@@ -154,6 +155,22 @@ export default function Faq({ hackathons }) {
       ...faq,
       [property]: value,
     });
+  };
+
+  const handleToggle = (hackathon, faq, setState) => {
+    if (faq.hackathonIDs.includes(hackathon)) {
+      setState({
+        ...faq,
+        hackathonIDs: faq.hackathonIDs.filter((item) => {
+          return item !== hackathon;
+        }),
+      });
+    } else {
+      setState({
+        ...faq,
+        hackathonIDs: [...faq.hackathonIDs, hackathon],
+      });
+    }
   };
 
   const handleUpdate = () => {
@@ -326,13 +343,31 @@ export default function Faq({ hackathons }) {
               />
             </ModalContent>
             <ModalContent page={FAQ} columns={1}>
-              <ModalField
-                label="Answer"
-                modalAction={NEW}
-                onChange={(event) => {
-                  handleInput('answer', event.target.value, newFaq, setNewFaq);
-                }}
-              />
+              <div>
+                <ModalField
+                  label="Answer"
+                  modalAction={NEW}
+                  onChange={(event) => {
+                    handleInput(
+                      'answer',
+                      event.target.value,
+                      newFaq,
+                      setNewFaq
+                    );
+                  }}
+                />
+                <Label>Hackathons this FAQ applies to</Label>
+                {newFaq.hackathonIDs &&
+                  hackathons.map((hackathon) => (
+                    <Checkbox
+                      key={hackathon}
+                      id={hackathon}
+                      label={hackathon}
+                      checked={newFaq.hackathonIDs.includes(hackathon)}
+                      onClick={() => handleToggle(hackathon, newFaq, setNewFaq)}
+                    />
+                  ))}
+              </div>
             </ModalContent>
           </Modal>
 
@@ -357,11 +392,24 @@ export default function Faq({ hackathons }) {
               />
             </ModalContent>
             <ModalContent page={FAQ} columns={1}>
-              <ModalField
-                label="Answer"
-                value={faqViewing.answer}
-                modalAction={VIEW}
-              />
+              <div>
+                <ModalField
+                  label="Answer"
+                  value={faqViewing.answer}
+                  modalAction={VIEW}
+                />
+                <Label>Hackathons this FAQ applies to</Label>
+                {faqViewing.hackathonIDs &&
+                  hackathons.map((hackathon) => (
+                    <Checkbox
+                      key={hackathon}
+                      id={hackathon}
+                      label={hackathon}
+                      checked={faqViewing.hackathonIDs.includes(hackathon)}
+                      disabled
+                    />
+                  ))}
+              </div>
             </ModalContent>
           </Modal>
 
@@ -402,28 +450,43 @@ export default function Faq({ hackathons }) {
               />
             </ModalContent>
             <ModalContent page={FAQ} columns={1}>
-              <ModalField
-                label="Answer"
-                value={faqEditing.answer}
-                modalAction={EDIT}
-                onChange={(event) => {
-                  handleInput(
-                    'answer',
-                    event.target.value,
-                    faqEditing,
-                    setFaqEditing
-                  );
-                }}
-              />
+              <div>
+                <ModalField
+                  label="Answer"
+                  value={faqEditing.answer}
+                  modalAction={EDIT}
+                  onChange={(event) => {
+                    handleInput(
+                      'answer',
+                      event.target.value,
+                      faqEditing,
+                      setFaqEditing
+                    );
+                  }}
+                />
+                <Label>Hackathons this FAQ applies to</Label>
+                {faqEditing.hackathonIDs &&
+                  hackathons.map((hackathon) => (
+                    <Checkbox
+                      key={hackathon}
+                      id={hackathon}
+                      label={hackathon}
+                      checked={faqEditing.hackathonIDs.includes(hackathon)}
+                      onClick={() =>
+                        handleToggle(hackathon, faqEditing, setFaqEditing)
+                      }
+                    />
+                  ))}
+              </div>
             </ModalContent>
           </Modal>
 
-          {/* Confirmation modal for deleting a FAQ */}
+          {/* Confirmation modal before deleting a FAQ */}
           <Modal
             isOpen={Object.keys(faqConfirm).length > 0}
             handleClose={() => setFaqConfirm({})}
             handleSave={() => handleDelete(faqConfirm.id, true)}
-            modalTitle="Are you sure you would like to delete the following FAQ?"
+            modalTitle="Are you sure you want to delete this FAQ?"
             modalAction={DELETE}
           >
             <ModalContent page={FAQ} columns={2}>
@@ -439,11 +502,24 @@ export default function Faq({ hackathons }) {
               />
             </ModalContent>
             <ModalContent page={FAQ} columns={1}>
-              <ModalField
-                label="Answer"
-                value={faqConfirm.answer}
-                modalAction={VIEW}
-              />
+              <div>
+                <ModalField
+                  label="Answer"
+                  value={faqConfirm.answer}
+                  modalAction={VIEW}
+                />
+                <Label>Hackathons this FAQ applies to</Label>
+                {faqConfirm.hackathonIDs &&
+                  hackathons.map((hackathon) => (
+                    <Checkbox
+                      key={hackathon}
+                      id={hackathon}
+                      label={hackathon}
+                      checked={faqConfirm.hackathonIDs.includes(hackathon)}
+                      disabled
+                    />
+                  ))}
+              </div>
             </ModalContent>
           </Modal>
         </CardContent>

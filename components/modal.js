@@ -12,6 +12,7 @@ import {
 import TextBox from './textbox';
 import Button from './button';
 import Dropdown from './dropdown';
+import { InputField } from './input';
 
 const BackDropScreen = styled.div`
   width: 100vw;
@@ -40,22 +41,6 @@ export const Label = styled.label`
   font-weight: bold;
 `;
 
-export const InputField = styled.input`
-  ${(props) =>
-    props.inline
-      ? 'flex-grow: 1; width: 50%; border-radius: 2px 0 0 2px;'
-      : 'width: 95%; border-radius: 2px;'}
-
-  height: 40px;
-  border: 1px solid ${COLOR.DARK_GRAY};
-  box-sizing: border-box;
-  margin-bottom: 0.75rem;
-  padding: 0 0.75rem;
-  background: ${COLOR.WHITE};
-  font-family: inherit;
-  font-size: 16px;
-`;
-
 const GenericText = styled.p`
   font-size: 16px;
   line-height: 20px;
@@ -78,12 +63,16 @@ export const ModalField = ({
     <>
       <div>
         <Label>{label}</Label>
-        {label === 'Answer' && modalAction !== VIEW && (
-          <TextBox width="95%" defaultValue={value} onChange={onChange} />
-        )}
-        {label !== 'Answer' && label !== 'Category' && modalAction !== VIEW && (
-          <InputField type={type} defaultValue={value} onChange={onChange} />
-        )}
+        {(label === 'Answer' || label === 'Description') &&
+          modalAction !== VIEW && (
+            <TextBox width="95%" defaultValue={value} onChange={onChange} />
+          )}
+        {label !== 'Answer' &&
+          label !== 'Description' &&
+          label !== 'Category' &&
+          modalAction !== VIEW && (
+            <InputField type={type} defaultValue={value} onChange={onChange} />
+          )}
         {label === 'Category' && modalAction !== VIEW && (
           <Dropdown
             options={[
@@ -120,7 +109,7 @@ const UploadButton = styled(Button)`
 `;
 
 const Inline = styled.div`
-  margin-top: 48px;
+  margin-top: 18px;
   display: flex;
   align-items: top;
 `;

@@ -45,16 +45,24 @@ const InternalWebsitesCollection = 'InternalWebsites';
 const CMSCollection = 'CMS';
 const LivesiteCollection = 'Livesite';
 
-export const formatDate = (date) => {
+export const formatDate = (date, preProcessed = false) => {
   if (!date) {
     return 'invalid date';
   }
-  date = new Date(date * 1000);
   const timeZoneOffset = new Date().getTimezoneOffset() * 60000;
+  if (!preProcessed) {
+    date = new Date(date * 1000);
+  } else {
+    return new Date(date - timeZoneOffset)
+      .toISOString()
+      .slice(0, -1)
+      .slice(0, -7)
+      .replace('T', ' ');
+  }
   return new Date(date - timeZoneOffset)
     .toISOString()
     .slice(0, -1)
-    .slice(0, -4)
+    .slice(0, -7)
     .replace('T', ' ');
 };
 
@@ -139,6 +147,84 @@ export const getHackathonSnapShot = (hackathonId, callback) => {
     .collection(Hackathons)
     .doc(hackathonId)
     .onSnapshot((doc) => callback(doc));
+};
+
+export const getEvent = (eventID, data) => {
+  return data
+    ? {
+        eventID,
+        key: data.key || eventID,
+        title: data.title || 'Empty event field',
+        text: data.text || 'Empty text description for event',
+        date: data.date
+          ? formatDate(data.date.seconds)
+          : formatDate(getTimestamp().seconds),
+        order: data.order >= 0 ? data.order : -1,
+        lastModified: data.lastModified
+          ? formatDate(data.lastModified.seconds)
+          : formatDate(getTimestamp().seconds),
+        lastModifiedBy: data.lastModifiedBy || 'Unknown user',
+      }
+    : null;
+};
+
+export const getEvents = async (hackathon) => {
+  const eventIDs = await db
+    .collection('Hackathons')
+    .doc(hackathon)
+    .collection('Events')
+    .get();
+  const events = {};
+  eventIDs.docs.forEach((doc) => {
+    const currEvent = getEvent(doc.id, doc.data());
+    if (currEvent) events[doc.id] = currEvent;
+  });
+  return events;
+};
+
+export const addEvent = async (hackathon, event) => {
+  const ref = db
+    .collection('Hackathons')
+    .doc(hackathon)
+    .collection('Events')
+    .doc();
+  await ref.set({
+    title: event.title,
+    key: ref.id,
+    text: event.text,
+    date: event.date,
+    order: event.order,
+    lastModified: getTimestamp(),
+    lastModifiedBy: event.lastModifiedBy,
+  });
+  return ref.id;
+};
+
+export const updateEvent = async (hackathon, event) => {
+  const ref = db
+    .collection('Hackathons')
+    .doc(hackathon)
+    .collection('Events')
+    .doc(event.eventID);
+  const currDate = getTimestamp();
+  await ref.update({
+    title: event.title || 'Empty event field',
+    key: event.key || event.eventID,
+    text: event.text || 'Empty text description for event',
+    date: event.date || currDate,
+    order: event.order || -1,
+    lastModified: currDate,
+    lastModifiedBy: event.lastModifiedBy,
+  });
+};
+
+export const deleteEvent = async (hackathon, eventID) => {
+  await db
+    .collection('Hackathons')
+    .doc(hackathon)
+    .collection('Events')
+    .doc(eventID)
+    .delete();
 };
 
 const getFaqCategory = (faqCategory) => {

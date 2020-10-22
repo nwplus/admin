@@ -20,6 +20,10 @@ function MyApp({ Component, pageProps }) {
       <Auth>
         <Head>
           <title>nwPlus CMS</title>
+          <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/react-datepicker/2.14.1/react-datepicker.min.css"
+          />
         </Head>
         <Component {...pageProps} />
       </Auth>

@@ -103,7 +103,6 @@ const PlaceHolderText = styled.td`
 `;
 
 export default function Faq({ hackathons }) {
-  // remove'LHD2021' when integrated with sidebar to receive hackathon that is passed down
   const [faqs, setFaqs] = useState([]);
   const [newFaq, setNewFaq] = useState({ hackathonIDs: [] });
   const [faqViewing, setFaqViewing] = useState({});
@@ -116,7 +115,9 @@ export default function Faq({ hackathons }) {
 
   const fetchFaqs = async () => {
     const faqsFetched = await getFaqs();
-    if (Object.keys(faqsFetched).length > 0) setFaqs(faqsFetched);
+    if (Object.keys(faqsFetched).length > 0) {
+      setFaqs(faqsFetched);
+    }
     setIsLoading(false);
   };
   useEffect(() => {
@@ -125,7 +126,9 @@ export default function Faq({ hackathons }) {
 
   useEffect(() => {
     // eslint-disable-next-line no-alert
-    if (alertMsg.length > 0) alert(alertMsg);
+    if (alertMsg.length > 0) {
+      alert(alertMsg);
+    }
   }, [alertMsg]);
 
   const handleNew = async () => {
@@ -478,12 +481,12 @@ export default function Faq({ hackathons }) {
             </ModalContent>
           </Modal>
 
-          {/* Confirmation modal for deleting a FAQ */}
+          {/* Confirmation modal before deleting a FAQ */}
           <Modal
             isOpen={Object.keys(faqConfirm).length > 0}
             handleClose={() => setFaqConfirm({})}
             handleSave={() => handleDelete(faqConfirm.id, true)}
-            modalTitle="Are you sure you would like to delete the following FAQ?"
+            modalTitle="Are you sure you want to delete this FAQ?"
             modalAction={DELETE}
           >
             <ModalContent page={FAQ} columns={2}>

@@ -8,6 +8,7 @@ import Card, {
   CardContent,
 } from '../../components/card';
 import Button from '../../components/button';
+import FeatureFlag from '../../components/FeatureFlag';
 import { COLOR, EDIT, HACKATHON_NAVBAR } from '../../constants';
 import {
   getTimestamp,
@@ -31,36 +32,6 @@ const InlineButtonContainer = styled.div`
   float: right;
   margin-top: -40px;
 `;
-
-const FeatureFlagsContainer = styled.div`
-  display: flex;
-  width: 40%;
-  border: 1px solid lightgray;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  justify-content: space-between;
-  background-color: ${COLOR.WHITE};
-  border-radius: 3px;
-`;
-
-const FeatureFlagToggle = styled.input`
-  width: 18px;
-  height: 18px;
-  margin: 14px 15px 14px 0;
-  ${(props) => !props.disabled && 'cursor: pointer;'}
-`;
-
-const FeatureFlagName = styled.p`
-  font-weight: ${(props) => (props.isLabel ? '600' : '400')};
-  font-size: 16px;
-  margin: 15px;
-  color: ${COLOR.BODY_TEXT};
-`;
-
-const FeatureFlagToggleContainer = styled.div`
-  display: flex;
-`;
-
 export default function FeatureFlags({ id, hackathons }) {
   const [editing, setEditing] = useState(false);
   const [flags, setFlags] = useState({});
@@ -91,24 +62,16 @@ export default function FeatureFlags({ id, hackathons }) {
           return null;
         }
         return (
-          <FeatureFlagsContainer key={key}>
-            <FeatureFlagName isLabel>{key}</FeatureFlagName>
-            <FeatureFlagToggleContainer>
-              <FeatureFlagName>
-                {value ? 'Activated' : 'Deactivated'}
-              </FeatureFlagName>
-              <FeatureFlagToggle
-                type="checkbox"
-                onChange={() => {
-                  setEditedFlags({
-                    ...editedFlags,
-                    [key]: !value,
-                  });
-                }}
-                checked={value}
-              />
-            </FeatureFlagToggleContainer>
-          </FeatureFlagsContainer>
+          <FeatureFlag
+            title={key}
+            value={value}
+            onChange={() => {
+              setEditedFlags({
+                ...editedFlags,
+                [key]: !value,
+              });
+            }}
+          />
         );
       })}
       <InlineButtonContainer>
@@ -134,18 +97,7 @@ export default function FeatureFlags({ id, hackathons }) {
         if (key === 'lastEdited' || key === 'lastEditedBy') {
           return null;
         }
-        return (
-          <FeatureFlagsContainer key={key}>
-            <FeatureFlagName isLabel>{key}</FeatureFlagName>
-            <FeatureFlagToggleContainer>
-              <FeatureFlagName>
-                {value ? 'Activated' : 'Deactivated'}
-              </FeatureFlagName>
-
-              <FeatureFlagToggle type="checkbox" disabled checked={value} />
-            </FeatureFlagToggleContainer>
-          </FeatureFlagsContainer>
-        );
+        return <FeatureFlag disabled title={key} value={value} />;
       })}
     </>
   );

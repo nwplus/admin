@@ -1,7 +1,7 @@
 /* eslint-disable no-alert */
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { format } from 'timeago.js';
+import moment from 'moment';
 import ReactMarkdown from 'react-markdown';
 import AnnouncementsCard from '../../components/announcementsCard';
 import Modal from '../../components/modal';
@@ -141,7 +141,7 @@ export default ({ hackathons }) => {
           <strong>Preview:</strong>
           <Markdown content={currentAnnouncement.content} />
           <p>
-            {format(currentAnnouncement.timestamp)} @{' '}
+            {moment(currentAnnouncement.timestamp).fromNow()} @{' '}
             {announcementDateFormat(currentAnnouncement.timestamp)}
           </p>
         </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { format } from 'timeago.js';
+import moment from 'moment';
 import Card, {
   CardHeader,
   CardTitle,
@@ -71,7 +71,7 @@ export default ({
                 padding="10px 0px 10px 20px"
               >
                 <Text style={{ flex: '3 3 0' }}>{announcement.content}</Text>
-                <Text>{format(announcement.timestamp)}</Text>
+                <Text>{moment(announcement.timestamp).fromNow()}</Text>
                 <Actions>
                   <Button
                     type={EDIT}

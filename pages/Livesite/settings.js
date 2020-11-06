@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import moment from 'moment';
 import Page from '../../components/page';
 import Card, {
   CardHeader,
@@ -9,13 +10,14 @@ import Card, {
   CardContentButtonContainer,
   CancelButton,
 } from '../../components/card';
+import FeatureFlag from '../../components/FeatureFlag';
 import { UploadContainer } from '../../components/modal';
 import Button from '../../components/button';
 import {
   formatDate,
   getTimestamp,
   getHackathons,
-  getLivesiteData,
+  subscribeToLivesiteData,
   updateLivesiteData,
   uploadLivesiteLogoToStorage,
 } from '../../utility/firebase';
@@ -24,6 +26,14 @@ import { LIVESITE_NAVBAR, EDIT } from '../../constants';
 
 const Label = styled.p`
   font-weight: bold;
+  margin: 10px 0;
+`;
+
+const Group = styled.div`
+  margin: 32px 0;
+  &:nth-child(1) {
+    margin-top: 0;
+  }
 `;
 
 export default ({ hackathons }) => {
@@ -69,13 +79,87 @@ export default ({ hackathons }) => {
     }
   };
 
-  const getAsyncData = async () => {
-    setLivesiteData(await getLivesiteData());
+  useEffect(() => {
+    const unsubscribe = subscribeToLivesiteData(setLivesiteData);
+    return unsubscribe;
+  }, []);
+
+  const HackathonChooser = () => (
+    <select
+      value={livesiteData.activeHackathon}
+      onChange={(event) =>
+        setLivesiteData({
+          ...livesiteData,
+          activeHackathon: event.target.value,
+        })
+      }
+    >
+      {hackathons.map((hackathon) => {
+        return (
+          <option key={hackathon} value={hackathon}>
+            {hackathon}
+          </option>
+        );
+      })}
+    </select>
+  );
+
+  const DatePicker = ({ field }) => {
+    const [editingDate, setEditingDate] = useState();
+
+    const handleDateChange = (event) => {
+      // State: Contains UTC ISO string of the date
+      const momentDate = moment(event.target.value);
+      setEditingDate(momentDate.toISOString());
+    };
+
+    const handleBlur = () => {
+      if (editingDate) {
+        setLivesiteData({ ...livesiteData, [field]: editingDate });
+      }
+      setEditingDate('');
+    };
+
+    // View: Converts ISO UTC string to local date in format 2017-06-01T08:30
+    const domStringDate = moment
+      .utc(livesiteData[field])
+      .local()
+      .format('YYYY-MM-DDTHH:mm');
+    return (
+      <input
+        type="datetime-local"
+        value={domStringDate}
+        onBlur={() => handleBlur()}
+        onChange={(e) => handleDateChange(e)}
+      />
+    );
   };
 
-  useEffect(() => {
-    getAsyncData();
-  }, []);
+  const LogoUpload = () => (
+    <>
+      <input
+        type="file"
+        id="file"
+        ref={inputFile}
+        accept="image/*"
+        onChange={selectImageFile}
+        style={{ display: 'none' }}
+      />
+      <UploadContainer
+        type="text"
+        value={fileUpload.imgName}
+        onClick={() => inputFile.current.click()}
+      />
+    </>
+  );
+
+  const LocalDate = ({ date }) => {
+    if (date) {
+      return moment(date).format('MMMM Do YYYY, h:mm:ss a');
+    }
+    return null;
+  };
+
   return (
     <Page
       currentPath="Livesite"
@@ -97,38 +181,50 @@ export default ({ hackathons }) => {
         <CardContent>
           {isEditing ? (
             <>
-              <Label>Active Hackathon</Label>
-              <select
-                value={livesiteData.activeHackathon}
-                onChange={(event) =>
+              <Group>
+                <Label>Active Hackathon</Label>
+                <HackathonChooser />
+              </Group>
+              <FeatureFlag
+                title="Judging Open"
+                value={livesiteData.judgingOpen}
+                onChange={() => {
                   setLivesiteData({
                     ...livesiteData,
-                    activeHackathon: event.target.value,
-                  })
-                }
-              >
-                {hackathons.map((hackathon) => {
-                  return (
-                    <option key={hackathon} value={hackathon}>
-                      {hackathon}
-                    </option>
-                  );
-                })}
-              </select>
-              <Label>Livesite Logo</Label>
-              <input
-                type="file"
-                id="file"
-                ref={inputFile}
-                accept="image/*"
-                onChange={selectImageFile}
-                style={{ display: 'none' }}
+                    judgingOpen: !livesiteData.judgingOpen,
+                  });
+                }}
               />
-              <UploadContainer
-                type="text"
-                value={fileUpload.imgName}
-                onClick={() => inputFile.current.click()}
+              <FeatureFlag
+                title="Judging Released"
+                value={livesiteData.judgingReleased}
+                onChange={() => {
+                  setLivesiteData({
+                    ...livesiteData,
+                    judgingReleased: !livesiteData.judgingReleased,
+                  });
+                }}
               />
+              <Group>
+                <Label>{livesiteData.activeHackathon} Start Time</Label>
+                <DatePicker field="hackathonStart" />
+              </Group>
+              <Group>
+                <Label>{livesiteData.activeHackathon} End Time</Label>
+                <DatePicker field="hackathonEnd" />
+              </Group>
+              <Group>
+                <Label>Hacking Period Start Time</Label>
+                <DatePicker field="hackingStart" />
+              </Group>
+              <Group>
+                <Label>Hacking Period End Time</Label>
+                <DatePicker field="hackingEnd" />
+              </Group>
+              <Group>
+                <Label>Livesite Logo</Label>
+                <LogoUpload />
+              </Group>
               <CardContentButtonContainer>
                 <CancelButton onClick={() => setisEditing(false)} />
                 <Button onClick={() => handleSave()}>Save</Button>
@@ -136,10 +232,40 @@ export default ({ hackathons }) => {
             </>
           ) : (
             <>
-              <Label>Active Hackathon</Label>
-              {livesiteData.activeHackathon}
-              <Label>Livesite Logo</Label>
-              <img src={livesiteData.imgUrl} alt="logo" />
+              <Group>
+                <Label>Active Hackathon</Label>
+                {livesiteData.activeHackathon}
+              </Group>
+              <FeatureFlag
+                title="Judging Open"
+                value={livesiteData.judgingOpen}
+                disabled
+              />
+              <FeatureFlag
+                title="Judging Released"
+                value={livesiteData.judgingReleased}
+                disabled
+              />
+              <Group>
+                <Label>{livesiteData.activeHackathon} Start Time</Label>
+                <LocalDate date={livesiteData.hackathonStart} />
+              </Group>
+              <Group>
+                <Label>{livesiteData.activeHackathon} End Time</Label>
+                <LocalDate date={livesiteData.hackathonEnd} />
+              </Group>
+              <Group>
+                <Label>Hacking Period Start Time</Label>
+                <LocalDate date={livesiteData.hackingStart} />
+              </Group>
+              <Group>
+                <Label>Hacking Period End Time</Label>
+                <LocalDate date={livesiteData.hackingEnd} />
+              </Group>
+              <Group>
+                <Label>Livesite Logo</Label>
+                <img src={livesiteData.imgUrl} alt="logo" />
+              </Group>
             </>
           )}
         </CardContent>

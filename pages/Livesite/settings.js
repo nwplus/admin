@@ -194,7 +194,16 @@ export default ({ hackathons }) => {
                     judgingOpen: !livesiteData.judgingOpen,
                   });
                 }}
-                checked={livesiteData.judgingOpen}
+              />
+              <FeatureFlag
+                title="Judging Released"
+                value={livesiteData.judgingReleased}
+                onChange={() => {
+                  setLivesiteData({
+                    ...livesiteData,
+                    judgingReleased: !livesiteData.judgingReleased,
+                  });
+                }}
               />
               <Group>
                 <Label>{livesiteData.activeHackathon} Start Time</Label>
@@ -227,6 +236,16 @@ export default ({ hackathons }) => {
                 <Label>Active Hackathon</Label>
                 {livesiteData.activeHackathon}
               </Group>
+              <FeatureFlag
+                title="Judging Open"
+                value={livesiteData.judgingOpen}
+                disabled
+              />
+              <FeatureFlag
+                title="Judging Released"
+                value={livesiteData.judgingReleased}
+                disabled
+              />
               <Group>
                 <Label>{livesiteData.activeHackathon} Start Time</Label>
                 <LocalDate date={livesiteData.hackathonStart} />

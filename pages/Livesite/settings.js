@@ -21,7 +21,7 @@ import {
   uploadLivesiteLogoToStorage,
 } from '../../utility/firebase';
 import { useAuth } from '../../utility/auth';
-import { LIVESITE_NAVBAR, EDIT } from '../../constants';
+import { COLOR, LIVESITE_NAVBAR, EDIT } from '../../constants';
 
 const Label = styled.p`
   font-weight: bold;
@@ -33,6 +33,35 @@ const Group = styled.div`
   &:nth-child(1) {
     margin-top: 0;
   }
+`;
+
+const FeatureFlagsContainer = styled.div`
+  display: flex;
+  width: 40%;
+  border: 1px solid lightgray;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  justify-content: space-between;
+  background-color: ${COLOR.WHITE};
+  border-radius: 3px;
+`;
+
+const FeatureFlagToggle = styled.input`
+  width: 18px;
+  height: 18px;
+  margin: 14px 15px 14px 0;
+  ${(props) => !props.disabled && 'cursor: pointer;'}
+`;
+
+const FeatureFlagName = styled.p`
+  font-weight: ${(props) => (props.isLabel ? '600' : '400')};
+  font-size: 16px;
+  margin: 15px;
+  color: ${COLOR.BODY_TEXT};
+`;
+
+const FeatureFlagToggleContainer = styled.div`
+  display: flex;
 `;
 
 export default ({ hackathons }) => {
@@ -184,6 +213,24 @@ export default ({ hackathons }) => {
                 <Label>Active Hackathon</Label>
                 <HackathonChooser />
               </Group>
+              <FeatureFlagsContainer>
+                <FeatureFlagName isLabel>Judging Open</FeatureFlagName>
+                <FeatureFlagToggleContainer>
+                  <FeatureFlagName>
+                    {livesiteData.judgingOpen ? 'Open' : 'Closed'}
+                  </FeatureFlagName>
+                  <FeatureFlagToggle
+                    type="checkbox"
+                    onChange={() => {
+                      setLivesiteData({
+                        ...livesiteData,
+                        judgingOpen: !livesiteData.judgingOpen,
+                      });
+                    }}
+                    checked={livesiteData.judgingOpen}
+                  />
+                </FeatureFlagToggleContainer>
+              </FeatureFlagsContainer>
               <Group>
                 <Label>{livesiteData.activeHackathon} Start Time</Label>
                 <DatePicker field="hackathonStart" />

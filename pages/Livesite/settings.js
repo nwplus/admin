@@ -11,7 +11,7 @@ import Card, {
   CancelButton,
 } from '../../components/card';
 import FeatureFlag from '../../components/FeatureFlag';
-import { UploadContainer } from '../../components/modal';
+// import { UploadContainer } from '../../components/modal';
 import Button from '../../components/button';
 import {
   formatDate,
@@ -37,11 +37,12 @@ const Group = styled.div`
 `;
 
 export default ({ hackathons }) => {
-  const inputFile = React.createRef();
   const [livesiteData, setLivesiteData] = useState({});
   const [isEditing, setisEditing] = useState(false);
-  const [imgFile, setImgFile] = useState();
-  const [fileUpload] = useState({});
+  const [imgFile] = useState();
+  // const inputFile = React.createRef();
+  // const [imgFile, setImgFile] = useState();
+  // const [fileUpload] = useState({});
   const { email: user } = useAuth().user;
 
   // MODAL SUBMIT BUTTON CLICKED (NEW + EDIT)
@@ -72,12 +73,12 @@ export default ({ hackathons }) => {
     setisEditing(false);
   };
 
-  const selectImageFile = (e) => {
-    if (e.target.files[0]) {
-      setImgFile(e.target.files[0]);
-      fileUpload.imgName = e.target.files[0].name;
-    }
-  };
+  // const selectImageFile = (e) => {
+  //   if (e.target.files[0]) {
+  //     setImgFile(e.target.files[0]);
+  //     fileUpload.imgName = e.target.files[0].name;
+  //   }
+  // };
 
   useEffect(() => {
     const unsubscribe = subscribeToLivesiteData(setLivesiteData);
@@ -135,23 +136,24 @@ export default ({ hackathons }) => {
     );
   };
 
-  const LogoUpload = () => (
-    <>
-      <input
-        type="file"
-        id="file"
-        ref={inputFile}
-        accept="image/*"
-        onChange={selectImageFile}
-        style={{ display: 'none' }}
-      />
-      <UploadContainer
-        type="text"
-        value={fileUpload.imgName}
-        onClick={() => inputFile.current.click()}
-      />
-    </>
-  );
+  // Livesite doesnt support logo from CMS yet
+  // const LogoUpload = () => (
+  //   <>
+  //     <input
+  //       type="file"
+  //       id="file"
+  //       ref={inputFile}
+  //       accept="image/*"
+  //       onChange={selectImageFile}
+  //       style={{ display: 'none' }}
+  //     />
+  //     <UploadContainer
+  //       type="text"
+  //       value={fileUpload.imgName}
+  //       onClick={() => inputFile.current.click()}
+  //     />
+  //   </>
+  // );
 
   const LocalDate = ({ date }) => {
     if (date) {
@@ -231,10 +233,10 @@ export default ({ hackathons }) => {
                 <Label>Hacking Period End Time</Label>
                 <DatePicker field="hackingEnd" />
               </Group>
-              <Group>
+              {/* <Group>
                 <Label>Livesite Logo</Label>
                 <LogoUpload />
-              </Group>
+              </Group> */}
               <CardContentButtonContainer>
                 <CancelButton onClick={() => setisEditing(false)} />
                 <Button onClick={() => handleSave()}>Save</Button>
@@ -277,10 +279,11 @@ export default ({ hackathons }) => {
                 <Label>Hacking Period End Time</Label>
                 <LocalDate date={livesiteData.hackingEnd} />
               </Group>
+              {/* Not enabled on livesite yet
               <Group>
                 <Label>Livesite Logo</Label>
                 <img src={livesiteData.imgUrl} alt="logo" />
-              </Group>
+              </Group> */}
             </>
           )}
         </CardContent>

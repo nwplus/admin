@@ -455,3 +455,81 @@ export const subscribeToLivesiteData = (callback) => {
 export const updateLivesiteData = async (data) => {
   return livesiteDocRef.update(data);
 };
+
+export const getLivesiteEvent = (eventID, data) => {
+  return data
+    ? {
+        eventID,
+        key: data.key || eventID,
+        name: data.name || 'Empty event field',
+        description: data.description || 'Empty text description for event',
+        date: data.date
+          ? formatDate(data.date.seconds)
+          : formatDate(getTimestamp().seconds),
+        lastModified: data.lastModified
+          ? formatDate(data.lastModified.seconds)
+          : formatDate(getTimestamp().seconds),
+        lastModifiedBy: data.lastModifiedBy || 'Unknown user',
+      }
+    : null;
+};
+
+export const getLivesiteEvents = async (hackathon) => {
+  const eventIDs = await db
+    .collection('Hackathons')
+    .doc(hackathon)
+    .collection('DayOf')
+    .get();
+  const events = {};
+  eventIDs.docs.forEach((doc) => {
+    console.log(doc);
+    const currEvent = getLivesiteEvent(doc.id, doc.data());
+    if (currEvent) events[doc.id] = currEvent;
+  });
+  return events;
+};
+
+export const addLivesiteEvent = async (hackathon, event) => {
+  const ref = db
+    .collection('Hackathons')
+    .doc(hackathon)
+    .collection('DayOf')
+    .doc();
+  await ref.set({
+    title: event.title,
+    key: ref.id,
+    text: event.text,
+    date: event.date,
+    order: event.order,
+    lastModified: getTimestamp(),
+    lastModifiedBy: event.lastModifiedBy,
+  });
+  return ref.id;
+};
+
+export const updateLivesiteEvent = async (hackathon, event) => {
+  const ref = db
+    .collection('Hackathons')
+    .doc(hackathon)
+    .collection('DayOf')
+    .doc(event.eventID);
+  const currDate = getTimestamp();
+  await ref.update({
+    title: event.title || 'Empty event field',
+    key: event.key || event.eventID,
+    text: event.text || 'Empty text description for event',
+    date: event.date || currDate,
+    order: event.order || -1,
+    lastModified: currDate,
+    lastModifiedBy: event.lastModifiedBy,
+  });
+};
+
+export const deleteLivesiteEvent = async (hackathon, eventID) => {
+  await db
+    .collection('Hackathons')
+    .doc(hackathon)
+    .collection('DayOf')
+    .doc(eventID)
+    .delete();
+};

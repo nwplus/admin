@@ -186,6 +186,16 @@ export default ({ hackathons }) => {
                 <HackathonChooser />
               </Group>
               <FeatureFlag
+                title="Project Submissions Open"
+                value={livesiteData.submissionsOpen}
+                onChange={() => {
+                  setLivesiteData({
+                    ...livesiteData,
+                    submissionsOpen: !livesiteData.submissionsOpen,
+                  });
+                }}
+              />
+              <FeatureFlag
                 title="Judging Open"
                 value={livesiteData.judgingOpen}
                 onChange={() => {
@@ -236,6 +246,11 @@ export default ({ hackathons }) => {
                 <Label>Active Hackathon</Label>
                 {livesiteData.activeHackathon}
               </Group>
+              <FeatureFlag
+                title="Project Submissions Open"
+                value={livesiteData.submissionsOpen}
+                disabled
+              />
               <FeatureFlag
                 title="Judging Open"
                 value={livesiteData.judgingOpen}

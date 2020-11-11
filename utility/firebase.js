@@ -482,7 +482,7 @@ export const getLivesiteEvents = async (hackathon) => {
     .get();
   const events = {};
   eventIDs.docs.forEach((doc) => {
-    console.log(doc);
+    console.log(doc.data());
     const currEvent = getLivesiteEvent(doc.id, doc.data());
     if (currEvent) events[doc.id] = currEvent;
   });

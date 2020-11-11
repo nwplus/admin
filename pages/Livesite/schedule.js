@@ -146,9 +146,8 @@ export default function Events({ hackathons }) {
   const EventRow = (props) => {
     return (
       <TableRow>
-        <TableData>{props.title}</TableData>
+        <TableData>{props.name}</TableData>
         <TableData>{props.date}</TableData>
-        <TableData>{props.order}</TableData>
         <TableData>{props.lastModified}</TableData>
         <TableData actions>
           <ActionsButtonContainer>
@@ -221,7 +220,6 @@ export default function Events({ hackathons }) {
                     <TableRow>
                       <TableHeader>Event</TableHeader>
                       <TableHeader>Date</TableHeader>
-                      <TableHeader narrow>Order</TableHeader>
                       <TableHeader>Last Modified</TableHeader>
                       <TableHeader>Actions</TableHeader>
                     </TableRow>
@@ -231,9 +229,8 @@ export default function Events({ hackathons }) {
                       <EventRow
                         key={events[curr].eventID}
                         eventID={events[curr].eventID}
-                        title={events[curr].title}
-                        text={events[curr].text}
-                        order={events[curr].order}
+                        name={events[curr].name}
+                        description={events[curr].description}
                         date={events[curr].date}
                         lastModified={events[curr].lastModified}
                         lastModifiedBy={events[curr].lastModifiedBy}
@@ -257,12 +254,7 @@ export default function Events({ hackathons }) {
                 label="Event"
                 modalAction={NEW}
                 onChange={(event) =>
-                  handleInput(
-                    'title',
-                    event.target.value,
-                    newEvent,
-                    setNewEvent
-                  )
+                  handleInput('name', event.target.value, newEvent, setNewEvent)
                 }
               />
             </ModalContent>
@@ -272,7 +264,7 @@ export default function Events({ hackathons }) {
                 modalAction={NEW}
                 onChange={(event) => {
                   handleInput(
-                    'text',
+                    'description',
                     event.target.value,
                     newEvent,
                     setNewEvent
@@ -290,18 +282,6 @@ export default function Events({ hackathons }) {
                   }
                 />
               </div>
-              <ModalField
-                label="Order"
-                modalAction={NEW}
-                onChange={(event) =>
-                  handleInput(
-                    'order',
-                    event.target.value,
-                    newEvent,
-                    setNewEvent
-                  )
-                }
-              />
             </ModalContent>
           </Modal>
 
@@ -314,15 +294,15 @@ export default function Events({ hackathons }) {
           >
             <ModalContent columns={1}>
               <ModalField
-                label="Event"
-                value={eventViewing.title}
+                label="Event Name"
+                value={eventViewing.name}
                 modalAction={VIEW}
               />
             </ModalContent>
             <ModalContent columns={1}>
               <ModalField
                 label="Description"
-                value={eventViewing.text}
+                value={eventViewing.description}
                 modalAction={VIEW}
               />
             </ModalContent>
@@ -330,11 +310,6 @@ export default function Events({ hackathons }) {
               <ModalField
                 label="Date"
                 value={eventViewing.date}
-                modalAction={VIEW}
-              />
-              <ModalField
-                label="Order"
-                value={eventViewing.order}
                 modalAction={VIEW}
               />
             </ModalContent>
@@ -350,7 +325,7 @@ export default function Events({ hackathons }) {
             <ModalContent columns={1}>
               <ModalField
                 label="Event"
-                value={eventEditing.title}
+                value={eventEditing.name}
                 modalAction={EDIT}
                 onChange={(event) => {
                   handleInput(
@@ -365,7 +340,7 @@ export default function Events({ hackathons }) {
             <ModalContent columns={1}>
               <ModalField
                 label="Description"
-                value={eventEditing.text}
+                value={eventEditing.description}
                 modalAction={EDIT}
                 onChange={(event) => {
                   handleInput(
@@ -387,19 +362,6 @@ export default function Events({ hackathons }) {
                   }
                 />
               </div>
-              <ModalField
-                label="Order"
-                value={eventEditing.order}
-                modalAction={EDIT}
-                onChange={(event) => {
-                  handleInput(
-                    'order',
-                    event.target.value,
-                    eventEditing,
-                    setEventEditing
-                  );
-                }}
-              />
             </ModalContent>
           </Modal>
           {/* Confirmation modal before deleting event */}

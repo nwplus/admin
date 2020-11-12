@@ -464,9 +464,8 @@ export const getLivesiteEvent = (eventID, data) => {
         key: data.key || eventID,
         name: data.name || 'Empty event field',
         description: data.description || 'Empty text description for event',
-        date: data.date
-          ? formatDate(data.date.seconds)
-          : formatDate(getTimestamp().seconds),
+        startTime: data.startTime || '',
+        endTime: data.endTime || '',
         lastModified: data.lastModified
           ? formatDate(data.lastModified.seconds)
           : formatDate(getTimestamp().seconds),
@@ -480,7 +479,7 @@ export const getLivesiteEvents = async (hackathon) => {
     .collection('Hackathons')
     .doc(hackathon)
     .collection('DayOf')
-    .orderBy('startTime')
+    // .orderBy('startTime') // TODO: uncomment this
     .get();
   const events = {};
   eventIDs.docs.forEach((doc) => {
@@ -511,12 +510,11 @@ export const updateLivesiteEvent = async (hackathon, event) => {
     .doc(hackathon)
     .collection('DayOf')
     .doc(event.eventID);
-  const currDate = getTimestamp();
   delete event.eventID;
   delete event.key;
   await ref.update({
     ...event,
-    lastModified: currDate,
+    lastModified: getTimestamp(),
   });
 };
 

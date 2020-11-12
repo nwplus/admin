@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import setHours from 'date-fns/setHours';
-import setMinutes from 'date-fns/setMinutes';
 import Page from '../../components/page';
 import {
   formatDate,
@@ -79,16 +77,15 @@ export default function Events({ hackathons }) {
 
   const handleNew = async () => {
     newEvent.lastModifiedBy = user;
-    newEvent.startTime = new Date(newEvent.startTime.toUTCString());
-    newEvent.endTime = new Date(newEvent.endTime.toUTCString());
-    const eventID = await addLivesiteEvent(activeHackathon, newEvent);
+    console.log(newEvent);
+    newEvent.startTime = new Date(newEvent.startTime).toISOString();
+    newEvent.endTime = new Date(newEvent.endTime).toISOString();
+    const eventID = await addLivesiteEvent(activeHackathon, { ...newEvent });
     newEvent.lastModified = formatDate(getTimestamp().seconds);
     setEvents({
       ...events,
       [eventID]: {
         ...newEvent,
-        startTime: formatDate(newEvent.startTime, true),
-        endTime: formatDate(newEvent.endTime, true),
         eventID,
       },
     });
@@ -98,17 +95,13 @@ export default function Events({ hackathons }) {
 
   const handleUpdate = async () => {
     eventEditing.lastModified = user;
-    eventEditing.startTime = new Date(eventEditing.startTime);
-    eventEditing.endTime = new Date(eventEditing.endTime);
-    await updateLivesiteEvent(activeHackathon, eventEditing);
+    eventEditing.startTime = new Date(eventEditing.startTime).toISOString();
+    eventEditing.endTime = new Date(eventEditing.endTime).toISOString();
+    await updateLivesiteEvent(activeHackathon, { ...eventEditing });
     eventEditing.lastModified = formatDate(getTimestamp().seconds);
     setEvents({
       ...events,
-      [eventEditing.eventID]: {
-        ...eventEditing,
-        startTime: formatDate(eventEditing.startTime, true),
-        endTime: formatDate(eventEditing.endTime, true),
-      },
+      [eventEditing.eventID]: eventEditing,
     });
     setEventEditing({});
     setAlertMsg(
@@ -135,7 +128,7 @@ export default function Events({ hackathons }) {
     setEventConfirm(
       {},
       setAlertMsg(
-        `Successfully deleted the following event: \n${events[eventID].title}`
+        `Successfully deleted the following event: \n${events[eventID].name}`
       )
     );
   };
@@ -194,8 +187,8 @@ export default function Events({ hackathons }) {
               type={NEW}
               onClick={() =>
                 setNewEvent({
-                  startTime: setHours(setMinutes(new Date(), 0), 13),
-                  endTime: setHours(setMinutes(new Date(), 0), 13),
+                  startTime: new Date(),
+                  endTime: new Date(),
                 })
               }
             >
@@ -275,7 +268,11 @@ export default function Events({ hackathons }) {
               <div>
                 <Label>Start Time</Label>
                 <DateTimePicker
-                  selected={newEvent.startTime}
+                  selected={
+                    newEvent.startTime
+                      ? new Date(newEvent.startTime)
+                      : new Date()
+                  }
                   onChange={(date) =>
                     handleInput('startTime', date, newEvent, setNewEvent)
                   }
@@ -284,7 +281,9 @@ export default function Events({ hackathons }) {
               <div>
                 <Label>End Time</Label>
                 <DateTimePicker
-                  selected={newEvent.endTime}
+                  selected={
+                    newEvent.endTime ? new Date(newEvent.startTime) : new Date()
+                  }
                   onChange={(date) =>
                     handleInput('endTime', date, newEvent, setNewEvent)
                   }
@@ -381,7 +380,11 @@ export default function Events({ hackathons }) {
               <div>
                 <Label>Start Time</Label>
                 <DateTimePicker
-                  selected={new Date(eventEditing.startTime)}
+                  selected={
+                    eventEditing.startTime
+                      ? new Date(eventEditing.startTime)
+                      : new Date()
+                  }
                   onChange={(date) =>
                     handleInput(
                       'startTime',
@@ -395,7 +398,11 @@ export default function Events({ hackathons }) {
               <div>
                 <Label>End Time</Label>
                 <DateTimePicker
-                  selected={new Date(eventEditing.endTime)}
+                  selected={
+                    eventEditing.endTime
+                      ? new Date(eventEditing.endTime)
+                      : new Date()
+                  }
                   onChange={(date) =>
                     handleInput('endTime', date, eventEditing, setEventEditing)
                   }

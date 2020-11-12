@@ -60,10 +60,10 @@ export const formatDate = (date, isGMT = false) => {
   }
   // convert to RFC3339 then to yyyy-mm-dd hh:mm
   return new Date(date - timeZoneOffset)
-  .toISOString()
-  .slice(0, -1)
-  .slice(0, -7)
-  .replace('T', ' ');
+    .toISOString()
+    .slice(0, -1)
+    .slice(0, -7)
+    .replace('T', ' ');
 };
 
 export const getDocument = async (hackathon, collection) => {

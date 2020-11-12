@@ -464,8 +464,6 @@ export const getLivesiteEvent = (eventID, data) => {
         key: data.key || eventID,
         name: data.name || 'Empty event field',
         description: data.description || 'Empty text description for event',
-        startTime: data.startTime || '',
-        endTime: data.endTime || '',
         lastModified: data.lastModified
           ? formatDate(data.lastModified.seconds)
           : formatDate(getTimestamp().seconds),
@@ -479,7 +477,7 @@ export const getLivesiteEvents = async (hackathon) => {
     .collection('Hackathons')
     .doc(hackathon)
     .collection('DayOf')
-    // .orderBy('startTime') // TODO: uncomment this
+    .orderBy('startTime')
     .get();
   const events = {};
   eventIDs.docs.forEach((doc) => {

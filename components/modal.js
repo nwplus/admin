@@ -156,7 +156,6 @@ const ModalBackground = styled.div`
   /* TODO: add media queries to make width responsive */
   width: 740px;
   max-width: 100%;
-  height: 480px;
   max-height: 100%;
 `;
 

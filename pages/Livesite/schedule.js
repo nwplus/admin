@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Page from '../../components/page';
+import FeatureFlag from '../../components/FeatureFlag';
 import {
   formatDate,
   getTimestamp,
@@ -77,7 +78,6 @@ export default function Events({ hackathons }) {
 
   const handleNew = async () => {
     newEvent.lastModifiedBy = user;
-    console.log(newEvent);
     newEvent.startTime = new Date(newEvent.startTime).toISOString();
     newEvent.endTime = new Date(newEvent.endTime).toISOString();
     const eventID = await addLivesiteEvent(activeHackathon, { ...newEvent });
@@ -264,6 +264,35 @@ export default function Events({ hackathons }) {
                 }}
               />
             </ModalContent>
+            <ModalContent columns={1}>
+              <ModalField
+                label="Type"
+                value={newEvent.type}
+                modalAction={EDIT}
+                onChange={(event) => {
+                  handleInput(
+                    'type',
+                    event.target.value,
+                    newEvent,
+                    setNewEvent
+                  );
+                }}
+              />
+            </ModalContent>
+            <ModalContent columns={1}>
+              <FeatureFlag
+                title="Delayed"
+                value={newEvent.delayed}
+                onChange={() => {
+                  handleInput(
+                    'delayed',
+                    !newEvent.delayed,
+                    newEvent,
+                    setNewEvent
+                  );
+                }}
+              />
+            </ModalContent>
             <ModalContent columns={2}>
               <div>
                 <Label>Start Time</Label>
@@ -376,14 +405,40 @@ export default function Events({ hackathons }) {
                 }}
               />
             </ModalContent>
+            <ModalContent columns={1}>
+              <ModalField
+                label="Type"
+                value={eventEditing.type}
+                modalAction={EDIT}
+                onChange={(event) => {
+                  handleInput(
+                    'type',
+                    event.target.value,
+                    eventEditing,
+                    setEventEditing
+                  );
+                }}
+              />
+            </ModalContent>
+            <ModalContent columns={1}>
+              <FeatureFlag
+                title="Delayed"
+                value={eventEditing.delayed}
+                onChange={() => {
+                  handleInput(
+                    'delayed',
+                    !eventEditing.delayed,
+                    eventEditing,
+                    setEventEditing
+                  );
+                }}
+              />
+            </ModalContent>
             <ModalContent columns={2}>
               <div>
                 <Label>Start Time</Label>
                 <DateTimePicker
-                  selected={
-                    eventEditing.startTime
-                      ? new Date(eventEditing.startTime)
-                      : new Date()
+                  selected={new Date(eventEditing.startTime)
                   }
                   onChange={(date) =>
                     handleInput(
@@ -398,10 +453,7 @@ export default function Events({ hackathons }) {
               <div>
                 <Label>End Time</Label>
                 <DateTimePicker
-                  selected={
-                    eventEditing.endTime
-                      ? new Date(eventEditing.endTime)
-                      : new Date()
+                  selected={new Date(eventEditing.endTime)
                   }
                   onChange={(date) =>
                     handleInput('endTime', date, eventEditing, setEventEditing)
@@ -421,26 +473,14 @@ export default function Events({ hackathons }) {
             <ModalContent columns={1}>
               <ModalField
                 label="Event"
-                value={eventConfirm.title}
+                value={eventConfirm.name}
                 modalAction={VIEW}
               />
             </ModalContent>
             <ModalContent columns={1}>
               <ModalField
                 label="Description"
-                value={eventConfirm.text}
-                modalAction={VIEW}
-              />
-            </ModalContent>
-            <ModalContent columns={2}>
-              <ModalField
-                label="Date"
-                value={eventConfirm.date}
-                modalAction={VIEW}
-              />
-              <ModalField
-                label="Order"
-                value={eventConfirm.order}
+                value={eventConfirm.description}
                 modalAction={VIEW}
               />
             </ModalContent>

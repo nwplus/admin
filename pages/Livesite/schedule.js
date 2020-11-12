@@ -75,40 +75,44 @@ export default function Events({ hackathons }) {
 
   useEffect(() => {
     fetchEvents();
-  }, [setEvents]);
+  }, [activeHackathon]);
 
   const handleNew = async () => {
     newEvent.lastModifiedBy = user;
-    newEvent.date = new Date(newEvent.date.toUTCString());
+    newEvent.startTime = new Date(newEvent.startTime.toUTCString());
+    newEvent.endTime = new Date(newEvent.endTime.toUTCString());
     const eventID = await addLivesiteEvent(activeHackathon, newEvent);
     newEvent.lastModified = formatDate(getTimestamp().seconds);
     setEvents({
       ...events,
       [eventID]: {
         ...newEvent,
-        date: formatDate(newEvent.date, true),
+        startTime: formatDate(newEvent.startTime, true),
+        endTime: formatDate(newEvent.endTime, true),
         eventID,
       },
     });
     setNewEvent({});
-    setAlertMsg(`Successfully added the following event: \n${newEvent.title}`);
+    setAlertMsg(`Successfully added the following event: \n${newEvent.name}`);
   };
 
   const handleUpdate = async () => {
     eventEditing.lastModified = user;
-    eventEditing.date = new Date(eventEditing.date);
+    eventEditing.startTime = new Date(eventEditing.startTime);
+    eventEditing.endTime = new Date(eventEditing.endTime);
     await updateLivesiteEvent(activeHackathon, eventEditing);
     eventEditing.lastModified = formatDate(getTimestamp().seconds);
     setEvents({
       ...events,
       [eventEditing.eventID]: {
         ...eventEditing,
-        date: formatDate(eventEditing.date, true),
+        startTime: formatDate(eventEditing.startTime, true),
+        endTime: formatDate(eventEditing.endTime, true),
       },
     });
     setEventEditing({});
     setAlertMsg(
-      `Successfully updated the following event: \n${eventEditing.title}`
+      `Successfully updated the following event: \n${eventEditing.name}`
     );
   };
 
@@ -147,8 +151,9 @@ export default function Events({ hackathons }) {
     return (
       <TableRow>
         <TableData>{props.name}</TableData>
-        <TableData>{props.date}</TableData>
-        <TableData>{props.lastModified}</TableData>
+        <TableData>{props.startTime}</TableData>
+        <TableData>{props.delayed ? 'True' : 'False'}</TableData>
+        <TableData>{props.type}</TableData>
         <TableData actions>
           <ActionsButtonContainer>
             <Button
@@ -189,7 +194,8 @@ export default function Events({ hackathons }) {
               type={NEW}
               onClick={() =>
                 setNewEvent({
-                  date: setHours(setMinutes(new Date(), 0), 13),
+                  startTime: setHours(setMinutes(new Date(), 0), 13),
+                  endTime: setHours(setMinutes(new Date(), 0), 13),
                 })
               }
             >
@@ -219,22 +225,15 @@ export default function Events({ hackathons }) {
                   <thead>
                     <TableRow>
                       <TableHeader>Event</TableHeader>
-                      <TableHeader>Date</TableHeader>
-                      <TableHeader>Last Modified</TableHeader>
+                      <TableHeader>Start Time</TableHeader>
+                      <TableHeader>Delayed</TableHeader>
+                      <TableHeader>Type</TableHeader>
                       <TableHeader>Actions</TableHeader>
                     </TableRow>
                   </thead>
                   <tbody>
-                    {Object.keys(events).map((curr) => (
-                      <EventRow
-                        key={events[curr].eventID}
-                        eventID={events[curr].eventID}
-                        name={events[curr].name}
-                        description={events[curr].description}
-                        date={events[curr].date}
-                        lastModified={events[curr].lastModified}
-                        lastModifiedBy={events[curr].lastModifiedBy}
-                      />
+                    {Object.entries(events).map(([key, event]) => (
+                      <EventRow {...event} key={key} />
                     ))}
                   </tbody>
                 </>
@@ -244,7 +243,7 @@ export default function Events({ hackathons }) {
 
           {/* Modal for adding new event */}
           <Modal
-            isOpen={newEvent.date}
+            isOpen={newEvent.startTime}
             handleSave={() => handleNew()}
             handleClose={() => setNewEvent({})}
             modalAction={NEW}
@@ -274,11 +273,20 @@ export default function Events({ hackathons }) {
             </ModalContent>
             <ModalContent columns={2}>
               <div>
-                <Label>Date</Label>
+                <Label>Start Time</Label>
                 <DateTimePicker
-                  selected={newEvent.date}
+                  selected={newEvent.startTime}
                   onChange={(date) =>
-                    handleInput('date', date, newEvent, setNewEvent)
+                    handleInput('startTime', date, newEvent, setNewEvent)
+                  }
+                />
+              </div>
+              <div>
+                <Label>End Time</Label>
+                <DateTimePicker
+                  selected={newEvent.endTime}
+                  onChange={(date) =>
+                    handleInput('endTime', date, newEvent, setNewEvent)
                   }
                 />
               </div>
@@ -308,8 +316,25 @@ export default function Events({ hackathons }) {
             </ModalContent>
             <ModalContent columns={2}>
               <ModalField
-                label="Date"
-                value={eventViewing.date}
+                label="Type"
+                value={eventViewing.type}
+                modalAction={VIEW}
+              />
+              <ModalField
+                label="Delayed"
+                value={eventViewing.delayed ? 'True' : 'False'}
+                modalAction={VIEW}
+              />
+            </ModalContent>
+            <ModalContent columns={2}>
+              <ModalField
+                label="Start Time"
+                value={eventViewing.startTime}
+                modalAction={VIEW}
+              />
+              <ModalField
+                label="End Time"
+                value={eventViewing.endTime}
                 modalAction={VIEW}
               />
             </ModalContent>
@@ -354,11 +379,25 @@ export default function Events({ hackathons }) {
             </ModalContent>
             <ModalContent columns={2}>
               <div>
-                <Label>Date</Label>
+                <Label>Start Time</Label>
                 <DateTimePicker
-                  selected={new Date(eventEditing.date)}
+                  selected={new Date(eventEditing.startTime)}
                   onChange={(date) =>
-                    handleInput('date', date, eventEditing, setEventEditing)
+                    handleInput(
+                      'startTime',
+                      date,
+                      eventEditing,
+                      setEventEditing
+                    )
+                  }
+                />
+              </div>
+              <div>
+                <Label>End Time</Label>
+                <DateTimePicker
+                  selected={new Date(eventEditing.endTime)}
+                  onChange={(date) =>
+                    handleInput('endTime', date, eventEditing, setEventEditing)
                   }
                 />
               </div>

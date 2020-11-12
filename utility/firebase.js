@@ -459,6 +459,7 @@ export const updateLivesiteData = async (data) => {
 export const getLivesiteEvent = (eventID, data) => {
   return data
     ? {
+        ...data,
         eventID,
         key: data.key || eventID,
         name: data.name || 'Empty event field',
@@ -479,10 +480,10 @@ export const getLivesiteEvents = async (hackathon) => {
     .collection('Hackathons')
     .doc(hackathon)
     .collection('DayOf')
+    .orderBy('startTime')
     .get();
   const events = {};
   eventIDs.docs.forEach((doc) => {
-    console.log(doc.data());
     const currEvent = getLivesiteEvent(doc.id, doc.data());
     if (currEvent) events[doc.id] = currEvent;
   });
@@ -495,14 +496,11 @@ export const addLivesiteEvent = async (hackathon, event) => {
     .doc(hackathon)
     .collection('DayOf')
     .doc();
+  delete event.eventID;
+  delete event.key;
   await ref.set({
-    title: event.title,
-    key: ref.id,
-    text: event.text,
-    date: event.date,
-    order: event.order,
+    ...event,
     lastModified: getTimestamp(),
-    lastModifiedBy: event.lastModifiedBy,
   });
   return ref.id;
 };
@@ -514,14 +512,11 @@ export const updateLivesiteEvent = async (hackathon, event) => {
     .collection('DayOf')
     .doc(event.eventID);
   const currDate = getTimestamp();
+  delete event.eventID;
+  delete event.key;
   await ref.update({
-    title: event.title || 'Empty event field',
-    key: event.key || event.eventID,
-    text: event.text || 'Empty text description for event',
-    date: event.date || currDate,
-    order: event.order || -1,
+    ...event,
     lastModified: currDate,
-    lastModifiedBy: event.lastModifiedBy,
   });
 };
 

@@ -59,9 +59,12 @@ export const formatDate = (date, isGMT = false) => {
     date = new Date(date * 1000);
   }
   // convert to RFC3339 then to yyyy-mm-dd hh:mm
-  return new Date(date - timeZoneOffset).toISOString().slice(0, -1).slice(0, -7).replace('T', ' ');
+  return new Date(date - timeZoneOffset)
+  .toISOString()
+  .slice(0, -1)
+  .slice(0, -7)
+  .replace('T', ' ');
 };
-
 
 export const getDocument = async (hackathon, collection) => {
   if (collection === hackathon) {

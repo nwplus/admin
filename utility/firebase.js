@@ -45,25 +45,21 @@ const InternalWebsitesCollection = 'InternalWebsites';
 const CMSCollection = 'CMS';
 const LivesiteCollection = 'Livesite';
 
-export const formatDate = (date, preProcessed = false) => {
+// formats timestamp to yyyy-mm-dd hh:mm of type string
+export const formatDate = (date, isGMT = false) => {
   if (!date) {
-    return 'invalid date';
+    date = getTimestamp().seconds;
   }
   const timeZoneOffset = new Date().getTimezoneOffset() * 60000;
-  if (!preProcessed) {
+  if (!isGMT) {
     date = new Date(date * 1000);
-  } else {
-    return new Date(date - timeZoneOffset)
+  }
+  // convert to RFC3339 then to yyyy-mm-dd hh:mm
+  return new Date(date - timeZoneOffset)
       .toISOString()
       .slice(0, -1)
       .slice(0, -7)
       .replace('T', ' ');
-  }
-  return new Date(date - timeZoneOffset)
-    .toISOString()
-    .slice(0, -1)
-    .slice(0, -7)
-    .replace('T', ' ');
 };
 
 export const getTimestamp = () => {

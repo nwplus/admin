@@ -9,7 +9,6 @@ export const DateTimePicker = ({ selected, onChange }) => {
       onChange={onChange}
       showTimeSelect
       timeFormat="HH:mm"
-      timeIntervals={24}
       timeCaption="Time"
       dateFormat="yyyy-MM-dd h:mm aa"
     />

@@ -438,8 +438,7 @@ export default function Events({ hackathons }) {
               <div>
                 <Label>Start Time</Label>
                 <DateTimePicker
-                  selected={new Date(eventEditing.startTime)
-                  }
+                  selected={new Date(eventEditing.startTime)}
                   onChange={(date) =>
                     handleInput(
                       'startTime',
@@ -453,8 +452,7 @@ export default function Events({ hackathons }) {
               <div>
                 <Label>End Time</Label>
                 <DateTimePicker
-                  selected={new Date(eventEditing.endTime)
-                  }
+                  selected={new Date(eventEditing.endTime)}
                   onChange={(date) =>
                     handleInput('endTime', date, eventEditing, setEventEditing)
                   }

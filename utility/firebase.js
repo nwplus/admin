@@ -451,3 +451,72 @@ export const subscribeToLivesiteData = (callback) => {
 export const updateLivesiteData = async (data) => {
   return livesiteDocRef.update(data);
 };
+
+export const getLivesiteEvent = (eventID, data) => {
+  return data
+    ? {
+        ...data,
+        eventID,
+        key: data.key || eventID,
+        name: data.name || 'Empty event field',
+        description: data.description || 'Empty text description for event',
+        lastModified: data.lastModified
+          ? formatDate(data.lastModified.seconds)
+          : formatDate(getTimestamp().seconds),
+        lastModifiedBy: data.lastModifiedBy || 'Unknown user',
+      }
+    : null;
+};
+
+export const getLivesiteEvents = async (hackathon) => {
+  const eventIDs = await db
+    .collection('Hackathons')
+    .doc(hackathon)
+    .collection('DayOf')
+    .orderBy('startTime')
+    .get();
+  const events = {};
+  eventIDs.docs.forEach((doc) => {
+    const currEvent = getLivesiteEvent(doc.id, doc.data());
+    if (currEvent) events[doc.id] = currEvent;
+  });
+  return events;
+};
+
+export const addLivesiteEvent = async (hackathon, event) => {
+  const ref = db
+    .collection('Hackathons')
+    .doc(hackathon)
+    .collection('DayOf')
+    .doc();
+  delete event.eventID;
+  delete event.key;
+  await ref.set({
+    ...event,
+    lastModified: getTimestamp(),
+  });
+  return ref.id;
+};
+
+export const updateLivesiteEvent = async (hackathon, event) => {
+  const ref = db
+    .collection('Hackathons')
+    .doc(hackathon)
+    .collection('DayOf')
+    .doc(event.eventID);
+  delete event.eventID;
+  delete event.key;
+  await ref.update({
+    ...event,
+    lastModified: getTimestamp(),
+  });
+};
+
+export const deleteLivesiteEvent = async (hackathon, eventID) => {
+  await db
+    .collection('Hackathons')
+    .doc(hackathon)
+    .collection('DayOf')
+    .doc(eventID)
+    .delete();
+};

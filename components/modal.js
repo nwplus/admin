@@ -1,14 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {
-  COLOR,
-  VIEW,
-  NEW,
-  EDIT,
-  CLOSE,
-  SPONSORSHIP,
-  FAQCategory,
-} from '../constants';
+import { COLOR, VIEW, NEW, EDIT, CLOSE, SPONSORSHIP } from '../constants';
 import TextBox from './textbox';
 import Button from './button';
 import Dropdown from './dropdown';
@@ -53,6 +45,8 @@ const GenericText = styled.p`
 `;
 
 export const ModalField = ({
+  dropdown,
+  dropdownOptions,
   label,
   value,
   type = 'text',
@@ -69,26 +63,13 @@ export const ModalField = ({
           )}
         {label !== 'Answer' &&
           label !== 'Description' &&
-          label !== 'Category' &&
+          !dropdown &&
           modalAction !== VIEW && (
             <InputField type={type} defaultValue={value} onChange={onChange} />
           )}
-        {label === 'Category' && modalAction !== VIEW && (
+        {dropdown && modalAction !== VIEW && (
           <Dropdown
-            options={[
-              {
-                label: FAQCategory.GENERAL,
-              },
-              {
-                label: FAQCategory.LOGS,
-              },
-              {
-                label: FAQCategory.TEAMS,
-              },
-              {
-                label: FAQCategory.MISC,
-              },
-            ]}
+            options={dropdownOptions}
             onChange={onChange}
             defaultValue={value}
           />
@@ -156,7 +137,6 @@ const ModalBackground = styled.div`
   /* TODO: add media queries to make width responsive */
   width: 740px;
   max-width: 100%;
-  height: 480px;
   max-height: 100%;
 `;
 

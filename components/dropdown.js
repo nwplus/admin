@@ -28,6 +28,7 @@ const Select = ({
 const TransformedArrow = styled(ArrowIcon)`
   position: absolute;
   margin-top: 0.25rem;
+  right: 1rem;
   ${(props) =>
     props.flip
       ? 'transform-origin: 50% 50%; transform: rotate(180deg); padding-right: 14.75rem;'
@@ -35,6 +36,7 @@ const TransformedArrow = styled(ArrowIcon)`
 `;
 
 const SelectContent = styled.button`
+  position: relative;
   width: 95%;
   height: 40px;
   border: 1px solid ${COLOR.DARK_GRAY};
@@ -54,6 +56,7 @@ const OptionsContainer = styled.div`
   color: ${COLOR.WHITE};
   padding: 0.25rem 0;
   position: fixed;
+  z-index: 20;
 `;
 
 const OptionList = styled.ul`

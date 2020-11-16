@@ -1,14 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {
-  COLOR,
-  VIEW,
-  NEW,
-  EDIT,
-  CLOSE,
-  SPONSORSHIP,
-  FAQCategory,
-} from '../constants';
+import { COLOR, VIEW, NEW, EDIT, CLOSE, SPONSORSHIP } from '../constants';
 import TextBox from './textbox';
 import Button from './button';
 import Dropdown from './dropdown';

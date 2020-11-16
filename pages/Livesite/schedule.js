@@ -266,16 +266,26 @@ export default function Events({ hackathons }) {
             </ModalContent>
             <ModalContent columns={1}>
               <ModalField
+                dropdown
+                dropdownOptions={[
+                  {
+                    label: 'main',
+                  },
+                  {
+                    label: 'workshops',
+                  },
+                  {
+                    label: 'minievents',
+                  },
+                  {
+                    label: 'notices',
+                  },
+                ]}
                 label="Type"
                 value={newEvent.type}
                 modalAction={EDIT}
-                onChange={(event) => {
-                  handleInput(
-                    'type',
-                    event.target.value,
-                    newEvent,
-                    setNewEvent
-                  );
+                onChange={(type) => {
+                  handleInput('type', type.label, newEvent, setNewEvent);
                 }}
               />
             </ModalContent>

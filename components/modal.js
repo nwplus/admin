@@ -53,6 +53,8 @@ const GenericText = styled.p`
 `;
 
 export const ModalField = ({
+  dropdown,
+  dropdownOptions,
   label,
   value,
   type = 'text',
@@ -69,26 +71,13 @@ export const ModalField = ({
           )}
         {label !== 'Answer' &&
           label !== 'Description' &&
-          label !== 'Category' &&
+          !dropdown &&
           modalAction !== VIEW && (
             <InputField type={type} defaultValue={value} onChange={onChange} />
           )}
-        {label === 'Category' && modalAction !== VIEW && (
+        {dropdown && modalAction !== VIEW && (
           <Dropdown
-            options={[
-              {
-                label: FAQCategory.GENERAL,
-              },
-              {
-                label: FAQCategory.LOGS,
-              },
-              {
-                label: FAQCategory.TEAMS,
-              },
-              {
-                label: FAQCategory.MISC,
-              },
-            ]}
+            options={dropdownOptions}
             onChange={onChange}
             defaultValue={value}
           />

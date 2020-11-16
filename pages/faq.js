@@ -436,6 +436,21 @@ export default function Faq({ hackathons }) {
                 }}
               />
               <ModalField
+                dropdown
+                dropdownOptions={[
+                  {
+                    label: FAQCategory.GENERAL,
+                  },
+                  {
+                    label: FAQCategory.LOGS,
+                  },
+                  {
+                    label: FAQCategory.TEAMS,
+                  },
+                  {
+                    label: FAQCategory.MISC,
+                  },
+                ]}
                 label="Category"
                 value={faqEditing.category}
                 modalAction={EDIT}

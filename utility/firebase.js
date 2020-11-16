@@ -45,29 +45,25 @@ const InternalWebsitesCollection = 'InternalWebsites';
 const CMSCollection = 'CMS';
 const LivesiteCollection = 'Livesite';
 
-export const formatDate = (date, preProcessed = false) => {
+export const getTimestamp = () => {
+  return firebase.firestore.Timestamp.now();
+};
+
+// formats timestamp to yyyy-mm-dd hh:mm of type string
+export const formatDate = (date, isGMT = false) => {
   if (!date) {
-    return 'invalid date';
+    date = getTimestamp().seconds;
   }
   const timeZoneOffset = new Date().getTimezoneOffset() * 60000;
-  if (!preProcessed) {
+  if (!isGMT) {
     date = new Date(date * 1000);
-  } else {
-    return new Date(date - timeZoneOffset)
-      .toISOString()
-      .slice(0, -1)
-      .slice(0, -7)
-      .replace('T', ' ');
   }
+  // convert to RFC3339 then to yyyy-mm-dd hh:mm
   return new Date(date - timeZoneOffset)
     .toISOString()
     .slice(0, -1)
     .slice(0, -7)
     .replace('T', ' ');
-};
-
-export const getTimestamp = () => {
-  return firebase.firestore.Timestamp.now();
 };
 
 export const getDocument = async (hackathon, collection) => {
@@ -407,9 +403,11 @@ export const subscribeToCMSStatus = (dateCallback) => {
     });
 };
 
-export const getActiveHackathon = db
+const livesiteDocRef = db
   .collection(InternalWebsitesCollection)
-  .doc(LivesiteCollection)
+  .doc(LivesiteCollection);
+
+export const getActiveHackathon = livesiteDocRef
   .get()
   .then((doc) => doc.data()?.activeHackathon);
 
@@ -446,18 +444,79 @@ export const deleteAnnouncement = async (hackathon, id) => {
   await announcementsRef(hackathon).doc(id).delete();
 };
 
-export const getLivesiteData = async () => {
-  const ref = db.collection(InternalWebsitesCollection).doc(LivesiteCollection);
-  const doc = await ref.get();
-  return doc.data();
+export const subscribeToLivesiteData = (callback) => {
+  return livesiteDocRef.onSnapshot((doc) => callback(doc.data()));
 };
 
 export const updateLivesiteData = async (data) => {
-  const doc = {
-    ...data,
-  };
-  return db
-    .collection(InternalWebsitesCollection)
-    .doc(LivesiteCollection)
-    .update(doc);
+  return livesiteDocRef.update(data);
+};
+
+export const getLivesiteEvent = (eventID, data) => {
+  return data
+    ? {
+        ...data,
+        eventID,
+        key: data.key || eventID,
+        name: data.name || 'Empty event field',
+        description: data.description || 'Empty text description for event',
+        lastModified: data.lastModified
+          ? formatDate(data.lastModified.seconds)
+          : formatDate(getTimestamp().seconds),
+        lastModifiedBy: data.lastModifiedBy || 'Unknown user',
+      }
+    : null;
+};
+
+export const getLivesiteEvents = async (hackathon) => {
+  const eventIDs = await db
+    .collection('Hackathons')
+    .doc(hackathon)
+    .collection('DayOf')
+    .orderBy('startTime')
+    .get();
+  const events = {};
+  eventIDs.docs.forEach((doc) => {
+    const currEvent = getLivesiteEvent(doc.id, doc.data());
+    if (currEvent) events[doc.id] = currEvent;
+  });
+  return events;
+};
+
+export const addLivesiteEvent = async (hackathon, event) => {
+  const ref = db
+    .collection('Hackathons')
+    .doc(hackathon)
+    .collection('DayOf')
+    .doc();
+  delete event.eventID;
+  delete event.key;
+  await ref.set({
+    ...event,
+    lastModified: getTimestamp(),
+  });
+  return ref.id;
+};
+
+export const updateLivesiteEvent = async (hackathon, event) => {
+  const ref = db
+    .collection('Hackathons')
+    .doc(hackathon)
+    .collection('DayOf')
+    .doc(event.eventID);
+  delete event.eventID;
+  delete event.key;
+  await ref.update({
+    ...event,
+    lastModified: getTimestamp(),
+  });
+};
+
+export const deleteLivesiteEvent = async (hackathon, eventID) => {
+  await db
+    .collection('Hackathons')
+    .doc(hackathon)
+    .collection('DayOf')
+    .doc(eventID)
+    .delete();
 };

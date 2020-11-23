@@ -1,23 +1,44 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Page from '../../components/page';
-import { getHackathons } from '../../utility/firebase';
+import {
+  getActiveHackathon,
+  getHackathons,
+  getLivesiteQuicklinks,
+} from '../../utility/firebase';
 import { LIVESITE_NAVBAR } from '../../constants';
 
-export default ({ hackathons }) => (
-  <Page
-    currentPath="Livesite"
-    hackathons={hackathons}
-    navbarItems={LIVESITE_NAVBAR}
-  >
-    <img
-      src="https://i.imgur.com/lEjmB7U.gif"
-      width="480"
-      height="362"
-      alt="panik"
-    />
-    <p>Quicklinks - This area under construction.</p>
-  </Page>
-);
+export default ({ hackathons }) => {
+  const [activeHackathon, setActiveHackathon] = useState('');
+  const [quicklinks, setQuicklinks] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      setActiveHackathon(await getActiveHackathon);
+    })();
+  });
+
+  useEffect(() => {
+    if (activeHackathon) {
+      (async () => {
+        await getLivesiteQuicklinks(activeHackathon, (data) => {
+          setQuicklinks(data);
+        });
+      })();
+    }
+  }, [activeHackathon, setQuicklinks]);
+  console.log(quicklinks)
+  return (
+    <Page
+      currentPath="Livesite"
+      hackathons={hackathons}
+      navbarItems={LIVESITE_NAVBAR}
+    >
+      {Object.values(quicklinks).map((quicklink) => {
+        return <p>{quicklink.label}</p>;
+      })}
+    </Page>
+  );
+};
 
 export const getStaticProps = async () => {
   const hackathons = await getHackathons();

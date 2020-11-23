@@ -452,6 +452,20 @@ export const updateLivesiteData = async (data) => {
   return livesiteDocRef.update(data);
 };
 
+export const getLivesiteQuicklinks = async (hackathon, callback) => {
+  const eventIDs = await db
+    .collection('Hackathons')
+    .doc(hackathon)
+    .collection('QuickLinks')
+    .orderBy('label')
+    .get();
+  return callback(
+    eventIDs.docs.map((doc) => {
+      return doc.data();
+    })
+  );
+};
+
 export const getLivesiteEvent = (eventID, data) => {
   return data
     ? {

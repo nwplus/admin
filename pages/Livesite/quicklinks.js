@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Page from '../../components/page';
 import {
+  formatDate,
   getActiveHackathon,
   getHackathons,
   subscribeToLivesiteQuicklinks,
@@ -48,10 +49,10 @@ export default ({ hackathons }) => {
     setActiveModal(NEW);
   };
 
-  const handleDelete = (key) => {
+  const handleDelete = async (key) => {
     // eslint-disable-next-line no-restricted-globals
     if (confirm('Are you sure? This cannot be undone')) {
-      deleteQuicklink(activeHackathon, key);
+      await deleteQuicklink(activeHackathon, key);
     }
   };
 
@@ -71,8 +72,8 @@ export default ({ hackathons }) => {
     }
   };
 
-  const handleSave = () => {
-    updateQuicklink(activeHackathon, currentQuicklink);
+  const handleSave = async () => {
+    await updateQuicklink(activeHackathon, currentQuicklink);
     setActiveModal('');
   };
 
@@ -108,14 +109,14 @@ export default ({ hackathons }) => {
       >
         {Object.entries(quicklinkFields).map(([key, label]) => {
           return (
-            <>
+            <div key={key}>
               <strong>{label}</strong>
               <StyledTextBox
                 defaultValue={currentQuicklink[key]}
                 modalAction={activeModal}
                 onChange={(event) => handleInput(event.target.value, key)}
               />
-            </>
+            </div>
           );
         })}
         <FeatureFlag
@@ -126,6 +127,10 @@ export default ({ hackathons }) => {
           }}
         />
         <p>*Common links appear on homepage</p>
+        <p>
+          Last edited by {currentQuicklink.editor} at{' '}
+          {formatDate(currentQuicklink.lastModified)}
+        </p>
       </Modal>
     </Page>
   );

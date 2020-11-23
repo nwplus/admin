@@ -484,14 +484,14 @@ export const subscribeToLivesiteQuicklinks = (hackathon, callback) => {
 
 export const updateQuicklink = async (hackathon, quicklink) => {
   if (quicklink.id) {
+    quicklink.lastModified = getTimestamp();
     const ref = quicklinksRef(hackathon).doc(quicklink.id);
     delete quicklink.id;
     await ref.set(quicklink);
     return quicklink.id;
   }
-  quicklink.timestamp = Date.now();
+  quicklink.lastModified = getTimestamp();
   const ref = await quicklinksRef(hackathon).doc().set(quicklink);
-  console.log(ref);
   return ref;
 };
 

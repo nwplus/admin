@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import moment from 'moment';
 import Card, {
   CardHeader,
   CardTitle,
@@ -73,7 +72,7 @@ export default ({
           <div>
             {Object.entries(quicklinks).map(([key, quicklink]) => (
               <CardContainer
-                key={quicklink.timestamp}
+                key={quicklink.href + quicklink.label}
                 padding="10px 0px 10px 20px"
               >
                 <Text>{quicklink.label}</Text>

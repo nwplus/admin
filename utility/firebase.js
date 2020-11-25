@@ -452,6 +452,53 @@ export const updateLivesiteData = async (data) => {
   return livesiteDocRef.update(data);
 };
 
+export const getLivesiteQuicklinks = async (hackathon, callback) => {
+  const eventIDs = await db
+    .collection('Hackathons')
+    .doc(hackathon)
+    .collection('QuickLinks')
+    .orderBy('label')
+    .get();
+  return callback(
+    eventIDs.docs.map((doc) => {
+      return doc.data();
+    })
+  );
+};
+
+const quicklinksRef = (hackathon) => {
+  return db.collection(Hackathons).doc(hackathon).collection('QuickLinks');
+};
+
+export const subscribeToLivesiteQuicklinks = (hackathon, callback) => {
+  return quicklinksRef(hackathon)
+    .orderBy('label')
+    .onSnapshot((querySnapshot) => {
+      const quicklinks = {};
+      querySnapshot.docs.forEach((doc) => {
+        quicklinks[doc.id] = doc.data();
+      });
+      callback(quicklinks);
+    });
+};
+
+export const updateQuicklink = async (hackathon, quicklink) => {
+  if (quicklink.id) {
+    quicklink.lastModified = getTimestamp();
+    const ref = quicklinksRef(hackathon).doc(quicklink.id);
+    delete quicklink.id;
+    await ref.set(quicklink);
+    return quicklink.id;
+  }
+  quicklink.lastModified = getTimestamp();
+  const ref = await quicklinksRef(hackathon).doc().set(quicklink);
+  return ref;
+};
+
+export const deleteQuicklink = async (hackathon, id) => {
+  await quicklinksRef(hackathon).doc(id).delete();
+};
+
 export const getLivesiteEvent = (eventID, data) => {
   return data
     ? {

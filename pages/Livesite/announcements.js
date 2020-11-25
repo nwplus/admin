@@ -61,7 +61,6 @@ export default ({ hackathons }) => {
   useEffect(() => {
     (async () => {
       setActiveHackathon(await getActiveHackathon);
-      setIsLoading(false);
     })();
   });
 
@@ -70,6 +69,7 @@ export default ({ hackathons }) => {
     if (activeHackathon) {
       return subscribeToLivesiteAnnouncements(activeHackathon, (data) => {
         setAnnouncements(data);
+        setIsLoading(false);
       });
     }
   }, [activeHackathon, setAnnouncements]);

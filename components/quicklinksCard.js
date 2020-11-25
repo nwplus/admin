@@ -79,7 +79,6 @@ export default ({
                 <Text>{quicklink.href}</Text>
                 <Text>{quicklink.category}</Text>
                 <Text>{quicklink.common ? 'true' : 'false'}</Text>
-                {/* <Text>{moment(quicklink.timestamp).fromNow()}</Text> */}
                 <Actions>
                   <Button
                     type={EDIT}

@@ -80,6 +80,7 @@ export default function Events({ hackathons }) {
     newEvent.lastModifiedBy = user;
     newEvent.startTime = new Date(newEvent.startTime).toISOString();
     newEvent.endTime = new Date(newEvent.endTime).toISOString();
+    newEvent.type = 'main';
     const eventID = await addLivesiteEvent(activeHackathon, { ...newEvent });
     newEvent.lastModified = formatDate(getTimestamp().seconds);
     setEvents({
@@ -282,7 +283,7 @@ export default function Events({ hackathons }) {
                   },
                 ]}
                 label="Type"
-                value={newEvent.type || 'main'}
+                value={newEvent.type}
                 modalAction={EDIT}
                 onChange={(type) => {
                   handleInput('type', type.label, newEvent, setNewEvent);
@@ -321,7 +322,7 @@ export default function Events({ hackathons }) {
                 <Label>End Time</Label>
                 <DateTimePicker
                   selected={
-                    newEvent.endTime ? new Date(newEvent.startTime) : new Date()
+                    newEvent.endTime ? new Date(newEvent.endTime) : new Date()
                   }
                   onChange={(date) =>
                     handleInput('endTime', date, newEvent, setNewEvent)

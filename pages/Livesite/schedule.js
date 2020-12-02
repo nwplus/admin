@@ -282,7 +282,7 @@ export default function Events({ hackathons }) {
                   },
                 ]}
                 label="Type"
-                value={newEvent.type}
+                value={newEvent.type || 'main'}
                 modalAction={EDIT}
                 onChange={(type) => {
                   handleInput('type', type.label, newEvent, setNewEvent);
@@ -392,7 +392,7 @@ export default function Events({ hackathons }) {
                 modalAction={EDIT}
                 onChange={(event) => {
                   handleInput(
-                    'title',
+                    'name',
                     event.target.value,
                     eventEditing,
                     setEventEditing

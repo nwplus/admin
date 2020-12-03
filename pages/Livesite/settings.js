@@ -217,6 +217,17 @@ export default ({ hackathons }) => {
                   });
                 }}
               />
+              <FeatureFlag
+                title="Applications Open"
+                value={livesiteData.applicationsOpen}
+                onChange={() => {
+                  setLivesiteData({
+                    ...livesiteData,
+                    applicationsOpen: !livesiteData.applicationsOpen,
+                  });
+                }}
+              />
+
               <Group>
                 <Label>{livesiteData.activeHackathon} Start Time</Label>
                 <DatePicker field="hackathonStart" />
@@ -261,6 +272,11 @@ export default ({ hackathons }) => {
               <FeatureFlag
                 title="Judging Released"
                 value={livesiteData.judgingReleased}
+                disabled
+              />
+              <FeatureFlag
+                title="Applications Open"
+                value={livesiteData.applicationsOpen}
                 disabled
               />
               <Group>

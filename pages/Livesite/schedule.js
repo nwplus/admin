@@ -408,7 +408,7 @@ export default function Events({ hackathons }) {
                 modalAction={EDIT}
                 onChange={(event) => {
                   handleInput(
-                    'text',
+                    'description',
                     event.target.value,
                     eventEditing,
                     setEventEditing

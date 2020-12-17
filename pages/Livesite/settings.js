@@ -222,11 +222,6 @@ export default ({ hackathons }) => {
                 value={livesiteData.sendAcceptancesBy}
                 onChange={(e) => handleChange('sendAcceptancesBy', e)}
               />
-              <Label>Hackathon Weekend (copy)</Label>
-              <Input
-                value={livesiteData.hackathonWeekend}
-                onChange={(e) => handleChange('hackathonWeekend', e)}
-              />
               <FeatureFlag
                 title="Project Submissions Open"
                 value={livesiteData.submissionsOpen}
@@ -294,10 +289,6 @@ export default ({ hackathons }) => {
               <Group>
                 <Label>Acceptences sent by (copy)</Label>
                 {livesiteData.sendAcceptancesBy}
-              </Group>
-              <Group>
-                <Label>Hackathon Weekend (copy)</Label>
-                {livesiteData.hackathonWeekend}
               </Group>
               <FeatureFlag
                 title="Project Submissions Open"

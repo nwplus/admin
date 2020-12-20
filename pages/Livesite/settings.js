@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
 import Page from '../../components/page';
+import Input from '../../components/input';
 import Card, {
   CardHeader,
   CardButtonContainer,
@@ -162,6 +163,20 @@ export default ({ hackathons }) => {
     return null;
   };
 
+  const toggleInput = (field) => {
+    setLivesiteData({
+      ...livesiteData,
+      [field]: !livesiteData[field],
+    });
+  };
+
+  const handleChange = (field, e) => {
+    setLivesiteData({
+      ...livesiteData,
+      [field]: e.target.value,
+    });
+  };
+
   return (
     <Page
       currentPath="Livesite"
@@ -187,45 +202,45 @@ export default ({ hackathons }) => {
                 <Label>Active Hackathon</Label>
                 <HackathonChooser />
               </Group>
+              <Label>Application Deadline (copy)</Label>
+              <Input
+                value={livesiteData.applicationDeadline}
+                onChange={(e) => handleChange('applicationDeadline', e)}
+              />
+              <Label>RSVP Deadline (copy)</Label>
+              <Input
+                value={livesiteData.rsvpBy}
+                onChange={(e) => handleChange('rsvpBy', e)}
+              />
+              <Label>Waitlist notify time (copy)</Label>
+              <Input
+                value={livesiteData.offWaitlistNotify}
+                onChange={(e) => handleChange('offWaitlistNotify', e)}
+              />
+              <Label>Acceptences sent by (copy)</Label>
+              <Input
+                value={livesiteData.sendAcceptancesBy}
+                onChange={(e) => handleChange('sendAcceptancesBy', e)}
+              />
               <FeatureFlag
                 title="Project Submissions Open"
                 value={livesiteData.submissionsOpen}
-                onChange={() => {
-                  setLivesiteData({
-                    ...livesiteData,
-                    submissionsOpen: !livesiteData.submissionsOpen,
-                  });
-                }}
+                onChange={() => toggleInput('submissionsOpen')}
               />
               <FeatureFlag
                 title="Judging Open"
                 value={livesiteData.judgingOpen}
-                onChange={() => {
-                  setLivesiteData({
-                    ...livesiteData,
-                    judgingOpen: !livesiteData.judgingOpen,
-                  });
-                }}
+                onChange={() => toggleInput('judgingOpen')}
               />
               <FeatureFlag
                 title="Judging Released"
                 value={livesiteData.judgingReleased}
-                onChange={() => {
-                  setLivesiteData({
-                    ...livesiteData,
-                    judgingReleased: !livesiteData.judgingReleased,
-                  });
-                }}
+                onChange={() => toggleInput('judgingReleased')}
               />
               <FeatureFlag
                 title="Applications Open"
                 value={livesiteData.applicationsOpen}
-                onChange={() => {
-                  setLivesiteData({
-                    ...livesiteData,
-                    applicationsOpen: !livesiteData.applicationsOpen,
-                  });
-                }}
+                onChange={() => toggleInput('applicationsOpen')}
               />
 
               <Group>
@@ -258,6 +273,22 @@ export default ({ hackathons }) => {
               <Group>
                 <Label>Active Hackathon</Label>
                 {livesiteData.activeHackathon}
+              </Group>
+              <Group>
+                <Label>Application Deadline (copy)</Label>
+                {livesiteData.applicationDeadline}
+              </Group>
+              <Group>
+                <Label>RSVP Deadline (copy)</Label>
+                {livesiteData.rsvpBy}
+              </Group>
+              <Group>
+                <Label>Waitlist notify time (copy)</Label>
+                {livesiteData.offWaitlistNotify}
+              </Group>
+              <Group>
+                <Label>Acceptences sent by (copy)</Label>
+                {livesiteData.sendAcceptancesBy}
               </Group>
               <FeatureFlag
                 title="Project Submissions Open"

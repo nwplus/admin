@@ -222,6 +222,11 @@ export default ({ hackathons }) => {
                 value={livesiteData.sendAcceptancesBy}
                 onChange={(e) => handleChange('sendAcceptancesBy', e)}
               />
+              <Label>Hackathon Weekend (copy)</Label>
+              <Input
+                value={livesiteData.hackathonWeekend}
+                onChange={(e) => handleChange('hackathonWeekend', e)}
+              />
               <FeatureFlag
                 title="Project Submissions Open"
                 value={livesiteData.submissionsOpen}
@@ -269,70 +274,74 @@ export default ({ hackathons }) => {
               </CardContentButtonContainer>
             </>
           ) : (
-            <>
-              <Group>
-                <Label>Active Hackathon</Label>
-                {livesiteData.activeHackathon}
-              </Group>
-              <Group>
-                <Label>Application Deadline (copy)</Label>
-                {livesiteData.applicationDeadline}
-              </Group>
-              <Group>
-                <Label>RSVP Deadline (copy)</Label>
-                {livesiteData.rsvpBy}
-              </Group>
-              <Group>
-                <Label>Waitlist notify time (copy)</Label>
-                {livesiteData.offWaitlistNotify}
-              </Group>
-              <Group>
-                <Label>Acceptences sent by (copy)</Label>
-                {livesiteData.sendAcceptancesBy}
-              </Group>
-              <FeatureFlag
-                title="Project Submissions Open"
-                value={livesiteData.submissionsOpen}
-                disabled
-              />
-              <FeatureFlag
-                title="Judging Open"
-                value={livesiteData.judgingOpen}
-                disabled
-              />
-              <FeatureFlag
-                title="Judging Released"
-                value={livesiteData.judgingReleased}
-                disabled
-              />
-              <FeatureFlag
-                title="Applications Open"
-                value={livesiteData.applicationsOpen}
-                disabled
-              />
-              <Group>
-                <Label>{livesiteData.activeHackathon} Start Time</Label>
-                <LocalDate date={livesiteData.hackathonStart} />
-              </Group>
-              <Group>
-                <Label>{livesiteData.activeHackathon} End Time</Label>
-                <LocalDate date={livesiteData.hackathonEnd} />
-              </Group>
-              <Group>
-                <Label>Hacking Period Start Time</Label>
-                <LocalDate date={livesiteData.hackingStart} />
-              </Group>
-              <Group>
-                <Label>Hacking Period End Time</Label>
-                <LocalDate date={livesiteData.hackingEnd} />
-              </Group>
-              {/* Not enabled on livesite yet
+              <>
+                <Group>
+                  <Label>Active Hackathon</Label>
+                  {livesiteData.activeHackathon}
+                </Group>
+                <Group>
+                  <Label>Application Deadline (copy)</Label>
+                  {livesiteData.applicationDeadline}
+                </Group>
+                <Group>
+                  <Label>RSVP Deadline (copy)</Label>
+                  {livesiteData.rsvpBy}
+                </Group>
+                <Group>
+                  <Label>Waitlist notify time (copy)</Label>
+                  {livesiteData.offWaitlistNotify}
+                </Group>
+                <Group>
+                  <Label>Acceptences sent by (copy)</Label>
+                  {livesiteData.sendAcceptancesBy}
+                </Group>
+                <Group>
+                  <Label>Hackathon Weekend (copy)</Label>
+                  {livesiteData.hackathonWeekend}
+                </Group>
+                <FeatureFlag
+                  title="Project Submissions Open"
+                  value={livesiteData.submissionsOpen}
+                  disabled
+                />
+                <FeatureFlag
+                  title="Judging Open"
+                  value={livesiteData.judgingOpen}
+                  disabled
+                />
+                <FeatureFlag
+                  title="Judging Released"
+                  value={livesiteData.judgingReleased}
+                  disabled
+                />
+                <FeatureFlag
+                  title="Applications Open"
+                  value={livesiteData.applicationsOpen}
+                  disabled
+                />
+                <Group>
+                  <Label>{livesiteData.activeHackathon} Start Time</Label>
+                  <LocalDate date={livesiteData.hackathonStart} />
+                </Group>
+                <Group>
+                  <Label>{livesiteData.activeHackathon} End Time</Label>
+                  <LocalDate date={livesiteData.hackathonEnd} />
+                </Group>
+                <Group>
+                  <Label>Hacking Period Start Time</Label>
+                  <LocalDate date={livesiteData.hackingStart} />
+                </Group>
+                <Group>
+                  <Label>Hacking Period End Time</Label>
+                  <LocalDate date={livesiteData.hackingEnd} />
+                </Group>
+                {/* Not enabled on livesite yet
               <Group>
                 <Label>Livesite Logo</Label>
                 <img src={livesiteData.imgUrl} alt="logo" />
               </Group> */}
-            </>
-          )}
+              </>
+            )}
         </CardContent>
       </Card>
     </Page>

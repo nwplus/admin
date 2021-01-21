@@ -31,6 +31,7 @@ export const HACKATHON_NAVBAR = {
   events: 'Events',
   spocos: 'Sponsors',
   FeatureFlags: 'Feature Flags',
+  BuildConfig: 'BuildConfig',
 };
 export const LIVESITE_NAVBAR = {
   announcements: 'Announcements',

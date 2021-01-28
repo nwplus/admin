@@ -2,18 +2,15 @@ import { useState } from 'react';
 import Page from '../../components/page';
 import Card, {
     CardHeader,
-    CardButtonContainer,
     CardTitle,
     CardContent,
   } from '../../components/card';
 import { HACKATHON_NAVBAR } from '../../constants';
 import {
     db,
-    getDocument,
     getHackathonPaths,
     getHackathons,
   } from '../../utility/firebase';
-
   
 export default function BuildConfig({id, hackathons}) {
     const [buildConfig, setBuildConfig] = useState({});
@@ -21,28 +18,58 @@ export default function BuildConfig({id, hackathons}) {
     db.collection('Hackathons').doc(id).onSnapshot(doc => {
         setBuildConfig(doc.data().BuildConfig)
     })  
-    console.log(buildConfig.globalStyling)    
+
     return(
         <Page
         currentPath={id}
         hackathons={hackathons}
         navbarItems={HACKATHON_NAVBAR}
-        >
-            <Card>
-                <CardHeader>
-                    <CardTitle>componentStyling for {id}</CardTitle>
-                    <CardContent>{JSON.stringify(buildConfig.componentStyling)}</CardContent>
-                </CardHeader>
-            </Card>
+        >     
+            {buildConfig === null || buildConfig === undefined ? 
+                <Card>
+                    <CardHeader>
+                        <CardTitle>
+                            No BuildConfig for {id}
+                        </CardTitle>
+                    </CardHeader>                    
+                </Card>
+                :
+                [buildConfig.componentStyling === null || buildConfig.componentStyling === undefined ?
+                <Card>
+                    <CardHeader>
+                        <CardTitle>
+                            No componentStyling for {id}
+                        </CardTitle>
+                    </CardHeader>
+                </Card>
+                :
+                Object.entries(buildConfig.componentStyling).map(([key, val]) => 
+                <Card>
+                    <CardHeader>
+                        <CardTitle>{key}</CardTitle>
+                    </CardHeader>
+                    <CardContent><pre>{JSON.stringify(val, null, 2)}</pre></CardContent>
+                </Card>
+                ),
 
-            <Card>
-                <CardHeader>
-                    <CardTitle>globalStyling for {id}</CardTitle>
-                    <CardContent>{JSON.stringify(buildConfig.globalStyling)}</CardContent>
-                </CardHeader>
-            </Card>
-            
-
+                buildConfig.globalStyling === null || buildConfig.componentStyling === undefined ? 
+                <Card>
+                    <CardHeader>
+                        <CardTitle>
+                            No globalStyling for {id}
+                        </CardTitle>
+                    </CardHeader>
+                </Card>
+                :
+                <Card>
+                    <CardHeader>
+                        <CardTitle>globalStyling</CardTitle>                    
+                    </CardHeader>
+                    <CardContent><pre>{JSON.stringify(buildConfig.globalStyling, null, 2)}</pre></CardContent>
+                </Card>
+                ]
+                
+            }
         </Page>        
     );
 }

@@ -1,89 +1,89 @@
 import { useState } from 'react';
 import Page from '../../components/page';
 import Card, {
-    CardHeader,
-    CardTitle,
-    CardContent,
-  } from '../../components/card';
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from '../../components/card';
 import { HACKATHON_NAVBAR } from '../../constants';
-import {
-    db,
-    getHackathonPaths,
-    getHackathons,
-  } from '../../utility/firebase';
-  
-export default function BuildConfig({id, hackathons}) {
-    const [buildConfig, setBuildConfig] = useState({});
+import { db, getHackathonPaths, getHackathons } from '../../utility/firebase';
 
-    db.collection('Hackathons').doc(id).onSnapshot(doc => {
-        setBuildConfig(doc.data().BuildConfig)
-    })  
+export default function BuildConfig({ id, hackathons }) {
+  const [buildConfig, setBuildConfig] = useState({});
 
-    return(
-        <Page
-        currentPath={id}
-        hackathons={hackathons}
-        navbarItems={HACKATHON_NAVBAR}
-        >     
-            {buildConfig === null || buildConfig === undefined ? 
-                <Card>
-                    <CardHeader>
-                        <CardTitle>
-                            No BuildConfig for {id}
-                        </CardTitle>
-                    </CardHeader>                    
-                </Card>
-                :
-                [buildConfig.componentStyling === null || buildConfig.componentStyling === undefined ?
-                <Card>
-                    <CardHeader>
-                        <CardTitle>
-                            No componentStyling for {id}
-                        </CardTitle>
-                    </CardHeader>
-                </Card>
-                :
-                Object.entries(buildConfig.componentStyling).map(([key, val]) => 
-                <Card>
-                    <CardHeader>
-                        <CardTitle>{key}</CardTitle>
-                    </CardHeader>
-                    <CardContent><pre>{JSON.stringify(val, null, 2)}</pre></CardContent>
-                </Card>
-                ),
-
-                buildConfig.globalStyling === null || buildConfig.componentStyling === undefined ? 
-                <Card>
-                    <CardHeader>
-                        <CardTitle>
-                            No globalStyling for {id}
-                        </CardTitle>
-                    </CardHeader>
-                </Card>
-                :
-                <Card>
-                    <CardHeader>
-                        <CardTitle>globalStyling</CardTitle>                    
-                    </CardHeader>
-                    <CardContent><pre>{JSON.stringify(buildConfig.globalStyling, null, 2)}</pre></CardContent>
-                </Card>
-                ]
-                
-            }
-        </Page>        
+  const EmptyConfigComponent = ({ config }) => {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>
+            No {config} for {id}
+          </CardTitle>
+        </CardHeader>
+      </Card>
     );
+  };
+
+  const ViewConfigComponent = ({ title, content }) => {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>{title}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <pre>{JSON.stringify(content, null, 2)}</pre>
+        </CardContent>
+      </Card>
+    );
+  };
+
+  db.collection('Hackathons')
+    .doc(id)
+    .onSnapshot((doc) => {
+      setBuildConfig(doc.data().BuildConfig);
+    });
+
+  return (
+    <Page
+      currentPath={id}
+      hackathons={hackathons}
+      navbarItems={HACKATHON_NAVBAR}
+    >
+      {!buildConfig ? (
+        <EmptyConfigComponent config="Build Config" />
+      ) : (
+        [
+          !buildConfig.componentStyling ? (
+            <EmptyConfigComponent config="componentStyling" />
+          ) : (
+            Object.entries(buildConfig.componentStyling).map(([key, val]) => (
+              <ViewConfigComponent title={key} content={val} />
+            ))
+          ),
+
+          !buildConfig.globalStyling ? (
+            <EmptyConfigComponent config="globalStyling" />
+          ) : (
+            <ViewConfigComponent
+              title="globalStyling"
+              content={buildConfig.globalStyling}
+            />
+          ),
+        ]
+      )}
+    </Page>
+  );
 }
 
 export const getStaticPaths = async () => {
-    return getHackathonPaths();
-  };
-  
+  return getHackathonPaths();
+};
+
 export const getStaticProps = async ({ params }) => {
-    const hackathons = await getHackathons();
-    return {
-        props: {
-        hackathons,
-        id: params.id,
-        },
-    };
+  const hackathons = await getHackathons();
+  return {
+    props: {
+      hackathons,
+      id: params.id,
+    },
+  };
 };

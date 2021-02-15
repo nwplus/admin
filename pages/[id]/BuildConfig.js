@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Page from '../../components/page';
 import Card, {
   CardHeader,
@@ -6,7 +6,8 @@ import Card, {
   CardContent,
 } from '../../components/card';
 import { HACKATHON_NAVBAR } from '../../constants';
-import { db, getHackathonPaths, getHackathons } from '../../utility/firebase';
+import GeneralConfig from '../../components/generalConfig';
+import { getHackathonPaths, getHackathonSnapShot, getHackathons } from '../../utility/firebase';
 
 export default function BuildConfig({ id, hackathons }) {
   const [buildConfig, setBuildConfig] = useState({});
@@ -30,17 +31,20 @@ export default function BuildConfig({ id, hackathons }) {
           <CardTitle>{title}</CardTitle>
         </CardHeader>
         <CardContent>
-          <pre>{JSON.stringify(content, null, 2)}</pre>
+          <GeneralConfig content={content} />
         </CardContent>
       </Card>
     );
   };
 
-  db.collection('Hackathons')
-    .doc(id)
-    .onSnapshot((doc) => {
-      setBuildConfig(doc.data().BuildConfig);
-    });
+  const getHackathonData = async (doc) => {
+    setBuildConfig(doc.data().BuildConfig)
+  }
+
+  useEffect(() => {
+    const unsubscribe = getHackathonSnapShot(id, getHackathonData);
+    return () => unsubscribe();
+  }, [window.location.pathname]);
 
   return (
     <Page

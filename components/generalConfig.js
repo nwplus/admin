@@ -1,13 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import EditIcon from './icons/edit'
 import CloseIcon from './icons/close'
-import { COLOR, NEW, EDIT, VIEW } from '../constants';
+import { COLOR, NEW, EDIT, VIEW, DELETE } from '../constants';
 import Modal, { Label, ModalContent, ModalField } from '../components/modal'
-
-const Container = styled.div`
-  margin-bottom: 40px;
-`;
+import { firestore, updateHackathonField } from '../utility/firebase';
 
 const KeyValueContainer = styled.div`
   padding: 5px 0px 5px 5px;
@@ -62,76 +59,108 @@ const TypeSelect = styled.select`
   text-align: left;
 `
 
-export default (props) => {
-    const id = "nwHacks2021"
-    const { title, content } = props
-    const [config, setConfig] = useState(content)
-    const [field, setField] = useState({})
-    const [isAdding, setIsAdding] = useState(false)
-    const [isModalOpen, setIsModalOpen] = useState(false)
-    const [modalAction, setModalAction] = useState({})
+export default ({ id, title, content }) => {
+    const [field, setField] = useState({});
+    const [isAdding, setIsAdding] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalAction, setModalAction] = useState({});
 
     const handleAddField = async () => {
-        console.log("du hello")
         setField({
             field: '',
             type: 'string',
             value: ''
-        })
-        setIsModalOpen(true)
-        setIsAdding(true)
-        setModalAction(NEW)
+        });
+        setIsModalOpen(true);
+        setIsAdding(true);
+        setModalAction(NEW);
     }
 
     const handleEditField = async (fieldName) => {
         setField({
             field: fieldName,
-            type: typeof configs[fieldName],
-            value: configs[fieldName]
-        })
-        setIsModalOpen(true)
-        setIsAdding(false)
-        setModalAction(EDIT)
+            type: typeof content[fieldName],
+            value: content[fieldName]
+        });
+        setIsModalOpen(true);
+        setIsAdding(false);
+        setModalAction(EDIT);
     }
 
     const handleClose = async () => {
-        setField({})
-        setIsModalOpen(false)
+        setField({});
+        setIsModalOpen(false);
     }
 
     const handleChange = async (property, value) => {
         setField({
             ...field,
             [property]: value
-        })
+        });
     }
 
     const handleSave = async (event) => {
-        event.preventDefault()
-        setIsModalOpen(false)
+        event.preventDefault();
+        setIsModalOpen(false);
 
-        setConfig({
-            ...config,
-            [field.field]: field.value
-        })
+        const fieldKey = `${title === "globalStyling"
+            ? "BuildConfig.globalStyling"
+            : `BuildConfig.componentStyling.${title}`}.${field.field}`;
+
+        let fieldValue = field.value;
+
+        if (modalAction === DELETE) {
+            fieldValue = firestore.FieldValue.delete();
+        } else {
+            // convert to corresponding type if necessary
+            if (field.type === "number") {
+                fieldValue = Number(fieldValue);
+                if (!fieldValue) {
+                    alert("Field must be a valid number.");
+                    return;
+                }
+            } else if (field.type === "boolean") {
+                fieldValue = fieldValue === "true" ? true : false;
+            }
+        }
+
+        updateHackathonField(id, {
+            [fieldKey]: fieldValue
+        });
+    }
+
+    const handleDeleteField = async (fieldName) => {
+        setField({
+            field: fieldName,
+            type: typeof content[fieldName],
+            value: content[fieldName]
+        });
+        setIsModalOpen(true);
+        setIsAdding(false);
+        setModalAction(DELETE);
     }
 
     return (
         <>
             <AddField onClick={handleAddField}>+ Add field</AddField>
-            {Object.keys(config).map((fieldName) => {
-                const value = config[fieldName]
+            {Object.keys(content).map((fieldName) => {
+                let value = content[fieldName]
                 const fieldType = typeof value
+                if (fieldType === "string") {
+                    value = `"${value}"`
+                } else if (fieldType === "boolean") {
+                    value = String(value)
+                }
                 return (
                     <KeyValueContainer key={fieldName}>
                         <GeneralKey>{fieldName}: </GeneralKey>
-                        <FieldValue>{fieldType === "string" ? `"${value}"` : value}</FieldValue>
+                        <FieldValue>{value}</FieldValue>
                         <HoverContainer>
                             <FieldType>({fieldType})</FieldType>
                             <IconContainer onClick={() => handleEditField(fieldName)}>
                                 <EditIcon color={COLOR.BLACK}/>
                             </IconContainer>
-                            <IconContainer>
+                            <IconContainer onClick={() => handleDeleteField(fieldName)}>
                                 <CloseIcon color={COLOR.BLACK} />
                             </IconContainer>
                         </HoverContainer>
@@ -147,15 +176,15 @@ export default (props) => {
                 modalAction={modalAction}>
                     <ModalContent columns={3}>
                         <ModalField
-                            label='Field'
+                            label="Field"
                             value={field.field}
                             modalAction={isAdding ? modalAction : VIEW}
-                            onChange={(event) => handleChange('field', event.target.value)}/>
+                            onChange={(event) => handleChange("field", event.target.value)}/>
                         <div>
                             <Label>Type</Label>
                             <TypeSelect
                                 value={field.type}
-                                onChange={(event) => handleChange('type', event.target.value)}>
+                                onChange={(event) => handleChange("type", event.target.value)}>
                                     <option value="string">string</option>
                                     <option value="number">number</option>
                                     <option value="boolean">boolean</option>
@@ -175,7 +204,7 @@ export default (props) => {
                                 </div>
                             ) : (
                                 <ModalField
-                                    label='Value'
+                                    label="Value"
                                     value={field.value}
                                     modalAction={modalAction}
                                     onChange={(event) => handleChange('value', event.target.value)}/>

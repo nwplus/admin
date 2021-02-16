@@ -216,9 +216,13 @@ export const ModalContent = ({ page, columns = 2, children }) => {
       </>
     );
   }
+  let columnsStyle = ""
+  for (let i = 0; i < columns; ++i) {
+    columnsStyle += " auto"
+  }
   return (
     <>
-      <ContentContainer columns={columns === 2 ? '60% 40%' : '100%'}>
+      <ContentContainer columns={columns === 2 ? '60% 40%' : columnsStyle}>
         {children}
       </ContentContainer>
     </>

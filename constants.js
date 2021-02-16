@@ -17,6 +17,7 @@ export const COLOR = {
   DARK_GRAY: '#606060',
   TRANSPARENT: 'Transparent',
   BODY_TEXT: '#5A5A5A',
+  BLUE: '#4285F4'
 };
 export const FAQ = 'FAQ';
 export const FAQCategory = Object.freeze({

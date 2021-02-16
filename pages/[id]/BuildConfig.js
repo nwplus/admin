@@ -5,35 +5,44 @@ import Card, {
   CardTitle,
   CardContent,
 } from '../../components/card';
+import styled from 'styled-components';
 import { HACKATHON_NAVBAR } from '../../constants';
 import GeneralConfig from '../../components/generalConfig';
 import { getHackathonPaths, getHackathonSnapShot, getHackathons } from '../../utility/firebase';
+
+const Container = styled.div`
+  margin-bottom: 40px;
+`;
 
 export default function BuildConfig({ id, hackathons }) {
   const [buildConfig, setBuildConfig] = useState({});
 
   const EmptyConfigComponent = ({ config }) => {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>
-            No {config} for {id}
-          </CardTitle>
-        </CardHeader>
-      </Card>
+      <Container>
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              No {config} for {id}
+            </CardTitle>
+          </CardHeader>
+        </Card>
+      </Container>
     );
   };
 
   const ViewConfigComponent = ({ title, content }) => {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>{title}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <GeneralConfig content={content} />
-        </CardContent>
-      </Card>
+      <Container>
+        <Card>
+          <CardHeader>
+            <CardTitle>{title}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <GeneralConfig id={id} title={title} content={content} />
+          </CardContent>
+        </Card>
+      </Container>
     );
   };
 

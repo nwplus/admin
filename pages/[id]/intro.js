@@ -22,6 +22,8 @@ import {
 } from '../../utility/firebase';
 import { useAuth } from '../../utility/auth';
 
+import GeneralConfig from '../../components/generalConfig'
+
 const HeaderText = styled.h2`
   margin: 0;
   border: none;
@@ -203,7 +205,11 @@ export default ({ id, hackathons }) => {
           );
         })
       ) : (
-        <span>No intro options for this page</span>
+        <div>
+          <GeneralConfig />
+          <span>No intro options for this page</span>
+        </div>
+
       )}
     </Page>
   );

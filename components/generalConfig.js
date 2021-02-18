@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import EditIcon from './icons/edit'
-import CloseIcon from './icons/close'
+import EditIcon from './icons/edit';
+import CloseIcon from './icons/close';
 import { COLOR, NEW, EDIT, VIEW, DELETE } from '../constants';
-import Modal, { Label, ModalContent, ModalField } from '../components/modal'
+import Modal, { Label, ModalContent, ModalField } from '../components/modal';
 import { firestore, updateHackathonField } from '../utility/firebase';
 
 const KeyValueContainer = styled.div`
@@ -13,7 +13,7 @@ const KeyValueContainer = styled.div`
   &:hover {
       background-color: ${COLOR.WHITE};
   }
-`
+`;
 
 const GeneralKey = styled.span`
   color: ${COLOR.DARK_GRAY};
@@ -32,16 +32,16 @@ const FieldType = styled.span`
   ${KeyValueContainer}:hover & {
     display: block;
   }
-`
+`;
 
 const HoverContainer = styled.div`
   margin-left: auto;
   display: flex;
-`
+`;
 
 const IconContainer = styled.div`
   padding: 0px 5px 0px 5px;
-`
+`;
 
 const AddField = styled.p`
   padding: 5px 0px 5px 5px;
@@ -51,13 +51,13 @@ const AddField = styled.p`
   &:hover {
     background-color: ${COLOR.WHITE};
   }
-`
+`;
 
 const TypeSelect = styled.select`
   color: ${COLOR.BODY_TEXT};
   width: 100%;
   text-align: left;
-`
+`;
 
 export default ({ id, title, content }) => {
     const [field, setField] = useState({});

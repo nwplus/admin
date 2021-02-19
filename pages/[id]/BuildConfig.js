@@ -1,14 +1,18 @@
 import { useState, useEffect } from 'react';
+import styled from 'styled-components';
 import Page from '../../components/page';
 import Card, {
   CardHeader,
   CardTitle,
   CardContent,
 } from '../../components/card';
-import styled from 'styled-components';
 import { HACKATHON_NAVBAR } from '../../constants';
 import GeneralConfig from '../../components/generalConfig';
-import { getHackathonPaths, getHackathonSnapShot, getHackathons } from '../../utility/firebase';
+import {
+  getHackathonPaths,
+  getHackathonSnapShot,
+  getHackathons,
+} from '../../utility/firebase';
 
 const Container = styled.div`
   margin-bottom: 40px;
@@ -47,8 +51,8 @@ export default function BuildConfig({ id, hackathons }) {
   };
 
   const getHackathonData = async (doc) => {
-    setBuildConfig(doc.data().BuildConfig)
-  }
+    setBuildConfig(doc.data().BuildConfig);
+  };
 
   useEffect(() => {
     const unsubscribe = getHackathonSnapShot(id, getHackathonData);

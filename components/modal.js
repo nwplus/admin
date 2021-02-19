@@ -216,9 +216,9 @@ export const ModalContent = ({ page, columns = 2, children }) => {
       </>
     );
   }
-  let columnsStyle = ""
-  for (let i = 0; i < columns; ++i) {
-    columnsStyle += " auto"
+  let columnsStyle = '';
+  for (let i = 0; i < columns; i += 1) {
+    columnsStyle += ' auto';
   }
   return (
     <>

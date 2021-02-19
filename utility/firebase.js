@@ -37,7 +37,7 @@ if (!firebase.apps.length) {
 
 export const db = firebase.firestore();
 export const storage = firebase.storage();
-export const firestore = firebase.firestore;
+export const { firestore } = firebase;
 
 const webCollection = 'Website_content';
 const faqCollection = FAQ;

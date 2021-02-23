@@ -121,7 +121,7 @@ export default ({ id, title, content }) => {
         return;
       }
     } else if (field.type === 'boolean') {
-      fieldValue = fieldValue === 'true';
+      fieldValue = (fieldValue === 'true');
     }
 
     updateHackathonField(id, {

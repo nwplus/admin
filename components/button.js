@@ -32,10 +32,10 @@ const StyledNewIcon = styled(NewIcon)`
   ${(props) => props.hasText && 'margin-right: 8px;'}
 `;
 
-/* color specifies the background color, contentColor specifies the color of the text/icon 
+/* color specifies the background color, contentColor specifies the color of the text/icon
     (i.e. content) within the button. contentColor is needed because:
       - modal close button should have padding: 0 to align with the modal container
-      - cancel button (isText) within the modal has a colored background but has white text 
+      - cancel button (isText) within the modal has a colored background but has white text
         instead of the default black text */
 const Button = ({
   children,

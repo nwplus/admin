@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import styled from 'styled-components';
 import Page from '../../components/page';
 import Card, {
   CardHeader,
@@ -6,41 +7,57 @@ import Card, {
   CardContent,
 } from '../../components/card';
 import { HACKATHON_NAVBAR } from '../../constants';
-import { db, getHackathonPaths, getHackathons } from '../../utility/firebase';
+import GeneralConfig from '../../components/generalConfig';
+import {
+  getHackathonPaths,
+  getHackathonSnapShot,
+  getHackathons,
+} from '../../utility/firebase';
+
+const Container = styled.div`
+  margin-bottom: 40px;
+`;
 
 export default function BuildConfig({ id, hackathons }) {
   const [buildConfig, setBuildConfig] = useState({});
 
   const EmptyConfigComponent = ({ config }) => {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>
-            No {config} for {id}
-          </CardTitle>
-        </CardHeader>
-      </Card>
+      <Container>
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              No {config} for {id}
+            </CardTitle>
+          </CardHeader>
+        </Card>
+      </Container>
     );
   };
 
   const ViewConfigComponent = ({ title, content }) => {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>{title}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <pre>{JSON.stringify(content, null, 2)}</pre>
-        </CardContent>
-      </Card>
+      <Container>
+        <Card>
+          <CardHeader>
+            <CardTitle>{title}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <GeneralConfig id={id} title={title} content={content} />
+          </CardContent>
+        </Card>
+      </Container>
     );
   };
 
-  db.collection('Hackathons')
-    .doc(id)
-    .onSnapshot((doc) => {
-      setBuildConfig(doc.data().BuildConfig);
-    });
+  const getHackathonData = async (doc) => {
+    setBuildConfig(doc.data().BuildConfig);
+  };
+
+  useEffect(() => {
+    const unsubscribe = getHackathonSnapShot(id, getHackathonData);
+    return () => unsubscribe();
+  }, [window.location.pathname]);
 
   return (
     <Page
@@ -53,17 +70,24 @@ export default function BuildConfig({ id, hackathons }) {
       ) : (
         [
           !buildConfig.componentStyling ? (
-            <EmptyConfigComponent config="componentStyling" />
+            <EmptyConfigComponent
+              key="emptyComponentStyling"
+              config="componentStyling"
+            />
           ) : (
             Object.entries(buildConfig.componentStyling).map(([key, val]) => (
-              <ViewConfigComponent title={key} content={val} />
+              <ViewConfigComponent key={key} title={key} content={val} />
             ))
           ),
 
           !buildConfig.globalStyling ? (
-            <EmptyConfigComponent config="globalStyling" />
+            <EmptyConfigComponent
+              key="emptyGlobalStyling"
+              config="globalStyling"
+            />
           ) : (
             <ViewConfigComponent
+              key="globalStyling"
               title="globalStyling"
               content={buildConfig.globalStyling}
             />

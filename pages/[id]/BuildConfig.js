@@ -70,7 +70,10 @@ export default function BuildConfig({ id, hackathons }) {
       ) : (
         [
           !buildConfig.componentStyling ? (
-            <EmptyConfigComponent config="componentStyling" />
+            <EmptyConfigComponent
+              key="emptyComponentStyling"
+              config="componentStyling"
+            />
           ) : (
             Object.entries(buildConfig.componentStyling).map(([key, val]) => (
               <ViewConfigComponent key={key} title={key} content={val} />
@@ -78,9 +81,13 @@ export default function BuildConfig({ id, hackathons }) {
           ),
 
           !buildConfig.globalStyling ? (
-            <EmptyConfigComponent config="globalStyling" />
+            <EmptyConfigComponent
+              key="emptyGlobalStyling"
+              config="globalStyling"
+            />
           ) : (
             <ViewConfigComponent
+              key="globalStyling"
               title="globalStyling"
               content={buildConfig.globalStyling}
             />

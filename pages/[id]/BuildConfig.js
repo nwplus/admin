@@ -73,7 +73,7 @@ export default function BuildConfig({ id, hackathons }) {
             <EmptyConfigComponent config="componentStyling" />
           ) : (
             Object.entries(buildConfig.componentStyling).map(([key, val]) => (
-              <ViewConfigComponent title={key} content={val} />
+              <ViewConfigComponent key={key} title={key} content={val} />
             ))
           ),
 

@@ -1,25 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import moment from 'moment';
 import Page from '../../components/page';
 import Input from '../../components/input';
-import TextBox from '../../components/TextBox';
+import TextBox from '../../components/textbox';
 import Card, {
   CardHeader,
   CardButtonContainer,
   CardTitle,
   CardContent,
-  CardContentButtonContainer,
-  CancelButton,
 } from '../../components/card';
 import Modal from '../../components/modal';
-import FeatureFlag from '../../components/FeatureFlag';
-// import { UploadContainer } from '../../components/modal';
 import Button from '../../components/button';
 import {
-  formatDate,
-  getTimestamp,
+  createProject,
   getHackathons,
+  getActiveHackathon,
 } from '../../utility/firebase';
 import { EDIT, NEW, LIVESITE_NAVBAR } from '../../constants';
 
@@ -29,8 +24,15 @@ const Label = styled.p`
 `;
 
 export default ({ hackathons }) => {
+  const [activeHackathon, setActiveHackathon] = useState('');
   const [activeModal, setActiveModal] = useState('');
   const [data, setData] = useState({});
+
+  useEffect(() => {
+    (async () => {
+      setActiveHackathon(await getActiveHackathon);
+    })();
+  });
 
   const handleNew = () => {
     setData({
@@ -46,12 +48,8 @@ export default ({ hackathons }) => {
   };
 
   const handleCloseModal = () => {
-    if (data.content) {
-      // eslint-disable-next-line no-restricted-globals
-      if (confirm('Are you sure? You will lose all progress')) {
-        setActiveModal('');
-      }
-    } else {
+    // eslint-disable-next-line
+    if (confirm('Are you sure? You will lose all progress')) {
       setActiveModal('');
     }
   };
@@ -64,7 +62,6 @@ export default ({ hackathons }) => {
       const project = {
         acknowledged: true,
         countAssigned: 0,
-        grades: {},
         ...data,
       };
       project.sponsorPrizes = project.sponsorPrizes.split(',');
@@ -73,6 +70,7 @@ export default ({ hackathons }) => {
       // eslint-disable-next-line
       const confirmation = confirm(JSON.stringify(project, null, 4));
       if (confirmation) {
+        await createProject(activeHackathon, project);
         setActiveModal('');
       }
     }

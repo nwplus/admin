@@ -568,3 +568,11 @@ export const deleteLivesiteEvent = async (hackathon, eventID) => {
     .doc(eventID)
     .delete();
 };
+
+export const createProject = async (hackathon, project) => {
+  await db
+    .collection('Hackathons')
+    .doc(hackathon)
+    .collection('Projects')
+    .add(project);
+};

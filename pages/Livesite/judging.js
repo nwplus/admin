@@ -64,9 +64,9 @@ export default ({ hackathons }) => {
         countAssigned: 0,
         ...data,
       };
-      project.sponsorPrizes = project.sponsorPrizes.split(',');
-      project.teamMembers = project.teamMembers.split(',');
-      project.teamMembersEmails = project.teamMembersEmails.split(',');
+      project.sponsorPrizes = project.sponsorPrizes.split(', ');
+      project.teamMembers = project.teamMembers.split(', ');
+      project.teamMembersEmails = project.teamMembersEmails.split(', ');
       // eslint-disable-next-line
       const confirmation = confirm(JSON.stringify(project, null, 4));
       if (confirmation) {

@@ -39,4 +39,5 @@ export const LIVESITE_NAVBAR = {
   quicklinks: 'Quicklinks',
   schedule: 'Schedule',
   settings: 'Settings',
+  judging: 'Judging',
 };

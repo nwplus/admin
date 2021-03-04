@@ -78,7 +78,7 @@ export default ({ hackathons }) => {
   };
 
   const handleInput = (content, key) => {
-    setCurrentQuicklink({ ...currentQuicklink, [key]: content });
+    setCurrentQuicklink({ ...currentQuicklink, [key]: content.trim() });
   };
 
   const quicklinkFields = {

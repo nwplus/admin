@@ -73,26 +73,27 @@ export default ({ hackathons }) => {
   };
 
   const handleSave = async () => {
+    if (!Object.values(data).every((field) => field === 0 || !!field)) {
+      // eslint-disable-next-line no-alert
+      alert('All fields required');
+      return;
+    }
+
     if (data.id) {
       updateProject(activeHackathon, formatProject(data));
       setActiveModal('');
       return;
     }
-    if (!Object.values(data).every((field) => !!field)) {
-      // eslint-disable-next-line no-alert
-      alert('All fields required');
-    } else {
-      const project = {
-        acknowledged: true,
-        countAssigned: 0,
-        ...formatProject(data),
-      };
-      // eslint-disable-next-line
-      const confirmation = confirm(JSON.stringify(project, null, 4));
-      if (confirmation) {
-        await createProject(activeHackathon, project);
-        setActiveModal('');
-      }
+    const project = {
+      acknowledged: true,
+      countAssigned: 0,
+      ...formatProject(data),
+    };
+    // eslint-disable-next-line
+    const confirmation = confirm(JSON.stringify(project, null, 4));
+    if (confirmation) {
+      await createProject(activeHackathon, project);
+      setActiveModal('');
     }
   };
 

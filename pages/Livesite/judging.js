@@ -15,8 +15,10 @@ import {
   createProject,
   getHackathons,
   getActiveHackathon,
+  subscribeToProjects,
 } from '../../utility/firebase';
 import { EDIT, NEW, LIVESITE_NAVBAR } from '../../constants';
+import ProjectsCard from '../../components/projectsCard';
 
 const Label = styled.p`
   font-weight: bold;
@@ -25,6 +27,7 @@ const Label = styled.p`
 
 export default ({ hackathons }) => {
   const [activeHackathon, setActiveHackathon] = useState('');
+  const [projects, setProjects] = useState([]);
   const [activeModal, setActiveModal] = useState('');
   const [data, setData] = useState({});
 
@@ -33,6 +36,16 @@ export default ({ hackathons }) => {
       setActiveHackathon(await getActiveHackathon);
     })();
   });
+
+  // eslint-disable-next-line consistent-return
+  useEffect(() => {
+    if (activeHackathon) {
+      return subscribeToProjects(activeHackathon, (p) => {
+        setProjects(p);
+        // setIsLoading(false);
+      });
+    }
+  }, [activeHackathon, setProjects]);
 
   const handleNew = () => {
     setData({
@@ -89,21 +102,7 @@ export default ({ hackathons }) => {
       hackathons={hackathons}
       navbarItems={LIVESITE_NAVBAR}
     >
-      <Card>
-        <CardHeader>
-          <CardTitle>Livesite Judging</CardTitle>
-          <p>Use this area to manually create a new project</p>
-          <CardButtonContainer>
-            <Button type={NEW} onClick={handleNew}>
-              New Project
-            </Button>
-          </CardButtonContainer>
-        </CardHeader>
-        <CardContent>
-          To view currently added projects go to{' '}
-          <a href="https://portal.nwplus.io/judging/admin">portal admin</a>
-        </CardContent>
-      </Card>
+      <ProjectsCard handleNew={handleNew} projects={projects} />
       <Modal
         isOpen={activeModal === EDIT || activeModal === NEW}
         handleClose={handleCloseModal}

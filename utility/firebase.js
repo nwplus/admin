@@ -576,3 +576,19 @@ export const createProject = async (hackathon, project) => {
     .collection('Projects')
     .add(project);
 };
+
+const projectsRef = (hackathon) => {
+  return db.collection(Hackathons).doc(hackathon).collection('Projects');
+};
+
+export const subscribeToProjects = (hackathon, callback) => {
+  return projectsRef(hackathon)
+    .orderBy('title')
+    .onSnapshot((querySnapshot) => {
+      const projects = {};
+      querySnapshot.docs.forEach((doc) => {
+        projects[doc.id] = doc.data();
+      });
+      callback(projects);
+    });
+};

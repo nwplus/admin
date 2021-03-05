@@ -592,3 +592,19 @@ export const subscribeToProjects = (hackathon, callback) => {
       callback(projects);
     });
 };
+
+export const updateProject = async (hackathon, project) => {
+  if (project.id) {
+    const ref = projectsRef(hackathon).doc(project.id);
+    delete project.id;
+    await ref.set(project);
+    return project.id;
+  }
+  const ref = await projectsRef(hackathon).doc().set(project);
+  console.log(ref);
+  return ref;
+};
+
+export const deleteProject = async (hackathon, id) => {
+  await projectsRef(hackathon).doc(id).delete();
+};

@@ -10,7 +10,7 @@ import {
   getActiveHackathon,
   subscribeToProjects,
   updateProject,
-  deleteProject
+  deleteProject,
 } from '../../utility/firebase';
 import { EDIT, NEW, LIVESITE_NAVBAR } from '../../constants';
 import ProjectsCard from '../../components/projectsCard';
@@ -61,9 +61,20 @@ export default ({ hackathons }) => {
     }
   };
 
+  const stringToArr = (str) => {
+    return str?.split(',').map((i) => i.trim());
+  };
+
+  const formatProject = (project) => {
+    project.sponsorPrizes = stringToArr(project.sponsorPrizes);
+    project.teamMembers = stringToArr(project.teamMembers);
+    project.teamMembersEmails = stringToArr(project.teamMembersEmails);
+    return project;
+  };
+
   const handleSave = async () => {
     if (data.id) {
-      updateProject(activeHackathon, data);
+      updateProject(activeHackathon, formatProject(data));
       setActiveModal('');
       return;
     }
@@ -74,11 +85,8 @@ export default ({ hackathons }) => {
       const project = {
         acknowledged: true,
         countAssigned: 0,
-        ...data,
+        ...formatProject(data),
       };
-      project.sponsorPrizes = project.sponsorPrizes.split(', ');
-      project.teamMembers = project.teamMembers.split(', ');
-      project.teamMembersEmails = project.teamMembersEmails.split(', ');
       // eslint-disable-next-line
       const confirmation = confirm(JSON.stringify(project, null, 4));
       if (confirmation) {
@@ -96,7 +104,13 @@ export default ({ hackathons }) => {
   };
 
   const handleEdit = (key) => {
-    setData({ ...projects[key], id: key });
+    setData({
+      ...projects[key],
+      id: key,
+      teamMembers: projects[key].teamMembers?.toString(),
+      teamMembersEmails: projects[key].teamMembersEmails?.toString(),
+      sponsorPrizes: projects[key].sponsorPrizes?.toString(),
+    });
     setActiveModal(EDIT);
   };
 

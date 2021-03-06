@@ -17,6 +17,7 @@ export const COLOR = {
   DARK_GRAY: '#606060',
   TRANSPARENT: 'Transparent',
   BODY_TEXT: '#5A5A5A',
+  BLUE: '#4285F4',
 };
 export const FAQ = 'FAQ';
 export const FAQCategory = Object.freeze({
@@ -31,10 +32,12 @@ export const HACKATHON_NAVBAR = {
   events: 'Events',
   spocos: 'Sponsors',
   FeatureFlags: 'Feature Flags',
+  BuildConfig: 'Build Config',
 };
 export const LIVESITE_NAVBAR = {
   announcements: 'Announcements',
   quicklinks: 'Quicklinks',
   schedule: 'Schedule',
   settings: 'Settings',
+  judging: 'Judging',
 };

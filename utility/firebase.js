@@ -37,6 +37,7 @@ if (!firebase.apps.length) {
 
 export const db = firebase.firestore();
 export const storage = firebase.storage();
+export const { firestore } = firebase;
 
 const webCollection = 'Website_content';
 const faqCollection = FAQ;
@@ -566,4 +567,44 @@ export const deleteLivesiteEvent = async (hackathon, eventID) => {
     .collection('DayOf')
     .doc(eventID)
     .delete();
+};
+
+export const createProject = async (hackathon, project) => {
+  await db
+    .collection('Hackathons')
+    .doc(hackathon)
+    .collection('Projects')
+    .add(project);
+};
+
+const projectsRef = (hackathon) => {
+  return db.collection(Hackathons).doc(hackathon).collection('Projects');
+};
+
+export const subscribeToProjects = (hackathon, callback) => {
+  return projectsRef(hackathon)
+    .orderBy('title')
+    .onSnapshot((querySnapshot) => {
+      const projects = {};
+      querySnapshot.docs.forEach((doc) => {
+        projects[doc.id] = doc.data();
+      });
+      callback(projects);
+    });
+};
+
+export const updateProject = async (hackathon, project) => {
+  if (project.id) {
+    const ref = projectsRef(hackathon).doc(project.id);
+    delete project.id;
+    await ref.set(project);
+    return project.id;
+  }
+  const ref = await projectsRef(hackathon).doc().set(project);
+  console.log(ref);
+  return ref;
+};
+
+export const deleteProject = async (hackathon, id) => {
+  await projectsRef(hackathon).doc(id).delete();
 };

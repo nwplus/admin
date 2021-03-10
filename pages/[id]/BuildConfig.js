@@ -13,10 +13,23 @@ import {
   getHackathonSnapShot,
   getHackathons,
 } from '../../utility/firebase';
+import Button from '../../components/button'
+import { Octokit } from '@octokit/core';
+import axios from 'axios'
+
+const octokit = new Octokit({ auth: 'edb5add3fa820e5d4db17b6587ef1ccb9c4a5d24' });
 
 const Container = styled.div`
   margin-bottom: 40px;
 `;
+
+const res = async () => await axios.post('https://api.github.com/repos/nwplus/monorepo/dispatches', { event_type: 'cms-deploy'}, { 
+  headers: {
+    Authorization: 'Bearer edb5add3fa820e5d4db17b6587ef1ccb9c4a5d24',
+    Accept: 'application/vnd.github.everest-preview+json'
+  }
+});
+console.log(res.status);
 
 export default function BuildConfig({ id, hackathons }) {
   const [buildConfig, setBuildConfig] = useState({});
@@ -59,12 +72,34 @@ export default function BuildConfig({ id, hackathons }) {
     return () => unsubscribe();
   }, [window.location.pathname]);
 
-  return (
+  return (    
     <Page
       currentPath={id}
       hackathons={hackathons}
       navbarItems={HACKATHON_NAVBAR}
     >
+      <Container>
+        {/* <Button onClick={() => octokit.request('POST/repos/nwplus/dispatches', {
+          owner: 'nwplus',
+          repo: 'monorepo',
+          headers: {
+            accept: 'application/vnd.github.everest-preview+json',
+            authorization: 'edb5add3fa820e5d4db17b6587ef1ccb9c4a5d24'
+          },
+          event_type: 'cms-deploy'
+        })}>
+          Deploy
+        </Button>    */}
+        <Button onClick={ async () => await axios.post('https://api.github.com/repos/nwplus/monorepo/dispatches', { event_type: 'cms-deploy'}, { 
+          headers: {
+            Authorization: 'Bearer edb5add3fa820e5d4db17b6587ef1ccb9c4a5d24',
+            Accept: 'application/vnd.github.everest-preview+json'
+          }
+        })}>
+          Deploy
+        </Button>
+      </Container>      
+
       {!buildConfig ? (
         <EmptyConfigComponent config="Build Config" />
       ) : (

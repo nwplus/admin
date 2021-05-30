@@ -17,19 +17,11 @@ import Button from '../../components/button'
 import { Octokit } from '@octokit/rest';
 import axios from 'axios'
 
-const octokit = new Octokit({ auth: '5b2f8a7ec1fee88d2691872c6314f79c58b1a927', baseUrl: 'https://api.github.com' });
+const octokit = new Octokit({ auth: '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', baseUrl: 'https://api.github.com' });
 
 const Container = styled.div`
   margin-bottom: 40px;
 `;
-
-const res = async () => await axios.post('https://api.github.com/repos/nwplus/monorepo/dispatches', { event_type: 'cms-deploy'}, { 
-  headers: {
-    Authorization: 'Bearer edb5add3fa820e5d4db17b6587ef1ccb9c4a5d24',
-    Accept: 'application/vnd.github.everest-preview+json'
-  }
-});
-console.log(res.status);
 
 export default function BuildConfig({ id, hackathons }) {
   const [buildConfig, setBuildConfig] = useState({});
@@ -79,41 +71,15 @@ export default function BuildConfig({ id, hackathons }) {
       navbarItems={HACKATHON_NAVBAR}
     >
       <Container>
-        <Button onClick={() => octokit.request('POST/repos/nwplus/monorepo/actions/workflows/firebase_deploy.yaml/dispatches', {
-          owner: 'nwplus',
-          repo: 'monorepo',
-          headers: {
-            accept: 'application/vnd.github.v3+json',
-            authorization: '5b2f8a7ec1fee88d2691872c6314f79c58b1a927'
-          },
-          data: {
-            ref :"test-action-dispatch",
-            inputs: { 'targetedHackathon': "cmd-f_dev" }
-          }          
-        })}>
-          Deploy
-        </Button>   
-        <Button onClick={ async () => await axios.post('https://api.github.com/repos/nwplus/monorepo/actions/workflows/firebase_deploy.yaml/dispatches', { 
-          headers: {
-            Authorization: 'Bearer 5b2f8a7ec1fee88d2691872c6314f79c58b1a927',
-            Accept: 'application/vnd.github.v3+json',
-            'Content-Type': 'application/json'
-          },
-          data: {
-            ref :"test-action-dispatch",
-            inputs: { 'targetedHackathon': "cmd-f_dev" }
-          }
-        })}>
-          Deploy
-        </Button>
+
         <Button onClick={() => octokit.actions.createWorkflowDispatch({
               owner: 'nwplus',
               repo: 'monorepo',
               workflow_id: 'firebase_deploy.yaml',
               ref: 'test-action-dispatch',
-              inputs: { 'targetedHackathon': "cmd-f_dev" }
+              inputs: { 'targetedHackathon': `${id}_main` }
         })}>
-          Deploy3
+          Deploy
         </Button>
       </Container>      
 

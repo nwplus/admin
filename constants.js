@@ -77,7 +77,7 @@ export const ASSESSMENT_COLOR = {
   BLUE_TEXT: '#2F80ED',
   TOOLBAR_GRAY: '#FAFAFA',
   BLUE_BORDER: '#21258A',
-}
+};
 
 export const MAX_SCORES = {
   RESUME: {

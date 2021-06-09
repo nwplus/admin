@@ -9,7 +9,7 @@ export const checkAdminClaim = async (user) => {
   return Object.prototype.hasOwnProperty.call(token.claims, 'admin');
 };
 
-const AuthContext = createContext({});
+export const AuthContext = createContext();
 
 const Auth = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -34,6 +34,14 @@ const Auth = ({ children }) => {
 
     return () => unsubscribe();
   }, []);
+
+  // useEffect(() => {
+  //   return firebase.auth().onAuthStateChanged(() => {
+  //     setUser(user);
+  //     console.log(router.pathname);
+  //     router.push(router.pathname);
+  //   });
+  // }, [router.pathname]);
 
   return (
     <AuthContext.Provider value={{ isAuthenticated: !!user, user, setUser }}>

@@ -5,7 +5,10 @@ import 'firebase/auth';
 import 'firebase/storage';
 import JSZip from 'jszip';
 import download from 'downloadjs';
+import dotenv from 'dotenv';
 import { APPLICATION_STATUS, FAQ, FAQCategory } from '../constants';
+
+dotenv.config();
 
 if (!firebase.apps.length) {
   const config = {

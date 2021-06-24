@@ -7,8 +7,12 @@ jobs:
   build_and_preview:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Repo
       - uses: actions/checkout@v2
-      - run: npm ci && npm run build
+      - name: Install and Lint
+      - run: npm ci && npm run lint        
+      - name: Build
+      - run: npm run build
         env:
           NEXT_PUBLIC_FIREBASE_API_KEY: ${{ secrets.DEV_NEXT_PUBLIC_FIREBASE_API_KEY }}
           NEXT_PUBLIC_FIREBASE_APP_ID: ${{ secrets.DEV_NEXT_PUBLIC_FIREBASE_APP_ID }}

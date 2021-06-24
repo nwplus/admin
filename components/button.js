@@ -21,7 +21,7 @@ const StyledButton = styled.button`
   display: flex;
   align-items: center;
   font-size: 16px;
-  border-radius: ${(props) => (props.inline ? '0 3px 3px 0' : '3px;')}
+  border-radius: ${(props) => (props.inline ? '0 3px 3px 0' : '3px')};
 `;
 
 const StyledEditIcon = styled(EditIcon)`

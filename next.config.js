@@ -1,4 +1,5 @@
 const withOptimizedImages = require('next-optimized-images');
+require('dotenv').config();
 
 module.exports = () => {
   if (process.env.DEPLOY_ENV !== 'PRODUCTION')

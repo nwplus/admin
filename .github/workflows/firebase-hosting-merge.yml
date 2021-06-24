@@ -12,12 +12,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: npm ci && npm run build
-      - uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_NWPLUS_UBC }}'
-          channelId: live
-          projectId: nwplus-ubc
         env:
           NEXT_PUBLIC_FIREBASE_API_KEY: '${{ secrets.NEXT_PUBLIC_FIREBASE_API_KEY }}'
           NEXT_PUBLIC_FIREBASE_APP_ID: '${{ secrets.NEXT_PUBLIC_FIREBASE_APP_ID }}'
@@ -28,3 +22,9 @@ jobs:
           NEXT_PUBLIC_FIREBASE_PROJECT_ID: '${{ secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID }}'
           NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: '${{ secrets.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}'
           FIREBASE_CLI_PREVIEWS: hostingchannels
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_NWPLUS_UBC }}'
+          channelId: live
+          projectId: nwplus-ubc

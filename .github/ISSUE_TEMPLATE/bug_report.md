@@ -1,3 +1,13 @@
+=======
+---
+name: Bug report
+about: Create a report to help us improve
+title: "[BUG]"
+labels: bug
+assignees: ''
+
+---
+
 ## Describe the bug
 A clear and concise description of what the bug is.
 
@@ -9,12 +19,13 @@ A clear and concise description of what the bug is.
 
 If you have details about the environment the bug exists in, please include those below!
 
-*Desktop*
+**Desktop**
  - OS: [e.g. iOS]
  - Browser [e.g. chrome, safari]
  - Version [e.g. 22]
 
-*Smartphone*
+
+**Smartphone**
  - Device: [e.g. iPhone6]
  - OS: [e.g. iOS8.1]
  - Browser [e.g. stock browser, safari]
@@ -24,7 +35,8 @@ If you have details about the environment the bug exists in, please include thos
 A clear and concise description of what you expected to happen.
 
 ## Screenshots/Videos
-If applicable, add screenshots/videos to show the bug.
+If applicable, add screenshots/videos to show the bug. 
+
 
 ## Additional context
 Add any other context about the problem here.

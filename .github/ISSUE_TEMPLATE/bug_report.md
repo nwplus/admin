@@ -1,4 +1,3 @@
-=======
 ---
 name: Bug report
 about: Create a report to help us improve
@@ -35,7 +34,7 @@ If you have details about the environment the bug exists in, please include thos
 A clear and concise description of what you expected to happen.
 
 ## Screenshots/Videos
-If applicable, add screenshots/videos to show the bug. 
+If applicable, add screenshots/videos to show the bug.
 
 
 ## Additional context

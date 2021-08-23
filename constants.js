@@ -31,6 +31,7 @@ export const HACKATHON_NAVBAR = {
   intro: 'Intro',
   events: 'Events',
   spocos: 'Sponsors',
+  resources: 'Resources',
   FeatureFlags: 'Feature Flags',
   BuildConfig: 'Build Config',
 };

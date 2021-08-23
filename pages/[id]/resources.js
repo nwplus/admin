@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, createRef } from 'react';
 import styled from 'styled-components';
 import Page from '../../components/page';
 import Button from '../../components/button';
@@ -8,6 +8,7 @@ import Card, {
   CardContent,
   CardButtonContainer,
 } from '../../components/card';
+import Checkbox from '../../components/checkbox';
 import {
   TableWrapper,
   TableContent,
@@ -16,28 +17,36 @@ import {
   TableData,
   ActionsButtonContainer,
 } from '../../components/table';
-import Modal, { Label, ModalContent, ModalField } from '../../components/modal';
+import Modal, {
+  Label,
+  ModalContent,
+  ModalField,
+  LogoImage,
+  UploadContainer,
+} from '../../components/modal';
 import { getHackathonPaths, getHackathons } from '../../utility/firebase';
 import { EDIT, NEW, DELETE, COLOR, HACKATHON_NAVBAR } from '../../constants';
 
 const resourceCards = [
   {
+    id: 'docid',
     title: 'title',
     imageUrl: 'https://imageUrl.com',
     resourceUrl: 'https://resourceUrl.com',
     event: 'event',
     year: 1970,
     isOurPick: true,
-    tags: ['tag1'],
+    type: 'Github',
   },
   {
+    id: 'docid2',
     title: 'title2',
     imageUrl: 'imageUrl2',
     resourceUrl: 'resourceUrl2',
     event: 'event2',
     year: 1970,
     isOurPick: true,
-    tags: ['tag2', 'tag3'],
+    type: 'Articles',
   },
 ];
 
@@ -54,6 +63,11 @@ export default function Resources({ id, hackathons }) {
   };
 
   const handleDelete = () => {
+    return;
+  };
+
+  const finishUpdate = (id) => {
+    setResources(id);
     return;
   };
 
@@ -80,7 +94,7 @@ export default function Resources({ id, hackathons }) {
                 <tbody>
                   {resources.map((r) => (
                     <ResourceRow
-                      key={r.resourceUrl}
+                      key={r.id}
                       handleEdit={handleEdit}
                       handleDelete={handleDelete}
                       {...r}
@@ -92,6 +106,7 @@ export default function Resources({ id, hackathons }) {
             <EditModal
               resourceToEdit={resourceToEdit}
               setResourceToEdit={setResourceToEdit}
+              finishUpdate={finishUpdate}
             />
           </CardContent>
         </Card>
@@ -106,17 +121,40 @@ export default function Resources({ id, hackathons }) {
   );
 }
 
-const EditModal = ({ resourceToEdit, setResourceToEdit }) => {
+const EditModal = ({ resourceToEdit, setResourceToEdit, finishUpdate }) => {
+  const [resource, setResource] = useState(resourceToEdit);
+  const [imgObject, setImgObject] = useState({});
+  const inputFile = createRef();
+
   const handleUpdate = () => {
-    return;
+    finishUpdate(resource);
   };
 
-  const handleInput = (property, value, event, setState) => {
-    setState({
-      ...event,
+  const handleInput = (property, value) => {
+    setResource({
+      ...resource,
       [property]: value,
     });
   };
+
+  // clicks the invisible <input type='file />
+  const fileClick = () => {
+    inputFile.current.click();
+  };
+
+  const selectImageFile = (e) => {
+    if (e.target.files[0]) {
+      setImgObject({
+        object: URL.createObjectURL(e.target.files[0]),
+        imgURL: e.target.files[0],
+        imgName: e.target.files[0].name,
+      });
+    }
+  };
+
+  useEffect(() => {
+    setResource(resourceToEdit);
+  }, [resourceToEdit]);
 
   return (
     <Modal
@@ -128,85 +166,84 @@ const EditModal = ({ resourceToEdit, setResourceToEdit }) => {
       <ModalContent columns={1}>
         <ModalField
           label="Title"
-          value={resourceToEdit.title}
+          value={resource.title}
           modalAction={EDIT}
           onChange={(e) => {
-            handleInput(
-              'title',
-              e.target.value,
-              resourceToEdit,
-              setResourceToEdit
-            );
+            handleInput('title', e.target.value);
           }}
         />
       </ModalContent>
-      <ModalContent columns={2}>
+
+      <ModalContent columns={1}>
         <ModalField
           label="Resource Url"
-          value={resourceToEdit.resourceUrl}
+          value={resource.resourceUrl}
           modalAction={EDIT}
           onChange={(e) => {
-            handleInput(
-              'resourceUrl',
-              e.target.value,
-              resourceToEdit,
-              setResourceToEdit
-            );
-          }}
-        />
-        <ModalField
-          label="Image Url"
-          value={resourceToEdit.imageUrl}
-          modalAction={EDIT}
-          onChange={(e) => {
-            handleInput(
-              'imageUrl',
-              e.target.value,
-              resourceToEdit,
-              setResourceToEdit
-            );
+            handleInput('resourceUrl', e.target.value);
           }}
         />
       </ModalContent>
+
       <ModalContent columns={3}>
-      <ModalField
+        <ModalField
           label="Event"
-          value={resourceToEdit.event}
+          value={resource.event}
           modalAction={EDIT}
           onChange={(e) => {
-            handleInput(
-              'event',
-              e.target.value,
-              resourceToEdit,
-              setResourceToEdit
-            );
+            handleInput('event', e.target.value);
           }}
         />
         <ModalField
           label="Year"
-          value={resourceToEdit.year}
+          value={resource.year}
           modalAction={EDIT}
           onChange={(e) => {
-            handleInput(
-              'year',
-              e.target.value,
-              resourceToEdit,
-              setResourceToEdit
-            );
+            handleInput('year', e.target.value);
           }}
         />
         <ModalField
-          label="Our Pick?"
-          value={resourceToEdit.isOurPick}
+          label="Type"
+          value={resource.type}
           modalAction={EDIT}
           onChange={(e) => {
-            handleInput(
-              'isOurPick',
-              e.target.value,
-              resourceToEdit,
-              setResourceToEdit
-            );
+            handleInput('type', e.target.value);
           }}
+        />
+      </ModalContent>
+
+      <ModalContent columns={1}>
+        <Checkbox
+          label="Our Pick?"
+          id="our-pick-checkbox"
+          checked={resource.isOurPick}
+          onClick={() => {
+            handleInput('isOurPick', !resource.isOurPick);
+          }}
+        />
+      </ModalContent>
+      <ModalContent columns={1}>
+        <input
+          type="file"
+          id="file"
+          ref={inputFile}
+          accept="image/*"
+          onChange={selectImageFile}
+          style={{ display: 'none' }}
+        />
+        <LogoImage>
+          <img
+            src={imgObject.object}
+            width="100%"
+            height="100%"
+            alt={imgObject.imgURL}
+          />
+        </LogoImage>
+        <UploadContainer
+          type="text"
+          value={imgObject.imgName}
+          onClick={fileClick}
+          disabled
         />
       </ModalContent>
     </Modal>
@@ -219,10 +256,10 @@ const CustomTableHeader = () => (
       <TableHeader>Title</TableHeader>
       <TableHeader>Image Url</TableHeader>
       <TableHeader>Resource Url</TableHeader>
-      <TableHeader>Event</TableHeader>
+      <TableHeader narrow>Event</TableHeader>
+      <TableHeader narrow>Type</TableHeader>
       <TableHeader narrow>Year</TableHeader>
       <TableHeader narrow>Our pick?</TableHeader>
-      <TableHeader>Tags</TableHeader>
       <TableHeader>Actions</TableHeader>
     </TableRow>
   </thead>
@@ -235,9 +272,9 @@ const ResourceRow = ({ handleEdit, handleDelete, ...props }) => {
       <TableData>{props.imageUrl}</TableData>
       <TableData>{props.resourceUrl}</TableData>
       <TableData>{props.event}</TableData>
+      <TableData>{props.type}</TableData>
       <TableData>{props.year}</TableData>
       <TableData>{props.isOurPick.toString()}</TableData>
-      <TableData>{props.tags.toString()}</TableData>
       <TableData actions>
         <ActionsButtonContainer>
           <Button

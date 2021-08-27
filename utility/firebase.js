@@ -780,15 +780,6 @@ export const updateApplicantStatus = async (userId, applicationStatus) => {
     });
 };
 
-export const editResource = async ({ id, ...resource }, hackathon) => {
-  return db
-    .collection('Hackathons')
-    .doc(hackathon)
-    .collection('Resources')
-    .doc(id.toString())
-    .set(resource);
-};
-
 export const uploadResourceImageToStorage = async (id, file) => {
   try {
     const ref = storage.ref(`resource/${id}/${file.name}`);

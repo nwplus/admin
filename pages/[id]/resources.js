@@ -1,5 +1,4 @@
 import { useState, useEffect, createRef } from 'react';
-import styled from 'styled-components';
 import Page from '../../components/page';
 import Button from '../../components/button';
 import Card, {
@@ -18,58 +17,47 @@ import {
   ActionsButtonContainer,
 } from '../../components/table';
 import Modal, {
-  Label,
   ModalContent,
   ModalField,
   LogoImage,
   UploadContainer,
 } from '../../components/modal';
-import { getHackathonPaths, getHackathons } from '../../utility/firebase';
+import {
+  getHackathonPaths,
+  getHackathons,
+  setDocument,
+  uploadResourceImageToStorage,
+  getAllResources,
+  deleteDocument,
+} from '../../utility/firebase';
 import { EDIT, NEW, DELETE, COLOR, HACKATHON_NAVBAR } from '../../constants';
 
-const resourceCards = [
-  {
-    id: 'docid',
-    title: 'title',
-    imageUrl: 'https://imageUrl.com',
-    resourceUrl: 'https://resourceUrl.com',
-    event: 'event',
-    year: 1970,
-    isOurPick: true,
-    type: 'Github',
-  },
-  {
-    id: 'docid2',
-    title: 'title2',
-    imageUrl: 'imageUrl2',
-    resourceUrl: 'resourceUrl2',
-    event: 'event2',
-    year: 1970,
-    isOurPick: true,
-    type: 'Articles',
-  },
-];
+const RESOURCES = 'Resources';
 
 export default function Resources({ id, hackathons }) {
   const [resourceToEdit, setResourceToEdit] = useState(false);
-  const [resources, setResources] = useState(resourceCards);
+  const [resources, setResources] = useState([]);
 
-  const addNewResourceCard = () => {
-    return;
+  const addNewResourceCard = async () => {
+    setResourceToEdit({ id: Date.now().toString() });
   };
 
   const handleEdit = (r) => {
     setResourceToEdit(r);
   };
 
-  const handleDelete = () => {
-    return;
+  const handleDelete = (rId) => {
+    deleteDocument(id, RESOURCES, rId);
   };
 
-  const finishUpdate = (id) => {
-    setResources(id);
-    return;
+  const finishUpdate = ({ id: rId, ...resource }) => {
+    setDocument(id, RESOURCES, rId, resource);
   };
+
+  useEffect(() => {
+    const getResources = async () => getAllResources(id, setResources);
+    getResources();
+  }, [resourceToEdit]);
 
   return (
     <Page
@@ -96,7 +84,7 @@ export default function Resources({ id, hackathons }) {
                     <ResourceRow
                       key={r.id}
                       handleEdit={handleEdit}
-                      handleDelete={handleDelete}
+                      handleDelete={() => handleDelete(r.id)}
                       {...r}
                     />
                   ))}
@@ -126,9 +114,22 @@ const EditModal = ({ resourceToEdit, setResourceToEdit, finishUpdate }) => {
   const [imgObject, setImgObject] = useState({});
   const inputFile = createRef();
 
-  const handleUpdate = () => {
-    finishUpdate(resource);
+  const handleUpdate = async () => {
+    // Don't judge
+    await new Promise((r) => setTimeout(r, 500));
+    finishUpdate({
+      id: resource.id,
+      title: resource.title || '',
+      imageUrl: resource.imageUrl || '',
+      resourceUrl: resource.resourceUrl || '',
+      event: resource.event || '',
+      year: resource.year || 0,
+      isOurPick: resource.isOurPick || false,
+      type: resource.type || '',
+    });
+    setResourceToEdit({});
   };
+
 
   const handleInput = (property, value) => {
     setResource({
@@ -137,23 +138,37 @@ const EditModal = ({ resourceToEdit, setResourceToEdit, finishUpdate }) => {
     });
   };
 
+  const uploadImage = async (imgUrl) => {
+    const imageUrl = await uploadResourceImageToStorage(resource.id, imgUrl);
+    handleInput('imageUrl', imageUrl);
+  };
+
   // clicks the invisible <input type='file />
   const fileClick = () => {
     inputFile.current.click();
   };
 
-  const selectImageFile = (e) => {
+  // Upload any picture you store
+  const selectImageFile = async (e) => {
     if (e.target.files[0]) {
-      setImgObject({
+      const imgObj = {
         object: URL.createObjectURL(e.target.files[0]),
         imgURL: e.target.files[0],
         imgName: e.target.files[0].name,
-      });
+      };
+      setImgObject(imgObj);
+      uploadImage(imgObj.imgURL);
     }
   };
 
   useEffect(() => {
     setResource(resourceToEdit);
+    if (resourceToEdit?.imageUrl)
+      setImgObject({
+        object: resourceToEdit.imageUrl,
+        alt: resourceToEdit.title,
+      });
+    else setImgObject({});
   }, [resourceToEdit]);
 
   return (
@@ -274,7 +289,7 @@ const ResourceRow = ({ handleEdit, handleDelete, ...props }) => {
       <TableData>{props.event}</TableData>
       <TableData>{props.type}</TableData>
       <TableData>{props.year}</TableData>
-      <TableData>{props.isOurPick.toString()}</TableData>
+      <TableData>{props.isOurPick?.toString() || false}</TableData>
       <TableData actions>
         <ActionsButtonContainer>
           <Button

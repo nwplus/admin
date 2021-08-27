@@ -70,7 +70,7 @@ export const getDocument = async (hackathon, collection) => {
 };
 
 export const updateDocument = (hackathon, collection, docId, object) => {
-  db.collection(webCollection)
+  db.collection(Hackathons)
     .doc(hackathon)
     .collection(collection)
     .doc(docId)
@@ -79,7 +79,7 @@ export const updateDocument = (hackathon, collection, docId, object) => {
 
 export const addDocument = async (hackathon, collection, object) => {
   const ref = await db
-    .collection(webCollection)
+    .collection(Hackathons)
     .doc(hackathon)
     .collection(collection)
     .add(object);
@@ -88,11 +88,20 @@ export const addDocument = async (hackathon, collection, object) => {
 
 export const deleteDocument = async (hackathon, collection, docId) => {
   await db
-    .collection(webCollection)
+    .collection(Hackathons)
     .doc(hackathon)
     .collection(collection)
     .doc(docId)
     .delete();
+};
+
+export const setDocument = async (hackathon, collection, docId, object) => {
+  await db
+    .collection(Hackathons)
+    .doc(hackathon)
+    .collection(collection)
+    .doc(docId)
+    .set(object);
 };
 
 export const getHackathons = async () => {
@@ -768,5 +777,43 @@ export const updateApplicantStatus = async (userId, applicationStatus) => {
     .doc(userId)
     .update({
       'status.applicationStatus': applicationStatus,
+    });
+};
+
+export const editResource = async ({ id, ...resource }, hackathon) => {
+  return db
+    .collection('Hackathons')
+    .doc(hackathon)
+    .collection('Resources')
+    .doc(id.toString())
+    .set(resource);
+};
+
+export const uploadResourceImageToStorage = async (id, file) => {
+  try {
+    const ref = storage.ref(`resource/${id}/${file.name}`);
+    const uploadData = await ref.put(file);
+    return uploadData.ref.getDownloadURL();
+  } catch (e) {
+    // eslint-disable-next-line no-alert
+    alert(e);
+    return null;
+  }
+};
+
+export const getAllResources = async (website, callback) => {
+  return db
+    .collection('Hackathons')
+    .doc(website) // hardcode for event
+    .collection('Resources')
+    .onSnapshot((snap) => {
+      callback(
+        snap.docs.map((doc) => {
+          return {
+            id: doc.id,
+            ...doc.data(),
+          };
+        })
+      );
     });
 };

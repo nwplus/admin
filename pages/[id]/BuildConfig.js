@@ -18,8 +18,7 @@ import Modal from '../../components/modal';
 import { Octokit } from '@octokit/rest';
 import axios from 'axios'
 
-const octokit = new Octokit({ auth: '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', baseUrl: 'https://api.github.com' });
-
+const octokit = new Octokit({ auth: process.env.SERVICE_ACCOUNT_TOKEN, baseUrl: 'https://api.github.com' });
 const Container = styled.div`
   margin-bottom: 40px;
 `;
@@ -32,12 +31,13 @@ export default function BuildConfig({ id, hackathons }) {
   const warningDeployModal = 
   <Modal
     modalTitle="WARNING"
-    handleSave={() => octokit.actions.createWorkflowDispatch({
+    handleSave={() => {octokit.actions.createWorkflowDispatch({
     owner: 'nwplus',
     repo: 'monorepo',
     workflow_id: 'firebase_deploy.yaml',
     ref: 'test-action-dispatch',
-    inputs: { 'targetedHackathon': `${id}_main` }})}
+    inputs: { 'targetedHackathon': `${id}_main` }})
+  setModalOpen(false)}}
     isOpen={modalOpen}
     handleClose={() => setModalOpen(false)}>
       <span>Are you sure you want to deploy to {id}?</span>

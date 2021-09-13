@@ -190,6 +190,15 @@ export default ({ hackathons, currentPath }) => {
         );
       })}
 
+      <NextLink href="/assessment" as="/assessment" passHref>
+        <Link>
+          <ItemContainer>
+            <Live color={currentPath === 'assessment' && COLOR.WHITE} />
+            <Label selected={currentPath === 'assessment'}>Assessment</Label>
+          </ItemContainer>
+        </Link>
+      </NextLink>
+
       <Link
         href="#!"
         onClick={() => {

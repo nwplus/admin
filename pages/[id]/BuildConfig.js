@@ -16,7 +16,6 @@ import {
 import Button from '../../components/button'
 import Modal from '../../components/modal';
 import { Octokit } from '@octokit/rest';
-import axios from 'axios'
 
 const octokit = new Octokit({ auth: process.env.SERVICE_ACCOUNT_TOKEN, baseUrl: 'https://api.github.com' });
 const Container = styled.div`

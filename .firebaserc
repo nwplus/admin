@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "nwplus-ubc"
+  },
+  "targets": {
+    "nwplus-ubc": {
+      "hosting": {
+        "admin-portal": [
+          "nw-admin-portal"
+        ]
+      }
+    }
+  }
+}

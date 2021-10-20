@@ -11,6 +11,9 @@
     "lint:fix": "eslint --fix --ext .js,.jsx ."
   },
   "dependencies": {
+    "@octokit/core": "^3.2.5",
+    "@octokit/rest": "^18.3.5",
+    "axios": "^0.21.1",
     "cross-env": "^7.0.2",
     "date-fns": "^2.16.1",
     "dotenv": "^8.2.0",

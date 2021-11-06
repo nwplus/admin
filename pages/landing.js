@@ -5,6 +5,8 @@ import { getHackathons } from '../utility/firebase';
 import nwPlusLogo from '../assets/nwplus.svg';
 import { useAuth } from '../utility/auth';
 
+import Tag from '../components/tag';
+
 const NwPlusImage = styled.img`
   margin-top: 5%;
   width: 250px;
@@ -25,6 +27,8 @@ export default function Landing({ hackathons }) {
   return (
     <Page hackathons={hackathons}>
       <div style={{ width: '100%', textAlign: 'center' }}>
+        <Tag color='#00DBCE'>Hello World</Tag>
+        <Tag type='DELETE' color='#433860'>Delete World</Tag>
         <NwPlusImage src={nwPlusLogo} />
         <WelcomeTitle>Welcome to the CMS {user.displayName}!</WelcomeTitle>
         <InfoMessage>Please choose a hackathon from the sidebar.</InfoMessage>

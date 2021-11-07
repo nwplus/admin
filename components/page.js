@@ -46,7 +46,7 @@ export default ({ hackathons, currentPath, children, navbarItems }) => {
   return (
     <Container>
       <Sidebar currentPath={currentPath} hackathons={hackathons} />
-      <div style={{ width: '80vw' }}>
+      <div style={{ 'flex-grow': '1' }}>
         <Content>
           {navbarItems && (
             <>

@@ -121,6 +121,7 @@ export default function Assessment({ hackathons }) {
               <ToggleButton leftText="View All" rightText="Assigned Only" isLeftSelected={isViewAllApplicants} setIsLeftSelected={setIsViewAllApplicants} />
             </ToggleBarContainer>
             {isViewAllApplicants ? <span>view all applicants place holder <br /> </span> : <span>view assigned only place holder <br /> </span>}
+            {/* conditionally render the assignment and scoring pages here based on isAdminView */}
             {isAdminView ? <span>Assignment page placeholder</span> : <span>Scoring page placeholder</span>}
             <ToolBar
                   search={setSearch}

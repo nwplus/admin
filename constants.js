@@ -18,6 +18,10 @@ export const COLOR = {
   TRANSPARENT: 'Transparent',
   BODY_TEXT: '#5A5A5A',
   BLUE: '#4285F4',
+  UNSELECTED_GRAY: '#BDBAC3',
+  MIDNIGHT_PURPLE: '#433860',
+  LIGHT_GRAY: '#F0EEF2',
+  LIGHT_PURPLE: '#E2D6FF'
 };
 export const FAQ = 'FAQ';
 export const FAQCategory = Object.freeze({

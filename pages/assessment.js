@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Page from '../components/page';
 import Table from '../components/Assessment/Table';
 import ToolBar from '../components/Assessment/toolbar';
+import ToggleButton from '../components/toggleButton';
 import { APPLICATION_STATUS, SORT } from '../constants';
 import { getAllApplicants, getHackathons } from '../utility/firebase';
 
@@ -102,6 +103,7 @@ export default function Assessment({ hackathons }) {
       {hackers && (
         <>
           <Page hackathons={hackathons} currentPath="assessment">
+            <ToggleButton leftText="View All" rightText="Assigned Only" />
             <ToolBar
               search={setSearch}
               reverse={setReverse}

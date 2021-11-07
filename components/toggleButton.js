@@ -47,8 +47,7 @@ const EyeImage = styled.img`
     padding-right: 3px;
 `;
 
-export default ({ leftText, rightText }) => {
-    const [isLeftSelected, setIsLeftSelected] = useState(false);
+export default ({ leftText, rightText, isLeftSelected, setIsLeftSelected }) => {
 
     return (
         <Container>

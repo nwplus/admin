@@ -5,6 +5,7 @@ import Eye from '../assets/eye.svg';
 
 const Container = styled.div`
     display: flex;
+    cursor: pointer;
 `;
 
 const ButtonContainer = css`

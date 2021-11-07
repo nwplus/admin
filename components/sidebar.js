@@ -2,9 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import NextLink from 'next/link';
 import { COLOR } from '../constants';
-import Website from './icons/website';
 import Icon from './Icon';
-import Live from './icons/live';
 import { logout } from '../utility/firebase';
 import LoadingGif from '../assets/nwplus.gif';
 

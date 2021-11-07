@@ -121,10 +121,8 @@ export default function Assessment({ hackathons }) {
               <ToggleButton leftText="View All" rightText="Assigned Only" isLeftSelected={isViewAllApplicants} setIsLeftSelected={setIsViewAllApplicants} />
             </ToggleBarContainer>
             {isViewAllApplicants ? <span>view all applicants place holder <br /> </span> : <span>view assigned only place holder <br /> </span>}
-            {isAdminView ? 
-              <>
-              <span>Assignment page placeholder</span>
-                <ToolBar
+            {isAdminView ? <span>Assignment page placeholder</span> : <span>Scoring page placeholder</span>}
+            <ToolBar
                   search={setSearch}
                   reverse={setReverse}
                   sort={setSortType}
@@ -134,24 +132,7 @@ export default function Assessment({ hackathons }) {
                   displayedHackers={displayedHackers}
                   selectedHacker={selectedHacker}
                   setSelectedHacker={setSelectedHacker}
-                />
-              </>
-              :
-              <>
-                <span>Scoring page placeholder</span>
-                <ToolBar
-                  search={setSearch}
-                  reverse={setReverse}
-                  sort={setSortType}
-                  reversed={reverse}
-                />
-                <Table
-                  displayedHackers={displayedHackers}
-                  selectedHacker={selectedHacker}
-                  setSelectedHacker={setSelectedHacker}
-                />
-              </>
-              }                      
+                />                
           </Page>
         </>
       )}

@@ -7,7 +7,7 @@ const Wrapper = styled.div`
 
 const Bar = styled.div`
   height: 20px;
-  width: ${({ width }) => width}px;
+  width: 100%;
   position: relative;
 `;
 
@@ -32,7 +32,7 @@ const Info = styled.span`
   vertical-align: middle;
 `;
 
-export default function StatusBar({ completed, total, width }) {
+export default function StatusBar({ completed, total }) {
   let percent = Math.ceil((completed / total) * 100);
   if (percent > 100) {
     percent = 100;
@@ -40,7 +40,7 @@ export default function StatusBar({ completed, total, width }) {
 
   return (
     <Wrapper>
-      <Bar width={width}>
+      <Bar>
         <Background />
         <Progress percent={percent}>
           <Info>{percent}%</Info>

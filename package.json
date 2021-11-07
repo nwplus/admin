@@ -11,6 +11,7 @@
     "lint:fix": "eslint --fix --ext .js,.jsx ."
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.4",
     "@octokit/core": "^3.2.5",
     "@octokit/rest": "^18.3.5",
     "axios": "^0.21.1",

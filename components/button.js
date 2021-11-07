@@ -1,9 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import EditIcon from './icons/edit';
-import NewIcon from './icons/new';
-import ViewIcon from './icons/view';
-import CloseIcon from './icons/close';
+import Icon from './Icon';
 import { COLOR, EDIT, VIEW, NEW, CLOSE, DELETE } from '../constants';
 
 const StyledButton = styled.button`
@@ -24,11 +21,7 @@ const StyledButton = styled.button`
   border-radius: ${(props) => (props.inline ? '0 3px 3px 0' : '3px')};
 `;
 
-const StyledEditIcon = styled(EditIcon)`
-  ${(props) => props.hasText && 'margin-right: 8px;'}
-`;
-
-const StyledNewIcon = styled(NewIcon)`
+const StyledIcon = styled(Icon)`
   ${(props) => props.hasText && 'margin-right: 8px;'}
 `;
 
@@ -52,12 +45,12 @@ const Button = ({
     contentColor={contentColor}
     inline={inline}
   >
-    {type === EDIT && !color && <StyledEditIcon hasText={children} />}
-    {type === EDIT && color && <EditIcon color={COLOR.BLACK} />}
-    {type === NEW && <StyledNewIcon hasText={children} />}
-    {type === VIEW && <ViewIcon />}
-    {type === DELETE && <CloseIcon />}
-    {type === CLOSE && <CloseIcon color={contentColor} />}
+    {type === EDIT && !color && <StyledIcon hasText={children} icon='edit' />}
+    {type === EDIT && color && <Icon color={COLOR.BLACK} icon='edit' />}
+    {type === NEW && <StyledIcon hasText={children} icon='plus' />}
+    {type === VIEW && <Icon icon='search' />}
+    {type === DELETE && <Icon icon='times' color={'red'} />}
+    {type === CLOSE && <Icon icon='times' color={contentColor} />}
     {children}
   </StyledButton>
 );

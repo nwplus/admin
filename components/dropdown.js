@@ -17,15 +17,15 @@ const Select = ({
   return (
     <>
       <SelectContent type={type} onKeyDown={onKeyDown} onClick={onClick}>
-        {isOpened &&  <TrasnformedIcon icon='caret-down' flip />}
-        {!isOpened && <TrasnformedIcon icon='caret-down' />}
+        {isOpened && <TransformedIcon icon='caret-down' flip />}
+        {!isOpened && <TransformedIcon icon='caret-down' />}
         {children}
       </SelectContent>
     </>
   );
 };
 
-const TrasnformedIcon = styled(Icon)`
+const TransformedIcon = styled(Icon)`
   position: absolute;
   right: 1rem;
   ${(props) =>

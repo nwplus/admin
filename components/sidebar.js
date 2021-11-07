@@ -67,18 +67,12 @@ const Link = styled.a`
   p {
     transition: color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
   }
-  svg {
-    transition: fill 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-  }
   i {
     transition: color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
   }
   &:hover {
     p {
       color: ${COLOR.WHITE};
-    }
-    svg {
-      fill: ${COLOR.WHITE};
     }
     i {
       color: ${COLOR.WHITE};

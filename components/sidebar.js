@@ -3,9 +3,8 @@ import styled from 'styled-components';
 import NextLink from 'next/link';
 import { COLOR } from '../constants';
 import Website from './icons/website';
-import Power from './icons/power';
+import Icon from './Icon';
 import Live from './icons/live';
-import FAQIcon from './icons/faq';
 import { logout } from '../utility/firebase';
 import LoadingGif from '../assets/nwplus.gif';
 
@@ -29,6 +28,7 @@ const Header = styled.h1`
 const ItemContainer = styled.div`
   display: flex;
   align-items: center;
+  color: ${COLOR.DARK_COPY};
 `;
 
 const Label = styled.p`
@@ -72,12 +72,18 @@ const Link = styled.a`
   svg {
     transition: fill 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
   }
+  i {
+    transition: color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
   &:hover {
     p {
       color: ${COLOR.WHITE};
     }
     svg {
       fill: ${COLOR.WHITE};
+    }
+    i {
+      color: ${COLOR.WHITE};
     }
   }
   &:focus {
@@ -140,7 +146,7 @@ export default ({ hackathons, currentPath }) => {
       >
         <Link>
           <ItemContainer>
-            <Live color={currentPath === 'Livesite' && COLOR.WHITE} />
+            <Icon color={currentPath === 'Livesite' && COLOR.WHITE}  icon='circle' />
             <Label selected={currentPath === 'Livesite'}>Livesite</Label>
           </ItemContainer>
         </Link>
@@ -158,13 +164,13 @@ export default ({ hackathons, currentPath }) => {
           }}
         >
           <ItemContainer>
-            <FAQIcon color={currentPath === 'faq' && COLOR.WHITE} />
+            <Icon color={currentPath === 'faq' && COLOR.WHITE} icon='question-circle' />
             <Label selected={currentPath === 'faq'}>FAQs</Label>
           </ItemContainer>
         </Link>
       </NextLink>
       <ItemContainer>
-        <Website color={hackathons.includes(currentPath) && COLOR.WHITE} />
+        <Icon color={hackathons.includes(currentPath) && COLOR.WHITE} icon='th-list' />
         <Label selected={hackathons.includes(currentPath)}>Websites</Label>
       </ItemContainer>
       {hackathons.map((id) => {
@@ -193,7 +199,7 @@ export default ({ hackathons, currentPath }) => {
       <NextLink href="/assessment" as="/assessment" passHref>
         <Link>
           <ItemContainer>
-            <Live color={currentPath === 'assessment' && COLOR.WHITE} />
+            <Icon color={currentPath === 'assessment' && COLOR.WHITE} icon='user-check' />
             <Label selected={currentPath === 'assessment'}>Assessment</Label>
           </ItemContainer>
         </Link>
@@ -211,7 +217,7 @@ export default ({ hackathons, currentPath }) => {
         }}
       >
         <ItemContainer>
-          <Power />
+          <Icon icon='sign-out-alt' />
           <Label>Logout</Label>
         </ItemContainer>
       </Link>

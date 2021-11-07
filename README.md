@@ -3,14 +3,16 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 nwPlus Content Management System equips executives of nwPlus to easily add/edit/delete parameters and contents of various nwPlus projects - mainly external facing web apps for hackathons.
 
 ## Getting started
-First, run the development server:
+
+First clone the project, then create a `.env` in the project root with the contents found [here](https://www.notion.so/nwplus/NextJs-env-2d2c848fd6d344099e50ee7bf7b6466d).
+
+Run the development server:
 
 ```bash
 npm run dev
 # or
 yarn dev
 ```
-
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.

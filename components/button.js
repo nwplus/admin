@@ -1,9 +1,9 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import Icon from './Icon';
 import { COLOR, EDIT, VIEW, NEW, CLOSE, DELETE } from '../constants';
 
-const StyledButton = styled.button`
+const StyledButton = css`
   border: none;
   font-family: 'HK Grotesk';
   font-weight: bold;
@@ -18,8 +18,17 @@ const StyledButton = styled.button`
   display: flex;
   align-items: center;
   font-size: 16px;
+`;
+
+const RectangleStyledButton = styled.button`
+  ${StyledButton}
   border-radius: ${(props) => (props.inline ? '0 3px 3px 0' : '3px')};
 `;
+
+const RoundStyledButton = styled.button`
+  ${StyledButton}
+  border-radius: ${(props) => (props.inline ? '0 100px 100px 0' : '100px')};
+`
 
 const StyledIcon = styled(Icon)`
   ${(props) => props.hasText && 'margin-right: 8px;'}
@@ -38,7 +47,7 @@ const Button = ({
   onClick,
   inline = false,
 }) => (
-  <StyledButton
+  <RectangleStyledButton
     isText={children && !type}
     onClick={onClick}
     color={color}
@@ -52,7 +61,32 @@ const Button = ({
     {type === DELETE && <Icon icon='times' color={'red'} />}
     {type === CLOSE && <Icon icon='times' color={contentColor} />}
     {children}
-  </StyledButton>
+  </RectangleStyledButton>
+);
+
+export const RoundedButton = ({
+  children,
+  type,
+  color,
+  contentColor = COLOR.BLACK,
+  onClick,
+  inline = false,
+}) => (
+  <RoundStyledButton
+    isText={children && !type}
+    onClick={onClick}
+    color={color}
+    contentColor={contentColor}
+    inline={inline}
+  >
+    {type === EDIT && !color && <StyledIcon hasText={children} icon='edit' />}
+    {type === EDIT && color && <Icon color={COLOR.BLACK} icon='edit' />}
+    {type === NEW && <StyledIcon hasText={children} icon='plus' />}
+    {type === VIEW && <Icon icon='search' />}
+    {type === DELETE && <Icon icon='times' color={'red'} />}
+    {type === CLOSE && <Icon icon='times' color={contentColor} />}
+    {children}
+  </RoundStyledButton>
 );
 
 export default Button;

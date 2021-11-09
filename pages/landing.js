@@ -5,8 +5,6 @@ import { getHackathons } from '../utility/firebase';
 import nwPlusLogo from '../assets/nwplus.svg';
 import { useAuth } from '../utility/auth';
 
-import Tag from '../components/tag';
-
 const NwPlusImage = styled.img`
   margin-top: 5%;
   width: 250px;

@@ -11,6 +11,10 @@ const Padding = css`
     box-sizing: border-box;
 `
 
+const FontSize = css`
+    font-size: 0.9em;
+`
+
 const InheritedStyles = css`
     font-family: inherit;
     height: inherit;
@@ -29,7 +33,8 @@ const StyledTextField = styled.div`
 const StyledTextInput = styled.input`
     ${InheritedStyles}
     ${Padding}
-    ${BorderRadius};
+    ${BorderRadius}
+    ${FontSize}
     border: 1px solid transparent;
     color: ${p => p.darkMode ? (p.isPrefilled ? COLOR.MIDNIGHT_PURPLE_LIGHT : COLOR.WHITE) : p.isPrefilled && COLOR.UNSELECTED_GRAY};
 
@@ -51,8 +56,12 @@ const StyledLinkDiv = styled.div`
 `
 
 const StyledLink = styled.a`
-    color: ${COLOR.MIDNIGHT_PURPLE_LIGHT};
     text-decoration: none;
+`
+
+const StyledLinkText = styled.div`
+    ${FontSize}
+    color: ${COLOR.MIDNIGHT_PURPLE_LIGHT};
 `
 
 const TextField = ({ darkModeEnabled, isLink, prefillValue, customValue, onChangeCustomValue }) => {
@@ -61,7 +70,9 @@ const TextField = ({ darkModeEnabled, isLink, prefillValue, customValue, onChang
             {
                 isLink ?
                 <StyledLinkDiv>
-                    <StyledLink href={prefillValue} target='_blank'>{prefillValue}</StyledLink>
+                    <StyledLink href={prefillValue} target='_blank'>
+                        <StyledLinkText>{prefillValue}</StyledLinkText>
+                    </StyledLink>
                     <NewTabIcon href={prefillValue}/>
                 </StyledLinkDiv>
                 :

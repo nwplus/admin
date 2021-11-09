@@ -27,8 +27,6 @@ export default function Landing({ hackathons }) {
   return (
     <Page hackathons={hackathons}>
       <div style={{ width: '100%', textAlign: 'center' }}>
-        <Tag color='#00DBCE'>Hello World</Tag>
-        <Tag type='DELETE' color='#433860'>Delete World</Tag>
         <NwPlusImage src={nwPlusLogo} />
         <WelcomeTitle>Welcome to the CMS {user.displayName}!</WelcomeTitle>
         <InfoMessage>Please choose a hackathon from the sidebar.</InfoMessage>

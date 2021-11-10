@@ -4,21 +4,29 @@ import Icon from './Icon';
 import { COLOR, EDIT, VIEW, NEW, CLOSE, DELETE } from '../constants';
 
 const StyledButton = styled.button`
-  border: none;
+  ${(props) => props.outlined ? `border: 2px solid ${props.disabled ? COLOR.INACTIVE_DARK_GRAY : props.contentColor}` : `border: none`};
   font-family: 'HK Grotesk';
   font-weight: bold;
   ${(props) => props.isText && 'padding: 6px 24px; height: 40px;'}
   ${(props) =>
     !props.isText && props.contentColor === COLOR.BLACK && 'padding: 10px;'}
   ${(props) =>
-    props.color
-      ? `color: ${props.contentColor}; background: ${props.color};`
-      : `color: ${COLOR.WHITE}; background-color: ${COLOR.PRIMARY};`}
+    !props.disabled ? (
+      props.color
+        ? `color: ${props.contentColor}; background: ${props.color};`
+        : `color: ${COLOR.WHITE}; background-color: ${COLOR.PRIMARY};`
+    ) : (
+      `color: ${COLOR.INACTIVE_DARK_GRAY}; background: ${props.outlined ? COLOR.TRANSPARENT : COLOR.UNSELECTED_GRAY};`
+    )}
+  border-radius: ${(props) => props.rounded ? (props.inline ? '0 100px 100px 0' : '100px') : (props.inline ? '0 8px 8px 0' : '8px')};
   cursor: pointer;
   display: flex;
   align-items: center;
   font-size: 16px;
-  border-radius: ${(props) => (props.inline ? '0 3px 3px 0' : '3px')};
+  &:hover {
+    color: ${(props) => props.hoverContentColor};
+    background: ${(props) => props.hoverBackgroundColor};
+  }
 `;
 
 const StyledIcon = styled(Icon)`
@@ -37,6 +45,11 @@ const Button = ({
   contentColor = COLOR.BLACK,
   onClick,
   inline = false,
+  hoverBackgroundColor,
+  hoverContentColor,
+  disabled = false,
+  outlined = false,
+  rounded = false
 }) => (
   <StyledButton
     isText={children && !type}
@@ -44,6 +57,11 @@ const Button = ({
     color={color}
     contentColor={contentColor}
     inline={inline}
+    hoverBackgroundColor={hoverBackgroundColor}
+    hoverContentColor={hoverContentColor}
+    disabled={disabled}
+    outlined={outlined}
+    rounded={rounded}
   >
     {type === EDIT && !color && <StyledIcon hasText={children} icon='edit' />}
     {type === EDIT && color && <Icon color={COLOR.BLACK} icon='edit' />}

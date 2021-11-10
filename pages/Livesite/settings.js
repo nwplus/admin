@@ -202,22 +202,22 @@ export default ({ hackathons }) => {
                 <Label>Active Hackathon</Label>
                 <HackathonChooser />
               </Group>
-              <Label>Application Deadline (copy)</Label>
+              <Label>Application Deadline (Hacker app copy)</Label>
               <Input
                 value={livesiteData.applicationDeadline}
                 onChange={(e) => handleChange('applicationDeadline', e)}
               />
-              <Label>RSVP Deadline (copy)</Label>
+              <Label>RSVP Deadline (Hacker app copy)</Label>
               <Input
                 value={livesiteData.rsvpBy}
                 onChange={(e) => handleChange('rsvpBy', e)}
               />
-              <Label>Waitlist notify time (copy)</Label>
+              <Label>Waitlist notify time (Hacker app copy)</Label>
               <Input
                 value={livesiteData.offWaitlistNotify}
                 onChange={(e) => handleChange('offWaitlistNotify', e)}
               />
-              <Label>Acceptences sent by (copy)</Label>
+              <Label>Acceptences sent by (Hacker app copy)</Label>
               <Input
                 value={livesiteData.sendAcceptancesBy}
                 onChange={(e) => handleChange('sendAcceptancesBy', e)}

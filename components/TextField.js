@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 import { COLOR } from '../constants';
-import NewTabIcon from './NewTabIcon';
+import Icon from './Icon';
 
 const BorderRadius = css`
     border-radius: 4px;
@@ -73,7 +73,9 @@ const TextField = ({ darkModeEnabled, isLink, prefillValue, customValue, onChang
                     <StyledLink href={prefillValue} target='_blank'>
                         <StyledLinkText>{prefillValue}</StyledLinkText>
                     </StyledLink>
-                    <NewTabIcon href={prefillValue}/>
+                    <a href={prefillValue} target='_blank'>
+                        <Icon icon='external-link-alt' color={COLOR.BLACK}></Icon>
+                    </a>
                 </StyledLinkDiv>
                 :
                 <StyledTextInput

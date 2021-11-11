@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Button from '../components/button';
+import Tag from '../components/tag';
 import { COLOR, BUTTON_COLOR } from '../constants';
 
 const Container = styled.div`
@@ -21,6 +22,10 @@ const ButtonContainer = styled.div`
 `;
 
 const BUTTON_TEXT = "Button"
+
+const TagContainer = styled.div`
+    margin:10px;
+`;
 
 export default function Charcuterie() {
     return (
@@ -191,6 +196,18 @@ export default function Charcuterie() {
                             {BUTTON_TEXT}
                         </Button>
                     </ButtonContainer>
+                </Row>
+            </Section>
+
+            {/* Tag components */}
+            <Section>
+                <Row>
+                    <TagContainer>
+                        <Tag color='#00DBCE' contentColor={COLOR.WHITE}>Hello World</Tag>
+                    </TagContainer>
+                    <TagContainer>
+                        <Tag type='DELETE' color={COLOR.BRIGHT_RED} contentColor={COLOR.WHITE} onDelete={e=>alert('delete')}>Delete World</Tag>
+                    </TagContainer>
                 </Row>
             </Section>
         </Container>

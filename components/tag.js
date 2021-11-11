@@ -73,33 +73,4 @@ const Tag = ({
   </StyledTag>
 );
 
-/*
-  Demo:
-  
-      <div style={{
-        display: 'inline-grid',
-        gridTemplateColumns: 'auto auto',
-        paddingTop: '2vh',
-        gap: 10
-      }}>
-        <div>
-          <Tag color='#00DBCE'>Hello World</Tag>
-          <p style={{fontFamily: 'monospace'}}>
-            <b>props</b><br/>
-            color='#00DBCE'
-            </p>
-        </div>
-        <div>
-        <Tag type='DELETE' color='#433860' contentColor='#FFF' onDelete={e=>alert('hello')}>Delete World</Tag>
-          <p style={{fontFamily: 'monospace'}}>
-            <b>props</b><br/>
-            color='#433860' <br />
-            contentColor='#FFF' <br />
-            type='DELETE' <br />
-            onDelete={`{e=>alert('hello')}`} <br />
-          </p>
-        </div>
-      </div>
-*/
-
 export default Tag;

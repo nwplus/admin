@@ -13,12 +13,11 @@ const StyledTag = styled.div`
 
 const TagText = styled.div`
   line-height:100%;
-  color: ${COLOR.WHITE}; 
+  ${(props) => `color: ${props.contentColor};`}
   ${(props) =>
     props.color
       ? `background: ${props.color};`
       : `background-color: ${COLOR.PRIMARY};`}
-    
   ${(props) => 
     (props.type === DELETE)
       ? `padding: 9px 5px 7px 12px;
@@ -39,7 +38,7 @@ const TagClose = styled.div`
       ? `background: ${props.color};`
       : `background-color: ${COLOR.PRIMARY};`}
   &:hover {
-    filter:brightness(0.7);
+    filter:brightness(0.85);
     cursor:pointer;
   }
 `;

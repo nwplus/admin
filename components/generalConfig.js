@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import EditIcon from './icons/edit';
-import CloseIcon from './icons/close';
+import Icon from './Icon';
 import { COLOR, NEW, EDIT, VIEW, DELETE } from '../constants';
 import Modal, { Label, ModalContent, ModalField } from './modal';
 import { firestore, updateHackathonField } from '../utility/firebase';
@@ -158,10 +157,10 @@ export default ({ id, title, content }) => {
             <HoverContainer>
               <FieldType>({fieldType})</FieldType>
               <IconContainer onClick={() => handleEditField(fieldName)}>
-                <EditIcon color={COLOR.BLACK} />
+                <Icon color={COLOR.BLACK} icon='edit' />
               </IconContainer>
               <IconContainer onClick={() => handleDeleteField(fieldName)}>
-                <CloseIcon color={COLOR.BLACK} />
+                <Icon color={COLOR.BLACK} icon='close' />
               </IconContainer>
             </HoverContainer>
           </KeyValueContainer>

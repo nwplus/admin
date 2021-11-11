@@ -18,7 +18,22 @@ export const COLOR = {
   TRANSPARENT: 'Transparent',
   BODY_TEXT: '#5A5A5A',
   BLUE: '#4285F4',
+  UNSELECTED_GRAY: '#BDBAC3',
+  MIDNIGHT_PURPLE: '#433860',
+  LIGHT_GRAY: '#F0EEF2',
+  LIGHT_PURPLE: '#E2D6FF',
+  NW_TEAL: '#20FFAF',
+  TEAL: '#00A399',
+  INACTIVE_DARK_GRAY: '#8C898F',
+  BRIGHT_RED: '#F83D3D'
 };
+export const BUTTON_COLOR = {
+  PRIMARY: 'linear-gradient(92.58deg, #0DEFE1 0%, #78FF96 100%)',
+  SECONDARY: '#FFFFFF',
+  OUTLINE: 'Transparent',
+  DESTRUCTIVE: '#F65C5C',
+  HOVER_PRIMARY: 'linear-gradient(90deg, #D7FFF0 0%, #7BFFCF 100%)'
+}
 export const FAQ = 'FAQ';
 export const FAQCategory = Object.freeze({
   GENERAL: 'General',

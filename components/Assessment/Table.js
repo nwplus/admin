@@ -151,7 +151,7 @@ export default function Table(props) {
 
   return (
     <div style={{ display: 'flex' }}>
-      <div style={{ flex: 1, overflowY: 'auto', height: '88vh' }}>
+      <div style={{ flex: 1, overflowY: 'auto' }}>
         <AllHackersRow />
         {props.displayedHackers.map((hacker, index) => {
           return (

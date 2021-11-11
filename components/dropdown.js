@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { COLOR } from '../constants';
-import ArrowIcon from './icons/arrow';
+import Icon from './Icon';
 
 const DropdownContainer = styled.div`
   width: 100%;
@@ -17,17 +17,16 @@ const Select = ({
   return (
     <>
       <SelectContent type={type} onKeyDown={onKeyDown} onClick={onClick}>
-        {isOpened && <TransformedArrow flip />}
-        {!isOpened && <TransformedArrow />}
+        {isOpened && <TransformedIcon icon='caret-down' flip />}
+        {!isOpened && <TransformedIcon icon='caret-down' />}
         {children}
       </SelectContent>
     </>
   );
 };
 
-const TransformedArrow = styled(ArrowIcon)`
+const TransformedIcon = styled(Icon)`
   position: absolute;
-  margin-top: 0.25rem;
   right: 1rem;
   ${(props) =>
     props.flip

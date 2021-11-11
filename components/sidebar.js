@@ -2,10 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import NextLink from 'next/link';
 import { COLOR } from '../constants';
-import Website from './icons/website';
-import Power from './icons/power';
-import Live from './icons/live';
-import FAQIcon from './icons/faq';
+import Icon from './Icon';
 import { logout } from '../utility/firebase';
 import LoadingGif from '../assets/nwplus.gif';
 
@@ -15,6 +12,9 @@ const SidebarContainer = styled.div`
   box-sizing: border-box;
   width: 300px;
   padding: 30px;
+  flex-shrink: 0;
+  transition: margin 0.3s ease-in-out;
+  margin-left: ${(p) => (p.showSidebar ? '0' : '-300px')};
 `;
 
 const HeaderContainer = styled.div`
@@ -29,6 +29,7 @@ const Header = styled.h1`
 const ItemContainer = styled.div`
   display: flex;
   align-items: center;
+  color: ${COLOR.DARK_COPY};
 `;
 
 const Label = styled.p`
@@ -69,15 +70,15 @@ const Link = styled.a`
   p {
     transition: color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
   }
-  svg {
-    transition: fill 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  i {
+    transition: color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
   }
   &:hover {
     p {
       color: ${COLOR.WHITE};
     }
-    svg {
-      fill: ${COLOR.WHITE};
+    i {
+      color: ${COLOR.WHITE};
     }
   }
   &:focus {
@@ -96,6 +97,26 @@ const LoadingImage = styled.img`
   padding-left: 10px;
 `;
 
+const Toggle = styled.div`
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
+  margin: 0 0 14px 14px;
+  padding: 16px;
+  background: ${COLOR.PRIMARY};
+  color: ${COLOR.DARK_COPY};
+
+  i {
+    ${(p) => p.showSidebar && 'transform: rotate(180deg);'}
+    transition: transform 0.2s linear;
+  }
+
+  &:hover {
+    color: ${COLOR.WHITE};
+    cursor: pointer;
+  }
+`;
+
 const getTrailingPath = (currentPath) => {
   const paths = window.location.href.split('/');
   const pathIndex = paths.findIndex((val) => val === currentPath);
@@ -111,6 +132,7 @@ const getTrailingPath = (currentPath) => {
 };
 
 export default ({ hackathons, currentPath }) => {
+  const [showSidebar, setShowSidebar] = useState(true);
   const [loading, setLoading] = useState(false);
   const [ifTimeOut, setIfTimeOut] = useState();
 
@@ -127,94 +149,116 @@ export default ({ hackathons, currentPath }) => {
     return `/${id}/${getTrailingPath(currentPath)}`;
   };
 
+  const clickToggle = () => {
+    setShowSidebar(!showSidebar);
+  };
+
   return (
-    <SidebarContainer>
-      <HeaderContainer>
-        <Header>nwPlus CMS</Header>
-        {loading && <LoadingImage src={LoadingGif} />}
-      </HeaderContainer>
-      <NextLink
-        href="/Livesite/announcements"
-        as="/Livesite/announcements"
-        passHref
-      >
-        <Link>
-          <ItemContainer>
-            <Live color={currentPath === 'Livesite' && COLOR.WHITE} />
-            <Label selected={currentPath === 'Livesite'}>Livesite</Label>
-          </ItemContainer>
-        </Link>
-      </NextLink>
-      <NextLink href="/faq" as="/faq" passHref>
+    <>
+      <SidebarContainer showSidebar={showSidebar}>
+        <HeaderContainer>
+          <Header>nwPlus CMS</Header>
+          {loading && <LoadingImage src={LoadingGif} />}
+        </HeaderContainer>
+        <NextLink
+          href="/Livesite/announcements"
+          as="/Livesite/announcements"
+          passHref
+        >
+          <Link>
+            <ItemContainer>
+              <Icon
+                color={currentPath === 'Livesite' && COLOR.WHITE}
+                icon="circle"
+              />
+              <Label selected={currentPath === 'Livesite'}>Livesite</Label>
+            </ItemContainer>
+          </Link>
+        </NextLink>
+        <NextLink href="/faq" as="/faq" passHref>
+          <Link
+            onClick={() => {
+              if (currentPath !== 'faq') {
+                setIfTimeOut(
+                  setTimeout(() => {
+                    setLoading(true);
+                  }, 750)
+                );
+              }
+            }}
+          >
+            <ItemContainer>
+              <Icon
+                color={currentPath === 'faq' && COLOR.WHITE}
+                icon="question-circle"
+              />
+              <Label selected={currentPath === 'faq'}>FAQs</Label>
+            </ItemContainer>
+          </Link>
+        </NextLink>
+        <ItemContainer>
+          <Icon
+            color={hackathons.includes(currentPath) && COLOR.WHITE}
+            icon="th-list"
+          />
+          <Label selected={hackathons.includes(currentPath)}>Websites</Label>
+        </ItemContainer>
+        {hackathons.map((id) => {
+          const href = generateLinkTemplate(id);
+          const link = generateLink(id);
+          return (
+            <NextLink key={id} href={href} as={link} passHref>
+              <IndentedLink
+                onClick={() => {
+                  if (currentPath !== id) {
+                    setIfTimeOut(
+                      setTimeout(() => {
+                        setLoading(true);
+                      }, 750)
+                    );
+                  }
+                }}
+                selected={currentPath === id}
+              >
+                {id}
+              </IndentedLink>
+            </NextLink>
+          );
+        })}
+
+        <NextLink href="/assessment" as="/assessment" passHref>
+          <Link>
+            <ItemContainer>
+              <Icon
+                color={currentPath === 'assessment' && COLOR.WHITE}
+                icon="user-check"
+              />
+              <Label selected={currentPath === 'assessment'}>Assessment</Label>
+            </ItemContainer>
+          </Link>
+        </NextLink>
+
         <Link
+          href="#!"
           onClick={() => {
-            if (currentPath !== 'faq') {
-              setIfTimeOut(
-                setTimeout(() => {
-                  setLoading(true);
-                }, 750)
-              );
-            }
+            setIfTimeOut(
+              setTimeout(() => {
+                setLoading(true);
+              }, 750)
+            );
+            logout();
           }}
         >
           <ItemContainer>
-            <FAQIcon color={currentPath === 'faq' && COLOR.WHITE} />
-            <Label selected={currentPath === 'faq'}>FAQs</Label>
+            <Icon icon="sign-out-alt" />
+            <Label>Logout</Label>
           </ItemContainer>
         </Link>
-      </NextLink>
-      <ItemContainer>
-        <Website color={hackathons.includes(currentPath) && COLOR.WHITE} />
-        <Label selected={hackathons.includes(currentPath)}>Websites</Label>
-      </ItemContainer>
-      {hackathons.map((id) => {
-        const href = generateLinkTemplate(id);
-        const link = generateLink(id);
-        return (
-          <NextLink key={id} href={href} as={link} passHref>
-            <IndentedLink
-              onClick={() => {
-                if (currentPath !== id) {
-                  setIfTimeOut(
-                    setTimeout(() => {
-                      setLoading(true);
-                    }, 750)
-                  );
-                }
-              }}
-              selected={currentPath === id}
-            >
-              {id}
-            </IndentedLink>
-          </NextLink>
-        );
-      })}
+      </SidebarContainer>
 
-      <NextLink href="/assessment" as="/assessment" passHref>
-        <Link>
-          <ItemContainer>
-            <Live color={currentPath === 'assessment' && COLOR.WHITE} />
-            <Label selected={currentPath === 'assessment'}>Assessment</Label>
-          </ItemContainer>
-        </Link>
-      </NextLink>
-
-      <Link
-        href="#!"
-        onClick={() => {
-          setIfTimeOut(
-            setTimeout(() => {
-              setLoading(true);
-            }, 750)
-          );
-          logout();
-        }}
-      >
-        <ItemContainer>
-          <Power />
-          <Label>Logout</Label>
-        </ItemContainer>
-      </Link>
-    </SidebarContainer>
+      <Toggle showSidebar={showSidebar} onClick={clickToggle}>
+        <Icon icon="chevron-right" />
+      </Toggle>
+    </>
   );
 };

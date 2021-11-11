@@ -1,34 +1,35 @@
 import React from 'react';
 import styled from 'styled-components';
-import EditIcon from './icons/edit';
-import NewIcon from './icons/new';
-import ViewIcon from './icons/view';
-import CloseIcon from './icons/close';
+import Icon from './Icon';
 import { COLOR, EDIT, VIEW, NEW, CLOSE, DELETE } from '../constants';
 
 const StyledButton = styled.button`
-  border: none;
+  ${(props) => props.outlined ? `border: 2px solid ${props.disabled ? COLOR.INACTIVE_DARK_GRAY : props.contentColor}` : `border: none`};
   font-family: 'HK Grotesk';
   font-weight: bold;
   ${(props) => props.isText && 'padding: 6px 24px; height: 40px;'}
   ${(props) =>
     !props.isText && props.contentColor === COLOR.BLACK && 'padding: 10px;'}
   ${(props) =>
-    props.color
-      ? `color: ${props.contentColor}; background: ${props.color};`
-      : `color: ${COLOR.WHITE}; background-color: ${COLOR.PRIMARY};`}
+    !props.disabled ? (
+      props.color
+        ? `color: ${props.contentColor}; background: ${props.color};`
+        : `color: ${COLOR.WHITE}; background-color: ${COLOR.PRIMARY};`
+    ) : (
+      `color: ${COLOR.INACTIVE_DARK_GRAY}; background: ${props.outlined ? COLOR.TRANSPARENT : COLOR.UNSELECTED_GRAY};`
+    )}
+  border-radius: ${(props) => props.rounded ? (props.inline ? '0 100px 100px 0' : '100px') : (props.inline ? '0 8px 8px 0' : '8px')};
   cursor: pointer;
   display: flex;
   align-items: center;
   font-size: 16px;
-  border-radius: ${(props) => (props.inline ? '0 3px 3px 0' : '3px')};
+  &:hover {
+    color: ${(props) => props.hoverContentColor};
+    background: ${(props) => props.hoverBackgroundColor};
+  }
 `;
 
-const StyledEditIcon = styled(EditIcon)`
-  ${(props) => props.hasText && 'margin-right: 8px;'}
-`;
-
-const StyledNewIcon = styled(NewIcon)`
+const StyledIcon = styled(Icon)`
   ${(props) => props.hasText && 'margin-right: 8px;'}
 `;
 
@@ -44,6 +45,11 @@ const Button = ({
   contentColor = COLOR.BLACK,
   onClick,
   inline = false,
+  hoverBackgroundColor,
+  hoverContentColor,
+  disabled = false,
+  outlined = false,
+  rounded = false
 }) => (
   <StyledButton
     isText={children && !type}
@@ -51,13 +57,18 @@ const Button = ({
     color={color}
     contentColor={contentColor}
     inline={inline}
+    hoverBackgroundColor={hoverBackgroundColor}
+    hoverContentColor={hoverContentColor}
+    disabled={disabled}
+    outlined={outlined}
+    rounded={rounded}
   >
-    {type === EDIT && !color && <StyledEditIcon hasText={children} />}
-    {type === EDIT && color && <EditIcon color={COLOR.BLACK} />}
-    {type === NEW && <StyledNewIcon hasText={children} />}
-    {type === VIEW && <ViewIcon />}
-    {type === DELETE && <CloseIcon />}
-    {type === CLOSE && <CloseIcon color={contentColor} />}
+    {type === EDIT && !color && <StyledIcon hasText={children} icon='edit' />}
+    {type === EDIT && color && <Icon color={COLOR.BLACK} icon='edit' />}
+    {type === NEW && <StyledIcon hasText={children} icon='plus' />}
+    {type === VIEW && <Icon icon='search' />}
+    {type === DELETE && <Icon icon='times' color={'red'} />}
+    {type === CLOSE && <Icon icon='times' color={contentColor} />}
     {children}
   </StyledButton>
 );

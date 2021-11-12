@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-// import styled from 'styled-components';
 import Page from '../components/page';
 import Table from '../components/Assessment/Table';
 import ToolBar from '../components/Assessment/toolbar';

@@ -202,6 +202,11 @@ export default ({ hackathons }) => {
                 <Label>Active Hackathon</Label>
                 <HackathonChooser />
               </Group>
+              <Label>Live Portal Link</Label>
+              <Input
+                value={livesiteData.livePortalLink}
+                onChange={(e) => handleChange('livePortalLink', e)}
+              />
               <Label>Application Deadline (copy)</Label>
               <Input
                 value={livesiteData.applicationDeadline}
@@ -273,6 +278,10 @@ export default ({ hackathons }) => {
               <Group>
                 <Label>Active Hackathon</Label>
                 {livesiteData.activeHackathon}
+              </Group>
+              <Group>
+                <Label>Live Portal Link</Label>
+                {livesiteData.livePortalLink}
               </Group>
               <Group>
                 <Label>Application Deadline (copy)</Label>

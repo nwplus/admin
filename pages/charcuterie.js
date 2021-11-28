@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Button from '../components/button';
 import Tag from '../components/tag';
+import ScoreInput from '../components/scoreInput';
 import { COLOR, BUTTON_COLOR } from '../constants';
 
 const Container = styled.div`
@@ -208,6 +209,18 @@ export default function Charcuterie() {
                     <TagContainer>
                         <Tag type='DELETE' color={COLOR.BRIGHT_RED} contentColor={COLOR.WHITE} onDelete={e=>alert('delete')}>Delete World</Tag>
                     </TagContainer>
+                </Row>
+            </Section>
+
+            <Section>
+                <Row>
+                    <ScoreInput
+                        label="Sample Label"
+                        score={3}
+                        comment="Sample comment"
+                        handleClick={() => {}}
+                        handleTextChange={() => {}}
+                        maxScore={{value: 7, weight: 1}}/>
                 </Row>
             </Section>
         </Container>

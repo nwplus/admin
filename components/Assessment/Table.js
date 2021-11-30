@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { APPLICATION_STATUS, COLOR, MAX_SCORE } from '../../constants';
+import { APPLICATION_STATUS, ASSESSMENT_COLOR, MAX_SCORE } from '../../constants';
 import ApplicantResponse from './applicantResponse';
 import ApplicantScore from './applicantScore';
 import Tag from './Tag';
@@ -18,29 +18,16 @@ const styles = {
   selectedHackerContainer: {},
 };
 
-const UnselectedName = styled.p`
+const HackerName = styled.p`
   font-size: 16px;
-  color: ${COLOR.DARK_GRAY};
-  margin: 0px;
-  font-weight: bold;
-`;
-
-const SelectedName = styled.p`
-  font-size: 16px;
-  color: ${COLOR.BLUE_TEXT};
+  color: ${ASSESSMENT_COLOR.DARK_GRAY};
   margin: 0px;
   font-weight: bold;
 `;
 
 const LightGrayText = styled.p`
   font-size: 16px;
-  color: ${COLOR.LIGHT_GRAY};
-  margin: 0px;
-`;
-
-const BlueText = styled.p`
-  font-size: 16px;
-  color: ${COLOR.BLUE_TEXT};
+  color: ${ASSESSMENT_COLOR.LIGHT_GRAY};
   margin: 0px;
 `;
 
@@ -53,17 +40,17 @@ const SelectedRowDiv = styled.div`
   display: flex;
   padding: 10px 16px 6px 16px;
   cursor: pointer;
-  background: ${COLOR.LIGHT_BLUE};
+  background: ${ASSESSMENT_COLOR.LIGHT_BLUE};
 `;
 
 const Scored = styled.p`
-  color: ${COLOR.LIGHT_GRAY};
+  color: ${ASSESSMENT_COLOR.LIGHT_GRAY};
   font-size: 16px;
   margin: 0px;
 `;
 
 const Unscored = styled.p`
-  color: ${COLOR.UNSCORED_GRAY};
+  color: ${ASSESSMENT_COLOR.UNSCORED_GRAY};
   font-size: 16px;
   margin: 0px;
 `;
@@ -80,12 +67,12 @@ export default function Table(props) {
     return selectedHacker.basicInfo === rowProp.hacker.basicInfo ? (
       <SelectedRowDiv onClick={() => selectHacker(rowProp.hacker)}>
         <div style={styles.nameEmailContainer}>
-          <SelectedName>
+          <HackerName>
             {rowProp.hacker.basicInfo.firstName}{' '}
             {rowProp.hacker.basicInfo.lastName}{' '}
             <Tag {...APPLICATION_STATUS[appStatus]} />
-          </SelectedName>
-          <BlueText>{rowProp.hacker.basicInfo.email}</BlueText>
+          </HackerName>
+          <LightGrayText>{rowProp.hacker.basicInfo.email}</LightGrayText>
         </div>
         <div style={styles.indexScoreContainer}>
           <LightGrayText>{rowProp.index}</LightGrayText>
@@ -101,11 +88,11 @@ export default function Table(props) {
     ) : (
       <UnselectedRowDiv onClick={() => selectHacker(rowProp.hacker)}>
         <div style={styles.nameEmailContainer}>
-          <UnselectedName>
+          <HackerName>
             {rowProp.hacker.basicInfo.firstName}{' '}
             {rowProp.hacker.basicInfo.lastName}{' '}
             <Tag {...APPLICATION_STATUS[appStatus]} />
-          </UnselectedName>
+          </HackerName>
           <LightGrayText>{rowProp.hacker.basicInfo.email}</LightGrayText>
         </div>
         <div style={styles.indexScoreContainer}>
@@ -132,18 +119,18 @@ export default function Table(props) {
     return (
       <UnselectedRowDiv>
         <div style={styles.nameEmailContainer}>
-          <UnselectedName>
+          <HackerName>
             {graded}/{props.displayedHackers.length}{' '}
             {props.displayedHackers.length === 1
               ? 'Hacker graded'
               : 'Hackers graded'}
-          </UnselectedName>
-          <UnselectedName>
+          </HackerName>
+          <HackerName>
             {accepted}/{props.displayedHackers.length}{' '}
             {props.displayedHackers.length === 1
               ? 'Hacker accepted'
               : 'Hackers accepted'}
-          </UnselectedName>
+          </HackerName>
         </div>
       </UnselectedRowDiv>
     );

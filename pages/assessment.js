@@ -8,7 +8,7 @@ import { getAllApplicants, getHackathons } from '../utility/firebase';
 import styled from 'styled-components';
 
 const ToggleBarContainer = styled.div`
-    display: flex;
+    display: flex; 
     flex-direction: row;
     background-color: #433860;
 `;

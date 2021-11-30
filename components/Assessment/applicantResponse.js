@@ -67,7 +67,7 @@ export default function ApplicantResponse(props) {
       <div style={{ paddingTop: '10px', paddingBottom: '30px' }}>
         <ResponseInput
           label="Full name"
-          response={`${hacker.basicInfo?.firstName} ${hacker.basicInfo.lastName}`}
+          response={`${hacker.basicInfo?.firstName} ${hacker.basicInfo?.lastName}`}
         />
         <ResponseInput label="Email" response={hacker.basicInfo?.email} />
         <ResponseInput

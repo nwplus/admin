@@ -75,6 +75,11 @@ export const APPLICATION_STATUS = {
     textColor: 'white',
     text: 'accepted',
   },
+  completed: {
+    color: COLOR.MIDNIGHT_PURPLE,
+    textColor: 'white',
+    text: 'completed',
+  },
 };
 
 export const ASSESSMENT_COLOR = {

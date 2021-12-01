@@ -88,10 +88,6 @@ export default function ApplicantResponse(props) {
           response={hacker.basicInfo?.location}
         />
         <ResponseInput
-          label="Hackathons Attended"
-          response={hacker.basicInfo.hackathonsAttended}
-        />
-        <ResponseInput
           label="Last Updated"
           response={moment(hacker.submission?.lastUpdated.toDate()).format(
             'dddd, MMMM Do, YYYY h:mm:ss A'
@@ -129,6 +125,10 @@ export default function ApplicantResponse(props) {
   function ResumeTab() {
     return (
       <div style={{ paddingTop: '10px' }}>
+        <ResponseInput
+          label="Hackathons Attended"
+          response={hacker.skills?.hackathonsAttended}
+        />
         <ResponseInput label="Resume" response={ResumeLink()} />
         <ResponseInput
           url
@@ -149,15 +149,26 @@ export default function ApplicantResponse(props) {
           openable
           label={
             <div>
-              Long answers which are either
+              Long answer question 1
               <br />
-              1. Describe how you became interested in the world of technology
-              and where you hope to go from here on out!
-              <br />
-              2. How would you like to challenge yourself during this hackathon?
+              1. What should technology be used for?
             </div>
           }
-          response={props.hacker.skills.longAnswers}
+          response={props.hacker.skills.longAnswers1}
+        />
+        <ResponseInput
+          openable
+          label={
+            <div>
+              Long answer 2 which is either
+              <br />
+              1. How would you like to challenge yourself during this hackathon?
+              <br />
+              2. Describe a time where you went above and beyond of your role to
+              demonstrate leadership in a project.
+            </div>
+          }
+          response={props.hacker.skills.longAnswers2}
         />
       </div>
     );
@@ -175,11 +186,6 @@ export default function ApplicantResponse(props) {
     }
     return <div> WIP </div>;
   }
-
-  // {Object.entriesprops.map((id, data) => {
-  //     return (
-  //     <div key={id}> {data.comment} by {data.by} </div>
-  //         )
-  //     })
-  // }
 }
+
+//[TODO] update this with stuff from firebase

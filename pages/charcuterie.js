@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Button from '../components/button';
+import { Title1, Title2, Title3, Title4 } from '../components/Typography';
 import Tag from '../components/tag';
 import { COLOR, BUTTON_COLOR } from '../constants';
 
@@ -208,6 +209,30 @@ export default function Charcuterie() {
                     <TagContainer>
                         <Tag type='DELETE' color={COLOR.BRIGHT_RED} contentColor={COLOR.WHITE} onDelete={e=>alert('delete')}>Delete World</Tag>
                     </TagContainer>
+                </Row>
+            </Section>
+
+            {/* Typography */}
+            <Section>
+                <Row>
+                    <Title1>
+                        Header1
+                    </Title1>
+                </Row>
+                <Row>
+                    <Title2>
+                        Header2
+                    </Title2>
+                </Row>
+                <Row>
+                    <Title3>
+                        Header3
+                    </Title3>
+                </Row>
+                <Row>
+                    <Title4>
+                        Header4
+                    </Title4>
                 </Row>
             </Section>
         </Container>

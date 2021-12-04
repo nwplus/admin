@@ -80,7 +80,7 @@ export default function Events({ hackathons }) {
     newEvent.lastModifiedBy = user;
     newEvent.startTime = new Date(newEvent.startTime).toISOString();
     newEvent.endTime = new Date(newEvent.endTime).toISOString();
-    newEvent.type = 'main';
+    newEvent.type = newEvent.type ?? 'main';
     const eventID = await addLivesiteEvent(activeHackathon, { ...newEvent });
     newEvent.lastModified = formatDate(getTimestamp().seconds);
     setEvents({

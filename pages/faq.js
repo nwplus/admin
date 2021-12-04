@@ -132,7 +132,7 @@ export default function Faq({ hackathons }) {
   }, [alertMsg]);
 
   const handleNew = async () => {
-    newFaq.category = newFaq.category ? newFaq.category : FAQCategory.GENERAL;
+    newFaq.category = newFaq.category ?? FAQCategory.GENERAL;
     newFaq.lastModifiedBy = user;
     const faqID = await addFaq(newFaq);
     newFaq.lastModified = formatDate(getTimestamp().seconds);
@@ -336,8 +336,13 @@ export default function Faq({ hackathons }) {
               <ModalField
                 label="Category"
                 modalAction={NEW}
-                onChange={(category) => {
-                  handleInput('category', category.label, newFaq, setNewFaq);
+                onChange={(event) => {
+                  handleInput(
+                    'category',
+                    event.target.value,
+                    newFaq,
+                    setNewFaq
+                  );
                 }}
                 value={FAQCategory.GENERAL}
               />

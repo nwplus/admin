@@ -80,6 +80,7 @@ export default function Events({ hackathons }) {
     newEvent.lastModifiedBy = user;
     newEvent.startTime = new Date(newEvent.startTime).toISOString();
     newEvent.endTime = new Date(newEvent.endTime).toISOString();
+    newEvent.category = newEvent.category ?? 'main';
     const eventID = await addLivesiteEvent(activeHackathon, { ...newEvent });
     newEvent.lastModified = formatDate(getTimestamp().seconds);
     setEvents({
@@ -97,7 +98,6 @@ export default function Events({ hackathons }) {
     eventEditing.lastModified = user;
     eventEditing.startTime = new Date(eventEditing.startTime).toISOString();
     eventEditing.endTime = new Date(eventEditing.endTime).toISOString();
-    eventEditing.category = eventEditing.category ?? 'main';
     await updateLivesiteEvent(activeHackathon, { ...eventEditing });
     eventEditing.lastModified = formatDate(getTimestamp().seconds);
     setEvents({

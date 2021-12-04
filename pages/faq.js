@@ -336,8 +336,13 @@ export default function Faq({ hackathons }) {
               <ModalField
                 label="Category"
                 modalAction={NEW}
-                onChange={(category) => {
-                  handleInput('category', category.label, newFaq, setNewFaq);
+                onChange={(event) => {
+                  handleInput(
+                    'category',
+                    event.target.value,
+                    newFaq,
+                    setNewFaq
+                  );
                 }}
                 value={FAQCategory.GENERAL}
               />

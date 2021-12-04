@@ -97,6 +97,7 @@ export default function Events({ hackathons }) {
     eventEditing.lastModified = user;
     eventEditing.startTime = new Date(eventEditing.startTime).toISOString();
     eventEditing.endTime = new Date(eventEditing.endTime).toISOString();
+    eventEditing.category = eventEditing.category ?? 'main';
     await updateLivesiteEvent(activeHackathon, { ...eventEditing });
     eventEditing.lastModified = formatDate(getTimestamp().seconds);
     setEvents({

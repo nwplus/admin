@@ -63,7 +63,6 @@ export default function ApplicantScore(props) {
     switch (label) {
       case 'Resume/LinkedIn':
         await updateApplicantScore(
-          'nwHacks2021',
           props.hacker._id,
           {
             ...score,
@@ -74,7 +73,6 @@ export default function ApplicantScore(props) {
         break;
       case 'Written Response Score':
         await updateApplicantScore(
-          'nwHacks2021',
           props.hacker._id,
           {
             ...score,

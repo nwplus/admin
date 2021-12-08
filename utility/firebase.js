@@ -31,6 +31,7 @@ const Hackathons = 'Hackathons';
 const InternalWebsitesCollection = 'InternalWebsites';
 const CMSCollection = 'CMS';
 const LivesiteCollection = 'Livesite';
+const HackerEvaluationHackathon = 'nwHacks2022';
 
 export const getTimestamp = () => {
   return firebase.firestore.Timestamp.now();
@@ -596,10 +597,10 @@ export const deleteProject = async (hackathon, id) => {
 };
 
 // Asessment portal
-export const getAllApplicants = async (website, callback) => {
+export const getAllApplicants = async (callback) => {
   return db
     .collection('Hackathons')
-    .doc(website) // hardcode for event
+    .doc(HackerEvaluationHackathon)
     .collection('Applicants')
     .where('status.applicationStatus', '!=', 'inProgress')
     .onSnapshot((snap) => {
@@ -610,7 +611,7 @@ export const getAllApplicants = async (website, callback) => {
 export const getApplicantsToAccept = async (score) => {
   const applicants = await db
     .collection('Hackathons')
-    .doc('nwHacks2021')
+    .doc(HackerEvaluationHackathon)
     .collection('Applicants')
     .where('score.totalScore', '>=', score - 1)
     .get();
@@ -628,7 +629,7 @@ export const getApplicantsToAccept = async (score) => {
 export const getCSVData = async () => {
   const apps = await db
     .collection('Hackathons')
-    .doc('nwHacks2021') // hardcode for event
+    .doc(HackerEvaluationHackathon)
     .collection('Applicants')
     .get();
   const CSV = apps.docs.map((doc) => {
@@ -692,7 +693,7 @@ export const getResumeFile = async (userId) => {
 export const getAllResumes = async () => {
   const apps = await db
     .collection('Hackathons')
-    .doc('nwHacks2021') // hardcode for event
+    .doc(HackerEvaluationHackathon)
     .collection('Applicants')
     .where('status.applicationStatus', '!=', 'inProgress')
     .get();
@@ -737,15 +738,10 @@ function calculateTotalScore(hackerScore) {
   return Object.values(hackerScore).reduce(reducer);
 }
 
-export const updateApplicantScore = async (
-  website,
-  applicantID,
-  object,
-  adminEmail
-) => {
+export const updateApplicantScore = async (applicantID, object, adminEmail) => {
   const totalScore = calculateTotalScore(object);
   db.collection('Hackathons')
-    .doc(website) // hardcode for event
+    .doc(HackerEvaluationHackathon)
     .collection('Applicants')
     .doc(applicantID)
     .update({
@@ -763,7 +759,7 @@ export const updateApplicantScore = async (
 export const updateApplicantStatus = async (userId, applicationStatus) => {
   return db
     .collection('Hackathons')
-    .doc('nwHacks2021') // hardcode for event
+    .doc(HackerEvaluationHackathon)
     .collection('Applicants')
     .doc(userId)
     .update({

@@ -3,13 +3,13 @@ import styled from 'styled-components'
 import { COLOR } from '../constants'
 
 const Circle = styled.div`
-  background-color: ${props => (props.active ? `${COLOR.BLUE_TEXT}` : `white`)};
+  background-color: ${props => (props.active ? `${COLOR.MIDNIGHT_PURPLE}` : `white`)};
   margin-right: 10px;
   border-radius: 50%;
-  border: 3px solid ${COLOR.BLUE_TEXT};
+  border: 3px solid ${COLOR.MIDNIGHT_PURPLE};
   width: 33px;
   height: 33px;
-  color: ${props => (props.active ? `white` : `${COLOR.BLUE_TEXT}`)};
+  color: ${props => (props.active ? `white` : `${COLOR.MIDNIGHT_PURPLE}`)};
   display: inline-flex;
   align-items: center;
   justify-content: center;

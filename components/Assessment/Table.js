@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { APPLICATION_STATUS, COLOR, MAX_SCORE } from '../../constants';
 import ApplicantResponse from './applicantResponse';
@@ -70,6 +70,7 @@ const Unscored = styled.p`
 
 export default function Table(props) {
   const { selectedHacker } = props;
+  const [existingTags, SetExistingTags] = useState([]); //[TODO] remove this and implement in firebase instead
 
   const selectHacker = (hacker) => {
     props.setSelectedHacker(hacker);
@@ -161,7 +162,9 @@ export default function Table(props) {
       </div>
       {Object.keys(selectedHacker).length !== 0 ? (
         <>
-          <ApplicantScore hacker={selectedHacker} style={{ flex: 1 }} />
+        {/* remember to change this depending on the firebase design [TODO] */}
+          <ApplicantScore hacker={selectedHacker} style={{ flex: 1 }}
+            existingTags={existingTags} SetExistingTags={SetExistingTags}/>
           <ApplicantResponse
             setSelectedHacker={props.setSelectedHacker}
             hacker={selectedHacker}

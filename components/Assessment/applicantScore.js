@@ -31,7 +31,8 @@ const Summary = styled.div`
 `;
 
 export default function ApplicantScore(props) {
-  const { hacker } = props;
+  const { hacker, existingTags, SetExistingTags } = props;
+  const [applicantTags, SetApplicantTags] = useState([]);
   const [hasScore, setHasScore] = useState(false);
 
   const appStatus = hacker.status.applicationStatus;

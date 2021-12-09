@@ -5,6 +5,7 @@ import { Title1, Title2, Title3, Title4 } from '../components/Typography';
 import Tag from '../components/tag';
 import ScoreInput from '../components/scoreInput';
 import { COLOR, BUTTON_COLOR } from '../constants';
+import AddTagButton from '../components/assessment/AddTagButton';
 
 const Container = styled.div`
     background-color: ${COLOR.MIDNIGHT_PURPLE};
@@ -235,6 +236,12 @@ export default function Charcuterie() {
                       <Title4>
                           Header4
                       </Title4>
+                  </Row>
+              </Section>
+
+              <Section>
+                  <Row>
+                    <AddTagButton/>
                   </Row>
               </Section>
 

@@ -1,11 +1,11 @@
 // this is the third sidebar for the scoring page
 
-import React, { useState, useEffect } from 'react';
-import moment from 'moment';
-import styled from 'styled-components';
-import ResponseInput from './responseInput';
-import { ASSESSMENT_COLOR, TABS } from '../../constants';
-import { getResumeFile } from '../../utility/firebase';
+import React, { useState, useEffect } from "react";
+import moment from "moment";
+import styled from "styled-components";
+import ResponseInput from "./responseInput";
+import { ASSESSMENT_COLOR, TABS } from "../../constants";
+import { getResumeFile } from "../../utility/firebase";
 
 const Main = styled.div`
   padding: 20px;
@@ -64,7 +64,7 @@ export default function ApplicantResponse(props) {
 
   function OverviewTab() {
     return (
-      <div style={{ paddingTop: '10px', paddingBottom: '30px' }}>
+      <div style={{ paddingTop: "10px", paddingBottom: "30px" }}>
         <ResponseInput
           label="Full name"
           response={`${hacker.basicInfo?.firstName} ${hacker.basicInfo?.lastName}`}
@@ -76,7 +76,7 @@ export default function ApplicantResponse(props) {
         />
         <ResponseInput
           label="19 or over?"
-          response={hacker.basicInfo?.isOfLegalAge ? 'yes' : 'no'}
+          response={hacker.basicInfo?.isOfLegalAge ? "yes" : "no"}
         />
         <ResponseInput
           label="School"
@@ -90,7 +90,7 @@ export default function ApplicantResponse(props) {
         <ResponseInput
           label="Last Updated"
           response={moment(hacker.submission?.lastUpdated.toDate()).format(
-            'dddd, MMMM Do, YYYY h:mm:ss A'
+            "dddd, MMMM Do, YYYY h:mm:ss A"
           )}
         />
       </div>
@@ -124,7 +124,7 @@ export default function ApplicantResponse(props) {
 
   function ResumeTab() {
     return (
-      <div style={{ paddingTop: '10px' }}>
+      <div style={{ paddingTop: "10px" }}>
         <ResponseInput
           label="Hackathons Attended"
           response={hacker.skills?.hackathonsAttended}
@@ -187,5 +187,3 @@ export default function ApplicantResponse(props) {
     return <div> WIP </div>;
   }
 }
-
-//[TODO] update this with stuff from firebase

@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
 import Page from '../components/page';
 import Table from '../components/Assessment/Table';
 import ToolBar from '../components/Assessment/toolbar';
 import ToggleButton from '../components/toggleButton';
 import { APPLICATION_STATUS, SORT } from '../constants';
 import { getAllApplicants, getHackathons } from '../utility/firebase';
-import styled from 'styled-components';
 
 const ToggleBarContainer = styled.div`
-    display: flex; 
-    flex-direction: row;
-    background-color: #433860;
+  display: flex;
+  flex-direction: row;
+  background-color: #433860;
 `;
 
 const sort = (arr, type) => {
@@ -69,7 +69,7 @@ export default function Assessment({ hackathons }) {
   const [isViewAllApplicants, setIsViewAllApplicants] = useState(false);
 
   useEffect(() => {
-    getAllApplicants('nwHacks2021', setHackers);
+    getAllApplicants(setHackers);
   }, []);
 
   useEffect(() => {
@@ -116,23 +116,23 @@ export default function Assessment({ hackathons }) {
         <>
           <Page hackathons={hackathons} currentPath="assessment">
             <ToggleBarContainer>
-              <ToggleButton leftText="Admin" rightText="Personal" isLeftSelected={isAdminView} setIsLeftSelected={setIsAdminView} />
+            <ToggleButton leftText="Admin" rightText="Personal" isLeftSelected={isAdminView} setIsLeftSelected={setIsAdminView} />
               <ToggleButton leftText="View All" rightText="Assigned Only" isLeftSelected={isViewAllApplicants} setIsLeftSelected={setIsViewAllApplicants} />
             </ToggleBarContainer>
             {isViewAllApplicants ? <span>view all applicants place holder <br /> </span> : <span>view assigned only place holder <br /> </span>}
             {/* conditionally render the assignment and scoring pages here based on isAdminView */}
             {isAdminView ? <span>Assignment page placeholder</span> : <span>Scoring page placeholder</span>}
             <ToolBar
-                  search={setSearch}
-                  reverse={setReverse}
-                  sort={setSortType}
-                  reversed={reverse}
-                />
-                <Table
-                  displayedHackers={displayedHackers}
-                  selectedHacker={selectedHacker}
-                  setSelectedHacker={setSelectedHacker}
-                />                
+              search={setSearch}
+              reverse={setReverse}
+              sort={setSortType}
+              reversed={reverse}
+            />
+            <Table
+              displayedHackers={displayedHackers}
+              selectedHacker={selectedHacker}
+              setSelectedHacker={setSelectedHacker}
+            />
           </Page>
         </>
       )}

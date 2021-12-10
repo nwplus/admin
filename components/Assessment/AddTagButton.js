@@ -32,7 +32,11 @@ function AddedTags({ tags }) {
     <ExistingTagContainer>
       {tags &&
         tags.map((tag) => (
-          <Tag color={tag.color} contentColor={COLOR.WHITE}>
+          <Tag
+            color={tag.color}
+            contentColor={COLOR.WHITE}
+            onDelete={(e) => alert("delete")} //[TODO] finish this delete handler
+          >
             {tag.text}
           </Tag>
         ))}

@@ -5,11 +5,18 @@ import Button from "../button";
 import Spinner from "../../assets/spinner.svg";
 import Tag from "../../assets/tag.svg";
 
-
 const TagAreaContainer = styled.div``;
 
 const TagButtonContainer = styled.div`
   display: flex;
+  align-items: center;
+  gap: 5px;
+`;
+
+const TagIcon = styled.img`
+  width: "18px";
+  height: "11.5px";
+  margin: "0 0 2px 0";
 `;
 
 export default function AddTagButton() {
@@ -23,29 +30,15 @@ export default function AddTagButton() {
         }}
       >
         <TagButtonContainer>
+          <TagIcon src={Tag} alt="loading" />
           Add Tag
-          <img
-            src={Tag}
-            style={{
-              width: "30px",
-              height: "30px",
-            }}
-            alt="loading"
-          />
-          {loading && (
-            <img
-              src={Spinner}
-              style={{
-                position: "absolute",
-                width: "30px",
-                height: "30px",
-                right: "10px",
-              }}
-              alt="loading"
-            />
-          )}
         </TagButtonContainer>
       </Button>
     </TagAreaContainer>
   );
 }
+
+// question
+// 1. what is the default font color
+// 2. change the colors of default
+// 3. how to view the color easily

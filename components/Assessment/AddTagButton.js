@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import styled from "styled-components";
 
 import Button from "../button";
-import Spinner from "../../assets/spinner.svg";
-import Tag from "../../assets/tag.svg";
+import Tag from "../tag";
+import TagIconSrc from "../../assets/tag.svg";
+import { ASSESSMENT_COLOR, COLOR } from "../../constants";
 
 const TagAreaContainer = styled.div``;
 
@@ -19,9 +20,27 @@ const TagIcon = styled.img`
   margin: "0 0 2px 0";
 `;
 
+const ExistingTagContainer = styled.div``;
+
+function AddedTags({ tags }) {
+  return (
+    <ExistingTagContainer>
+      {tags &&
+        tags.map((tag) => (
+          <Tag color={tag.color} contentColor={COLOR.WHITE}>
+            {tag.text}
+          </Tag>
+        ))}
+    </ExistingTagContainer>
+  );
+}
+
 export default function AddTagButton() {
   return (
     <TagAreaContainer>
+      <AddedTags
+        tags={[{ text: "testing tag", color: ASSESSMENT_COLOR.RED }]}
+      />
       <Button
         color="white"
         onClick={async () => {
@@ -30,7 +49,7 @@ export default function AddTagButton() {
         }}
       >
         <TagButtonContainer>
-          <TagIcon src={Tag} alt="loading" />
+          <TagIcon src={TagIconSrc} alt="loading" />
           Add Tag
         </TagButtonContainer>
       </Button>
@@ -38,7 +57,3 @@ export default function AddTagButton() {
   );
 }
 
-// question
-// 1. what is the default font color
-// 2. change the colors of default
-// 3. how to view the color easily

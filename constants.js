@@ -34,8 +34,8 @@ export const BUTTON_COLOR = {
   SECONDARY: '#FFFFFF',
   OUTLINE: 'Transparent',
   DESTRUCTIVE: '#F65C5C',
-  HOVER_PRIMARY: 'linear-gradient(90deg, #D7FFF0 0%, #7BFFCF 100%)'
-}
+  HOVER_PRIMARY: 'linear-gradient(90deg, #D7FFF0 0%, #7BFFCF 100%)',
+};
 export const FAQ = 'FAQ';
 export const FAQCategory = Object.freeze({
   GENERAL: 'General',

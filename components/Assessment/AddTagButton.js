@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import styled from "styled-components";
+import React, { useState } from 'react';
+import styled from 'styled-components';
 
-import Button from "../button";
-import Tag from "../tag";
-import TagIconSrc from "../../assets/tag.svg";
-import { ASSESSMENT_COLOR, COLOR } from "../../constants";
+import Button from '../button';
+import Tag from '../tag';
+import TagIconSrc from '../../assets/tag.svg';
+import { ASSESSMENT_COLOR, COLOR } from '../../constants';
 
-const TagAreaContainer = styled.div``;
+import AddTagModal from './AddTagModal';
 
 const TagButtonContainer = styled.div`
   display: flex;
@@ -15,9 +15,9 @@ const TagButtonContainer = styled.div`
 `;
 
 const TagIcon = styled.img`
-  width: "18px";
-  height: "11.5px";
-  margin: "0 0 2px 0";
+  width: '18px';
+  height: '11.5px';
+  margin: '0 0 2px 0';
 `;
 
 const ExistingTagContainer = styled.div`
@@ -36,7 +36,7 @@ function AddedTags({ tags }) {
             type="DELETE"
             color={tag.color}
             contentColor={COLOR.WHITE}
-            onDelete={(e) => alert("delete")} //[TODO] finish this delete handler
+            onDelete={(e) => alert('delete')} // [TODO] finish this delete handler
           >
             {tag.text}
           </Tag>
@@ -46,26 +46,23 @@ function AddedTags({ tags }) {
 }
 
 export default function AddTagButton() {
+  const [showTagModal, setShowTagModal] = useState(false);
+
   return (
-    <TagAreaContainer>
+    <>
       <AddedTags
         tags={[
-          { text: "testing tag", color: ASSESSMENT_COLOR.RED },
-          { text: "seattle bus", color: ASSESSMENT_COLOR.BLUE_TEXT },
+          { text: 'testing tag', color: ASSESSMENT_COLOR.RED },
+          { text: 'seattle bus', color: ASSESSMENT_COLOR.BLUE_TEXT },
         ]}
       />
-      <Button
-        color="white"
-        onClick={async () => {
-          isWindows.alert("You want to add tag!");
-          //[TODO] this event should open the modal
-        }}
-      >
+      <Button color="white" onClick={() => setShowTagModal(true)}>
         <TagButtonContainer>
           <TagIcon src={TagIconSrc} alt="loading" />
           Add Tag
         </TagButtonContainer>
       </Button>
-    </TagAreaContainer>
+      {showTagModal && <AddTagModal setShowing={setShowTagModal} />}
+    </>
   );
 }

@@ -33,6 +33,7 @@ function AddedTags({ tags }) {
       {tags &&
         tags.map((tag) => (
           <Tag
+            type="DELETE"
             color={tag.color}
             contentColor={COLOR.WHITE}
             onDelete={(e) => alert("delete")} //[TODO] finish this delete handler

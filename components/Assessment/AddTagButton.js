@@ -20,7 +20,12 @@ const TagIcon = styled.img`
   margin: "0 0 2px 0";
 `;
 
-const ExistingTagContainer = styled.div``;
+const ExistingTagContainer = styled.div`
+  padding: 24px 24px 8px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+`;
 
 function AddedTags({ tags }) {
   return (
@@ -39,7 +44,10 @@ export default function AddTagButton() {
   return (
     <TagAreaContainer>
       <AddedTags
-        tags={[{ text: "testing tag", color: ASSESSMENT_COLOR.RED }]}
+        tags={[
+          { text: "testing tag", color: ASSESSMENT_COLOR.RED },
+          { text: "seattle bus", color: ASSESSMENT_COLOR.BLUE_TEXT },
+        ]}
       />
       <Button
         color="white"
@@ -56,4 +64,3 @@ export default function AddTagButton() {
     </TagAreaContainer>
   );
 }
-

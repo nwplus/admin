@@ -1,25 +1,37 @@
 import React, { useState } from "react";
-import { Button } from "./Button";
-import Spinner from "../../assets/spinner.svg";
 import styled from "styled-components";
+
+import Button from "../button";
+import Spinner from "../../assets/spinner.svg";
+import Tag from "../../assets/tag.svg";
+
 
 const TagAreaContainer = styled.div``;
 
+const TagButtonContainer = styled.div`
+  display: flex;
+`;
+
 export default function AddTagButton() {
-  const [loading, setLoading] = useState(false);
   return (
     <TagAreaContainer>
       <Button
-        width="large"
-        bColor="black"
+        color="white"
         onClick={async () => {
-          setLoading(true);
-          await getAllResumes();
-          setLoading(false);
+          isWindows.alert("You want to add tag!");
+          //[TODO] this event should open the modal
         }}
       >
-        <div style={{ position: "relative", textAlign: "center" }}>
-          Download Resumes{" "}
+        <TagButtonContainer>
+          Add Tag
+          <img
+            src={Tag}
+            style={{
+              width: "30px",
+              height: "30px",
+            }}
+            alt="loading"
+          />
           {loading && (
             <img
               src={Spinner}
@@ -32,7 +44,7 @@ export default function AddTagButton() {
               alt="loading"
             />
           )}
-        </div>
+        </TagButtonContainer>
       </Button>
     </TagAreaContainer>
   );

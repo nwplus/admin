@@ -238,6 +238,18 @@ export default ({ hackathons, currentPath }) => {
           </Link>
         </NextLink>
 
+        <NextLink href="/eval" as="/eval" passHref>
+          <Link>
+            <ItemContainer>
+              <Icon
+                color={currentPath === 'eval' && COLOR.WHITE}
+                icon="user-check"
+              />
+              <Label selected={currentPath === 'eval'}>Evaluator</Label>
+            </ItemContainer>
+          </Link>
+        </NextLink>
+
         <Link
           href="#!"
           onClick={() => {

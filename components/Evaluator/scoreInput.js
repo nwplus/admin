@@ -2,7 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Number from './numberIcon';
-import { ASSESSMENT_COLOR } from '../constants';
+import { ASSESSMENT_COLOR } from '../../constants';
 
 const Container = styled.div`
   padding-bottom: 12px;

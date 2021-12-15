@@ -36,7 +36,7 @@ const StyledTextInput = styled.input`
   ${Padding}
     ${BorderRadius}
     ${FontSize}
-    border: 1px solid transparent;
+    border: 1px solid ${COLOR.GREY_500};
   color: ${(p) =>
     p.darkMode
       ? p.isPrefilled
@@ -76,6 +76,7 @@ const TextField = ({
   prefillValue,
   customValue,
   onChangeCustomValue,
+  placeholder,
 }) => {
   return (
     <StyledTextField darkMode={darkModeEnabled}>
@@ -96,6 +97,7 @@ const TextField = ({
           darkMode={darkModeEnabled}
           disabled={prefillValue}
           isPrefilled={prefillValue}
+          placeholder={placeholder}
         />
       )}
     </StyledTextField>

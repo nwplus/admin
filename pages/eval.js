@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import Scoring from '../components/Evaluator/Scoring';
 import Page from '../components/page';
 import { getHackathons } from '../utility/firebase';
 
@@ -21,7 +22,7 @@ export default function Eval({ hackathons }) {
           <div>Rubric</div>
         </LeftContainer>
         <div>Applicant Response</div>
-        <div>Scoring</div>
+        <Scoring />
       </Container>
     </Page>
   );

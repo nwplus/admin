@@ -1,35 +1,34 @@
-
 // these are the blue buttons for the applicantScore sidebar
-import React from 'react'
-import styled from 'styled-components'
-import Number from './numberIcon'
-import { ASSESSMENT_COLOR } from '../constants'
+import React from 'react';
+import styled from 'styled-components';
+import Number from './numberIcon';
+import { ASSESSMENT_COLOR } from '../constants';
 
 const Container = styled.div`
   padding-bottom: 12px;
-`
+`;
 
 const ScoreContainer = styled.div`
   display: flex;
   padding-top: 8px;
-`
+`;
 
 const Label = styled.label`
   color: ${ASSESSMENT_COLOR.LIGHT_GRAY};
-`
+`;
 
 export default function ScoreInput({ label, score, handleClick, maxScore }) {
-  const arr = [...Array(maxScore.value + 1).keys()]
+  const arr = [...Array(maxScore.value + 1).keys()];
 
-  const handleMultipier = (value, label) => {
-    return handleClick(value * maxScore.weight, label)
-  }
+  const handleMultipier = (value, numberLabel) => {
+    return handleClick(value * maxScore.weight, numberLabel);
+  };
 
   return (
     <Container>
       <Label>{label}</Label>
       <ScoreContainer>
-        {arr.map(num => {
+        {arr.map((num) => {
           return (
             <Number
               label={label}
@@ -38,9 +37,9 @@ export default function ScoreInput({ label, score, handleClick, maxScore }) {
               key={num}
               handleClick={handleMultipier}
             />
-          )
+          );
         })}
       </ScoreContainer>
     </Container>
-  )
+  );
 }

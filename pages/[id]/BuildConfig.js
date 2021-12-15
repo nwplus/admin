@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { Octokit } from '@octokit/rest';
 import Page from '../../components/page';
 import Card, {
   CardHeader,
@@ -13,11 +14,13 @@ import {
   getHackathonSnapShot,
   getHackathons,
 } from '../../utility/firebase';
-import Button from '../../components/button'
+import Button from '../../components/button';
 import Modal from '../../components/modal';
-import { Octokit } from '@octokit/rest';
 
-const octokit = new Octokit({ auth: process.env.SERVICE_ACCOUNT_TOKEN, baseUrl: 'https://api.github.com' });
+const octokit = new Octokit({
+  auth: process.env.SERVICE_ACCOUNT_TOKEN,
+  baseUrl: 'https://api.github.com',
+});
 const Container = styled.div`
   margin-bottom: 40px;
 `;
@@ -27,20 +30,25 @@ export default function BuildConfig({ id, hackathons }) {
   const [modalOpen, setModalOpen] = useState(false);
 
   // run gh action on handleSave
-  const warningDeployModal = 
-  <Modal
-    modalTitle="WARNING"
-    handleSave={() => {octokit.actions.createWorkflowDispatch({
-    owner: 'nwplus',
-    repo: 'monorepo',
-    workflow_id: 'firebase_deploy.yaml',
-    ref: 'test-action-dispatch',
-    inputs: { 'targetedHackathon': `${id}_main` }})
-  setModalOpen(false)}}
-    isOpen={modalOpen}
-    handleClose={() => setModalOpen(false)}>
+  const warningDeployModal = (
+    <Modal
+      modalTitle="WARNING"
+      handleSave={() => {
+        octokit.actions.createWorkflowDispatch({
+          owner: 'nwplus',
+          repo: 'monorepo',
+          workflow_id: 'firebase_deploy.yaml',
+          ref: 'test-action-dispatch',
+          inputs: { targetedHackathon: `${id}_main` },
+        });
+        setModalOpen(false);
+      }}
+      isOpen={modalOpen}
+      handleClose={() => setModalOpen(false)}
+    >
       <span>Are you sure you want to deploy to {id}?</span>
-  </Modal>
+    </Modal>
+  );
 
   const EmptyConfigComponent = ({ config }) => {
     return (
@@ -80,20 +88,16 @@ export default function BuildConfig({ id, hackathons }) {
     return () => unsubscribe();
   }, [window.location.pathname]);
 
-  return ( 
+  return (
     <Page
       currentPath={id}
       hackathons={hackathons}
       navbarItems={HACKATHON_NAVBAR}
     >
       <Container>
-
-        <Button onClick={() => setModalOpen(true)
-        }>
-          Deploy
-        </Button>
+        <Button onClick={() => setModalOpen(true)}>Deploy</Button>
         {warningDeployModal}
-      </Container>      
+      </Container>
 
       {!buildConfig ? (
         <EmptyConfigComponent config="Build Config" />

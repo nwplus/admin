@@ -4,34 +4,34 @@ import Page from '../components/page';
 import { getHackathons } from '../utility/firebase';
 
 const Container = styled.div`
-    display: flex;
-`
+  display: flex;
+`;
 
 const LeftContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-`
+  display: flex;
+  flex-direction: column;
+`;
 
 export default function Eval({ hackathons }) {
-    return (
-        <Page hackathons={hackathons} currentPath="eval">
-            <Container>
-                <LeftContainer>
-                    <div>Applicant List</div>
-                    <div>Rubric</div>
-                </LeftContainer>
-                <div>Applicant Response</div>
-                <div>Scoring</div>
-            </Container>
-        </Page>
-    )
+  return (
+    <Page hackathons={hackathons} currentPath="eval">
+      <Container>
+        <LeftContainer>
+          <div>Applicant List</div>
+          <div>Rubric</div>
+        </LeftContainer>
+        <div>Applicant Response</div>
+        <div>Scoring</div>
+      </Container>
+    </Page>
+  );
 }
 
 export const getStaticProps = async () => {
-    const hackathons = await getHackathons();
-    return {
-      props: {
-        hackathons,
-      },
-    };
+  const hackathons = await getHackathons();
+  return {
+    props: {
+      hackathons,
+    },
   };
+};

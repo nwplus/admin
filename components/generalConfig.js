@@ -157,10 +157,10 @@ export default ({ id, title, content }) => {
             <HoverContainer>
               <FieldType>({fieldType})</FieldType>
               <IconContainer onClick={() => handleEditField(fieldName)}>
-                <Icon color={COLOR.BLACK} icon='edit' />
+                <Icon color={COLOR.BLACK} icon="edit" />
               </IconContainer>
               <IconContainer onClick={() => handleDeleteField(fieldName)}>
-                <Icon color={COLOR.BLACK} icon='close' />
+                <Icon color={COLOR.BLACK} icon="close" />
               </IconContainer>
             </HoverContainer>
           </KeyValueContainer>

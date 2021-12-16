@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Button from '../components/button';
 import { Title1, Title2, Title3, Title4 } from '../components/Typography';
 import Tag from '../components/tag';
-import ScoreInput from '../components/scoreInput';
+import ScoreInput from '../components/Evaluator/scoreInput';
 import { COLOR, BUTTON_COLOR } from '../constants';
 
 const Container = styled.div`

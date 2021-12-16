@@ -8,3 +8,10 @@ export const hexToRgba = (hex, a = 1) => {
       )}, ${a})`
     : `rgba(0, 0, 0, ${a})`;
 };
+
+// Given an object, take its values and sum them up
+export const calculateTotalScore = (hackerScore) => {
+  // summing up values score
+  const reducer = (accumulator, currentValue) => accumulator + currentValue;
+  return Object.values(hackerScore).reduce(reducer);
+};

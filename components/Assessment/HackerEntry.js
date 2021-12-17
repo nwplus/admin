@@ -1,10 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {
-  APPLICATION_STATUS,
-  ASSESSMENT_COLOR,
-  MAX_SCORE,
-} from '../../constants';
+import { COMPLETED_TAG, ASSESSMENT_COLOR, MAX_SCORE } from '../../constants';
 import Tag from './Tag';
 
 const styles = {
@@ -58,29 +54,29 @@ const Unscored = styled.p`
 `;
 
 export default function HackerEntry({
-  firstname,
-  lastname,
   index,
+  firstName,
+  lastName,
+  email,
   id,
   score,
+  selectHacker,
   hasCompleted = false,
-  isSelected = false,
+  selectedHackerID = null,
 }) {
-  return isSelected ? (
-    <SelectedRowDiv onClick={() => selectHacker(rowProp.hacker)}>
+  return id === selectedHackerID ? (
+    <SelectedRowDiv onClick={() => selectHacker(id)}>
       <div style={styles.nameEmailContainer}>
         <HackerName>
-          {rowProp.hacker.basicInfo.firstName}{' '}
-          {rowProp.hacker.basicInfo.lastName}{' '}
-          <Tag {...APPLICATION_STATUS[appStatus]} />
+          {firstName} {lastName} {hasCompleted && <Tag {...COMPLETED_TAG} />}
         </HackerName>
-        <LightGrayText>{rowProp.hacker.basicInfo.email}</LightGrayText>
+        <LightGrayText>{email}</LightGrayText>
       </div>
       <div style={styles.indexScoreContainer}>
-        <LightGrayText>{rowProp.index}</LightGrayText>
-        {rowProp.hacker.score ? (
+        <LightGrayText>{id}</LightGrayText>
+        {score ? (
           <Scored>
-            {rowProp.hacker.score.totalScore ?? '?'}/{MAX_SCORE}
+            {score.totalScore ?? '?'}/{MAX_SCORE}
           </Scored>
         ) : (
           <Unscored>/{MAX_SCORE}</Unscored>
@@ -88,20 +84,18 @@ export default function HackerEntry({
       </div>
     </SelectedRowDiv>
   ) : (
-    <UnselectedRowDiv onClick={() => selectHacker(rowProp.hacker)}>
+    <UnselectedRowDiv onClick={() => selectHacker(id)}>
       <div style={styles.nameEmailContainer}>
         <HackerName>
-          {rowProp.hacker.basicInfo.firstName}{' '}
-          {rowProp.hacker.basicInfo.lastName}{' '}
-          <Tag {...APPLICATION_STATUS[appStatus]} />
+          {firstName} {lastName} <Tag {...COMPLETED_TAG} />
         </HackerName>
-        <LightGrayText>{rowProp.hacker.basicInfo.email}</LightGrayText>
+        <LightGrayText>{email}</LightGrayText>
       </div>
       <div style={styles.indexScoreContainer}>
-        <LightGrayText>{rowProp.index}</LightGrayText>
-        {rowProp.hacker.score ? (
+        <LightGrayText>{index}</LightGrayText>
+        {score ? (
           <Scored>
-            {rowProp.hacker.score.totalScore ?? '?'}/{MAX_SCORE}
+            {score.totalScore ?? '?'}/{MAX_SCORE}
           </Scored>
         ) : (
           <Unscored>/{MAX_SCORE}</Unscored>

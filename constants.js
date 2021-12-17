@@ -101,6 +101,12 @@ export const APPLICATION_STATUS = {
   },
 };
 
+export const COMPLETED_TAG = {
+  color: COLOR.MIDNIGHT_PURPLE,
+  textColor: 'white',
+  text: 'completed',
+};
+
 export const SCORING = {
   LINK: {
     label: 'GitHub/Personal Website',

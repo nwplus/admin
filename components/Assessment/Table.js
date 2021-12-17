@@ -1,6 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import { APPLICATION_STATUS, ASSESSMENT_COLOR, MAX_SCORE } from '../../constants';
+import {
+  APPLICATION_STATUS,
+  ASSESSMENT_COLOR,
+  MAX_SCORE,
+} from '../../constants';
 import ApplicantResponse from './applicantResponse';
 import ApplicantScore from './applicantScore';
 import Tag from './Tag';

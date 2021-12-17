@@ -1,8 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import { APPLICATION_STATUS, ASSESSMENT_COLOR, MAX_SCORE } from '../../constants';
-import ApplicantResponse from './applicantResponse';
-import ApplicantScore from './applicantScore';
+import {
+  APPLICATION_STATUS,
+  ASSESSMENT_COLOR,
+  MAX_SCORE,
+} from '../../constants';
 import Tag from './Tag';
 
 const styles = {
@@ -55,109 +57,56 @@ const Unscored = styled.p`
   margin: 0px;
 `;
 
-export default function Table(props) {
-  const { selectedHacker } = props;
-
-  const selectHacker = (hacker) => {
-    props.setSelectedHacker(hacker);
-  };
-
-  function Row(rowProp) {
-    const appStatus = rowProp.hacker.status.applicationStatus;
-    return selectedHacker.basicInfo === rowProp.hacker.basicInfo ? (
-      <SelectedRowDiv onClick={() => selectHacker(rowProp.hacker)}>
-        <div style={styles.nameEmailContainer}>
-          <HackerName>
-            {rowProp.hacker.basicInfo.firstName}{' '}
-            {rowProp.hacker.basicInfo.lastName}{' '}
-            <Tag {...APPLICATION_STATUS[appStatus]} />
-          </HackerName>
-          <LightGrayText>{rowProp.hacker.basicInfo.email}</LightGrayText>
-        </div>
-        <div style={styles.indexScoreContainer}>
-          <LightGrayText>{rowProp.index}</LightGrayText>
-          {rowProp.hacker.score ? (
-            <Scored>
-              {rowProp.hacker.score.totalScore ?? '?'}/{MAX_SCORE}
-            </Scored>
-          ) : (
-            <Unscored>/{MAX_SCORE}</Unscored>
-          )}
-        </div>
-      </SelectedRowDiv>
-    ) : (
-      <UnselectedRowDiv onClick={() => selectHacker(rowProp.hacker)}>
-        <div style={styles.nameEmailContainer}>
-          <HackerName>
-            {rowProp.hacker.basicInfo.firstName}{' '}
-            {rowProp.hacker.basicInfo.lastName}{' '}
-            <Tag {...APPLICATION_STATUS[appStatus]} />
-          </HackerName>
-          <LightGrayText>{rowProp.hacker.basicInfo.email}</LightGrayText>
-        </div>
-        <div style={styles.indexScoreContainer}>
-          <LightGrayText>{rowProp.index}</LightGrayText>
-          {rowProp.hacker.score ? (
-            <Scored>
-              {rowProp.hacker.score.totalScore ?? '?'}/{MAX_SCORE}
-            </Scored>
-          ) : (
-            <Unscored>/{MAX_SCORE}</Unscored>
-          )}
-        </div>
-      </UnselectedRowDiv>
-    );
-  }
-
-  const AllHackersRow = () => {
-    const graded = props.displayedHackers.filter(
-      (h) => h.status.applicationStatus === APPLICATION_STATUS.scored.text
-    ).length;
-    const accepted = props.displayedHackers.filter(
-      (h) => h.status.applicationStatus === APPLICATION_STATUS.accepted.text
-    ).length;
-    return (
-      <UnselectedRowDiv>
-        <div style={styles.nameEmailContainer}>
-          <HackerName>
-            {graded}/{props.displayedHackers.length}{' '}
-            {props.displayedHackers.length === 1
-              ? 'Hacker graded'
-              : 'Hackers graded'}
-          </HackerName>
-          <HackerName>
-            {accepted}/{props.displayedHackers.length}{' '}
-            {props.displayedHackers.length === 1
-              ? 'Hacker accepted'
-              : 'Hackers accepted'}
-          </HackerName>
-        </div>
-      </UnselectedRowDiv>
-    );
-  };
-
-  return (
-    <div style={{ display: 'flex' }}>
-      <div style={{ flex: 1, overflowY: 'auto' }}>
-        <AllHackersRow />
-        {props.displayedHackers.map((hacker, index) => {
-          return (
-            <Row key={hacker.basicInfo.email} hacker={hacker} index={index} />
-          );
-        })}
+export default function HackerEntry({
+  firstname,
+  lastname,
+  index,
+  id,
+  score,
+  hasCompleted = false,
+  isSelected = false,
+}) {
+  return isSelected ? (
+    <SelectedRowDiv onClick={() => selectHacker(rowProp.hacker)}>
+      <div style={styles.nameEmailContainer}>
+        <HackerName>
+          {rowProp.hacker.basicInfo.firstName}{' '}
+          {rowProp.hacker.basicInfo.lastName}{' '}
+          <Tag {...APPLICATION_STATUS[appStatus]} />
+        </HackerName>
+        <LightGrayText>{rowProp.hacker.basicInfo.email}</LightGrayText>
       </div>
-      {Object.keys(selectedHacker).length !== 0 ? (
-        <>
-          <ApplicantScore hacker={selectedHacker} style={{ flex: 1 }} />
-          <ApplicantResponse
-            setSelectedHacker={props.setSelectedHacker}
-            hacker={selectedHacker}
-            style={{ flex: 1 }}
-          />
-        </>
-      ) : (
-        <div />
-      )}
-    </div>
+      <div style={styles.indexScoreContainer}>
+        <LightGrayText>{rowProp.index}</LightGrayText>
+        {rowProp.hacker.score ? (
+          <Scored>
+            {rowProp.hacker.score.totalScore ?? '?'}/{MAX_SCORE}
+          </Scored>
+        ) : (
+          <Unscored>/{MAX_SCORE}</Unscored>
+        )}
+      </div>
+    </SelectedRowDiv>
+  ) : (
+    <UnselectedRowDiv onClick={() => selectHacker(rowProp.hacker)}>
+      <div style={styles.nameEmailContainer}>
+        <HackerName>
+          {rowProp.hacker.basicInfo.firstName}{' '}
+          {rowProp.hacker.basicInfo.lastName}{' '}
+          <Tag {...APPLICATION_STATUS[appStatus]} />
+        </HackerName>
+        <LightGrayText>{rowProp.hacker.basicInfo.email}</LightGrayText>
+      </div>
+      <div style={styles.indexScoreContainer}>
+        <LightGrayText>{rowProp.index}</LightGrayText>
+        {rowProp.hacker.score ? (
+          <Scored>
+            {rowProp.hacker.score.totalScore ?? '?'}/{MAX_SCORE}
+          </Scored>
+        ) : (
+          <Unscored>/{MAX_SCORE}</Unscored>
+        )}
+      </div>
+    </UnselectedRowDiv>
   );
 }

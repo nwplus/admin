@@ -319,7 +319,16 @@ export default function Charcuterie() {
 
       <Section>
         <Row>
-          <HackerEntry />
+          <HackerEntry
+            index={1}
+            firstName="Teddy"
+            lastName="Flood"
+            email="thisEmailWillBeRemoved"
+            id={51}
+            score={{ totalScore: 18 }}
+            hasCompleted
+            selectedHackerID={51}
+          />
         </Row>
       </Section>
     </>

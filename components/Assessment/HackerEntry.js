@@ -1,21 +1,21 @@
-import React from 'react';
-import styled from 'styled-components';
-import { COMPLETED_TAG, ASSESSMENT_COLOR, MAX_SCORE } from '../../constants';
-import Tag from './Tag';
+import React from "react";
+import styled from "styled-components";
+import { COMPLETED_TAG, ASSESSMENT_COLOR, MAX_SCORE } from "../../constants";
+import Tag from "../tag";
 
 const styles = {
   nameEmailContainer: {
     flex: 3,
-    textAlign: 'left',
+    textAlign: "left",
   },
   indexScoreContainer: {
     flex: 1,
-    textAlign: 'right',
+    textAlign: "right",
   },
   unselectedHackerContainer: {},
   selectedHackerContainer: {},
 };
-
+// TODO: make a separate component for the completed tag here since this is the only place it will be used
 const HackerName = styled.p`
   font-size: 16px;
   color: ${ASSESSMENT_COLOR.DARK_GRAY};
@@ -68,7 +68,15 @@ export default function HackerEntry({
     <SelectedRowDiv onClick={() => selectHacker(id)}>
       <div style={styles.nameEmailContainer}>
         <HackerName>
-          {firstName} {lastName} {hasCompleted && <Tag {...COMPLETED_TAG} />}
+          {firstName} {lastName}{" "}
+          {hasCompleted && (
+            <Tag
+              color={COMPLETED_TAG.color}
+              contentColor={COMPLETED_TAG.textColor}
+            >
+              {COMPLETED_TAG.text}
+            </Tag>
+          )}
         </HackerName>
         <LightGrayText>{email}</LightGrayText>
       </div>
@@ -76,7 +84,7 @@ export default function HackerEntry({
         <LightGrayText>{id}</LightGrayText>
         {score ? (
           <Scored>
-            {score.totalScore ?? '?'}/{MAX_SCORE}
+            {score.totalScore ?? "?"}/{MAX_SCORE}
           </Scored>
         ) : (
           <Unscored>/{MAX_SCORE}</Unscored>
@@ -95,7 +103,7 @@ export default function HackerEntry({
         <LightGrayText>{index}</LightGrayText>
         {score ? (
           <Scored>
-            {score.totalScore ?? '?'}/{MAX_SCORE}
+            {score.totalScore ?? "?"}/{MAX_SCORE}
           </Scored>
         ) : (
           <Unscored>/{MAX_SCORE}</Unscored>

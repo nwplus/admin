@@ -5,6 +5,7 @@ import 'firebase/auth';
 import 'firebase/storage';
 import JSZip from 'jszip';
 import download from 'downloadjs';
+import { calculateTotalScore } from './utilities';
 import { APPLICATION_STATUS, FAQ, FAQCategory } from '../constants';
 
 if (!firebase.apps.length) {
@@ -731,12 +732,6 @@ export const getAllResumes = async () => {
   const finishedZip = await zip.generateAsync({ type: 'blob' });
   download(finishedZip, 'Resumes', 'application/zip');
 };
-
-function calculateTotalScore(hackerScore) {
-  // summing up values score
-  const reducer = (accumulator, currentValue) => accumulator + currentValue;
-  return Object.values(hackerScore).reduce(reducer);
-}
 
 export const updateApplicantScore = async (applicantID, object, adminEmail) => {
   const totalScore = calculateTotalScore(object);

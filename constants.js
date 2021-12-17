@@ -19,22 +19,23 @@ export const COLOR = {
   BODY_TEXT: '#5A5A5A',
   BLUE: '#4285F4',
   UNSELECTED_GRAY: '#BDBAC3',
-  MIDNIGHT_PURPLE: '#433860',
+  MIDNIGHT_PURPLE: '#2C2543',
   MIDNIGHT_PURPLE_LIGHT: '#8E7EB4',
   LIGHT_GRAY: '#F0EEF2',
   LIGHT_PURPLE: '#E2D6FF',
   NW_TEAL: '#20FFAF',
   TEAL: '#00A399',
   INACTIVE_DARK_GRAY: '#8C898F',
-  BRIGHT_RED: '#F83D3D'
+  BRIGHT_RED: '#F83D3D',
+  GREY_500: '#BDBAC3',
 };
 export const BUTTON_COLOR = {
   PRIMARY: 'linear-gradient(92.58deg, #0DEFE1 0%, #78FF96 100%)',
   SECONDARY: '#FFFFFF',
   OUTLINE: 'Transparent',
   DESTRUCTIVE: '#F65C5C',
-  HOVER_PRIMARY: 'linear-gradient(90deg, #D7FFF0 0%, #7BFFCF 100%)'
-}
+  HOVER_PRIMARY: 'linear-gradient(90deg, #D7FFF0 0%, #7BFFCF 100%)',
+};
 export const FAQ = 'FAQ';
 export const FAQCategory = Object.freeze({
   GENERAL: 'General',
@@ -100,18 +101,30 @@ export const APPLICATION_STATUS = {
   },
 };
 
-export const MAX_SCORES = {
+export const SCORING = {
+  LINK: {
+    label: 'GitHub/Personal Website',
+    value: 7,
+    weight: 1,
+  },
   RESUME: {
+    label: 'Resume',
     value: 7,
     weight: 1,
   },
   ESSAY: {
+    label: 'Short Answer 1',
+    value: 3,
+    weight: 2,
+  },
+  ESSAY_TWO: {
+    label: 'Short Answer 2',
     value: 3,
     weight: 2,
   },
 };
 
-export const MAX_SCORE = Object.values(MAX_SCORES).reduce(
+export const MAX_SCORE = Object.values(SCORING).reduce(
   (acc, curr) => acc + curr.value * curr.weight,
   0
 );

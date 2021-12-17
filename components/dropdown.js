@@ -17,8 +17,8 @@ const Select = ({
   return (
     <>
       <SelectContent type={type} onKeyDown={onKeyDown} onClick={onClick}>
-        {isOpened && <TransformedIcon icon='caret-down' flip />}
-        {!isOpened && <TransformedIcon icon='caret-down' />}
+        {isOpened && <TransformedIcon icon="caret-down" flip />}
+        {!isOpened && <TransformedIcon icon="caret-down" />}
         {children}
       </SelectContent>
     </>

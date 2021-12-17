@@ -14,7 +14,7 @@ import {
   ASSESSMENT_COLOR,
   APPLICATION_STATUS,
   MAX_SCORE,
-  MAX_SCORES,
+  SCORING,
 } from '../../constants';
 
 const Main = styled.div`
@@ -94,10 +94,10 @@ export default function ApplicantScore(props) {
           label="Resume/LinkedIn"
           score={score.ResumeScore}
           handleClick={handleClick}
-          maxScore={MAX_SCORES.RESUME}
+          maxScore={SCORING.RESUME}
         />
         <ScoreInput
-          maxScore={MAX_SCORES.ESSAY}
+          maxScore={SCORING.ESSAY}
           label="Written Response Score"
           score={score.ResponseScore}
           handleClick={handleClick}

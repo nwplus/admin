@@ -1,23 +1,14 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import moment from 'moment';
+import { useContext, useEffect, useState } from 'react';
 import Button from '../button';
 import ScoreInput from './scoreInput';
 import TextField from '../TextField';
 import { Title4 } from '../Typography';
 import { calculateTotalScore } from '../../utility/utilities';
 import { COLOR, MAX_SCORE, SCORING } from '../../constants';
-
-const applicant = {
-  score: {
-    scores: {
-      LinkScore: 5,
-      ResumeScore: 4,
-      ResponseOneScore: 4,
-      ResponseTwoScore: 4,
-    },
-    totalScore: 17,
-  },
-};
+import { AuthContext } from '../../utility/auth';
+import { updateApplicantScore } from '../../utility/firebase';
 
 const ScoreInputs = styled.div`
   display: flex;
@@ -34,10 +25,23 @@ const BottomSection = styled.div`
   margin-top: 32px;
 `;
 
-export default function Scoring() {
-  const [scores, setScores] = useState(applicant.score.scores);
-  const [totalScore, setTotalScore] = useState(applicant.score.totalScore);
-  const [comment, setComment] = useState(applicant?.comment || '');
+const SmallText = styled.div`
+  font-size: 0.8em;
+  color: ${COLOR.GREY_500};
+`;
+
+export default function Scoring({ applicant }) {
+  const [scores, setScores] = useState(null);
+  const [totalScore, setTotalScore] = useState(null);
+  const [comment, setComment] = useState('');
+
+  const { user } = useContext(AuthContext);
+
+  useEffect(() => {
+    setScores(applicant?.score?.scores || null);
+    setTotalScore(applicant?.score?.totalScore || null);
+    setComment(applicant?.score?.comment || '');
+  }, [applicant]);
 
   const handleClick = (score, label) => {
     // Switch to whatever the field is in Firebase
@@ -64,13 +68,8 @@ export default function Scoring() {
     setTotalScore(calculateTotalScore(newScores));
   };
 
-  const handleSave = () => {
-    // TODO: once we're pulling applicants from Firebase we can
-    // - accept the applicant object as a prop
-    // - call updateApplicantScore in this function to update the applicant
-    console.log(scores);
-    console.log(totalScore);
-    console.log(comment);
+  const handleSave = async () => {
+    await updateApplicantScore(applicant._id, scores, comment, user.email);
   };
 
   return (
@@ -80,25 +79,25 @@ export default function Scoring() {
         <ScoreInput
           label={SCORING.LINK.label}
           handleClick={handleClick}
-          score={scores.LinkScore}
+          score={scores?.LinkScore}
           maxScore={SCORING.LINK}
         />
         <ScoreInput
           label={SCORING.RESUME.label}
           handleClick={handleClick}
-          score={scores.ResumeScore}
+          score={scores?.ResumeScore}
           maxScore={SCORING.RESUME}
         />
         <ScoreInput
           label={SCORING.ESSAY.label}
           handleClick={handleClick}
-          score={scores.ResponseOneScore}
+          score={scores?.ResponseOneScore}
           maxScore={SCORING.ESSAY}
         />
         <ScoreInput
           label={SCORING.ESSAY_TWO.label}
           handleClick={handleClick}
-          score={scores.ResponseTwoScore}
+          score={scores?.ResponseTwoScore}
           maxScore={SCORING.ESSAY_TWO}
         />
         <TextField
@@ -108,7 +107,17 @@ export default function Scoring() {
         />
       </ScoreInputs>
       <BottomSection>
-        Total Score: {totalScore} / {MAX_SCORE}
+        <div>
+          Total Score: {totalScore} / {MAX_SCORE}
+          {applicant && (
+            <SmallText>
+              Last updated by: {applicant?.score?.lastUpdatedBy} at{' '}
+              {moment(applicant?.score?.lastUpdated.toDate()).format(
+                'MMM Do, YYYY h:mm:ss A'
+              )}
+            </SmallText>
+          )}
+        </div>
         <Button
           color={COLOR.MIDNIGHT_PURPLE_LIGHT}
           contentColor={COLOR.WHITE}

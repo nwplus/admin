@@ -1,6 +1,6 @@
-import React from "react";
-import styled from "styled-components";
-import { ASSESSMENT_COLOR, MAX_SCORE, COLOR } from "../../constants";
+import React from 'react';
+import styled from 'styled-components';
+import { ASSESSMENT_COLOR, MAX_SCORE, COLOR } from '../../constants';
 
 const HackerName = styled.span`
   font-size: 15px;
@@ -29,6 +29,7 @@ const StyledInfoContainer = styled.div`
 
 const StyledHackerEntryDiv = styled.div`
   height: 56px;
+  width: 350px;
   padding: 0 21px;
   display: flex;
   align-items: center;
@@ -42,7 +43,7 @@ const StyledTag = styled.div`
   box-sizing: border-box;
   align-items: stretch;
   border: none;
-  font-family: "HK Grotesk";
+  font-family: 'HK Grotesk';
   font-size: 13px;
   line-height: 16px;
   font-weight: 400;
@@ -51,7 +52,7 @@ const StyledTag = styled.div`
   padding: 0px 5px;
   border-radius: 4px;
   height: 16px;
-  margin-left: 20px;
+  margin-rght: 0px;
 `;
 
 export default function HackerEntry({
@@ -75,7 +76,7 @@ export default function HackerEntry({
           {firstName} {lastName}
         </HackerName>
         <HackerInfoText>
-          ID #{id} | Score: {score ? score.totalScore ?? "?" : "0"} /{MAX_SCORE}
+          ID #{id} | Score: {score ? score.totalScore ?? '?' : '0'} /{MAX_SCORE}
         </HackerInfoText>
       </StyledInfoContainer>
       {hasCompleted && <StyledTag>Completed</StyledTag>}

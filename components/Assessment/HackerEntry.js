@@ -41,7 +41,6 @@ const StyledHackerEntryDiv = styled.div`
 const StyledTag = styled.div`
   display: inline-flex;
   box-sizing: border-box;
-  align-items: stretch;
   border: none;
   font-family: 'HK Grotesk';
   font-size: 13px;
@@ -52,7 +51,7 @@ const StyledTag = styled.div`
   padding: 0px 5px;
   border-radius: 4px;
   height: 16px;
-  margin-rght: 0px;
+  margin-left: auto;
 `;
 
 export default function HackerEntry({

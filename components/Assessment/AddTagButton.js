@@ -26,7 +26,7 @@ const TagIcon = styled.img`
   margin: '0 0 2px 0';
 `;
 
-const ExistingTagContainer = styled.div`
+const ExistingTagsContainer = styled.div`
   padding: 24px 24px 8px 24px;
   display: flex;
   flex-direction: column;
@@ -35,7 +35,7 @@ const ExistingTagContainer = styled.div`
 
 function AddedTags({ tags }) {
   return (
-    <ExistingTagContainer>
+    <ExistingTagsContainer>
       {tags &&
         tags.map((tag) => (
           <Tag
@@ -47,7 +47,7 @@ function AddedTags({ tags }) {
             {tag.text}
           </Tag>
         ))}
-    </ExistingTagContainer>
+    </ExistingTagsContainer>
   );
 }
 

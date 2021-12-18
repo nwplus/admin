@@ -77,7 +77,7 @@ export default function HackerEntry({
           {firstName} {lastName}
         </HackerName>
         <HackerInfoText>
-          ID #{id} &nbsp;|&nbsp; Score: {score?.totalScore ?? '?'} /{MAX_SCORE}
+          ID #{id} &nbsp;|&nbsp; Score: {score?.totalScore ?? '?'}/{MAX_SCORE}
         </HackerInfoText>
       </StyledInfoContainer>
       {hasCompleted && <StyledTag>Completed</StyledTag>}

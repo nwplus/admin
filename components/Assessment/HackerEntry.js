@@ -1,21 +1,26 @@
-import React from "react";
-import styled from "styled-components";
-import { COMPLETED_TAG, ASSESSMENT_COLOR, MAX_SCORE } from "../../constants";
-import Tag from "../tag";
+import React from 'react';
+import styled from 'styled-components';
+import {
+  COMPLETED_TAG,
+  ASSESSMENT_COLOR,
+  MAX_SCORE,
+  COLOR,
+} from '../../constants';
+import Tag from '../tag';
 
 const styles = {
   nameEmailContainer: {
     flex: 3,
-    textAlign: "left",
+    textAlign: 'left',
   },
   indexScoreContainer: {
     flex: 1,
-    textAlign: "right",
+    textAlign: 'right',
   },
   unselectedHackerContainer: {},
   selectedHackerContainer: {},
 };
-// TODO: make a separate component for the completed tag here since this is the only place it will be used
+
 const HackerName = styled.p`
   font-size: 16px;
   color: ${ASSESSMENT_COLOR.DARK_GRAY};
@@ -53,6 +58,21 @@ const Unscored = styled.p`
   margin: 0px;
 `;
 
+const StyledTag = styled.div`
+  display: inline-flex;
+  box-sizing: border-box;
+  align-items: stretch;
+  border: none;
+  font-family: 'HK Grotesk';
+  font-size: 13px;
+  line-height: 16px;
+  font-weight: 400;
+  color: ${COLOR.LIGHT_PURPLE};
+  background: ${COLOR.MIDNIGHT_PURPLE_DARK};
+  padding: 0px 5px;
+  border-radius: 4px;
+`;
+
 export default function HackerEntry({
   index,
   firstName,
@@ -68,15 +88,7 @@ export default function HackerEntry({
     <SelectedRowDiv onClick={() => selectHacker(id)}>
       <div style={styles.nameEmailContainer}>
         <HackerName>
-          {firstName} {lastName}{" "}
-          {hasCompleted && (
-            <Tag
-              color={COMPLETED_TAG.color}
-              contentColor={COMPLETED_TAG.textColor}
-            >
-              {COMPLETED_TAG.text}
-            </Tag>
-          )}
+          {firstName} {lastName} {hasCompleted && <StyledTag>Completed</StyledTag>}
         </HackerName>
         <LightGrayText>{email}</LightGrayText>
       </div>
@@ -84,7 +96,7 @@ export default function HackerEntry({
         <LightGrayText>{id}</LightGrayText>
         {score ? (
           <Scored>
-            {score.totalScore ?? "?"}/{MAX_SCORE}
+            {score.totalScore ?? '?'}/{MAX_SCORE}
           </Scored>
         ) : (
           <Unscored>/{MAX_SCORE}</Unscored>
@@ -103,7 +115,7 @@ export default function HackerEntry({
         <LightGrayText>{index}</LightGrayText>
         {score ? (
           <Scored>
-            {score.totalScore ?? "?"}/{MAX_SCORE}
+            {score.totalScore ?? '?'}/{MAX_SCORE}
           </Scored>
         ) : (
           <Unscored>/{MAX_SCORE}</Unscored>

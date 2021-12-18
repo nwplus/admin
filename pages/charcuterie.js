@@ -1,14 +1,15 @@
-import React from 'react';
-import styled from 'styled-components';
-import Button from '../components/button';
-import { Title1, Title2, Title3, Title4 } from '../components/Typography';
-import Tag from '../components/tag';
-import ScoreInput from '../components/scoreInput';
-import { COLOR, BUTTON_COLOR } from '../constants';
-import AddTagButton from '../components/Assessment/AddTagButton';
+import React from "react";
+import styled from "styled-components";
+import Button from "../components/button";
+import { Title1, Title2, Title3, Title4 } from "../components/Typography";
+import Tag from "../components/tag";
+import ScoreInput from "../components/scoreInput";
+import { COLOR, BUTTON_COLOR } from "../constants";
+import AddTagButton from "../components/Assessment/AddTagButton";
 
 const Container = styled.div`
   background-color: ${COLOR.MIDNIGHT_PURPLE};
+  padding-bottom: 30px;
 `;
 
 const Section = styled.div`
@@ -24,7 +25,7 @@ const ButtonContainer = styled.div`
   margin: 10px;
 `;
 
-const BUTTON_TEXT = 'Button';
+const BUTTON_TEXT = "Button";
 
 const TagContainer = styled.div`
   margin: 10px;
@@ -279,7 +280,7 @@ export default function Charcuterie() {
                 type="DELETE"
                 color={COLOR.BRIGHT_RED}
                 contentColor={COLOR.WHITE}
-                onDelete={(e) => alert('delete')}
+                onDelete={(e) => alert("delete")}
               >
                 Delete World
               </Tag>
@@ -302,12 +303,6 @@ export default function Charcuterie() {
             <Title4>Header4</Title4>
           </Row>
         </Section>
-
-        <Section>
-          <Row>
-            <AddTagButton />
-          </Row>
-        </Section>
       </Container>
 
       <Section>
@@ -320,6 +315,12 @@ export default function Charcuterie() {
             handleTextChange={() => {}}
             maxScore={{ value: 7, weight: 1 }}
           />
+        </Row>
+      </Section>
+
+      <Section>
+        <Row>
+          <AddTagButton />
         </Row>
       </Section>
     </>

@@ -8,6 +8,12 @@ import { ASSESSMENT_COLOR, COLOR } from '../../constants';
 
 import AddTagModal from './AddTagModal';
 
+const TagButtonStyledDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  background: white;
+`;
+
 const TagButtonContainer = styled.div`
   display: flex;
   align-items: center;
@@ -49,7 +55,7 @@ export default function AddTagButton() {
   const [showTagModal, setShowTagModal] = useState(false);
 
   return (
-    <>
+    <TagButtonStyledDiv>
       <AddedTags
         tags={[
           { text: 'testing tag', color: ASSESSMENT_COLOR.RED },
@@ -63,6 +69,6 @@ export default function AddTagButton() {
         </TagButtonContainer>
       </Button>
       {showTagModal && <AddTagModal setShowing={setShowTagModal} />}
-    </>
+    </TagButtonStyledDiv>
   );
 }

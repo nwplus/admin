@@ -2,17 +2,24 @@ import React from 'react';
 import styled from 'styled-components';
 import { ASSESSMENT_COLOR, MAX_SCORE, COLOR } from '../../constants';
 
-const HackerName = styled.p`
-  font-size: 16px;
+const HackerName = styled.span`
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 19px;
   color: ${COLOR.MIDNIGHT_PURPLE};
-  margin: 0px;
+  font-family: HK Grotesk;
+  font-style: normal;
   font-weight: bold;
 `;
 
-const HackerInfoText = styled.p`
-  font-size: 16px;
+const HackerInfoText = styled.span`
+  font-family: HK Grotesk;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 19px;
   color: ${COLOR.MIDNIGHT_PURPLE};
-  margin: 0px;
 `;
 
 const StyledHackerEntryDiv = styled.div`

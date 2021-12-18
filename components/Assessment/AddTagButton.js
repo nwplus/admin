@@ -51,6 +51,7 @@ function AddedTags({ tags }) {
   );
 }
 
+// [TODO] pull tag info from firebase
 export default function AddTagButton() {
   const [showTagModal, setShowTagModal] = useState(false);
 

@@ -1,11 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {
-  COMPLETED_TAG,
-  ASSESSMENT_COLOR,
-  MAX_SCORE,
-  COLOR,
-} from '../../constants';
+import { ASSESSMENT_COLOR, MAX_SCORE, COLOR } from '../../constants';
 import Tag from '../tag';
 
 const styles = {
@@ -34,16 +29,13 @@ const LightGrayText = styled.p`
   margin: 0px;
 `;
 
-const UnselectedRowDiv = styled.div`
-  display: flex;
-  padding: 10px 16px 6px 16px;
-  cursor: pointer;
-`;
 const SelectedRowDiv = styled.div`
+  height: 56px;
+  padding: 0 21px;
+  align-items: center;
   display: flex;
-  padding: 10px 16px 6px 16px;
   cursor: pointer;
-  background: ${ASSESSMENT_COLOR.LIGHT_BLUE};
+  ${(p) => p.selected && `background: ${ASSESSMENT_COLOR.LIGHT_BLUE};`}
 `;
 
 const Scored = styled.p`
@@ -71,6 +63,7 @@ const StyledTag = styled.div`
   background: ${COLOR.MIDNIGHT_PURPLE_DARK};
   padding: 0px 5px;
   border-radius: 4px;
+  height: 16px;
 `;
 
 export default function HackerEntry({
@@ -84,11 +77,15 @@ export default function HackerEntry({
   hasCompleted = false,
   selectedHackerID = null,
 }) {
-  return id === selectedHackerID ? (
-    <SelectedRowDiv onClick={() => selectHacker(id)}>
+  return (
+    <SelectedRowDiv
+      onClick={() => selectHacker(id)}
+      selected={id === selectedHackerID}
+    >
+      <div>{index}</div>
       <div style={styles.nameEmailContainer}>
         <HackerName>
-          {firstName} {lastName} {hasCompleted && <StyledTag>Completed</StyledTag>}
+          {firstName} {lastName}
         </HackerName>
         <LightGrayText>{email}</LightGrayText>
       </div>
@@ -102,25 +99,7 @@ export default function HackerEntry({
           <Unscored>/{MAX_SCORE}</Unscored>
         )}
       </div>
+      {hasCompleted && <StyledTag>Completed</StyledTag>}
     </SelectedRowDiv>
-  ) : (
-    <UnselectedRowDiv onClick={() => selectHacker(id)}>
-      <div style={styles.nameEmailContainer}>
-        <HackerName>
-          {firstName} {lastName} <Tag {...COMPLETED_TAG} />
-        </HackerName>
-        <LightGrayText>{email}</LightGrayText>
-      </div>
-      <div style={styles.indexScoreContainer}>
-        <LightGrayText>{index}</LightGrayText>
-        {score ? (
-          <Scored>
-            {score.totalScore ?? '?'}/{MAX_SCORE}
-          </Scored>
-        ) : (
-          <Unscored>/{MAX_SCORE}</Unscored>
-        )}
-      </div>
-    </UnselectedRowDiv>
   );
 }

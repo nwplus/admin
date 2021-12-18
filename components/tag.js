@@ -1,13 +1,13 @@
-import React from "react";
-import styled from "styled-components";
-import { COLOR, DELETE } from "../constants";
+import React from 'react';
+import styled from 'styled-components';
+import { COLOR, DELETE } from '../constants';
 
 const StyledTag = styled.div`
   display: inline-flex;
   box-sizing: border-box;
   align-items: stretch;
   border: none;
-  font-family: "HK Grotesk";
+  font-family: 'HK Grotesk';
   font-weight: 600;
   height: 24px;
 `;

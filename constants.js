@@ -27,7 +27,7 @@ export const COLOR = {
   NW_TEAL: '#20FFAF',
   TEAL: '#00A399',
   INACTIVE_DARK_GRAY: '#8C898F',
-  BRIGHT_RED: '#F83D3D'
+  BRIGHT_RED: '#F83D3D',
 };
 export const BUTTON_COLOR = {
   PRIMARY: 'linear-gradient(92.58deg, #0DEFE1 0%, #78FF96 100%)',

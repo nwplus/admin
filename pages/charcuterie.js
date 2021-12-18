@@ -323,10 +323,18 @@ export default function Charcuterie() {
             index={1}
             firstName="Teddy"
             lastName="Flood"
-            email="thisEmailWillBeRemoved"
             id={51}
             score={{ totalScore: 18 }}
             hasCompleted
+            selectedHackerID={51}
+          />
+        </Row>
+        <Row>
+          <HackerEntry
+            index={2}
+            firstName="Alice"
+            lastName="Lovelace"
+            id={52}
             selectedHackerID={51}
           />
         </Row>

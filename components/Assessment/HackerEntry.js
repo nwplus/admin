@@ -12,6 +12,8 @@ const HackerName = styled.span`
   font-weight: bold;
 `;
 
+const HackerIndex = HackerName;
+
 const HackerInfoText = styled.span`
   font-family: HK Grotesk;
   font-style: normal;
@@ -69,13 +71,13 @@ export default function HackerEntry({
       onClick={() => selectHacker(id)}
       selected={id === selectedHackerID}
     >
-      <div>{index}</div>
+      <HackerIndex>{index}</HackerIndex>
       <StyledInfoContainer>
         <HackerName>
           {firstName} {lastName}
         </HackerName>
         <HackerInfoText>
-          ID #{id} | Score: {score ? score.totalScore ?? '?' : '0'} /{MAX_SCORE}
+          ID #{id}  &nbsp;|&nbsp;  Score: {score?.totalScore ?? '?'} /{MAX_SCORE}
         </HackerInfoText>
       </StyledInfoContainer>
       {hasCompleted && <StyledTag>Completed</StyledTag>}

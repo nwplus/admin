@@ -6,6 +6,7 @@ import Tag from '../components/tag';
 import ScoreInput from '../components/scoreInput';
 import { COLOR, BUTTON_COLOR } from '../constants';
 import AddTagButton from '../components/Assessment/AddTagButton';
+import AddTagModal from '../components/Assessment/AddTagModal';
 
 const Container = styled.div`
   background-color: ${COLOR.MIDNIGHT_PURPLE};
@@ -321,6 +322,12 @@ export default function Charcuterie() {
       <Section>
         <Row>
           <AddTagButton />
+        </Row>
+      </Section>
+
+      <Section>
+        <Row>
+          <AddTagModal />
         </Row>
       </Section>
     </>

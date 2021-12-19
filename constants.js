@@ -28,6 +28,7 @@ export const COLOR = {
   TEAL: '#00A399',
   INACTIVE_DARK_GRAY: '#8C898F',
   BRIGHT_RED: '#F83D3D',
+  GREY_500: '#BDBAC3',
 };
 export const BUTTON_COLOR = {
   PRIMARY: 'linear-gradient(92.58deg, #0DEFE1 0%, #78FF96 100%)',
@@ -96,18 +97,30 @@ export const ASSESSMENT_COLOR = {
   BLUE_BORDER: '#21258A',
 };
 
-export const MAX_SCORES = {
+export const SCORING = {
+  LINK: {
+    label: 'GitHub/Personal Website',
+    value: 7,
+    weight: 1,
+  },
   RESUME: {
+    label: 'Resume',
     value: 7,
     weight: 1,
   },
   ESSAY: {
+    label: 'Short Answer 1',
+    value: 3,
+    weight: 2,
+  },
+  ESSAY_TWO: {
+    label: 'Short Answer 2',
     value: 3,
     weight: 2,
   },
 };
 
-export const MAX_SCORE = Object.values(MAX_SCORES).reduce(
+export const MAX_SCORE = Object.values(SCORING).reduce(
   (acc, curr) => acc + curr.value * curr.weight,
   0
 );

@@ -13,7 +13,6 @@ const ModalContainer = styled.div`
   border-radius: 5px;
   padding: 16px 11px;
   min-width: 226px;
-  min-height: 442px;
   position: absolute;
   bottom: 0;
 `;
@@ -34,9 +33,16 @@ const ExistingTagsContainer = styled.div`
   margin: 10px 0;
 `;
 
+const NotAddedTagsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin: 10px 0 20px;
+`;
+
 function NotAddedTags({ tags }) {
   return (
-    <ExistingTagsContainer>
+    <NotAddedTagsContainer>
       {tags &&
         tags.map((tag) => (
           <div>
@@ -49,7 +55,7 @@ function NotAddedTags({ tags }) {
             </Tag>
           </div>
         ))}
-    </ExistingTagsContainer>
+    </NotAddedTagsContainer>
   );
 }
 

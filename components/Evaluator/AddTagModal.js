@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import Button from '../button';
@@ -50,7 +50,17 @@ const TagDropDown = styled.div`
   }
 `;
 
-function NotAddedTags({ hackerId, tags, applicantTags = [] }) {
+function NotAddedTags({ hackerId, allTags, applicantTags = [] }) {
+  const [tags, setTags] = useState([]);
+
+  useEffect(() => {
+    setTags(
+      applicantTags
+        ? allTags.filter((tag) => applicantTags.indexOf(tag) === -1)
+        : allTags
+    );
+  }, [applicantTags]);
+
   return (
     <NotAddedTagsContainer>
       {tags &&
@@ -105,11 +115,7 @@ export default function AddTagModal({
       <TitleContainer>Tag As</TitleContainer>
       <NotAddedTags
         hackerId={hackerId}
-        tags={
-          applicantTags
-            ? allTags.filter((tag) => applicantTags.indexOf(tag) === -1)
-            : allTags
-        }
+        allTags={allTags}
         applicantTags={applicantTags}
       />
       <TitleContainer>Existing Tags</TitleContainer>

@@ -7,7 +7,7 @@ import TagIconSrc from '../../assets/tag.svg';
 import { COLOR } from '../../constants';
 
 import AddTagModal from './AddTagModal';
-import { getApplicantTags } from '../../utility/firebase';
+import { getApplicantTags, updateApplicantTags } from '../../utility/firebase';
 
 const TagButtonStyledDiv = styled.div`
   display: flex;
@@ -35,7 +35,7 @@ const ExistingTagsContainer = styled.div`
   gap: 9px;
 `;
 
-function AddedTags({ tags }) {
+function AddedTags({ tags, hackerId }) {
   return (
     <ExistingTagsContainer>
       {tags &&
@@ -44,7 +44,12 @@ function AddedTags({ tags }) {
             type="DELETE"
             color={tag.color}
             contentColor={COLOR.WHITE}
-            onDelete={(e) => alert('delete')} // [TODO] finish this delete handler
+            onDelete={() =>
+              updateApplicantTags(
+                hackerId,
+                tags.filter((applicantTag) => applicantTag !== tag)
+              )
+            }
           >
             {tag.text}
           </Tag>
@@ -63,7 +68,7 @@ export default function AddTagButton({ allTags, hackerId }) {
 
   return (
     <TagButtonStyledDiv>
-      <AddedTags tags={applicantTags} />
+      <AddedTags tags={applicantTags} hackerId={hackerId} />
       <Button color="white" onClick={() => setShowTagModal(true)}>
         <TagButtonContainer>
           <TagIcon src={TagIconSrc} alt="loading" />

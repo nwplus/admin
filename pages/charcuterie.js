@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { COLOR, BUTTON_COLOR, TAG_COLOR } from '../constants';
+import { COLOR, BUTTON_COLOR, TAG_COLOR, TAGS } from '../constants';
 import Button from '../components/button';
 import { Title1, Title2, Title3, Title4 } from '../components/Typography';
 import Tag from '../components/tag';
@@ -322,13 +322,17 @@ export default function Charcuterie() {
 
       <Section>
         <Row>
-          <AddTagButton />
+          {/* note: this id points to Kevo's application: kevin.zp.zou */}
+          <AddTagButton
+            AllTags={TAGS}
+            hackerId="W2Gk9IiTFrUQKht8wMhSFBFCsX32"
+          />
         </Row>
       </Section>
 
       <Section>
         <Row>
-          <AddTagModal />
+          <AddTagModal AllTags={TAGS} hackerId="W2Gk9IiTFrUQKht8wMhSFBFCsX32" />
         </Row>
       </Section>
     </>

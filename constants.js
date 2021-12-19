@@ -46,7 +46,7 @@ export const TAG_COLOR = {
   ORANGE: '#FFA644',
   YELLOW: '#FFF463',
 };
-export const currentTags = [
+export const TAGS = [
   {
     text: 'seattle bus',
     color: TAG_COLOR.TEAL,

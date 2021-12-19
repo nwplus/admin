@@ -54,7 +54,7 @@ function AddedTags({ tags }) {
 
 export default function AddTagModal({ setShowing }) {
   return (
-    <ModalContainer setShowing={setShowing}>
+    <ModalContainer>
       <TitleContainer>Tag As</TitleContainer>
       <AddedTags
         tags={[
@@ -65,7 +65,7 @@ export default function AddTagModal({ setShowing }) {
       <Button
         color="white"
         type="get rid of the paddings"
-        onClick={() => console.log('new tags are applied')}
+        onClick={() => setShowing(false)}
       >
         Apply
       </Button>

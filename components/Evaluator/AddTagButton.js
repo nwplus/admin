@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import Button from '../button';
@@ -7,6 +7,7 @@ import TagIconSrc from '../../assets/tag.svg';
 import { ASSESSMENT_COLOR, COLOR } from '../../constants';
 
 import AddTagModal from './AddTagModal';
+import { getApplicantTags } from '../../utility/firebase';
 
 const TagButtonStyledDiv = styled.div`
   display: flex;
@@ -55,15 +56,19 @@ function AddedTags({ tags }) {
 // [TODO] pull tag info from firebase
 export default function AddTagButton({ AllTags, hackerId }) {
   const [showTagModal, setShowTagModal] = useState(false);
+  const [applicantTags, setApplicantTags] = useState([]);
+
+  useEffect(() => {
+    async function fetchCurrentApplicantTags() {
+      const tags = await getApplicantTags(hackerId);
+      setApplicantTags(tags);
+    }
+    fetchCurrentApplicantTags();
+  }, []);
 
   return (
     <TagButtonStyledDiv>
-      <AddedTags
-        tags={[
-          { text: 'testing tag', color: ASSESSMENT_COLOR.RED },
-          { text: 'seattle bus', color: ASSESSMENT_COLOR.BLUE_TEXT },
-        ]}
-      />
+      <AddedTags tags={applicantTags} />
       <Button color="white" onClick={() => setShowTagModal(true)}>
         <TagButtonContainer>
           <TagIcon src={TagIconSrc} alt="loading" />

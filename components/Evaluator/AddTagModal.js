@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import Button from '../button';
 import Tag from '../tag';
 import { ASSESSMENT_COLOR, COLOR } from '../../constants';
+import { updateApplicantTags } from '../../utility/firebase';
 
 const ModalContainer = styled.div`
   background: white;
@@ -39,7 +40,7 @@ const NotAddedTagsContainer = styled.div`
   margin: 10px 0 20px;
 `;
 
-const AddTagDropDown = styled.div`
+const TagDropDown = styled.div`
   cursor: pointer;
   padding: 4.5px 0 4.5px 5px;
   margin-left: -5px;
@@ -49,32 +50,41 @@ const AddTagDropDown = styled.div`
   }
 `;
 
-function NotAddedTags({ tags }) {
+function NotAddedTags({ hackerId, tags, applicantTags = [] }) {
   return (
     <NotAddedTagsContainer>
       {tags &&
         tags.map((tag) => (
-          <AddTagDropDown>
+          <TagDropDown
+            onClick={() =>
+              updateApplicantTags(hackerId, applicantTags.push(tag))
+            }
+          >
             <Tag color={tag.color} contentColor={COLOR.WHITE}>
               {tag.text}
             </Tag>
-          </AddTagDropDown>
+          </TagDropDown>
         ))}
     </NotAddedTagsContainer>
   );
 }
 
-function AddedTags({ tags }) {
+function AddedTags({ hackerId, applicantTags }) {
   return (
     <ExistingTagsContainer>
-      {tags &&
-        tags.map((tag) => (
+      {applicantTags &&
+        applicantTags.map((tag) => (
           <div>
             <Tag
               type="DELETE"
               color={tag.color}
               contentColor={COLOR.WHITE}
-              onDelete={(e) => alert('delete')} // [TODO] finish this delete handler
+              onDelete={() =>
+                updateApplicantTags(
+                  hackerId,
+                  applicantTags.filter((applicantTag) => applicantTag !== tag)
+                )
+              }
             >
               {tag.text}
             </Tag>
@@ -94,14 +104,20 @@ export default function AddTagModal({
     <ModalContainer>
       <TitleContainer>Tag As</TitleContainer>
       <NotAddedTags
+        hackerId={hackerId}
         tags={
           applicantTags
             ? allTags.filter((tag) => !applicantTags.include(tag))
             : allTags
         }
+        applicantTags={applicantTags}
       />
       <TitleContainer>Existing Tags</TitleContainer>
-      <AddedTags tags={applicantTags} />
+      <AddedTags
+        hackerId={hackerId}
+        tags={applicantTags}
+        applicantTags={applicantTags}
+      />
       <Button
         color="white"
         type="get rid of the paddings"

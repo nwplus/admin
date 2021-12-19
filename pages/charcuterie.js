@@ -325,12 +325,13 @@ export default function Charcuterie() {
           {/* note: this id points to Kevo's application: kevin.zp.zou */}
           <AddTagButton
             allTags={TAGS}
-            hackerId="W2Gk9IiTFrUQKht8wMhSFBFCsX32"/>
-          </Row>
+            hackerId="W2Gk9IiTFrUQKht8wMhSFBFCsX32"
+          />
+        </Row>
       </Section>
 
       <Section>
-            <Row>
+        <Row>
           <HackerEntry
             index={1}
             firstName="Teddy"

@@ -7,6 +7,7 @@ import { Title1, Title2, Title3, Title4 } from '../components/Typography';
 import Tag from '../components/tag';
 import ScoreInput from '../components/Evaluator/scoreInput';
 import AddTagButton from '../components/Evaluator/AddTagButton';
+import HackerEntry from '../components/Evaluator/HackerEntry';
 
 const Container = styled.div`
   background-color: ${COLOR.MIDNIGHT_PURPLE};
@@ -324,7 +325,29 @@ export default function Charcuterie() {
           {/* note: this id points to Kevo's application: kevin.zp.zou */}
           <AddTagButton
             allTags={TAGS}
-            hackerId="W2Gk9IiTFrUQKht8wMhSFBFCsX32"
+            hackerId="W2Gk9IiTFrUQKht8wMhSFBFCsX32"/>
+          </Row>
+      </Section>
+
+      <Section>
+            <Row>
+          <HackerEntry
+            index={1}
+            firstName="Teddy"
+            lastName="Flood"
+            id={51}
+            score={{ totalScore: 18 }}
+            hasCompleted
+            selectedHackerID={51}
+          />
+        </Row>
+        <Row>
+          <HackerEntry
+            index={2}
+            firstName="Alice"
+            lastName="Lovelace"
+            id={52}
+            selectedHackerID={51}
           />
         </Row>
       </Section>

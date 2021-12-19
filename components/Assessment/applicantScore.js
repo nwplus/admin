@@ -70,6 +70,7 @@ export default function ApplicantScore(props) {
             ...score,
             ResumeScore: value,
           },
+          '',
           user.email
         );
         break;
@@ -80,6 +81,7 @@ export default function ApplicantScore(props) {
             ...score,
             ResponseScore: value,
           },
+          '',
           user.email
         );
         break;

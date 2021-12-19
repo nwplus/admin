@@ -36,8 +36,17 @@ const ExistingTagsContainer = styled.div`
 const NotAddedTagsContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 9px;
   margin: 10px 0 20px;
+`;
+
+const AddTagDropDown = styled.div`
+  cursor: pointer;
+  padding: 4.5px 0 4.5px 2px;
+  margin-left: -2px;
+
+  &:hover {
+    background: ${COLOR.MIDNIGHT_PURPLE_LIGHT};
+  }
 `;
 
 function NotAddedTags({ tags }) {
@@ -45,15 +54,11 @@ function NotAddedTags({ tags }) {
     <NotAddedTagsContainer>
       {tags &&
         tags.map((tag) => (
-          <div>
-            <Tag
-              color={tag.color}
-              contentColor={COLOR.WHITE}
-              onDelete={(e) => alert('delete')} // [TODO] finish this delete handler
-            >
+          <AddTagDropDown>
+            <Tag color={tag.color} contentColor={COLOR.WHITE}>
               {tag.text}
             </Tag>
-          </div>
+          </AddTagDropDown>
         ))}
     </NotAddedTagsContainer>
   );

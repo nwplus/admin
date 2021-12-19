@@ -83,25 +83,6 @@ export const LIVESITE_NAVBAR = {
   judging: 'Judging',
 };
 
-// Assessment portal
-export const APPLICATION_STATUS = {
-  applied: {
-    color: COLOR.RED,
-    textColor: 'white',
-    text: 'applied',
-  },
-  scored: {
-    color: COLOR.BLUE_TEXT,
-    textColor: 'white',
-    text: 'scored',
-  },
-  accepted: {
-    color: 'green',
-    textColor: 'white',
-    text: 'accepted',
-  },
-};
-
 export const ASSESSMENT_COLOR = {
   PRIMARY: '#2D2937',
   PRIMARY_DARK: '#1b1821',
@@ -114,10 +95,34 @@ export const ASSESSMENT_COLOR = {
   BODY_TEXT: '#5A5A5A',
   LIGHT_GRAY: '#828282',
   UNSCORED_GRAY: '#E0E0E0',
-  LIGHT_BLUE: '#F6FEFF',
+  LIGHT_BLUE: '#F0EEF2',
   BLUE_TEXT: '#2F80ED',
   TOOLBAR_GRAY: '#FAFAFA',
   BLUE_BORDER: '#21258A',
+};
+
+// Assessment portal
+export const APPLICATION_STATUS = {
+  applied: {
+    color: ASSESSMENT_COLOR.RED,
+    textColor: 'white',
+    text: 'applied',
+  },
+  scored: {
+    color: ASSESSMENT_COLOR.BLUE_TEXT,
+    textColor: 'white',
+    text: 'scored',
+  },
+  accepted: {
+    color: 'green',
+    textColor: 'white',
+    text: 'accepted',
+  },
+  completed: {
+    color: COLOR.MIDNIGHT_PURPLE,
+    textColor: 'white',
+    text: 'completed',
+  },
 };
 
 export const SCORING = {

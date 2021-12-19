@@ -54,11 +54,15 @@ function NotAddedTags({ hackerId, allTags, applicantTags = [] }) {
   const [tags, setTags] = useState([]);
 
   useEffect(() => {
-    setTags(
-      applicantTags
-        ? allTags.filter((tag) => applicantTags.indexOf(tag) === -1)
-        : allTags
-    );
+    const notAddedTags = [];
+    for (const tag of allTags) {
+      let exists = false;
+      for (const addedTag of applicantTags) {
+        if (tag.text === addedTag.text) exists = true;
+      }
+      if (!exists) notAddedTags.push(tag);
+    }
+    setTags(notAddedTags);
   }, [applicantTags]);
 
   return (

@@ -1,12 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
+
+import { COLOR, BUTTON_COLOR } from '../constants';
 import Button from '../components/button';
 import { Title1, Title2, Title3, Title4 } from '../components/Typography';
 import Tag from '../components/tag';
 import ScoreInput from '../components/Evaluator/scoreInput';
-import { COLOR, BUTTON_COLOR } from '../constants';
-import AddTagButton from '../components/Assessment/AddTagButton';
-import AddTagModal from '../components/Assessment/AddTagModal';
+import AddTagButton from '../components/Evaluator/AddTagButton';
+import AddTagModal from '../components/Evaluator/AddTagModal';
 
 const Container = styled.div`
   background-color: ${COLOR.MIDNIGHT_PURPLE};

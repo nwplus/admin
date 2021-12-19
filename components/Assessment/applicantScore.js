@@ -9,7 +9,7 @@ import {
 } from '../../utility/firebase';
 import { Button } from './Button';
 import ScoreInput from './scoreInput';
-import AddTagButton from './AddTagButton';
+import AddTagButton from '../Evaluator/AddTagButton';
 import { AuthContext } from '../../utility/auth';
 import {
   ASSESSMENT_COLOR,

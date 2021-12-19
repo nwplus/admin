@@ -107,7 +107,7 @@ export default function AddTagModal({
         hackerId={hackerId}
         tags={
           applicantTags
-            ? allTags.filter((tag) => !applicantTags.include(tag))
+            ? allTags.filter((tag) => applicantTags.indexOf(tag) === -1)
             : allTags
         }
         applicantTags={applicantTags}

@@ -36,6 +36,7 @@ const ExistingTagsContainer = styled.div`
 `;
 
 function AddedTags({ tags }) {
+  console.log(tags, "this is tags");
   return (
     <ExistingTagsContainer>
       {tags &&
@@ -61,7 +62,8 @@ export default function AddTagButton({ allTags, hackerId }) {
   useEffect(() => {
     async function fetchCurrentApplicantTags() {
       const tags = await getApplicantTags(hackerId);
-      setApplicantTags(tags);
+      console.log(tags, "tags hot off the press");
+      setApplicantTags(tags ?? []);
     }
     fetchCurrentApplicantTags();
   }, []);

@@ -766,3 +766,12 @@ export const updateApplicantStatus = async (userId, applicationStatus) => {
       'status.applicationStatus': applicationStatus,
     });
 };
+
+export const updateApplicantTags = async (userId, applicantTags) => {
+  return db
+    .collection('Hackathons')
+    .doc(HackerEvaluationHackathon)
+    .collection('Applicants')
+    .doc(userId)
+    .update({ applicantTags });
+};

@@ -329,12 +329,6 @@ export default function Charcuterie() {
           />
         </Row>
       </Section>
-
-      <Section>
-        <Row>
-          <AddTagModal AllTags={TAGS} hackerId="W2Gk9IiTFrUQKht8wMhSFBFCsX32" />
-        </Row>
-      </Section>
     </>
   );
 }

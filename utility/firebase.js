@@ -767,6 +767,17 @@ export const updateApplicantStatus = async (userId, applicationStatus) => {
     });
 };
 
+export const getApplicantTags = async (userId) => {
+  const apps = await db
+    .collection('Hackathons')
+    .doc(HackerEvaluationHackathon)
+    .collection('Applicants')
+    .doc(userId)
+    .get();
+
+  return apps.data().applicantTags;
+};
+
 export const updateApplicantTags = async (userId, applicantTags) => {
   return db
     .collection('Hackathons')

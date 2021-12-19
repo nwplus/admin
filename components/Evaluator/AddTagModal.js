@@ -54,7 +54,7 @@ function AddedTags({ tags }) {
   );
 }
 
-export default function AddTagModal({ setShowing }) {
+export default function AddTagModal({ setShowing, AllTags, hackerId }) {
   return (
     <ModalContainer>
       <TitleContainer>Tag As</TitleContainer>

@@ -53,7 +53,7 @@ function AddedTags({ tags }) {
 }
 
 // [TODO] pull tag info from firebase
-export default function AddTagButton({ AllTags }) {
+export default function AddTagButton({ AllTags, hackerId }) {
   const [showTagModal, setShowTagModal] = useState(false);
 
   return (

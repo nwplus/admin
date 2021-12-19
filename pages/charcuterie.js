@@ -5,7 +5,7 @@ import { Title1, Title2, Title3, Title4 } from '../components/Typography';
 import Tag from '../components/tag';
 import ScoreInput from '../components/Evaluator/scoreInput';
 import { COLOR, BUTTON_COLOR } from '../constants';
-import HackerEntry from '../components/Assessment/HackerEntry';
+import HackerEntry from '../components/Evaluator/HackerEntry';
 
 const Container = styled.div`
   background-color: ${COLOR.MIDNIGHT_PURPLE};

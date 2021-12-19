@@ -14,6 +14,8 @@ const ModalContainer = styled.div`
   padding: 16px 11px;
   min-width: 226px;
   min-height: 442px;
+  position: absolute;
+  bottom: 0;
 `;
 
 const TitleContainer = styled.span`

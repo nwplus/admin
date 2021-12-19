@@ -12,6 +12,7 @@ const TagButtonStyledDiv = styled.div`
   display: flex;
   flex-direction: column;
   background: white;
+  position: relative;
 `;
 
 const TagButtonContainer = styled.div`

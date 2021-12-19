@@ -110,9 +110,10 @@ export default function Eval({ hackathons }) {
           <div>Applicant List</div>
           <div>Rubric</div>
         </LeftContainer>
-        <div>Applicant Response</div>
+        <div>
+          <ApplicantResponse hacker={hacker} />
+        </div>
         <Scoring />
-        <ApplicantResponse hacker={hacker} />
       </Container>
     </Page>
   );

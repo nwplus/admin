@@ -14,35 +14,16 @@ const Container = styled.div`
   height: 85vh;
 `;
 
+const NO_RESPONSE = "No Response";
+
 export default function ApplicantResponse({hacker}) {
-
-  function ResumeLink() {
-    const [file, setFile] = useState(null);
-    const [noResume, setNoResume] = useState(false);
-    useEffect(() => {
-      getResumeFile(hacker._id)
-        .then(async (url) => {
-          const data = await fetch(url);
-          setFile(await data.blob());
-          const fileURL = URL.createObjectURL(file);
-          setFile(fileURL);
-        })
-        .catch(() => setNoResume(true));
-    }, []);
-
-    return !file && noResume === false ? (
-      <>Loading</>
-    ) : noResume ? (
-      <div>No resume</div>
-    ) : (
-      <a href={file} target="_blank" rel="noopener noreferrer">
-        View Resume
-      </a>
-    );
-  }
-
-  const temp = ResumeLink();
-  console.log(temp.props.children)
+  const [resumeURL, setResumeURL] = useState(null)
+  useEffect(() => {
+    getResumeFile(hacker._id)
+      .then(async (url) => {
+        setResumeURL(url)
+      });
+  })
 
   return (
     <Container>
@@ -54,25 +35,38 @@ export default function ApplicantResponse({hacker}) {
 
       <ResponseInput
         url
+        urlLabel={hacker.skills?.github ? "View GitHub" : NO_RESPONSE}
         label="Github"
         response={hacker.skills?.github}
       />
 
       <ResponseInput
         url
+        urlLabel={hacker.skills?.portfolio ? "View Portfolio" : NO_RESPONSE}
         label="Personal site"
         response={hacker.skills?.portfolio}
       />
 
-      <ResponseInput url={temp.props.children !== "No resume"} label="Resume" response={temp}/>
+      <ResponseInput
+        url
+        urlLabel={hacker.skills?.linkedin ? "View LinkedIn" : NO_RESPONSE}
+        label="LinkedIn"
+        response={hacker.skills?.linkedin}
+      />
 
       <ResponseInput
-          label="What are you interested in building at nwHacks? Tell us about an idea you have, and why it gets you excited."
+        url={resumeURL}
+        urlLabel={resumeURL ? "View Resume" : NO_RESPONSE}
+        label="Resume"
+        response={resumeURL}/>
+
+      <ResponseInput
+          label="What should technology be used for?"
           response={`${hacker.skills.longAnswers1}`}
       />
 
       <ResponseInput
-        label="What can you teach others at nwHacks? (It can be a specific skill, technology, or an area of domain knowledge)"
+        label="How would you like to challenge yourself during this hackathon? OR Describe a time where you went above and beyond of your role to demonstrate leadership in a project."
         response={`${hacker.skills.longAnswers2}`}
       />
 

@@ -4,22 +4,15 @@ import { ASSESSMENT_COLOR, MAX_SCORE, COLOR } from '../../constants';
 
 const HackerName = styled.span`
   font-size: 15px;
-  font-weight: 400;
   line-height: 19px;
   color: ${COLOR.MIDNIGHT_PURPLE};
-  font-family: HK Grotesk;
-  font-style: normal;
   font-weight: bold;
 `;
 
 const HackerIndex = HackerName;
 
 const HackerInfoText = styled.span`
-  font-family: HK Grotesk;
-  font-style: normal;
-  font-weight: normal;
   font-size: 15px;
-  font-weight: 400;
   line-height: 19px;
   color: ${COLOR.MIDNIGHT_PURPLE};
 `;
@@ -44,10 +37,8 @@ const StyledTag = styled.div`
   display: inline-flex;
   box-sizing: border-box;
   border: none;
-  font-family: 'HK Grotesk';
   font-size: 13px;
   line-height: 16px;
-  font-weight: 400;
   color: ${COLOR.LIGHT_PURPLE};
   background: ${COLOR.MIDNIGHT_PURPLE_MEDIUM};
   padding: 0px 5px;

@@ -41,11 +41,11 @@ const NotAddedTagsContainer = styled.div`
 
 const AddTagDropDown = styled.div`
   cursor: pointer;
-  padding: 4.5px 0 4.5px 2px;
-  margin-left: -2px;
+  padding: 4.5px 0 4.5px 5px;
+  margin-left: -5px;
 
   &:hover {
-    background: ${COLOR.MIDNIGHT_PURPLE_LIGHT};
+    background: ${ASSESSMENT_COLOR.LIGHT_BLUE};
   }
 `;
 

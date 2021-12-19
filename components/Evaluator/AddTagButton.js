@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Button from '../button';
 import Tag from '../tag';
 import TagIconSrc from '../../assets/tag.svg';
-import { ASSESSMENT_COLOR, COLOR } from '../../constants';
+import { COLOR } from '../../constants';
 
 import AddTagModal from './AddTagModal';
 import { getApplicantTags } from '../../utility/firebase';
@@ -54,7 +54,7 @@ function AddedTags({ tags }) {
 }
 
 // [TODO] pull tag info from firebase
-export default function AddTagButton({ AllTags, hackerId }) {
+export default function AddTagButton({ allTags, hackerId }) {
   const [showTagModal, setShowTagModal] = useState(false);
   const [applicantTags, setApplicantTags] = useState([]);
 
@@ -75,7 +75,14 @@ export default function AddTagButton({ AllTags, hackerId }) {
           Add Tag
         </TagButtonContainer>
       </Button>
-      {showTagModal && <AddTagModal setShowing={setShowTagModal} />}
+      {showTagModal && (
+        <AddTagModal
+          setShowing={setShowTagModal}
+          allTags={allTags}
+          hackerId={hackerId}
+          applicantTags={applicantTags}
+        />
+      )}
     </TagButtonStyledDiv>
   );
 }

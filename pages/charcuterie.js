@@ -7,7 +7,6 @@ import { Title1, Title2, Title3, Title4 } from '../components/Typography';
 import Tag from '../components/tag';
 import ScoreInput from '../components/Evaluator/scoreInput';
 import AddTagButton from '../components/Evaluator/AddTagButton';
-import AddTagModal from '../components/Evaluator/AddTagModal';
 
 const Container = styled.div`
   background-color: ${COLOR.MIDNIGHT_PURPLE};
@@ -324,7 +323,7 @@ export default function Charcuterie() {
         <Row>
           {/* note: this id points to Kevo's application: kevin.zp.zou */}
           <AddTagButton
-            AllTags={TAGS}
+            allTags={TAGS}
             hackerId="W2Gk9IiTFrUQKht8wMhSFBFCsX32"
           />
         </Row>

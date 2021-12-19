@@ -34,6 +34,25 @@ const ExistingTagsContainer = styled.div`
   margin: 10px 0;
 `;
 
+function NotAddedTags({ tags }) {
+  return (
+    <ExistingTagsContainer>
+      {tags &&
+        tags.map((tag) => (
+          <div>
+            <Tag
+              color={tag.color}
+              contentColor={COLOR.WHITE}
+              onDelete={(e) => alert('delete')} // [TODO] finish this delete handler
+            >
+              {tag.text}
+            </Tag>
+          </div>
+        ))}
+    </ExistingTagsContainer>
+  );
+}
+
 function AddedTags({ tags }) {
   return (
     <ExistingTagsContainer>
@@ -54,16 +73,24 @@ function AddedTags({ tags }) {
   );
 }
 
-export default function AddTagModal({ setShowing, AllTags, hackerId }) {
+export default function AddTagModal({
+  setShowing,
+  allTags,
+  hackerId,
+  applicantTags,
+}) {
   return (
     <ModalContainer>
       <TitleContainer>Tag As</TitleContainer>
-      <AddedTags
-        tags={[
-          { text: 'testing tag', color: ASSESSMENT_COLOR.RED },
-          { text: 'seattle bus', color: ASSESSMENT_COLOR.BLUE_TEXT },
-        ]}
+      <NotAddedTags
+        tags={
+          applicantTags
+            ? allTags.filter((tag) => !applicantTags.include(tag))
+            : allTags
+        }
       />
+      <TitleContainer>Existing Tags</TitleContainer>
+      <AddedTags tags={applicantTags} />
       <Button
         color="white"
         type="get rid of the paddings"

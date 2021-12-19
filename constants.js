@@ -46,6 +46,20 @@ export const TAG_COLOR = {
   ORANGE: '#FFA644',
   YELLOW: '#FFF463',
 };
+export const currentTags = [
+  {
+    text: 'seattle bus',
+    color: TAG_COLOR.TEAL,
+  },
+  {
+    text: "rsvp'd",
+    color: TAG_COLOR.BLUE,
+  },
+  {
+    text: 'travel reimbursement',
+    color: TAG_COLOR.PURPLE,
+  },
+];
 export const FAQ = 'FAQ';
 export const FAQCategory = Object.freeze({
   GENERAL: 'General',

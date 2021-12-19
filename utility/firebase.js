@@ -382,6 +382,11 @@ export const updateFlags = async (id, flags) => {
   return db.collection(Hackathons).doc(id).update(doc);
 };
 
+export const updateTags = async (id, tags) => {
+  const doc = { tags };
+  return db.collection(Hackathons).doc(id).update(doc);
+};
+
 export const subscribeToCMSStatus = (dateCallback) => {
   return db
     .collection(InternalWebsitesCollection)

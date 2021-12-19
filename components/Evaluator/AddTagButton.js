@@ -36,7 +36,6 @@ const ExistingTagsContainer = styled.div`
 `;
 
 function AddedTags({ tags }) {
-  console.log(tags, "this is tags");
   return (
     <ExistingTagsContainer>
       {tags &&
@@ -54,18 +53,12 @@ function AddedTags({ tags }) {
   );
 }
 
-// [TODO] pull tag info from firebase
 export default function AddTagButton({ allTags, hackerId }) {
   const [showTagModal, setShowTagModal] = useState(false);
   const [applicantTags, setApplicantTags] = useState([]);
 
   useEffect(() => {
-    async function fetchCurrentApplicantTags() {
-      const tags = await getApplicantTags(hackerId);
-      console.log(tags, "tags hot off the press");
-      setApplicantTags(tags ?? []);
-    }
-    fetchCurrentApplicantTags();
+    getApplicantTags(hackerId, setApplicantTags);
   }, []);
 
   return (

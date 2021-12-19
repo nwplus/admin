@@ -56,9 +56,9 @@ function NotAddedTags({ hackerId, tags, applicantTags = [] }) {
       {tags &&
         tags.map((tag) => (
           <TagDropDown
-            onClick={() =>
-              updateApplicantTags(hackerId, applicantTags.push(tag))
-            }
+            onClick={() => {
+              updateApplicantTags(hackerId, [...applicantTags, tag]);
+            }}
           >
             <Tag color={tag.color} contentColor={COLOR.WHITE}>
               {tag.text}

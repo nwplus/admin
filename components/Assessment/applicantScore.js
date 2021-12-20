@@ -9,7 +9,6 @@ import {
 } from '../../utility/firebase';
 import { Button } from './Button';
 import ScoreInput from './scoreInput';
-import AddTagButton from '../Evaluator/AddTagButton';
 import { AuthContext } from '../../utility/auth';
 import {
   ASSESSMENT_COLOR,
@@ -31,8 +30,7 @@ const Summary = styled.div`
 `;
 
 export default function ApplicantScore(props) {
-  const { hacker, existingTags, SetExistingTags } = props;
-  const [applicantTags, SetApplicantTags] = useState([]);
+  const { hacker } = props;
   const [hasScore, setHasScore] = useState(false);
 
   const appStatus = hacker.status.applicationStatus;
@@ -145,7 +143,6 @@ export default function ApplicantScore(props) {
           </div>
         </Summary>
       )}
-      <AddTagButton/>
     </div>
   );
 }

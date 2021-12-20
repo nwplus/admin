@@ -152,6 +152,7 @@ export default function Table(props) {
       </div>
       {Object.keys(selectedHacker).length !== 0 ? (
         <>
+          <ApplicantScore hacker={selectedHacker} style={{ flex: 1 }} />
           <ApplicantResponse
             setSelectedHacker={props.setSelectedHacker}
             hacker={selectedHacker}

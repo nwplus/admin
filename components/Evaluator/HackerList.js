@@ -52,7 +52,10 @@ export default function HackerList({
   return (
     <>
       <Title>Applicant List</Title>
-      <Input value={search} onChange={(e) => setSearch(e.target.value)} />
+      <Input
+        value={search}
+        onChange={(e) => setSearch(e.target.value.toLowerCase())}
+      />
       {filtered.map((applicant, i) => (
         <HackerEntry
           index={applicant.index || i}

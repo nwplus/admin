@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Scoring from '../components/Evaluator/Scoring';
-import HackerEntry from '../components/Evaluator/HackerEntry';
+import HackerList from '../components/Evaluator/HackerList';
 import Page from '../components/page';
 import { getAllApplicants, getHackathons } from '../utility/firebase';
 
@@ -35,11 +35,14 @@ export default function Eval({ hackathons }) {
     <Page hackathons={hackathons} currentPath="eval">
       <Container>
         <LeftContainer>
-          <div>Applicant List</div>
-          {/* TODO: Replace this with the applicant component */}
-          {applicants.map((applicant, i) => {
-            console.log(applicant)
-            return <HackerEntry
+          <HackerList
+            applicants={applicants}
+            selectedApplicant={selectedApplicant}
+            setSelectedApplicant={setSelectedApplicant}
+          />
+          {/* <div>Applicant List</div>
+          {applicants.map((applicant, i) => (
+            <HackerEntry
               index={applicant.index || i}
               id={applicant.id || 'tbd'}
               firstName={applicant.basicInfo.firstName}
@@ -48,7 +51,7 @@ export default function Eval({ hackathons }) {
               selectHacker={() => setSelectedApplicant(applicant)}
               isSelected={selectedApplicant._id === applicant._id}
             />
-            })}
+          ))} */}
           <div>Rubric</div>
         </LeftContainer>
         <div>Applicant Response</div>

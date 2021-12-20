@@ -40,18 +40,6 @@ export default function Eval({ hackathons }) {
             selectedApplicant={selectedApplicant}
             setSelectedApplicant={setSelectedApplicant}
           />
-          {/* <div>Applicant List</div>
-          {applicants.map((applicant, i) => (
-            <HackerEntry
-              index={applicant.index || i}
-              id={applicant.id || 'tbd'}
-              firstName={applicant.basicInfo.firstName}
-              lastName={applicant.basicInfo.lastName}
-              score={applicant.score}
-              selectHacker={() => setSelectedApplicant(applicant)}
-              isSelected={selectedApplicant._id === applicant._id}
-            />
-          ))} */}
           <div>Rubric</div>
         </LeftContainer>
         <div>Applicant Response</div>

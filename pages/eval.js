@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Scoring from '../components/Evaluator/Scoring';
+import HackerEntry from '../components/Evaluator/HackerEntry';
 import Page from '../components/page';
 import { getAllApplicants, getHackathons } from '../utility/firebase';
 
@@ -36,14 +37,18 @@ export default function Eval({ hackathons }) {
         <LeftContainer>
           <div>Applicant List</div>
           {/* TODO: Replace this with the applicant component */}
-          {applicants.map((applicant) => (
-            <button
-              type="button"
-              onClick={() => setSelectedApplicant(applicant)}
-            >
-              {applicant.basicInfo.firstName}
-            </button>
-          ))}
+          {applicants.map((applicant, i) => {
+            console.log(applicant)
+            return <HackerEntry
+              index={applicant.index || i}
+              id={applicant.id || 'tbd'}
+              firstName={applicant.basicInfo.firstName}
+              lastName={applicant.basicInfo.lastName}
+              score={applicant.score}
+              selectHacker={() => setSelectedApplicant(applicant)}
+              isSelected={selectedApplicant._id === applicant._id}
+            />
+            })}
           <div>Rubric</div>
         </LeftContainer>
         <div>Applicant Response</div>

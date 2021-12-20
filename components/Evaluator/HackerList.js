@@ -38,8 +38,7 @@ export default function HackerList({
       setFiltered(
         applicants.filter((applicant) => {
           const [name, email] = [
-            applicant.basicInfo.firstName.toLowerCase() +
-              applicant.basicInfo.lastName.toLowerCase(),
+            `${applicant.basicInfo.firstName.toLowerCase()} ${applicant.basicInfo.lastName.toLowerCase()}`,
             applicant.basicInfo.email.toLowerCase(),
           ];
           return (

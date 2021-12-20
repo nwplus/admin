@@ -11,7 +11,8 @@ const Container = styled.div`
   padding: 20px;
   max-width: 46%;
   text-align: left;
-  height: 85vh;
+  overflow-y: scroll;
+  height: 80vh;
 `;
 
 const NO_RESPONSE = "No Response";
@@ -28,6 +29,35 @@ export default function ApplicantResponse({hacker}) {
   return (
     <Container>
       <Title4 color={COLOR.MIDNIGHT_PURPLE}>Applicant Response</Title4>
+      <ResponseInput
+          label="Full Name"
+          response={`${hacker.basicInfo?.firstName} ${hacker.basicInfo.lastName}`}
+      />
+
+      <ResponseInput label="Email" response={hacker.basicInfo?.email} />
+
+      <ResponseInput
+        label="Role"
+        response={hacker.basicInfo?.contributionRole}
+      />
+
+      <ResponseInput
+        label="19 or over?"
+        response={hacker.basicInfo?.isOfLegalAge ? 'yes' : 'no'}
+      />
+
+      <ResponseInput
+        label="School"
+        response={`Studying ${hacker.basicInfo?.school}`}
+      />
+
+      <ResponseInput label="Major" response={hacker.basicInfo?.major} />
+
+      <ResponseInput
+        label="Visiting From"
+        response={hacker.basicInfo?.location}
+      />
+
       <ResponseInput
           label="How many hackathons have you attended?"
           response={`${hacker.skills.hackathonsAttended}`}

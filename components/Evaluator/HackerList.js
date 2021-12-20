@@ -16,21 +16,44 @@ export default function HackerList({
   selectedApplicant,
   setSelectedApplicant = () => {},
 }) {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filteredApplicants, setFilteredApplicants] = useState([]);
+  const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [filtered, setFiltered] = useState([]);
 
+  // debounce search
   useEffect(() => {
-    setFilteredApplicants(applicants);
-  }, []);
+    const handler = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 20);
+
+    return () => {
+      // teardown
+      clearTimeout(handler);
+    };
+  }, [search]);
+
+  // filter applicants based off of search term
+  useEffect(
+    () =>
+      setFiltered(
+        applicants.filter((applicant) => {
+          const [first, last] = [
+            applicant.basicInfo.firstName.toLowerCase(),
+            applicant.basicInfo.lastName.toLowerCase(),
+          ];
+          return (
+            first.includes(debouncedSearch) || last.includes(debouncedSearch)
+          );
+        })
+      ),
+    [debouncedSearch, applicants]
+  );
 
   return (
     <>
       <Title>Applicant List</Title>
-      <Input
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
-      {filteredApplicants.map((applicant, i) => (
+      <Input value={search} onChange={(e) => setSearch(e.target.value)} />
+      {filtered.map((applicant, i) => (
         <HackerEntry
           index={applicant.index || i}
           id={applicant.id || 'tbd'}

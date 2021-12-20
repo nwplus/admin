@@ -37,12 +37,13 @@ export default function HackerList({
     () =>
       setFiltered(
         applicants.filter((applicant) => {
-          const [first, last] = [
-            applicant.basicInfo.firstName.toLowerCase(),
-            applicant.basicInfo.lastName.toLowerCase(),
+          const [name, email] = [
+            applicant.basicInfo.firstName.toLowerCase() +
+              applicant.basicInfo.lastName.toLowerCase(),
+            applicant.basicInfo.email.toLowerCase(),
           ];
           return (
-            first.includes(debouncedSearch) || last.includes(debouncedSearch)
+            name.includes(debouncedSearch) || email.includes(debouncedSearch)
           );
         })
       ),

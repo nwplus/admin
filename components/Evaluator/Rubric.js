@@ -76,11 +76,11 @@ const Rubric = () => {
     <Container>
       <Title4 color={COLOR.MIDNIGHT_PURPLE}>Rubric</Title4>
       <ContentContainer>
-        <RubricDropdown onSelect={(val) => setSelected(val)}/>
+        <RubricDropdown onSelect={(val) => setSelected(val)} />
         {selected !== null ? (
           <StyledTable>
             <tbody>
-              { RUBRIC[selected].map(rubricEntry => (
+              {RUBRIC[selected].map(rubricEntry => (
                 <RubricEntry
                   score={rubricEntry.score}
                   label={rubricEntry.label}
@@ -92,7 +92,7 @@ const Rubric = () => {
           <EmptyValueContentContainer>
             <StyledImg src={Teapots} />
             <StyledText>
-              Select a rubric from the <br/> dropdown above.
+              Select a rubric from the <br /> dropdown above.
             </StyledText>
           </EmptyValueContentContainer>
         )}

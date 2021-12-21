@@ -79,13 +79,15 @@ const RubricDropdown = ({ onSelect }) => {
   const dropdownRef = useRef(null);
 
   useEffect(() => {
-    const clickOutside = (e) => { 
+    const clickOutside = (e) => {
+      console.log('HOHO');
       if (
         dropdownRef.current &&
         isOpen &&
         !dropdownRef.current.contains(e.target)
       ) {
-          setIsOpen(false);
+        console.log('FINALLY');
+        setIsOpen(false);
       }
     };
     document.addEventListener('mousedown', clickOutside);
@@ -93,16 +95,24 @@ const RubricDropdown = ({ onSelect }) => {
 
   return (
     <Container>
-      <SelectContainer isOpen={isOpen} ref={dropdownRef} hasValue={!!selectedValue} onClick={() => setIsOpen(!isOpen)}>
+      <SelectContainer 
+        isOpen={isOpen}
+        ref={dropdownRef}
+        hasValue={!!selectedValue}
+        onClick={() => setIsOpen(!isOpen)}
+      >
         <RowContent>
-          <div>{selectedValue === null ? 'Select a rubric' : selectedValue}</div>
-          <img src={DropdownArrow} alt='' />
+          <div>
+            {selectedValue === null ? 'Select a rubric' : selectedValue}
+          </div>
+          <img src={DropdownArrow} alt="" />
         </RowContent>
         <OptionsContainer isOpen={isOpen}>
-          { rubricOptions.map((r) => (
+          {rubricOptions.map((r) => (
             <StyledOption onClick={() => onChange(r)}>
               <StyledOptionCircle>{r.label}</StyledOptionCircle>
-              </StyledOption>))}
+            </StyledOption>
+          ))}
         </OptionsContainer>
       </SelectContainer>
     </Container>

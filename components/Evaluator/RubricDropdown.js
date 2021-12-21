@@ -95,7 +95,7 @@ const RubricDropdown = ({ onSelect }) => {
 
   return (
     <Container>
-      <SelectContainer 
+      <SelectContainer
         isOpen={isOpen}
         ref={dropdownRef}
         hasValue={!!selectedValue}

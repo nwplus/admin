@@ -80,7 +80,7 @@ const Rubric = () => {
         {selected !== null ? (
           <StyledTable>
             <tbody>
-              {RUBRIC[selected].map(rubricEntry => (
+              {RUBRIC[selected].map((rubricEntry) => (
                 <RubricEntry
                   score={rubricEntry.score}
                   label={rubricEntry.label}

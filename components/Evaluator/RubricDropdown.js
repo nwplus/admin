@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import DropdownArrow from "../../assets/arrowDropdown.svg";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { COLOR } from "../../constants";
 
 const Container = styled.div`
@@ -8,18 +8,13 @@ const Container = styled.div`
 `
 
 const SelectContainer = styled.div`
-    // display: flex;
-    // justify-content: space-between;
-    // align-items: center;
     border: solid 1px ${COLOR.EVAL_GREY};
     border-radius: ${p => p.isOpen ? "5px 5px 0 0" : "5px"};
-    // height: 25px;
-    // padding: 10px;
     cursor: pointer;
     background-color: ${p => !p.hasValue && COLOR.LIGHT_GRAY};
     position: relative;
 `
-const Temp = styled.div`
+const RowContent = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -80,13 +75,24 @@ const RubricDropdown = ({ onSelect }) => {
         setIsOpen(false)
     }
 
+    const dropdownRef = useRef(null)
+
+    useEffect(() => {
+        const clickOutside = e => { 
+            if (dropdownRef.current && isOpen && !dropdownRef.current.contains(e.target)) {
+                setIsOpen(false)
+            }
+        }
+        document.addEventListener("mousedown", clickOutside);
+    }, [dropdownRef])
+
     return (
         <Container>
-            <SelectContainer isOpen={isOpen} hasValue={!!selectedValue} onClick={() => setIsOpen(!isOpen)}>
-                <Temp>
+            <SelectContainer isOpen={isOpen} ref={dropdownRef} hasValue={!!selectedValue} onClick={() => setIsOpen(!isOpen)}>
+                <RowContent>
                     <div>{selectedValue === null ? "Select a rubric" : selectedValue}</div>
                     <img src={DropdownArrow} />
-                </Temp>
+                </RowContent>
                 <OptionsContainer isOpen={isOpen}>
                     { rubricOptions.map(r => <StyledOption onClick={() => onChange(r)}><StyledOptionCircle>{r.label}</StyledOptionCircle></StyledOption>) }
                 </OptionsContainer>

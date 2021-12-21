@@ -92,7 +92,6 @@ const RubricDropdown = ({ onSelect }) => {
       <SelectContainer
         isOpen={isOpen}
         ref={dropdownRef}
-        tabIndex='-1'
         hasValue={!!selectedValue}
         onClick={() => setIsOpen(!isOpen)}
       >

@@ -13,5 +13,5 @@ export const hexToRgba = (hex, a = 1) => {
 export const calculateTotalScore = (hackerScore) => {
   // summing up values score
   const reducer = (accumulator, currentValue) => accumulator + currentValue;
-  return Object.values(hackerScore).reduce(reducer);
+  return Object.values(hackerScore).reduce(reducer, 0);
 };

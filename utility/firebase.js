@@ -733,7 +733,12 @@ export const getAllResumes = async () => {
   download(finishedZip, 'Resumes', 'application/zip');
 };
 
-export const updateApplicantScore = async (applicantID, object, adminEmail) => {
+export const updateApplicantScore = async (
+  applicantID,
+  object,
+  comment,
+  adminEmail
+) => {
   const totalScore = calculateTotalScore(object);
   db.collection('Hackathons')
     .doc(HackerEvaluationHackathon)
@@ -745,6 +750,7 @@ export const updateApplicantScore = async (applicantID, object, adminEmail) => {
           ...object,
         },
         totalScore,
+        comment,
         lastUpdated: firebase.firestore.Timestamp.now(),
         lastUpdatedBy: adminEmail,
       },

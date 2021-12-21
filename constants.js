@@ -68,6 +68,7 @@ export const ASSESSMENT_COLOR = {
   DARK_COPY: '#A198A6',
   RED: '#EB5757',
   DARK_GRAY: '#4F4F4F',
+  INPUT_GRAY: '#F4F4F4',
   TRANSPARENT: 'Transparent',
   BODY_TEXT: '#5A5A5A',
   LIGHT_GRAY: '#828282',

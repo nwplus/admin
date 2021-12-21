@@ -30,7 +30,7 @@ export const COLOR = {
   BRIGHT_RED: '#F83D3D',
   GREY_500: '#BDBAC3',
   GREY_200: '#F0EEf2',
-  EVAL_GREY: '#D2D2D2'
+  EVAL_GREY: '#D2D2D2',
 };
 export const BUTTON_COLOR = {
   PRIMARY: 'linear-gradient(92.58deg, #0DEFE1 0%, #78FF96 100%)',
@@ -150,7 +150,8 @@ export const RUBRIC = {
   DEV: [
     {
       score: '+2',
-      label: 'At least 2 small projects or 1 big project (personal, hackathon, or school projects)',
+      label:
+        'At least 2 small projects or 1 big project (personal, hackathon, or school projects)',
     },
     {
       score: '+1',
@@ -158,7 +159,8 @@ export const RUBRIC = {
     },
     {
       score: '+1',
-      label: 'If any of the work experiences are tech-related (work or internship)',
+      label: 
+        'If any of the work experiences are tech-related (work or internship)',
     },
     {
       score: '+1',
@@ -170,17 +172,20 @@ export const RUBRIC = {
     },
     {
       score: '+1',
-      label: 'Easy to read, clean, well made (something you would do to apply to a job)',
+      label:
+        'Easy to read, clean, well made (something you would do to apply to a job)',
     },
   ],
   DESIGN: [
     {
       score: '+2',
-      label: 'At least 2 small projects or 1 big project (personal, hackathon, school)',
+      label:
+        'At least 2 small projects or 1 big project (personal, hackathon, school)',
     },
     {
       score: '+1',
-      label: 'For a design project linked to tech (examples: website design, app design) (not examples: sculpture)',
+      label:
+        'For a design project linked to tech (examples: website design, app design) (not examples: sculpture)',
     },
     {
       score: '+1',
@@ -196,7 +201,8 @@ export const RUBRIC = {
     },
     {
       score: '+1',
-      label: 'Easy to read, clean, well made (something you would do to apply to a job)',
+      label: 
+        'Easy to read, clean, well made (something you would do to apply to a job)',
     },
   ],
   GENERAL: [
@@ -222,21 +228,25 @@ export const RUBRIC = {
     },
     {
       score: '+1',
-      label: 'Easy to read, clean, well made (something you would do to apply to a job)',
+      label:
+        'Easy to read, clean, well made (something you would do to apply to a job)',
     },
   ],
   LONG_ANSWER: [
     {
       score: '+4',
-      label: 'Above and beyond | Damn this is some quality writing | You think we need to accept this applicant',
+      label:
+        'Above and beyond | Damn this is some quality writing | You think we need to accept this applicant',
     },
     {
       score: '+3',
-      label: 'One meaningful and realistic statement | Connect with impact to self or society (the why behind it) | Explanation to personal connection or passion (the how)',
+      label:
+        'One meaningful and realistic statement | Connect with impact to self or society (the why behind it) | Explanation to personal connection or passion (the how)',
     },
     {
       score: '+2',
-      label: 'One meaningful and realistic statement | Connect with impact to self or society (the why behind it)',
+      label:
+        'One meaningful and realistic statement | Connect with impact to self or society (the why behind it)',
     },
     {
       score: '+1',
@@ -248,7 +258,8 @@ export const RUBRIC = {
     },
     {
       score: '-1',
-      label: 'Spelling and grammar mistakes makes it hard to read or understand the text',
+      label:
+        'Spelling and grammar mistakes makes it hard to read or understand the text',
     },
   ],
 };

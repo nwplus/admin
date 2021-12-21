@@ -66,7 +66,7 @@ const StyledImg = styled.img`
 const StyledText = styled.div`
     color: ${COLOR.INACTIVE_DARK_GRAY};
     text-align: center;
-    font-size: 0.6em;
+    font-size: 0.8em;
     margin-top: 10px;
 `
 

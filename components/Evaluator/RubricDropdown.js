@@ -8,21 +8,32 @@ const Container = styled.div`
 `
 
 const SelectContainer = styled.div`
+    // display: flex;
+    // justify-content: space-between;
+    // align-items: center;
+    border: solid 1px ${COLOR.EVAL_GREY};
+    border-radius: ${p => p.isOpen ? "5px 5px 0 0" : "5px"};
+    // height: 25px;
+    // padding: 10px;
+    cursor: pointer;
+    background-color: ${p => !p.hasValue && COLOR.LIGHT_GRAY};
+    position: relative;
+`
+const Temp = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border: solid 1px ${COLOR.EVAL_GREY};
-    border-radius: ${p => p.isOpen ? "5px 5px 0 0" : "5px"};
     height: 25px;
     padding: 10px;
-    cursor: pointer;
-    background-color: ${p => !p.hasValue && COLOR.LIGHT_GRAY};
+    cursor: pointer:
 `
 
 const OptionsContainer = styled.div`
     position: absolute;
-    width: 84.5%;
+    width: 100%;
     z-index: 20;
+    top: 46px;
+    left: -1px;
     display: ${p => p.isOpen ? "flex" : "none"};
     flex-direction: column;
     border: solid 1px ${COLOR.EVAL_GREY};
@@ -72,12 +83,14 @@ const RubricDropdown = ({ onSelect }) => {
     return (
         <Container>
             <SelectContainer isOpen={isOpen} hasValue={!!selectedValue} onClick={() => setIsOpen(!isOpen)}>
-                <div>{selectedValue === null ? "Select a rubric" : selectedValue}</div>
-                <img src={DropdownArrow} />
+                <Temp>
+                    <div>{selectedValue === null ? "Select a rubric" : selectedValue}</div>
+                    <img src={DropdownArrow} />
+                </Temp>
+                <OptionsContainer isOpen={isOpen}>
+                    { rubricOptions.map(r => <StyledOption onClick={() => onChange(r)}><StyledOptionCircle>{r.label}</StyledOptionCircle></StyledOption>) }
+                </OptionsContainer>
             </SelectContainer>
-            <OptionsContainer isOpen={isOpen}>
-                { rubricOptions.map(r => <StyledOption onClick={() => onChange(r)}><StyledOptionCircle>{r.label}</StyledOptionCircle></StyledOption>) }
-            </OptionsContainer>
         </Container>
     )
 }

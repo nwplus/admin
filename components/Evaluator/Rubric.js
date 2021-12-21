@@ -1,10 +1,10 @@
-  import styled from 'styled-components';
-  import { ASSESSMENT_COLOR, COLOR, RUBRIC } from '../../constants';
-  import { Title4 } from '../Typography';
-  import Teapots from '../../assets/teapots.svg';
-  import RubricEntry from './RubricEntry';
-  import { useState } from 'react';
-  import RubricDropdown from './RubricDropdown';
+import { useState } from 'react';
+import styled from 'styled-components';
+import { ASSESSMENT_COLOR, COLOR, RUBRIC } from '../../constants';
+import { Title4 } from '../Typography';
+import Teapots from '../../assets/teapots.svg';
+import RubricEntry from './RubricEntry';
+import RubricDropdown from './RubricDropdown';
 
 const Container = styled.div`
   border-style: solid;
@@ -36,16 +36,16 @@ const StyledTable = styled.table`
   margin-top: 20px;
 
   ::-webkit-scrollbar {
-      width: 15px;
-      background: transparent;
+    width: 15px;
+    background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-      border-style: solid;
-      border-color: transparent;
-      border-left-width: 10px;
-      background-clip: padding-box;
-      border-radius: 10px;
-      box-shadow: inset 0 0 6px 6px ${ASSESSMENT_COLOR.UNSCORED_GRAY};
+    border-style: solid;
+    border-color: transparent;
+    border-left-width: 10px;
+    background-clip: padding-box;
+    border-radius: 10px;
+    box-shadow: inset 0 0 6px 6px ${ASSESSMENT_COLOR.UNSCORED_GRAY};
   }
 `;
 
@@ -71,25 +71,25 @@ const StyledText = styled.div`
 `;
 
 const Rubric = () => {
-  const [selected, setSelected] = useState(null)
+  const [selected, setSelected] = useState(null);
   return (
-      <Container>
-          <Title4 color={COLOR.MIDNIGHT_PURPLE}>Rubric</Title4>
-          <ContentContainer>
-              <RubricDropdown onSelect={val => setSelected(val)}/>
-              {
-                  selected !== null ?
-                  <StyledTable>
-                      { RUBRIC[selected].map(rubricEntry => <RubricEntry score={rubricEntry.score} label={rubricEntry.label} />) }
-                  </StyledTable>
-                  :
-                  <EmptyValueContentContainer>
-                      <StyledImg src={Teapots} />
-                      <StyledText>Select a rubric from the <br/> dropdown above.</StyledText>
-                  </EmptyValueContentContainer>
-              }
-          </ContentContainer>
-      </Container>
+    <Container>
+        <Title4 color={COLOR.MIDNIGHT_PURPLE}>Rubric</Title4>
+        <ContentContainer>
+            <RubricDropdown onSelect={val => setSelected(val)}/>
+            {
+                selected !== null ?
+                <StyledTable>
+                    { RUBRIC[selected].map(rubricEntry => <RubricEntry score={rubricEntry.score} label={rubricEntry.label} />) }
+                </StyledTable>
+                :
+                <EmptyValueContentContainer>
+                    <StyledImg src={Teapots} />
+                    <StyledText>Select a rubric from the <br/> dropdown above.</StyledText>
+                </EmptyValueContentContainer>
+            }
+        </ContentContainer>
+    </Container>
   );
 };
 

@@ -80,13 +80,7 @@ const RubricDropdown = ({ onSelect }) => {
 
   useEffect(() => {
     const clickOutside = (e) => {
-      console.log('HOHO');
-      if (
-        dropdownRef.current &&
-        isOpen &&
-        !dropdownRef.current.contains(e.target)
-      ) {
-        console.log('FINALLY');
+      if (!dropdownRef.current.contains(e.target)) {
         setIsOpen(false);
       }
     };
@@ -98,6 +92,7 @@ const RubricDropdown = ({ onSelect }) => {
       <SelectContainer
         isOpen={isOpen}
         ref={dropdownRef}
+        tabIndex='-1'
         hasValue={!!selectedValue}
         onClick={() => setIsOpen(!isOpen)}
       >

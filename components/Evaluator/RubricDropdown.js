@@ -71,36 +71,40 @@ const RubricDropdown = ({ onSelect }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const onChange = (rubricOption) => {
-    setSelectedValue(rubricOption.label)
-    onSelect(rubricOption.value)
-    setIsOpen(false)
+    setSelectedValue(rubricOption.label);
+    onSelect(rubricOption.value);
+    setIsOpen(false);
   };
 
   const dropdownRef = useRef(null);
 
   useEffect(() => {
-    const clickOutside = e => { 
-      if (dropdownRef.current && isOpen && !dropdownRef.current.contains(e.target)) {
-          setIsOpen(false)
+    const clickOutside = (e) => { 
+      if (
+        dropdownRef.current &&
+        isOpen &&
+        !dropdownRef.current.contains(e.target)
+      ) {
+          setIsOpen(false);
       }
-    }
+    };
     document.addEventListener('mousedown', clickOutside);
-  }, [dropdownRef]);
+  }, []);
 
   return (
     <Container>
-        <SelectContainer isOpen={isOpen} ref={dropdownRef} hasValue={!!selectedValue} onClick={() => setIsOpen(!isOpen)}>
-            <RowContent>
-                <div>{selectedValue === null ? 'Select a rubric' : selectedValue}</div>
-                <img src={DropdownArrow} />
-            </RowContent>
-            <OptionsContainer isOpen={isOpen}>
-                { rubricOptions.map((r) => (
-                  <StyledOption onClick={() => onChange(r)}>
-                    <StyledOptionCircle>{r.label}</StyledOptionCircle>
-                    </StyledOption>))}
-            </OptionsContainer>
-        </SelectContainer>
+      <SelectContainer isOpen={isOpen} ref={dropdownRef} hasValue={!!selectedValue} onClick={() => setIsOpen(!isOpen)}>
+        <RowContent>
+          <div>{selectedValue === null ? 'Select a rubric' : selectedValue}</div>
+          <img src={DropdownArrow} alt='' />
+        </RowContent>
+        <OptionsContainer isOpen={isOpen}>
+          { rubricOptions.map((r) => (
+            <StyledOption onClick={() => onChange(r)}>
+              <StyledOptionCircle>{r.label}</StyledOptionCircle>
+              </StyledOption>))}
+        </OptionsContainer>
+      </SelectContainer>
     </Container>
   );
 };

@@ -74,21 +74,29 @@ const Rubric = () => {
   const [selected, setSelected] = useState(null);
   return (
     <Container>
-        <Title4 color={COLOR.MIDNIGHT_PURPLE}>Rubric</Title4>
-        <ContentContainer>
-            <RubricDropdown onSelect={val => setSelected(val)}/>
-            {
-                selected !== null ?
-                <StyledTable>
-                    { RUBRIC[selected].map(rubricEntry => <RubricEntry score={rubricEntry.score} label={rubricEntry.label} />) }
-                </StyledTable>
-                :
-                <EmptyValueContentContainer>
-                    <StyledImg src={Teapots} />
-                    <StyledText>Select a rubric from the <br/> dropdown above.</StyledText>
-                </EmptyValueContentContainer>
-            }
-        </ContentContainer>
+      <Title4 color={COLOR.MIDNIGHT_PURPLE}>Rubric</Title4>
+      <ContentContainer>
+        <RubricDropdown onSelect={(val) => setSelected(val)}/>
+        {selected !== null ? (
+          <StyledTable>
+            <tbody>
+              { RUBRIC[selected].map(rubricEntry => (
+                <RubricEntry
+                  score={rubricEntry.score}
+                  label={rubricEntry.label}
+                />
+              ))}
+            </tbody>
+          </StyledTable>
+        ) : (
+          <EmptyValueContentContainer>
+            <StyledImg src={Teapots} />
+            <StyledText>
+              Select a rubric from the <br/> dropdown above.
+            </StyledText>
+          </EmptyValueContentContainer>
+        )}
+      </ContentContainer>
     </Container>
   );
 };

@@ -7,11 +7,6 @@ import RubricEntry from './RubricEntry';
 import RubricDropdown from './RubricDropdown';
 
 const Container = styled.div`
-  border-style: solid;
-  border-size: 5px;
-  border-radius: 4px;
-  border-color: red;
-
   padding: 0px 20px 30px;
   width: 15vw;
   height: 40vh;

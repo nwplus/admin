@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Scoring from '../components/Evaluator/Scoring';
 import Page from '../components/page';
+import Rubric from '../components/Evaluator/Rubric';
 import { getAllApplicants, getHackathons } from '../utility/firebase';
 
 const Container = styled.div`
@@ -44,7 +45,7 @@ export default function Eval({ hackathons }) {
               {applicant.basicInfo.firstName}
             </button>
           ))}
-          <div>Rubric</div>
+          <Rubric />
         </LeftContainer>
         <div>Applicant Response</div>
         <Scoring applicant={selectedApplicant} />

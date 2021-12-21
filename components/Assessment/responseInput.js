@@ -11,25 +11,31 @@ const Label = styled.label`
 
 const Container = styled.div`
   margin-top: 15px;
-`
+`;
 
 const URL = styled.a`
   color: ${COLOR.MIDNIGHT_PURPLE_LIGHT};
   text-decoration: none;
   font-weight: bold;
-`
+`;
 
 const URLContainer = styled.div`
   display: flex;
-`
+`;
 
 const OpenIcon = styled.a`
   margin-left: auto;
   cursor: pointer;
   margin-right: 10px;
-`
+`;
 
-export default function ResponseInput({ url, label, response, openable, urlLabel }) {
+export default function ResponseInput({
+  url,
+  label,
+  response,
+  openable,
+  urlLabel,
+}) {
   const [open, setOpen] = useState(false);
 
   const OpenButton = () => (
@@ -64,12 +70,12 @@ export default function ResponseInput({ url, label, response, openable, urlLabel
         response
       ) : (
         <URLContainer>
-            <URL href={response} target="_blank" rel="noreferrer noopener">
-              {urlLabel ? urlLabel : response}
-            </URL>
-            <OpenIcon href={response} target="_blank" rel="noreferrer noopener">
-              <img src={OpenLinkIcon} />
-            </OpenIcon>
+          <URL href={response} target="_blank" rel="noreferrer noopener">
+            {urlLabel || response}
+          </URL>
+          <OpenIcon href={response} target="_blank" rel="noreferrer noopener">
+            <img src={OpenLinkIcon} alt="Open Link Icon" />
+          </OpenIcon>
         </URLContainer>
       )}
     </div>

@@ -149,106 +149,106 @@ export const TABS = {
 export const RUBRIC = {
   DEV: [
     {
-      score: "+2",
-      label: "At least 2 small projects or 1 big project (personal, hackathon, or school projects)",
+      score: '+2',
+      label: 'At least 2 small projects or 1 big project (personal, hackathon, or school projects)',
     },
     {
-      score: "+1",
-      label: "If one or more of any work experience",
+      score: '+1',
+      label: 'If one or more of any work experience',
     },
     {
-      score: "+1",
-      label: "If any of the work experiences are tech-related (work or internship)",
+      score: '+1',
+      label: 'If any of the work experiences are tech-related (work or internship)',
     },
     {
-      score: "+1",
-      label: "At least one tech-related extracurricular activity",
+      score: '+1',
+      label: 'At least one tech-related extracurricular activity',
     },
     {
-      score: "+1",
-      label: "If have won a hackathon (won: 1st, 2nd, 3rd)",
+      score: '+1',
+      label: 'If have won a hackathon (won: 1st, 2nd, 3rd)',
     },
     {
-      score: "+1",
-      label: "Easy to read, clean, well made (something you would do to apply to a job)",
+      score: '+1',
+      label: 'Easy to read, clean, well made (something you would do to apply to a job)',
     },
   ],
   DESIGN: [
     {
-      score: "+2",
-      label: "At least 2 small projects or 1 big project (personal, hackathon, school)",
+      score: '+2',
+      label: 'At least 2 small projects or 1 big project (personal, hackathon, school)',
     },
     {
-      score: "+1",
-      label: "For a design project linked to tech (examples: website design, app design) (not examples: sculpture)",
+      score: '+1',
+      label: 'For a design project linked to tech (examples: website design, app design) (not examples: sculpture)',
     },
     {
-      score: "+1",
-      label: "If one or more of any work experience",
+      score: '+1',
+      label: 'If one or more of any work experience',
     },
     {
-      score: "+1",
-      label: "If at least one job is design-related",
+      score: '+1',
+      label: 'If at least one job is design-related',
     },
     {
-      score: "+1",
-      label: "At least one tech-related extracurricular activity",
+      score: '+1',
+      label: 'At least one tech-related extracurricular activity',
     },
     {
-      score: "+1",
-      label: "Easy to read, clean, well made (something you would do to apply to a job)",
+      score: '+1',
+      label: 'Easy to read, clean, well made (something you would do to apply to a job)',
     },
   ],
   GENERAL: [
     {
-      score: "+1",
-      label: "Because they are a beginner",
+      score: '+1',
+      label: 'Because they are a beginner',
     },
     {
-      score: "+1",
-      label: "At least 1 small project/experience",
+      score: '+1',
+      label: 'At least 1 small project/experience',
     },
     {
-      score: "+1",
-      label: "If project/experience related to tech",
+      score: '+1',
+      label: 'If project/experience related to tech',
     },
     {
-      score: "+1",
-      label: "For each extracurricular activity (1 point each, max 3 points)",
+      score: '+1',
+      label: 'For each extracurricular activity (1 point each, max 3 points)',
     },
     {
-      score: "+2",
-      label: "If extracurricular activities are tech-related",
+      score: '+2',
+      label: 'If extracurricular activities are tech-related',
     },
     {
-      score: "+1",
-      label: "Easy to read, clean, well made (something you would do to apply to a job)",
+      score: '+1',
+      label: 'Easy to read, clean, well made (something you would do to apply to a job)',
     },
   ],
   LONG_ANSWER: [
     {
-      score: "+4",
-      label: "Above and beyond | Damn this is some quality writing | You think we need to accept this applicant",
+      score: '+4',
+      label: 'Above and beyond | Damn this is some quality writing | You think we need to accept this applicant',
     },
     {
-      score: "+3",
-      label: "One meaningful and realistic statement | Connect with impact to self or society (the why behind it) | Explanation to personal connection or passion (the how)",
+      score: '+3',
+      label: 'One meaningful and realistic statement | Connect with impact to self or society (the why behind it) | Explanation to personal connection or passion (the how)',
     },
     {
-      score: "+2",
-      label: "One meaningful and realistic statement | Connect with impact to self or society (the why behind it)",
+      score: '+2',
+      label: 'One meaningful and realistic statement | Connect with impact to self or society (the why behind it)',
     },
     {
-      score: "+1",
-      label: "One Meaningful and realistic statement",
+      score: '+1',
+      label: 'One Meaningful and realistic statement',
     },
     {
-      score: "+0",
-      label: "No effort | Very low word count",
+      score: '+0',
+      label: 'No effort | Very low word count',
     },
     {
-      score: "-1",
-      label: "Spelling and grammar mistakes makes it hard to read or understand the text",
+      score: '-1',
+      label: 'Spelling and grammar mistakes makes it hard to read or understand the text',
     },
   ],
 };

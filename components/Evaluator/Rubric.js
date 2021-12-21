@@ -1,10 +1,10 @@
-import styled from "styled-components";
-import { ASSESSMENT_COLOR, COLOR, RUBRIC } from "../../constants";
-import { Title4 } from "../Typography";
-import Teapots from "../../assets/illustrations.svg";
-import RubricEntry from "./RubricEntry";
-import { useState } from "react";
-import RubricDropdown from "./RubricDropdown";
+import styled from 'styled-components';
+import { ASSESSMENT_COLOR, COLOR, RUBRIC } from '../../constants';
+import { Title4 } from '../Typography';
+import Teapots from '../../assets/illustrations.svg';
+import RubricEntry from './RubricEntry';
+import { useState } from 'react';
+import RubricDropdown from './RubricDropdown';
 
 const Container = styled.div`
     border-style: solid;

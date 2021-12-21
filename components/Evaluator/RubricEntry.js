@@ -29,12 +29,12 @@ const StyledText = styled.td`
 `;
 
 const RubricEntry = ({ score, label }) => {
-	return (
-		<Container>
-			<StyledScore>{score}</StyledScore>
-			<StyledText>{label}</StyledText>
-		</Container>
-	);
+  return (
+    <Container>
+      <StyledScore>{score}</StyledScore>
+      <StyledText>{label}</StyledText>
+    </Container>
+  );
 };
 
 export default RubricEntry;

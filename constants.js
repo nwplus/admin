@@ -159,7 +159,7 @@ export const RUBRIC = {
     },
     {
       score: '+1',
-      label: 
+      label:
         'If any of the work experiences are tech-related (work or internship)',
     },
     {
@@ -201,7 +201,7 @@ export const RUBRIC = {
     },
     {
       score: '+1',
-      label: 
+      label:
         'Easy to read, clean, well made (something you would do to apply to a job)',
     },
   ],

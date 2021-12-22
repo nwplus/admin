@@ -6,7 +6,7 @@ import { COLOR, ASSESSMENT_COLOR } from '../../constants';
 import { getResumeFile } from '../../utility/firebase';
 
 const Container = styled.div`
-  display: ${(p) => !p.shouldDisplay && 'none'};
+  ${(p) => !p.shouldDisplay && 'display: none'};
   border-radius: 5px;
   border: none;
   padding: 0 20px 20px;
@@ -33,7 +33,7 @@ const NO_RESPONSE = 'No Response';
 export default function ApplicantResponse({ shouldDisplay, hacker }) {
   const [resumeURL, setResumeURL] = useState(null);
   useEffect(() => {
-    if (hacker !== null) {
+    if (hacker) {
       getResumeFile(hacker._id).then(async (url) => {
         setResumeURL(url);
       });

@@ -12,7 +12,7 @@ import { AuthContext } from '../../utility/auth';
 import { updateApplicantScore } from '../../utility/firebase';
 
 const Container = styled.div`
-  display: ${(p) => !p.shouldDisplay && 'none'};
+  ${(p) => !p.shouldDisplay && 'display: none'};
   margin-left: 10px;
 `;
 

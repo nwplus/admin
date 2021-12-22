@@ -8,8 +8,7 @@ import RubricDropdown from './RubricDropdown';
 
 const Container = styled.div`
   padding: 0px 20px 30px;
-  width: 15vw;
-  height: 40vh;
+  height: 35%;
   display: flex;
   flex-direction: column;
 `;

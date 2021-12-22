@@ -11,10 +11,12 @@ const Container = styled.div`
   display: flex;
 `;
 
-const LeftContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+const Column = styled.div`
+  flex: 1.5;
+`;
+
+const SmallColumn = styled.div`
+  flex: 1;
 `;
 
 export default function Eval({ hackathons }) {
@@ -37,22 +39,26 @@ export default function Eval({ hackathons }) {
   return (
     <Page hackathons={hackathons} currentPath="eval" isFullscreen>
       <Container>
-        <LeftContainer>
+        <SmallColumn>
           <HackerList
             applicants={applicants}
             selectedApplicant={selectedApplicant}
             setSelectedApplicant={setSelectedApplicant}
           />
           <Rubric />
-        </LeftContainer>
-        <ApplicantResponse
-          shouldDisplay={!!selectedApplicant}
-          hacker={selectedApplicant}
-        />
-        <Scoring
-          shouldDisplay={!!selectedApplicant}
-          applicant={selectedApplicant}
-        />
+        </SmallColumn>
+        <Column>
+          <ApplicantResponse
+            shouldDisplay={!!selectedApplicant}
+            hacker={selectedApplicant}
+          />
+        </Column>
+        <SmallColumn>
+          <Scoring
+            shouldDisplay={!!selectedApplicant}
+            applicant={selectedApplicant}
+          />
+        </SmallColumn>
       </Container>
     </Page>
   );

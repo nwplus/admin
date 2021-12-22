@@ -7,8 +7,8 @@ const StyledTag = styled.div`
   box-sizing: border-box;
   align-items: stretch;
   border: none;
-  font-family: 'HK Grotesk';
   font-weight: 600;
+  height: 24px;
 `;
 
 const TagText = styled.div`
@@ -20,9 +20,9 @@ const TagText = styled.div`
       : `background-color: ${COLOR.PRIMARY};`}
   ${(props) =>
     props.type === DELETE
-      ? `padding: 9px 5px 7px 12px;
+      ? `padding: 6px 5px 7px 12px;
          border-radius: 5px 0 0 5px;`
-      : `padding: 9px 12px 7px 12px;
+      : `padding: 6px 12px 7px 12px;
          border-radius: 5px;`}
 `;
 
@@ -30,7 +30,7 @@ const TagClose = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 7px 0 5px;
+  padding: 0 5px 0px 5px;
   border-radius: 0 5px 5px 0;
   transition: 0.12s all cubic-bezier(0.55, 0, 0.45, 1);
   ${(props) =>
@@ -44,7 +44,7 @@ const TagClose = styled.div`
 `;
 
 const CloseSvg = (props) => (
-  <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
+  <svg width="17" height="17" viewBox="0 0 16 16" fill="none">
     <path
       d="M12 4L4 12"
       stroke={props.currentColor}

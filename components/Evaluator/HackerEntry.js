@@ -5,7 +5,7 @@ import { ASSESSMENT_COLOR, MAX_SCORE, COLOR } from '../../constants';
 const HackerName = styled.span`
   font-size: 15px;
   line-height: 19px;
-  color: ${COLOR.MIDNIGHT_PURPLE};
+  color: ${COLOR.MIDNIGHT_PURPLE_DEEP};
   font-weight: bold;
 `;
 
@@ -14,7 +14,7 @@ const HackerIndex = HackerName;
 const HackerInfoText = styled.span`
   font-size: 15px;
   line-height: 19px;
-  color: ${COLOR.MIDNIGHT_PURPLE};
+  color: ${COLOR.MIDNIGHT_PURPLE_DEEP};
 `;
 
 const StyledInfoContainer = styled.div`
@@ -40,7 +40,7 @@ const StyledTag = styled.div`
   font-size: 13px;
   line-height: 16px;
   color: ${COLOR.LIGHT_PURPLE};
-  background: ${COLOR.MIDNIGHT_PURPLE_MEDIUM};
+  background: ${COLOR.MIDNIGHT_PURPLE};
   padding: 0px 5px;
   border-radius: 4px;
   height: 16px;

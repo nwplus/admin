@@ -382,6 +382,11 @@ export const updateFlags = async (id, flags) => {
   return db.collection(Hackathons).doc(id).update(doc);
 };
 
+export const updateTags = async (id, tags) => {
+  const doc = { tags };
+  return db.collection(Hackathons).doc(id).update(doc);
+};
+
 export const subscribeToCMSStatus = (dateCallback) => {
   return db
     .collection(InternalWebsitesCollection)
@@ -766,4 +771,24 @@ export const updateApplicantStatus = async (userId, applicationStatus) => {
     .update({
       'status.applicationStatus': applicationStatus,
     });
+};
+
+export const getApplicantTags = async (userId, callback) => {
+  return db
+    .collection('Hackathons')
+    .doc(HackerEvaluationHackathon)
+    .collection('Applicants')
+    .doc(userId)
+    .onSnapshot((snap) => {
+      callback(snap.data().applicantTags ?? []);
+    });
+};
+
+export const updateApplicantTags = async (userId, applicantTags) => {
+  return db
+    .collection('Hackathons')
+    .doc(HackerEvaluationHackathon)
+    .collection('Applicants')
+    .doc(userId)
+    .update({ applicantTags });
 };

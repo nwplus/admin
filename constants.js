@@ -19,8 +19,8 @@ export const COLOR = {
   BODY_TEXT: '#5A5A5A',
   BLUE: '#4285F4',
   UNSELECTED_GRAY: '#BDBAC3',
-  MIDNIGHT_PURPLE: '#2C2543',
-  MIDNIGHT_PURPLE_MEDIUM: '#433860',
+  MIDNIGHT_PURPLE_DEEP: '#2C2543',
+  MIDNIGHT_PURPLE: '#433860',
   MIDNIGHT_PURPLE_LIGHT: '#8E7EB4',
   LIGHT_GRAY: '#F0EEF2',
   LIGHT_PURPLE: '#E2D6FF',
@@ -39,6 +39,29 @@ export const BUTTON_COLOR = {
   DESTRUCTIVE: '#F65C5C',
   HOVER_PRIMARY: 'linear-gradient(90deg, #D7FFF0 0%, #7BFFCF 100%)',
 };
+export const TAG_COLOR = {
+  TEAL: '#00BCBC',
+  BLUE: '#2F80ED',
+  PURPLE: '#812F9D',
+  GREEN: '#00B775',
+  RED: '#F83D3D',
+  ORANGE: '#FFA644',
+  YELLOW: '#FFF463',
+};
+export const TAGS = [
+  {
+    text: 'seattle bus',
+    color: TAG_COLOR.TEAL,
+  },
+  {
+    text: "rsvp'd",
+    color: TAG_COLOR.BLUE,
+  },
+  {
+    text: 'travel reimbursement',
+    color: TAG_COLOR.PURPLE,
+  },
+];
 export const FAQ = 'FAQ';
 export const FAQCategory = Object.freeze({
   GENERAL: 'General',

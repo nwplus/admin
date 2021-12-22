@@ -1,14 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
+import { COLOR, BUTTON_COLOR, TAG_COLOR } from '../constants';
 import Button from '../components/button';
 import { Title1, Title2, Title3, Title4 } from '../components/Typography';
 import Tag from '../components/tag';
 import ScoreInput from '../components/Evaluator/scoreInput';
-import { COLOR, BUTTON_COLOR } from '../constants';
 import HackerEntry from '../components/Evaluator/HackerEntry';
 
 const Container = styled.div`
   background-color: ${COLOR.MIDNIGHT_PURPLE};
+  padding-bottom: 30px;
 `;
 
 const Section = styled.div`
@@ -270,14 +271,14 @@ export default function Charcuterie() {
         <Section>
           <Row>
             <TagContainer>
-              <Tag color="#00DBCE" contentColor={COLOR.WHITE}>
+              <Tag color={TAG_COLOR.TEAL} contentColor={COLOR.WHITE}>
                 Hello World
               </Tag>
             </TagContainer>
             <TagContainer>
               <Tag
                 type="DELETE"
-                color={COLOR.BRIGHT_RED}
+                color={TAG_COLOR.RED}
                 contentColor={COLOR.WHITE}
                 onDelete={() => alert('delete')}
               >

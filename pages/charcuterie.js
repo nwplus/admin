@@ -1,12 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-
-import { COLOR, BUTTON_COLOR, TAG_COLOR, TAGS } from '../constants';
+import { COLOR, BUTTON_COLOR, TAG_COLOR } from '../constants';
 import Button from '../components/button';
 import { Title1, Title2, Title3, Title4 } from '../components/Typography';
 import Tag from '../components/tag';
 import ScoreInput from '../components/Evaluator/scoreInput';
-import AddTagButton from '../components/Evaluator/AddTagButton';
 import HackerEntry from '../components/Evaluator/HackerEntry';
 
 const Container = styled.div`
@@ -316,16 +314,6 @@ export default function Charcuterie() {
             handleClick={() => {}}
             handleTextChange={() => {}}
             maxScore={{ value: 7, weight: 1 }}
-          />
-        </Row>
-      </Section>
-
-      <Section>
-        <Row>
-          {/* note: this id points to Kevo's application: kevin.zp.zou */}
-          <AddTagButton
-            allTags={TAGS}
-            hackerId="W2Gk9IiTFrUQKht8wMhSFBFCsX32"
           />
         </Row>
       </Section>

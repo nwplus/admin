@@ -7,7 +7,6 @@ const StyledTag = styled.div`
   box-sizing: border-box;
   align-items: stretch;
   border: none;
-  font-family: 'HK Grotesk';
   font-weight: 600;
   height: 24px;
 `;

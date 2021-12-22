@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-
 import Button from '../button';
 import Tag from '../tag';
 import TagIconSrc from '../../assets/tag.svg';
 import { COLOR } from '../../constants';
-
 import AddTagModal from './AddTagModal';
 import { getApplicantTags, updateApplicantTags } from '../../utility/firebase';
 
@@ -35,7 +33,7 @@ const ExistingTagsContainer = styled.div`
   gap: 9px;
 `;
 
-function AddedTags({ tags, hackerId }) {
+function AddedTags({ tags, hacker }) {
   return (
     <ExistingTagsContainer>
       {tags &&
@@ -46,7 +44,7 @@ function AddedTags({ tags, hackerId }) {
             contentColor={COLOR.WHITE}
             onDelete={() =>
               updateApplicantTags(
-                hackerId,
+                hacker._id,
                 tags.filter((applicantTag) => applicantTag !== tag)
               )
             }
@@ -58,17 +56,12 @@ function AddedTags({ tags, hackerId }) {
   );
 }
 
-export default function AddTagButton({ allTags, hackerId }) {
+export default function AddTagButton({ allTags, hacker }) {
   const [showTagModal, setShowTagModal] = useState(false);
-  const [applicantTags, setApplicantTags] = useState([]);
-
-  useEffect(() => {
-    getApplicantTags(hackerId, setApplicantTags);
-  }, []);
 
   return (
     <TagButtonStyledDiv>
-      <AddedTags tags={applicantTags} hackerId={hackerId} />
+      <AddedTags tags={hacker?.applicantTags || []} hacker={hacker} />
       <Button color="white" onClick={() => setShowTagModal(true)}>
         <TagButtonContainer>
           <TagIcon src={TagIconSrc} alt="loading" />
@@ -79,8 +72,8 @@ export default function AddTagButton({ allTags, hackerId }) {
         <AddTagModal
           setShowing={setShowTagModal}
           allTags={allTags}
-          hackerId={hackerId}
-          applicantTags={applicantTags}
+          hackerId={hacker._id}
+          applicantTags={hacker.applicantTags}
         />
       )}
     </TagButtonStyledDiv>

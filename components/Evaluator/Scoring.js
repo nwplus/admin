@@ -4,11 +4,16 @@ import { useContext, useEffect, useState } from 'react';
 import Button from '../button';
 import ScoreInput from './scoreInput';
 import TextField from '../TextField';
+import AddTagButton from './AddTagButton';
 import { Title4 } from '../Typography';
 import { calculateTotalScore } from '../../utility/utilities';
-import { COLOR, MAX_SCORE, SCORING } from '../../constants';
+import { COLOR, MAX_SCORE, SCORING, TAGS } from '../../constants';
 import { AuthContext } from '../../utility/auth';
 import { updateApplicantScore } from '../../utility/firebase';
+
+const Container = styled.div`
+  display: ${p => !p.shouldDisplay && 'none'};
+`;
 
 const ScoreInputs = styled.div`
   display: flex;
@@ -25,12 +30,17 @@ const BottomSection = styled.div`
   margin-top: 32px;
 `;
 
+const BottomSectionContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
 const SmallText = styled.div`
   font-size: 0.8em;
   color: ${COLOR.GREY_500};
 `;
 
-export default function Scoring({ applicant }) {
+export default function Scoring({ shouldDisplay, applicant }) {
   const [scores, setScores] = useState(null);
   const [totalScore, setTotalScore] = useState(null);
   const [comment, setComment] = useState('');
@@ -73,7 +83,7 @@ export default function Scoring({ applicant }) {
   };
 
   return (
-    <div>
+    <Container shouldDisplay={shouldDisplay} >
       <Title4 color={COLOR.MIDNIGHT_PURPLE}>Scoring</Title4>
       <ScoreInputs>
         <ScoreInput
@@ -106,26 +116,32 @@ export default function Scoring({ applicant }) {
           placeholder="Add your comment here"
         />
       </ScoreInputs>
-      <BottomSection>
-        <div>
-          Total Score: {totalScore} / {MAX_SCORE}
-          {applicant && (
-            <SmallText>
-              Last updated by: {applicant?.score?.lastUpdatedBy} at{' '}
-              {moment(applicant?.score?.lastUpdated.toDate()).format(
-                'MMM Do, YYYY h:mm:ss A'
-              )}
-            </SmallText>
-          )}
-        </div>
-        <Button
-          color={COLOR.MIDNIGHT_PURPLE_LIGHT}
-          contentColor={COLOR.WHITE}
-          onClick={handleSave}
-        >
-          Save
-        </Button>
-      </BottomSection>
-    </div>
+      <BottomSectionContainer>
+        <AddTagButton
+          allTags={TAGS}
+          hacker={applicant}
+        />
+        <BottomSection>
+          <div>
+            Total Score: {totalScore} / {MAX_SCORE}
+            {applicant && (
+              <SmallText>
+                Last updated by: {applicant?.score?.lastUpdatedBy} at{' '}
+                {moment(applicant?.score?.lastUpdated.toDate()).format(
+                  'MMM Do, YYYY h:mm:ss A'
+                )}
+              </SmallText>
+            )}
+          </div>
+          <Button
+            color={COLOR.MIDNIGHT_PURPLE_LIGHT}
+            contentColor={COLOR.WHITE}
+            onClick={handleSave}
+          >
+            Save
+          </Button>
+        </BottomSection>
+      </BottomSectionContainer>
+    </Container>
   );
 }

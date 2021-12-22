@@ -19,8 +19,6 @@ const ModalContainer = styled.div`
 `;
 
 const TitleContainer = styled.span`
-  font-family: HK Grotesk;
-  font-style: normal;
   font-weight: bold;
   font-size: 13px;
   line-height: 16px;
@@ -51,19 +49,7 @@ const TagDropDown = styled.div`
 `;
 
 function NotAddedTags({ hackerId, allTags, applicantTags = [] }) {
-  const [tags, setTags] = useState([]);
-
-  useEffect(() => {
-    const notAddedTags = [];
-    for (const tag of allTags) {
-      let exists = false;
-      for (const addedTag of applicantTags) {
-        if (tag.text === addedTag.text) exists = true;
-      }
-      if (!exists) notAddedTags.push(tag);
-    }
-    setTags(notAddedTags);
-  }, [applicantTags]);
+  const tags = allTags.filter((tag) => !applicantTags.some((addedTag) => addedTag.text === tag.text));
 
   return (
     <NotAddedTagsContainer>
@@ -130,7 +116,7 @@ export default function AddTagModal({
       />
       <Button
         color="white"
-        type="get rid of the paddings"
+        type="button"
         onClick={() => setShowing(false)}
       >
         Apply

@@ -33,11 +33,11 @@ const NO_RESPONSE = 'No Response';
 export default function ApplicantResponse({ shouldDisplay, hacker }) {
   const [resumeURL, setResumeURL] = useState(null);
   useEffect(() => {
-    if (!!hacker) {
+    if (hacker !== null) {
       getResumeFile(hacker._id).then(async (url) => {
         setResumeURL(url);
       });
-    };
+    }
   }, [hacker]);
 
   return (

@@ -13,6 +13,7 @@ import { updateApplicantScore } from '../../utility/firebase';
 
 const Container = styled.div`
   display: ${(p) => !p.shouldDisplay && 'none'};
+  margin-left: 10px;
 `;
 
 const ScoreInputs = styled.div`

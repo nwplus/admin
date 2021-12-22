@@ -54,7 +54,7 @@ const StyledOption = styled.div`
   align-items: center;
 
   &:hover ${StyledOptionCircle} {
-    background-color: ${COLOR.MIDNIGHT_PURPLE_MEDIUM};
+    background-color: ${COLOR.MIDNIGHT_PURPLE};
     color: ${COLOR.WHITE};
   }
 `;

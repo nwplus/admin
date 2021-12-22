@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Scoring from '../components/Evaluator/Scoring';
+import HackerList from '../components/Evaluator/HackerList';
 import ApplicantResponse from '../components/Evaluator/ApplicantResponse';
 import Page from '../components/page';
 import Rubric from '../components/Evaluator/Rubric';
@@ -124,16 +125,11 @@ export default function Eval({ hackathons }) {
     <Page hackathons={hackathons} currentPath="eval">
       <Container>
         <LeftContainer>
-          <div>Applicant List</div>
-          {/* TODO: Replace this with the applicant component */}
-          {applicants.map((applicant) => (
-            <button
-              type="button"
-              onClick={() => setSelectedApplicant(applicant)}
-            >
-              {applicant.basicInfo.firstName}
-            </button>
-          ))}
+          <HackerList
+            applicants={applicants}
+            selectedApplicant={selectedApplicant}
+            setSelectedApplicant={setSelectedApplicant}
+          />
           <Rubric />
         </LeftContainer>
         <div>

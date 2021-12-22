@@ -55,12 +55,12 @@ export default function HackerEntry({
   score,
   selectHacker,
   hasCompleted = false,
-  selectedHackerID = null,
+  isSelected = false,
 }) {
   return (
     <StyledHackerEntryDiv
       onClick={() => selectHacker(id)}
-      selected={id === selectedHackerID}
+      selected={isSelected}
     >
       <HackerIndex>{index}</HackerIndex>
       <StyledInfoContainer>

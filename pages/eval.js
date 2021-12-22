@@ -15,7 +15,6 @@ const LeftContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  width: 17vw;
 `;
 
 export default function Eval({ hackathons }) {
@@ -46,12 +45,10 @@ export default function Eval({ hackathons }) {
           />
           <Rubric />
         </LeftContainer>
-        <div>
-          <ApplicantResponse
-            shouldDisplay={!!selectedApplicant}
-            hacker={selectedApplicant}
-          />
-        </div>
+        <ApplicantResponse
+          shouldDisplay={!!selectedApplicant}
+          hacker={selectedApplicant}
+        />
         <Scoring
           shouldDisplay={!!selectedApplicant}
           applicant={selectedApplicant}

@@ -21,13 +21,16 @@ const TagButtonContainer = styled.div`
 `;
 
 const TagIcon = styled.img`
-  width: '18px';
-  height: '11.5px';
-  margin: '0 0 2px 0';
+  width: 18px;
+  height: 11.5px;
+  margin: 0 0 2px 0;
+`;
+
+const StyledButton = styled(Button)`
+  padding: 0;
 `;
 
 const ExistingTagsContainer = styled.div`
-  padding: 24px 24px 8px 24px;
   display: flex;
   flex-direction: column;
   gap: 9px;
@@ -62,12 +65,12 @@ export default function AddTagButton({ allTags, hacker }) {
   return (
     <TagButtonStyledDiv>
       <AddedTags tags={hacker?.applicantTags || []} hacker={hacker} />
-      <Button color="white" onClick={() => setShowTagModal(true)}>
+      <StyledButton color="white" onClick={() => setShowTagModal(true)}>
         <TagButtonContainer>
           <TagIcon src={TagIconSrc} alt="loading" />
           Add Tag
         </TagButtonContainer>
-      </Button>
+      </StyledButton>
       {showTagModal && (
         <AddTagModal
           setShowing={setShowTagModal}

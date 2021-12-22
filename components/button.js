@@ -62,6 +62,7 @@ const Button = ({
   disabled = false,
   outlined = false,
   rounded = false,
+  className,
 }) => (
   <StyledButton
     isText={children && !type}
@@ -74,6 +75,7 @@ const Button = ({
     disabled={disabled}
     outlined={outlined}
     rounded={rounded}
+    className={className}
   >
     {type === EDIT && !color && <StyledIcon hasText={children} icon="edit" />}
     {type === EDIT && color && <Icon color={COLOR.BLACK} icon="edit" />}

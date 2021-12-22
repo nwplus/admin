@@ -23,17 +23,13 @@ const ScoreInputs = styled.div`
 `;
 
 const BottomSection = styled.div`
-  display: flex;
-  align-items: flex-end;
   flex-direction: column;
   gap: 20px;
-  text-align: right;
-  margin-top: 32px;
+  margin-top: 28px;
 `;
 
-const BottomSectionContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
+const StyledButton = styled(Button)`
+  margin-top: 12px;
 `;
 
 const SmallText = styled.div`
@@ -117,29 +113,25 @@ export default function Scoring({ shouldDisplay, applicant }) {
           placeholder="Add your comment here"
         />
       </ScoreInputs>
-      <BottomSectionContainer>
+      <BottomSection>
         <AddTagButton allTags={TAGS} hacker={applicant} />
-        <BottomSection>
-          <div>
-            Total Score: {totalScore} / {MAX_SCORE}
-            {applicant && (
-              <SmallText>
-                Last updated by: {applicant?.score?.lastUpdatedBy} at{' '}
-                {moment(applicant?.score?.lastUpdated.toDate()).format(
-                  'MMM Do, YYYY h:mm:ss A'
-                )}
-              </SmallText>
+        Total Score: {totalScore} / {MAX_SCORE}
+        {applicant && (
+          <SmallText>
+            Last updated by: {applicant?.score?.lastUpdatedBy} at{' '}
+            {moment(applicant?.score?.lastUpdated.toDate()).format(
+              'MMM Do, YYYY h:mm:ss A'
             )}
-          </div>
-          <Button
-            color={COLOR.MIDNIGHT_PURPLE_LIGHT}
-            contentColor={COLOR.WHITE}
-            onClick={handleSave}
-          >
-            Save
-          </Button>
-        </BottomSection>
-      </BottomSectionContainer>
+          </SmallText>
+        )}
+        <StyledButton
+          color={COLOR.MIDNIGHT_PURPLE_LIGHT}
+          contentColor={COLOR.WHITE}
+          onClick={handleSave}
+        >
+          Save
+        </StyledButton>
+      </BottomSection>
     </Container>
   );
 }

@@ -10,7 +10,6 @@ const Container = styled.div`
   border-radius: 5px;
   border: none;
   padding: 0 20px 20px;
-  width: 30vw;
   height: 90vh;
   text-align: left;
   overflow-y: scroll;

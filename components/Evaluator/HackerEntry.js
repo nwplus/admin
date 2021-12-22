@@ -9,8 +9,6 @@ const HackerName = styled.span`
   font-weight: bold;
 `;
 
-const HackerIndex = HackerName;
-
 const HackerInfoText = styled.span`
   font-size: 15px;
   line-height: 19px;
@@ -24,7 +22,7 @@ const StyledInfoContainer = styled.div`
 
 const StyledHackerEntryDiv = styled.div`
   height: 56px;
-  width: 350px;
+  min-width: 290px;
   padding: 0 21px;
   display: flex;
   align-items: center;
@@ -62,7 +60,7 @@ export default function HackerEntry({
       onClick={() => selectHacker(id)}
       selected={isSelected}
     >
-      <HackerIndex>{index}</HackerIndex>
+      <HackerName>{index}</HackerName>
       <StyledInfoContainer>
         <HackerName>
           {firstName} {lastName}

@@ -4,7 +4,7 @@ import { COLOR } from '../../constants';
 const Container = styled.tr`
   display: flex;
   border-bottom: 0.5px solid ${COLOR.GREY_500};
-  padding: 20px 0px;
+  padding: 10px 0px;
 `;
 
 const StyledScore = styled.td`

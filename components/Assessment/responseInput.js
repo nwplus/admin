@@ -1,9 +1,41 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
 import PopoutWindow from './PopoutWindow';
 import { Button } from './Button';
-import { ASSESSMENT_COLOR } from '../../constants';
+import { ASSESSMENT_COLOR, COLOR } from '../../constants';
+import OpenLinkIcon from '../../assets/openLinkIcon.svg';
 
-export default function ResponseInput({ url, label, response, openable }) {
+const Label = styled.label`
+  color: ${ASSESSMENT_COLOR.LIGHT_GRAY};
+`;
+
+const Container = styled.div`
+  margin-top: 15px;
+`;
+
+const URL = styled.a`
+  color: ${COLOR.MIDNIGHT_PURPLE_LIGHT};
+  text-decoration: none;
+  font-weight: bold;
+`;
+
+const URLContainer = styled.div`
+  display: flex;
+`;
+
+const OpenIcon = styled.a`
+  margin-left: auto;
+  cursor: pointer;
+  margin-right: 10px;
+`;
+
+export default function ResponseInput({
+  url,
+  label,
+  response,
+  openable,
+  urlLabel,
+}) {
   const [open, setOpen] = useState(false);
 
   const OpenButton = () => (
@@ -23,8 +55,9 @@ export default function ResponseInput({ url, label, response, openable }) {
   const ResponseArea = ({ fontSize }) => (
     <div
       style={{
-        border: '1px solid grey',
-        padding: '15px',
+        border: 'none',
+        padding: '12px 0px 8px 12px',
+        backgroundColor: ASSESSMENT_COLOR.INPUT_GRAY,
         fontSize,
         resize: 'none',
         color: 'black',
@@ -36,19 +69,24 @@ export default function ResponseInput({ url, label, response, openable }) {
       ) : !url ? (
         response
       ) : (
-        <a href={response} target="_blank" rel="noreferrer noopener">
-          {response}
-        </a>
+        <URLContainer>
+          <URL href={response} target="_blank" rel="noreferrer noopener">
+            {urlLabel || response}
+          </URL>
+          <OpenIcon href={response} target="_blank" rel="noreferrer noopener">
+            <img src={OpenLinkIcon} alt="Open Link Icon" />
+          </OpenIcon>
+        </URLContainer>
       )}
     </div>
   );
 
   return (
-    <div>
-      <h5>
+    <Container>
+      <Label>
         {label}
         {openable && <OpenButton />}
-      </h5>
+      </Label>
       <ResponseArea />
       {open && (
         <PopoutWindow title={label} setWindowClosed={() => setOpen(false)}>
@@ -56,6 +94,6 @@ export default function ResponseInput({ url, label, response, openable }) {
           <ResponseArea fontSize="20px" />
         </PopoutWindow>
       )}
-    </div>
+    </Container>
   );
 }

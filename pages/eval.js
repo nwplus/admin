@@ -36,7 +36,7 @@ export default function Eval({ hackathons }) {
   }, [applicants]);
 
   return (
-    <Page hackathons={hackathons} currentPath="eval">
+    <Page hackathons={hackathons} currentPath="eval" isFullscreen>
       <Container>
         <LeftContainer>
           <HackerList

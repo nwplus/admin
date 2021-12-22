@@ -12,7 +12,7 @@ import { AuthContext } from '../../utility/auth';
 import { updateApplicantScore } from '../../utility/firebase';
 
 const Container = styled.div`
-  display: ${p => !p.shouldDisplay && 'none'};
+  display: ${(p) => !p.shouldDisplay && 'none'};
 `;
 
 const ScoreInputs = styled.div`
@@ -83,7 +83,7 @@ export default function Scoring({ shouldDisplay, applicant }) {
   };
 
   return (
-    <Container shouldDisplay={shouldDisplay} >
+    <Container shouldDisplay={shouldDisplay}>
       <Title4 color={COLOR.MIDNIGHT_PURPLE}>Scoring</Title4>
       <ScoreInputs>
         <ScoreInput
@@ -117,10 +117,7 @@ export default function Scoring({ shouldDisplay, applicant }) {
         />
       </ScoreInputs>
       <BottomSectionContainer>
-        <AddTagButton
-          allTags={TAGS}
-          hacker={applicant}
-        />
+        <AddTagButton allTags={TAGS} hacker={applicant}/>
         <BottomSection>
           <div>
             Total Score: {totalScore} / {MAX_SCORE}

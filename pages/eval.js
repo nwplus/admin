@@ -139,7 +139,10 @@ export default function Eval({ hackathons }) {
         <div>
           <ApplicantResponse hacker={hacker} />
         </div>
-        <Scoring shouldDisplay={!!selectedApplicant} applicant={selectedApplicant} />
+        <Scoring
+          shouldDisplay={!!selectedApplicant}
+          applicant={selectedApplicant}
+        />
       </Container>
     </Page>
   );

@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-
 import Button from '../button';
 import Tag from '../tag';
 import { ASSESSMENT_COLOR, COLOR } from '../../constants';
@@ -49,7 +47,9 @@ const TagDropDown = styled.div`
 `;
 
 function NotAddedTags({ hackerId, allTags, applicantTags = [] }) {
-  const tags = allTags.filter((tag) => !applicantTags.some((addedTag) => addedTag.text === tag.text));
+  const tags = allTags.filter(
+    (tag) => !applicantTags.some((addedTag) => addedTag.text === tag.text)
+  );
 
   return (
     <NotAddedTagsContainer>
@@ -114,11 +114,7 @@ export default function AddTagModal({
         tags={applicantTags}
         applicantTags={applicantTags}
       />
-      <Button
-        color="white"
-        type="button"
-        onClick={() => setShowing(false)}
-      >
+      <Button color="white" type="button" onClick={() => setShowing(false)}>
         Apply
       </Button>
     </ModalContainer>

@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Button from '../button';
 import Tag from '../tag';
 import TagIconSrc from '../../assets/tag.svg';
 import { COLOR } from '../../constants';
 import AddTagModal from './AddTagModal';
-import { getApplicantTags, updateApplicantTags } from '../../utility/firebase';
+import { updateApplicantTags } from '../../utility/firebase';
 
 const TagButtonStyledDiv = styled.div`
   display: flex;

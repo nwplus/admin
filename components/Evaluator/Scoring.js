@@ -117,7 +117,7 @@ export default function Scoring({ shouldDisplay, applicant }) {
         />
       </ScoreInputs>
       <BottomSectionContainer>
-        <AddTagButton allTags={TAGS} hacker={applicant}/>
+        <AddTagButton allTags={TAGS} hacker={applicant} />
         <BottomSection>
           <div>
             Total Score: {totalScore} / {MAX_SCORE}

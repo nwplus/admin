@@ -637,6 +637,7 @@ export const getCSVData = async () => {
     .collection('Hackathons')
     .doc(HackerEvaluationHackathon)
     .collection('Applicants')
+    .where('status.applicationStatus', '!=', 'inProgress')
     .get();
   const CSV = apps.docs.map((doc) => {
     const {

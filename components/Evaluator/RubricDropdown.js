@@ -60,9 +60,9 @@ const StyledOption = styled.div`
 `;
 
 const rubricOptions = [
-  { value: 'DEV', label: 'Developer' },
-  { value: 'DESIGN', label: 'Design' },
-  { value: 'GENERAL', label: 'General' },
+  { value: 'DEV', label: 'Resume - Developer' },
+  { value: 'DESIGN', label: 'Resume - Design' },
+  { value: 'GENERAL', label: 'Resume - First Time Hacker' },
   { value: 'LONG_ANSWER', label: 'Long answer' },
 ];
 

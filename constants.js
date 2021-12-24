@@ -129,11 +129,6 @@ export const APPLICATION_STATUS = {
 };
 
 export const SCORING = {
-  LINK: {
-    label: 'GitHub/Personal Website',
-    value: 7,
-    weight: 1,
-  },
   RESUME: {
     label: 'Resume',
     value: 7,

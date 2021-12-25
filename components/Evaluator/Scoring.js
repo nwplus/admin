@@ -54,9 +54,6 @@ export default function Scoring({ shouldDisplay, applicant }) {
     // Switch to whatever the field is in Firebase
     let field = '';
     switch (label) {
-      case SCORING.LINK.label:
-        field = 'LinkScore';
-        break;
       case SCORING.RESUME.label:
         field = 'ResumeScore';
         break;
@@ -83,12 +80,6 @@ export default function Scoring({ shouldDisplay, applicant }) {
     <Container shouldDisplay={shouldDisplay}>
       <Title4 color={COLOR.MIDNIGHT_PURPLE}>Scoring</Title4>
       <ScoreInputs>
-        <ScoreInput
-          label={SCORING.LINK.label}
-          handleClick={handleClick}
-          score={scores?.LinkScore}
-          maxScore={SCORING.LINK}
-        />
         <ScoreInput
           label={SCORING.RESUME.label}
           handleClick={handleClick}

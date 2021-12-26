@@ -9,7 +9,7 @@ const Circle = styled.div`
   border: 2px solid ${COLOR.MIDNIGHT_PURPLE};
   width: 33px;
   height: 33px;
-  font-weight:600;
+  font-weight: 600;
   color: ${(props) => (props.active ? `white` : `${COLOR.MIDNIGHT_PURPLE}`)};
   display: inline-flex;
   align-items: center;

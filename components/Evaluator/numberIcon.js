@@ -5,17 +5,17 @@ import { COLOR } from '../../constants';
 const Circle = styled.div`
   background-color: ${(props) =>
     props.active ? `${COLOR.MIDNIGHT_PURPLE}` : `white`};
-  margin-right: 10px;
   border-radius: 50%;
-  border: 3px solid ${COLOR.MIDNIGHT_PURPLE};
+  border: 2px solid ${COLOR.MIDNIGHT_PURPLE};
   width: 33px;
   height: 33px;
+  font-weight:600;
   color: ${(props) => (props.active ? `white` : `${COLOR.MIDNIGHT_PURPLE}`)};
   display: inline-flex;
   align-items: center;
   justify-content: center;
   :hover {
-    border: 3px solid ${COLOR.BLUE_BORDER};
+    border-color: ${COLOR.BLUE_BORDER};
     cursor: pointer;
   }
 `;

@@ -8,15 +8,26 @@ import Rubric from '../components/Evaluator/Rubric';
 import { getAllApplicants, getHackathons } from '../utility/firebase';
 
 const Container = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 1fr;
+  grid-template-rows: 1fr;
+  gap: 1rem;
+  height: 100vh;
+  box-sizing: border-box;
+  padding: 0 1rem;
+  background: #f7f7f7;
 `;
 
 const Column = styled.div`
-  flex: 1.5;
-`;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem 0;
 
-const SmallColumn = styled.div`
-  flex: 1;
+  ${(p) =>
+    p.items
+      ? `height: calc(100vh - ${1 + p.items}rem);`
+      : 'height: calc(100vh - 2rem);'};
 `;
 
 export default function Eval({ hackathons }) {
@@ -37,28 +48,28 @@ export default function Eval({ hackathons }) {
   }, [applicants]);
 
   return (
-    <Page hackathons={hackathons} currentPath="eval" isFullscreen>
+    <Page hackathons={hackathons} currentPath="eval" isFullview>
       <Container>
-        <SmallColumn>
+        <Column items={2}>
           <HackerList
             applicants={applicants}
             selectedApplicant={selectedApplicant}
             setSelectedApplicant={setSelectedApplicant}
           />
           <Rubric />
-        </SmallColumn>
+        </Column>
         <Column>
           <ApplicantResponse
             shouldDisplay={!!selectedApplicant}
             hacker={selectedApplicant}
           />
         </Column>
-        <SmallColumn>
+        <Column>
           <Scoring
             shouldDisplay={!!selectedApplicant}
             applicant={selectedApplicant}
           />
-        </SmallColumn>
+        </Column>
       </Container>
     </Page>
   );

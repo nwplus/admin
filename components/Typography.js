@@ -66,3 +66,17 @@ export const Title4 = styled.h4.attrs((p) => ({
   ${SetColor}
   ${SetBackground}
 `;
+
+export const Title5 = styled.h5.attrs((p) => ({
+  color: p.color || '#fff',
+}))`
+  margin: 1.5rem 0 1rem 0;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 25px;
+  letter-spacing: -0.45px;
+  font-feature-settings: 'liga' off;
+  ${SetColor}
+  ${SetBackground}
+`;

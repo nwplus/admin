@@ -3,20 +3,31 @@ import styled from 'styled-components';
 import HackerEntry from './HackerEntry';
 import Input from '../input';
 import { COLOR, ASSESSMENT_COLOR } from '../../constants';
-import { Title4 } from '../Typography';
+import { Title5 } from '../Typography';
 
 const Container = styled.div`
-  height: 50vh;
+  height: 60%;
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+`;
+
+const HeadContainer = styled.div`
+  padding: 0 1rem;
 `;
 
 const ListContainer = styled.div`
+  flex-grow: 1;
   height: 65%;
   width: 100%;
   overflow-x: hidden;
   overflow-y: scroll;
 
   ::-webkit-scrollbar {
-    width: 13px;
+    width: 10px;
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
@@ -68,11 +79,14 @@ export default function HackerList({
 
   return (
     <Container>
-      <Title4 color={COLOR.MIDNIGHT_PURPLE}>Applicant List</Title4>
-      <Input
-        value={search}
-        onChange={(e) => setSearch(e.target.value.toLowerCase())}
-      />
+      <HeadContainer>
+        <Title5 color={COLOR.MIDNIGHT_PURPLE}>Applicant List</Title5>
+        <Input
+          placeholder="Search"
+          value={search}
+          onChange={(e) => setSearch(e.target.value.toLowerCase())}
+        />
+      </HeadContainer>
       <ListContainer>
         {filtered.map((applicant, i) => (
           <HackerEntry

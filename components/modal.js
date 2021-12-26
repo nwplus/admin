@@ -137,11 +137,13 @@ const ModalBackground = styled.div`
   /* TODO: add media queries to make width responsive */
   width: 740px;
   max-width: 100%;
-  max-height: 100%;
+  max-height: 70%;
+  overflow: scroll;
 `;
 
 const ButtonContainer = styled.div`
   margin: 0;
+  padding-bottom: 20px;
   float: right;
   display: inline-block;
 `;

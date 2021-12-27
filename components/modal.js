@@ -138,7 +138,7 @@ const ModalBackground = styled.div`
   width: 740px;
   max-width: 100%;
   max-height: 70%;
-  overflow: scroll;
+  overflow-y: auto;
 `;
 
 const ButtonContainer = styled.div`

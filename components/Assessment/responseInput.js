@@ -29,15 +29,9 @@ const OpenIcon = styled.a`
   margin-right: 10px;
 `;
 
-
 const NO_RESPONSE = 'No Response';
 
-export default function ResponseInput({
-  url,
-  label,
-  response,
-  openable,
-}) {
+export default function ResponseInput({ url, label, response, openable }) {
   const [open, setOpen] = useState(false);
 
   const OpenButton = () => (

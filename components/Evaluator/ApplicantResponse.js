@@ -27,8 +27,6 @@ const Container = styled.div`
   }
 `;
 
-const NO_RESPONSE = 'No Response';
-
 export default function ApplicantResponse({ shouldDisplay, hacker }) {
   const [resumeURL, setResumeURL] = useState(null);
   useEffect(() => {
@@ -59,10 +57,7 @@ export default function ApplicantResponse({ shouldDisplay, hacker }) {
         response={hacker?.basicInfo?.isOfLegalAge ? 'yes' : 'no'}
       />
 
-      <ResponseInput
-        label="School"
-        response={`Studying ${hacker?.basicInfo?.school}`}
-      />
+      <ResponseInput label="School" response={`${hacker?.basicInfo?.school}`} />
 
       <ResponseInput label="Major" response={hacker?.basicInfo?.major} />
 
@@ -76,33 +71,17 @@ export default function ApplicantResponse({ shouldDisplay, hacker }) {
         response={`${hacker?.skills?.hackathonsAttended}`}
       />
 
-      <ResponseInput
-        url
-        urlLabel={hacker?.skills?.github ? 'View GitHub' : NO_RESPONSE}
-        label="Github"
-        response={hacker?.skills?.github}
-      />
+      <ResponseInput url label="Github" response={hacker?.skills?.github} />
 
       <ResponseInput
         url
-        urlLabel={hacker?.skills?.portfolio ? 'View Portfolio' : NO_RESPONSE}
         label="Personal site"
         response={hacker?.skills?.portfolio}
       />
 
-      <ResponseInput
-        url
-        urlLabel={hacker?.skills?.linkedin ? 'View LinkedIn' : NO_RESPONSE}
-        label="LinkedIn"
-        response={hacker?.skills?.linkedin}
-      />
+      <ResponseInput url label="LinkedIn" response={hacker?.skills?.linkedin} />
 
-      <ResponseInput
-        url={resumeURL}
-        urlLabel={resumeURL ? 'View Resume' : NO_RESPONSE}
-        label="Resume"
-        response={resumeURL}
-      />
+      <ResponseInput url={resumeURL} label="Resume" response={resumeURL} />
 
       <ResponseInput
         label="What should technology be used for?"

@@ -115,7 +115,7 @@ export default function AddTagModal({
         applicantTags={applicantTags}
       />
       <Button color="white" type="button" onClick={() => setShowing(false)}>
-        Apply
+        Done
       </Button>
     </ModalContainer>
   );

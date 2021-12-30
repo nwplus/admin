@@ -29,13 +29,9 @@ const OpenIcon = styled.a`
   margin-right: 10px;
 `;
 
-export default function ResponseInput({
-  url,
-  label,
-  response,
-  openable,
-  urlLabel,
-}) {
+const NO_RESPONSE = 'No Response';
+
+export default function ResponseInput({ url, label, response, openable }) {
   const [open, setOpen] = useState(false);
 
   const OpenButton = () => (
@@ -71,7 +67,7 @@ export default function ResponseInput({
       ) : (
         <URLContainer>
           <URL href={response} target="_blank" rel="noreferrer noopener">
-            {urlLabel || response}
+            {response || NO_RESPONSE}
           </URL>
           <OpenIcon href={response} target="_blank" rel="noreferrer noopener">
             <img src={OpenLinkIcon} alt="Open Link Icon" />

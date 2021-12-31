@@ -226,18 +226,6 @@ export default ({ hackathons, currentPath }) => {
           );
         })}
 
-        <NextLink href="/assessment" as="/assessment" passHref>
-          <Link>
-            <ItemContainer>
-              <Icon
-                color={currentPath === 'assessment' && COLOR.WHITE}
-                icon="user-check"
-              />
-              <Label selected={currentPath === 'assessment'}>Assessment</Label>
-            </ItemContainer>
-          </Link>
-        </NextLink>
-
         <NextLink href="/eval" as="/eval" passHref>
           <Link>
             <ItemContainer>

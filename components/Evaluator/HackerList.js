@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import HackerEntry from './HackerEntry';
+import Icon from '../Icon';
 import Input from '../input';
 import { COLOR, ASSESSMENT_COLOR } from '../../constants';
 import { Title5 } from '../Typography';
@@ -16,7 +17,34 @@ const Container = styled.div`
 `;
 
 const HeadContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 0 1rem;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  gap: 20px;
+`;
+
+const StyledIcon = styled(Icon)`
+  pointer-events: all;
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+const SearchContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin: 1.5rem 0 1rem 0;
+  width: 100%;
+`;
+
+const StyledInput = styled(Input)`
+  margin: 0;
 `;
 
 const ListContainer = styled.div`
@@ -47,6 +75,9 @@ export default function HackerList({
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [filtered, setFiltered] = useState([]);
+  // State for search and filter icons
+  const [searchActive, setSearchActive] = useState(false);
+  const [filterActive, setFilterActive] = useState(false);
 
   // debounce search
   useEffect(() => {
@@ -60,32 +91,61 @@ export default function HackerList({
     };
   }, [search]);
 
-  // filter applicants based off of search term
-  useEffect(
-    () =>
-      setFiltered(
-        applicants.filter((applicant) => {
-          const [name, email] = [
-            `${applicant.basicInfo.firstName.toLowerCase()} ${applicant.basicInfo.lastName.toLowerCase()}`,
-            applicant.basicInfo.email.toLowerCase(),
-          ];
-          return (
-            name.includes(debouncedSearch) || email.includes(debouncedSearch)
-          );
-        })
-      ),
-    [debouncedSearch, applicants]
-  );
+  // filter applicants based off of search term and/or filter state
+  useEffect(() => {
+    const filteredBySearch = applicants.filter((applicant) => {
+      if (debouncedSearch === '') {
+        return true;
+      }
+      const [name, email] = [
+        `${applicant.basicInfo.firstName.toLowerCase()} ${applicant.basicInfo.lastName.toLowerCase()}`,
+        applicant.basicInfo.email.toLowerCase(),
+      ];
+      return name.includes(debouncedSearch) || email.includes(debouncedSearch);
+    });
+
+    // If filterActive is true, we filter out those that are already completed
+    // If filterActive is false, we don't filter any applications
+    const filteredByComplete = filteredBySearch.filter((applicant) => {
+      if (!filterActive) {
+        return true;
+      }
+      return !applicant.score || Object.keys(applicant.score.scores).length < 3;
+    });
+
+    setFiltered(filteredByComplete);
+  }, [debouncedSearch, filterActive, applicants]);
+
+  const closeSearch = () => {
+    setSearchActive(false);
+    setSearch('');
+  };
 
   return (
     <Container>
       <HeadContainer>
-        <Title5 color={COLOR.MIDNIGHT_PURPLE}>Applicant List</Title5>
-        <Input
-          placeholder="Search"
-          value={search}
-          onChange={(e) => setSearch(e.target.value.toLowerCase())}
-        />
+        {searchActive ? (
+          <SearchContainer>
+            <StyledInput
+              placeholder="Search"
+              value={search}
+              onChange={(e) => setSearch(e.target.value.toLowerCase())}
+            />
+            <StyledIcon icon="close" onClick={closeSearch} />
+          </SearchContainer>
+        ) : (
+          <>
+            <Title5 color={COLOR.MIDNIGHT_PURPLE}>Applicant List</Title5>
+            <ButtonContainer>
+              <StyledIcon icon="search" onClick={() => setSearchActive(true)} />
+              <StyledIcon
+                icon="filter"
+                color={!filterActive && COLOR.GREY_500}
+                onClick={() => setFilterActive(!filterActive)}
+              />
+            </ButtonContainer>
+          </>
+        )}
       </HeadContainer>
       <ListContainer>
         {filtered.map((applicant, i) => (

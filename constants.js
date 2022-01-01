@@ -239,10 +239,10 @@ export const RUBRIC = {
     },
     {
       score: '+1',
-      label: 'For each extracurricular activity (1 point each, max 3 points)',
+      label: 'For each extracurricular activity (1 point each, max 2 points)',
     },
     {
-      score: '+2',
+      score: '+1',
       label: 'If extracurricular activities are tech-related',
     },
     {

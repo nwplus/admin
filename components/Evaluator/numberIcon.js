@@ -14,8 +14,9 @@ const Circle = styled.div`
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  transition: 0.2s all ease-in-out;
   :hover {
-    border-color: ${COLOR.BLUE_BORDER};
+    opacity: 0.8;
     cursor: pointer;
   }
 `;

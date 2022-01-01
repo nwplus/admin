@@ -14,7 +14,7 @@ const Container = styled.div`
   gap: 1rem;
   height: 100vh;
   box-sizing: border-box;
-  padding: 0 1rem;
+  padding: 1rem;
   background: #f7f7f7;
 `;
 
@@ -22,7 +22,6 @@ const Column = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding: 1rem 0;
 
   ${(p) =>
     p.items
@@ -48,7 +47,7 @@ export default function Eval({ hackathons }) {
   }, [applicants]);
 
   return (
-    <Page hackathons={hackathons} currentPath="eval" isFullview>
+    <Page hackathons={hackathons} currentPath="eval" isFullscreen>
       <Container>
         <Column items={2}>
           <HackerList

@@ -27,16 +27,11 @@ const Container = styled.div`
 `;
 
 const Content = styled.div`
-  ${(p) =>
-    p.isFullscreen
-      ? 'padding: 0 40px;'
-      : p.isFullview
-      ? 'padding: 0;'
-      : 'padding: 40px;'}
+  ${(p) => (p.isFullscreen ? 'padding: 0;' : 'padding: 40px;')}
 `;
 
 const Children = styled.div`
-  ${(p) => !(p.isFullscreen || p.isFullview) && 'padding: 40px 0;'}
+  ${(p) => !p.isFullscreen && 'padding: 40px 0;'}
 `;
 
 export default ({
@@ -45,7 +40,6 @@ export default ({
   children,
   navbarItems,
   isFullscreen,
-  isFullview,
 }) => {
   const [loading, setLoading] = useState(false);
   const [timeOut, setTimeOut] = useState();
@@ -59,7 +53,7 @@ export default ({
     <Container>
       <Sidebar currentPath={currentPath} hackathons={hackathons} />
       <div style={{ flexGrow: '1' }}>
-        <Content isFullscreen={isFullscreen} isFullview={isFullview}>
+        <Content isFullscreen={isFullscreen}>
           {navbarItems && (
             <>
               <HeaderContainer>
@@ -74,9 +68,7 @@ export default ({
               />
             </>
           )}
-          <Children isFullscreen={isFullscreen} isFullview={isFullview}>
-            {children}
-          </Children>
+          <Children isFullscreen={isFullscreen}>{children}</Children>
         </Content>
       </div>
     </Container>

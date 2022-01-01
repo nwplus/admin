@@ -30,7 +30,7 @@ export const COLOR = {
   BRIGHT_RED: '#F83D3D',
   GREY_500: '#BDBAC3',
   GREY_200: '#F0EEf2',
-  EVAL_GREY: '#D2D2D2',
+  EVAL_GREY: '#EEEEEE',
 };
 export const BUTTON_COLOR = {
   PRIMARY: 'linear-gradient(92.58deg, #0DEFE1 0%, #78FF96 100%)',

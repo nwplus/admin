@@ -32,7 +32,8 @@ const StyledButton = styled(Button)`
 
 const ExistingTagsContainer = styled.div`
   display: flex;
-  flex-direction: column;
+  align-items: flex-start;
+  flex-wrap: wrap;
   gap: 9px;
 `;
 

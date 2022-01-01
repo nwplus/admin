@@ -27,7 +27,7 @@ const Container = styled.div`
 `;
 
 const Content = styled.div`
-  ${(p) => (p.isFullscreen ? 'padding: 10px 40px;' : 'padding: 40px;')}
+  ${(p) => (p.isFullscreen ? 'padding: 0;' : 'padding: 40px;')}
 `;
 
 const Children = styled.div`
@@ -52,7 +52,7 @@ export default ({
   return (
     <Container>
       <Sidebar currentPath={currentPath} hackathons={hackathons} />
-      <div style={{ 'flex-grow': '1' }}>
+      <div style={{ flexGrow: '1' }}>
         <Content isFullscreen={isFullscreen}>
           {navbarItems && (
             <>

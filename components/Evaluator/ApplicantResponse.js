@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Title4 } from '../Typography';
+import { Title5 } from '../Typography';
 import ResponseInput from '../Assessment/responseInput';
 import { COLOR, ASSESSMENT_COLOR } from '../../constants';
 import { getResumeFile } from '../../utility/firebase';
@@ -10,12 +10,17 @@ const Container = styled.div`
   border-radius: 5px;
   border: none;
   padding: 0 20px 20px;
-  height: 90vh;
+  height: 100%;
   text-align: left;
-  overflow-y: scroll;
+  overflow-y: auto;
+
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
 
   ::-webkit-scrollbar {
-    width: 13px;
+    width: 10px;
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
@@ -39,7 +44,7 @@ export default function ApplicantResponse({ shouldDisplay, hacker }) {
 
   return (
     <Container shouldDisplay={shouldDisplay}>
-      <Title4 color={COLOR.MIDNIGHT_PURPLE}>Applicant Response</Title4>
+      <Title5 color={COLOR.MIDNIGHT_PURPLE}>Applicant Response</Title5>
       <ResponseInput
         label="Full Name"
         response={`${hacker?.basicInfo?.firstName} ${hacker?.basicInfo?.lastName}`}

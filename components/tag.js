@@ -8,7 +8,6 @@ const StyledTag = styled.div`
   align-items: stretch;
   border: none;
   font-weight: 600;
-  height: 24px;
 `;
 
 const TagText = styled.div`
@@ -20,9 +19,9 @@ const TagText = styled.div`
       : `background-color: ${COLOR.PRIMARY};`}
   ${(props) =>
     props.type === DELETE
-      ? `padding: 6px 5px 7px 12px;
+      ? `padding: 7px 5px 7px 12px;
          border-radius: 5px 0 0 5px;`
-      : `padding: 6px 12px 7px 12px;
+      : `padding: 7px 12px 7px 12px;
          border-radius: 5px;`}
 `;
 

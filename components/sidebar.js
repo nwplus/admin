@@ -99,6 +99,7 @@ const LoadingImage = styled.img`
 
 const Toggle = styled.div`
   position: absolute;
+  z-index: 900;
   left: 0px;
   bottom: 0px;
   margin: 0 0 14px 14px;

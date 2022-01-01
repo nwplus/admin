@@ -5,7 +5,7 @@ import Button from '../button';
 import ScoreInput from './scoreInput';
 import TextField from '../TextField';
 import AddTagButton from './AddTagButton';
-import { Title4 } from '../Typography';
+import { Title5 } from '../Typography';
 import { calculateTotalScore } from '../../utility/utilities';
 import { COLOR, MAX_SCORE, SCORING, TAGS } from '../../constants';
 import { AuthContext } from '../../utility/auth';
@@ -13,7 +13,11 @@ import { updateApplicantScore } from '../../utility/firebase';
 
 const Container = styled.div`
   ${(p) => !p.shouldDisplay && 'display: none'};
-  margin-left: 10px;
+  padding: 0 1rem 1rem 1rem;
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
 `;
 
 const ScoreInputs = styled.div`
@@ -78,7 +82,7 @@ export default function Scoring({ shouldDisplay, applicant }) {
 
   return (
     <Container shouldDisplay={shouldDisplay}>
-      <Title4 color={COLOR.MIDNIGHT_PURPLE}>Scoring</Title4>
+      <Title5 color={COLOR.MIDNIGHT_PURPLE}>Scoring</Title5>
       <ScoreInputs>
         <ScoreInput
           label={SCORING.RESUME.label}

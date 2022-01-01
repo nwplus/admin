@@ -11,6 +11,7 @@ const Container = styled.div`
 const ScoreContainer = styled.div`
   display: flex;
   padding-top: 8px;
+  gap: 0.5rem;
 `;
 
 const Label = styled.label`

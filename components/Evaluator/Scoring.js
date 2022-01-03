@@ -42,14 +42,14 @@ const SmallText = styled.div`
 `;
 
 export default function Scoring({ shouldDisplay, applicant }) {
-  const [scores, setScores] = useState(null);
+  const [scores, setScores] = useState({});
   const [totalScore, setTotalScore] = useState(null);
   const [comment, setComment] = useState('');
 
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
-    setScores(applicant?.score?.scores || null);
+    setScores(applicant?.score?.scores || {});
     setTotalScore(applicant?.score?.totalScore || null);
     setComment(applicant?.score?.comment || '');
   }, [applicant]);

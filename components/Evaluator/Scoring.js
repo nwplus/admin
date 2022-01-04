@@ -52,7 +52,7 @@ export default function Scoring({ shouldDisplay, applicant }) {
     setScores(applicant?.score?.scores || {});
     setTotalScore(applicant?.score?.totalScore || null);
     setComment(applicant?.score?.comment || '');
-  }, [applicant]);
+  }, [applicant?._id]);
 
   const handleClick = (score, label) => {
     // Switch to whatever the field is in Firebase

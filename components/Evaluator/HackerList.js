@@ -158,7 +158,9 @@ export default function HackerList({
             score={applicant.score}
             selectHacker={() => setSelectedApplicant(applicant)}
             hasCompleted={
-              applicant.score && Object.keys(applicant.score.scores).length >= 3
+              applicant.score &&
+              applicant.score.scores &&
+              Object.keys(applicant.score.scores).length >= 3
             }
             isSelected={
               selectedApplicant && selectedApplicant._id === applicant._id

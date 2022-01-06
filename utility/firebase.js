@@ -648,14 +648,14 @@ export const getCSVData = async () => {
         educationLevel,
         phoneNumber,
         school,
-        location,
         major,
-        hackathonsAttended,
       },
+      skills: { hackathonsAttended },
       status: { applicationStatus },
     } = doc.data();
     const totalScore = doc.data().score?.totalScore ?? '?';
-    const firstTimeHacker = hackathonsAttended === 0;
+    const numHackathons = hackathonsAttended || 0;
+    const firstTimeHacker = numHackathons === 0;
     return [
       firstName,
       lastName,
@@ -663,11 +663,10 @@ export const getCSVData = async () => {
       phoneNumber,
       school,
       educationLevel,
-      location,
       totalScore,
       applicationStatus,
       major,
-      hackathonsAttended,
+      numHackathons,
       firstTimeHacker,
     ];
   });
@@ -678,7 +677,6 @@ export const getCSVData = async () => {
     'Phone Number',
     'School Name',
     'Level of Study',
-    'Country',
     'Total Score',
     'Application Status',
     'Major',

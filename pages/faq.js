@@ -550,6 +550,7 @@ export default function Faq({ hackathons }) {
 
 export const getStaticProps = async () => {
   const hackathons = await getHackathons();
+  hackathons.push('Portal'); // Enable Portal specific FAQs
   return {
     props: {
       hackathons,

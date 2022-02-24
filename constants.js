@@ -139,11 +139,6 @@ export const SCORING = {
     value: 3,
     weight: 2,
   },
-  ESSAY_TWO: {
-    label: 'Short Answer 2',
-    value: 3,
-    weight: 2,
-  },
 };
 
 export const MAX_SCORE = Object.values(SCORING).reduce(

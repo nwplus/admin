@@ -67,13 +67,8 @@ export default function ApplicantResponse({ shouldDisplay, hacker }) {
       <ResponseInput label="Major" response={hacker?.basicInfo?.major} />
 
       <ResponseInput
-        label="Visiting From"
-        response={hacker?.basicInfo?.location}
-      />
-
-      <ResponseInput
-        label="How many hackathons have you attended?"
-        response={`${hacker?.skills?.hackathonsAttended}`}
+        label="First time hacker?"
+        response={hacker?.skills?.hackathonsAttended ? 'No' : 'Yes'}
       />
 
       <ResponseInput url label="Github" response={hacker?.skills?.github} />
@@ -89,13 +84,8 @@ export default function ApplicantResponse({ shouldDisplay, hacker }) {
       <ResponseInput url={resumeURL} label="Resume" response={resumeURL} />
 
       <ResponseInput
-        label="What should technology be used for?"
+        label="How do you intend to grow at cmd-f?"
         response={`${hacker?.skills?.longAnswers1}`}
-      />
-
-      <ResponseInput
-        label="How would you like to challenge yourself during this hackathon? OR Describe a time where you went above and beyond of your role to demonstrate leadership in a project."
-        response={`${hacker?.skills?.longAnswers2}`}
       />
     </Container>
   );

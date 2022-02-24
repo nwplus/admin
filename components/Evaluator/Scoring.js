@@ -64,9 +64,6 @@ export default function Scoring({ shouldDisplay, applicant }) {
       case SCORING.ESSAY.label:
         field = 'ResponseOneScore';
         break;
-      case SCORING.ESSAY_TWO.label:
-        field = 'ResponseTwoScore';
-        break;
       default:
         break;
     }
@@ -95,12 +92,6 @@ export default function Scoring({ shouldDisplay, applicant }) {
           handleClick={handleClick}
           score={scores?.ResponseOneScore}
           maxScore={SCORING.ESSAY}
-        />
-        <ScoreInput
-          label={SCORING.ESSAY_TWO.label}
-          handleClick={handleClick}
-          score={scores?.ResponseTwoScore}
-          maxScore={SCORING.ESSAY_TWO}
         />
         <TextField
           customValue={comment}

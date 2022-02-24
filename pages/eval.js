@@ -16,6 +16,7 @@ const Container = styled.div`
   box-sizing: border-box;
   padding: 1rem;
   background: #f7f7f7;
+  word-break: break-word;
 `;
 
 const Column = styled.div`

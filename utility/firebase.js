@@ -624,7 +624,7 @@ export const getApplicantsToAccept = async (score) => {
   return applicants.docs
     .filter((app) => {
       const appStatus = app.data().status.applicationStatus;
-      const newHacker = app.data().basicInfo.hackathonsAttended === 0;
+      const newHacker = app.data().skills.hackathonsAttended === 0;
       if (appStatus !== APPLICATION_STATUS.scored.text) return false;
       if (newHacker) return true;
       return app.data().score.totalScore >= score;
@@ -650,12 +650,11 @@ export const getCSVData = async () => {
         school,
         location,
         major,
-        hackathonsAttended,
       },
       status: { applicationStatus },
+      skills: { hackathonsAttended },
     } = doc.data();
     const totalScore = doc.data().score?.totalScore ?? '?';
-    const firstTimeHacker = hackathonsAttended === 0;
     return [
       firstName,
       lastName,
@@ -668,7 +667,6 @@ export const getCSVData = async () => {
       applicationStatus,
       major,
       hackathonsAttended,
-      firstTimeHacker,
     ];
   });
   CSV.unshift([
@@ -682,7 +680,6 @@ export const getCSVData = async () => {
     'Total Score',
     'Application Status',
     'Major',
-    '# of hackathons attended',
     'First time hacker?',
   ]);
   return CSV;

@@ -5,6 +5,7 @@ import Icon from '../Icon';
 import Input from '../input';
 import { COLOR, ASSESSMENT_COLOR } from '../../constants';
 import { Title5 } from '../Typography';
+import ExportModal from '../Assessment/ExportModal';
 
 const Container = styled.div`
   height: 60%;
@@ -78,6 +79,7 @@ export default function HackerList({
   // State for search and filter icons
   const [searchActive, setSearchActive] = useState(false);
   const [filterActive, setFilterActive] = useState(false);
+  const [showExportModal, setShowExportModal] = useState(false);
 
   // debounce search
   useEffect(() => {
@@ -143,6 +145,10 @@ export default function HackerList({
                 color={!filterActive && COLOR.GREY_500}
                 onClick={() => setFilterActive(!filterActive)}
               />
+              <StyledIcon
+                icon="file-arrow-down"
+                onClick={() => setShowExportModal(true)}
+              />
             </ButtonContainer>
           </>
         )}
@@ -168,6 +174,8 @@ export default function HackerList({
           />
         ))}
       </ListContainer>
+
+      {showExportModal && <ExportModal setShowing={setShowExportModal} />}
     </Container>
   );
 }

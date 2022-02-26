@@ -6,6 +6,7 @@ const GreyDiv = styled.div`
   width: 100vw;
   background: rgba(0, 0, 0, 0.4);
   position: absolute;
+  z-index: 99;
 `;
 
 const ModalDiv = styled.div`
@@ -17,6 +18,10 @@ const ModalDiv = styled.div`
   background-color: white;
   transform: translate(-50%, -25%);
   opacity: 100%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 export default function Modal({ children, setShowing }) {

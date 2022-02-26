@@ -650,12 +650,12 @@ export const getCSVData = async () => {
         school,
         location,
         major,
-        hackathonsAttended,
       },
       status: { applicationStatus },
+      // TODO: hackathonsAttended should belong in basicInfo, I messed up :') (see PR for more info)
+      skills: { hackathonsAttended },
     } = doc.data();
     const totalScore = doc.data().score?.totalScore ?? '?';
-    const firstTimeHacker = hackathonsAttended === 0;
     return [
       firstName,
       lastName,
@@ -668,7 +668,6 @@ export const getCSVData = async () => {
       applicationStatus,
       major,
       hackathonsAttended,
-      firstTimeHacker,
     ];
   });
   CSV.unshift([
@@ -682,7 +681,6 @@ export const getCSVData = async () => {
     'Total Score',
     'Application Status',
     'Major',
-    '# of hackathons attended',
     'First time hacker?',
   ]);
   return CSV;

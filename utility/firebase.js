@@ -624,7 +624,7 @@ export const getApplicantsToAccept = async (score) => {
   return applicants.docs
     .filter((app) => {
       const appStatus = app.data().status.applicationStatus;
-      const newHacker = app.data().basicInfo.hackathonsAttended === 0;
+      const newHacker = app.data().skills.hackathonsAttended === 0;
       if (appStatus !== APPLICATION_STATUS.scored.text) return false;
       if (newHacker) return true;
       return app.data().score.totalScore >= score;
@@ -652,7 +652,6 @@ export const getCSVData = async () => {
         major,
       },
       status: { applicationStatus },
-      // TODO: hackathonsAttended should belong in basicInfo, I messed up :') (see PR for more info)
       skills: { hackathonsAttended },
     } = doc.data();
     const totalScore = doc.data().score?.totalScore ?? '?';

@@ -14,6 +14,7 @@ import {
 } from '../../utility/firebase';
 import { EDIT, NEW, LIVESITE_NAVBAR } from '../../constants';
 import ProjectsCard from '../../components/projectsCard';
+import TeamMembersSelector from '../../components/Judging/TeamMembersSelector';
 
 const Label = styled.p`
   font-weight: bold;
@@ -67,8 +68,8 @@ export default ({ hackathons }) => {
 
   const formatProject = (project) => {
     project.sponsorPrizes = stringToArr(project.sponsorPrizes);
-    project.teamMembers = stringToArr(project.teamMembers);
     project.teamMembersEmails = stringToArr(project.teamMembersEmails);
+    // project.teamMembers = stringToArr(project.teamMembers);
     return project;
   };
 
@@ -108,7 +109,8 @@ export default ({ hackathons }) => {
     setData({
       ...projects[key],
       id: key,
-      teamMembers: projects[key].teamMembers?.toString(),
+      // teamMembers: projects[key].teamMembers?.toString(),
+      teamMembers: projects[key].teamMembers,
       teamMembersEmails: projects[key].teamMembersEmails?.toString(),
       sponsorPrizes: projects[key].sponsorPrizes?.toString(),
     });
@@ -163,10 +165,10 @@ export default ({ hackathons }) => {
           value={data.youtubeUrl}
           onChange={(e) => handleChange('youtubeUrl', e)}
         />
-        <Label>Team Members (Comma separated)</Label>
-        <Input
+        <Label>Team Members</Label>
+        <TeamMembersSelector
           value={data.teamMembers}
-          onChange={(e) => handleChange('teamMembers', e)}
+          updateValue={handleChange}
         />
         <Label>Team Emails (Comma separated)</Label>
         <Input

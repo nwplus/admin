@@ -11,9 +11,106 @@
 // ]
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import TextField from '../TextField';
+import { getAllApplicants } from '../../utility/firebase';
+
+const InputArea = styled.div`
+  background: white;
+  padding: 0.5rem;
+  border: 1px solid #eeeeee;
+  display: flex;
+  gap: 0.5rem;
+  position: relative;
+  min-height: calc(1rem + calc(1rem * 1.2));
+`;
+
+const Member = styled.div`
+  background: #2d2937;
+  color: white;
+  padding: 0.5rem 0.7rem;
+  border-radius: 5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+`;
+
+const AddText = styled.span`
+  margin: 0.5rem 0.3rem;
+  cursor: pointer;
+  font-weight: 600;
+  position: absolute;
+  top: 0.5rem;
+  right: 10px;
+`;
+
+const AddPanelOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  ${(p) => (p.isAdding ? 'display: flex;' : 'display: none;')}
+  align-items: flex-end;
+  justify-content: center;
+`;
+
+const AddPanel = styled.div`
+  transition: all 0.5s linear;
+  background: #f8f8f8;
+  border-style: none solid solid solid;
+  border-width: 1px;
+  border-color: #eeeeee;
+  box-sizing: border-box;
+  border-radius: 8px 8px 0 0;
+`;
+
+const AddTitle = styled.h4`
+  line-height: 150%;
+  margin: 0;
+`;
+
+const HackerOptions = styled.div`
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f8f8f8;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #eeeeee;
+    border-radius: 9001px;
+  }
+`;
+
+const EmptyOptions = styled.div`
+  font-size: 0.9rem;
+  color: #777777;
+`;
+
+const SelectableHacker = styled.div`
+  line-height: 150%;
+  box-sizing: border-box;
+  padding: 0.5rem 1.5rem;
+  cursor: pointer;
+  width: 100%;
+
+  :hover {
+    background: #eeeeee;
+  }
+`;
+
+const SmallText = styled.span`
+  font-size: 0.8rem;
+  color: #777777;
+`;
 
 const TeamMembersSelector = (props) => {
-  const { value, updateValue } = props;
+  const { value, updateValue, fnNoOverflow } = props;
   // onChange => ('teamMembers', e)
 
   const copyValues = () => {
@@ -28,46 +125,17 @@ const TeamMembersSelector = (props) => {
   const [renderMembers, setRenderMembers] = useState([]);
   const [trigger, setTrigger] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
+  const [hackerSearch, setHackerSearch] = useState('');
+  const [applicants, setApplicants] = useState([]);
 
-  const InputArea = styled.div`
-    background: white;
-    padding: 0.5rem;
-    border: 1px solid #eeeeee;
-    display: flex;
-    gap: 0.5rem;
-    position: relative;
-    min-height: calc(1rem + calc(1rem * 1.2));
-  `;
-
-  const Member = styled.div`
-    background: #2d2937;
-    color: white;
-    padding: 0.5rem 0.7rem;
-    border-radius: 5px;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-  `;
-
-  const AddText = styled.span`
-    margin: 0.5rem 0.3rem;
-    cursor: pointer;
-    font-weight: 600;
-    position: absolute;
-    top: 0.5rem;
-    right: 10px;
-  `;
-
-  const AddPanel = styled.div`
-    transition: all 0.2s linear;
-    background: white;
-    padding: 0.5rem;
-    border-style: none solid solid solid;
-    border-width: 1px;
-    border-color: #EEEEEE;
-  `;
-
-  const handleAddMember = () => {};
+  const handleAddHackerToTeam = (hacker) => {
+    const currentMembers = members;
+    members.push(hacker);
+    setMembers(currentMembers);
+    setTrigger(!trigger);
+    setIsAdding(false);
+    setHackerSearch('');
+  };
 
   const handleDeleteMember = (index) => {
     const currentMembers = members;
@@ -76,7 +144,7 @@ const TeamMembersSelector = (props) => {
     setTrigger(!trigger);
   };
 
-  const DeleteIcon = ({ index }) => {
+  const DeleteIcon = ({ fn }) => {
     return (
       <div
         style={{
@@ -87,8 +155,8 @@ const TeamMembersSelector = (props) => {
         }}
         role="button"
         tabIndex="0"
-        onKeyPress={() => handleDeleteMember(index)}
-        onClick={() => handleDeleteMember(index)}
+        onKeyPress={fn}
+        onClick={fn}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -111,33 +179,122 @@ const TeamMembersSelector = (props) => {
   useEffect(() => {
     const renderArray = [];
 
-    members.forEach((item, index) => {
-      renderArray.push(
-        <Member key={index}>
-          {item.name}
-          {/* <DeleteIcon index={index} /> */}
-        </Member>
-      );
-    });
+    if (members) {
+      members.forEach((item, index) => {
+        renderArray.push(
+          <Member key={index}>
+            {item.name}
+            <DeleteIcon fn={() => handleDeleteMember(index)} />
+          </Member>
+        );
+      });
+    }
 
     setRenderMembers(renderArray);
   }, [trigger]);
 
+  useEffect(() => {
+    if (isAdding) {
+      document
+        .getElementById('project-modal')
+        ?.scrollTo(0, document.getElementById('project-modal')?.scrollHeight);
+      fnNoOverflow(true);
+    } else {
+      fnNoOverflow(false);
+    }
+  }, [isAdding]);
+
+  useEffect(() => {
+    getAllApplicants(setApplicants);
+  }, []);
+
   return (
     <>
-      <InputArea>
-        {renderMembers}
-        {/* <AddText onClick={() => setIsAdding(!isAdding)}>
-          {isAdding ? 'Cancel' : 'Add Member'}
-        </AddText> */}
-      </InputArea>
-      <AddPanel
+      <div style={{ paddingBottom: '0.5rem' }}>
+        <InputArea>
+          {renderMembers}
+          <AddText onClick={() => setIsAdding(true)}>Add Member</AddText>
+        </InputArea>
+      </div>
+      <AddPanelOverlay
+        isAdding={isAdding}
         style={{
-          display: isAdding ? 'flex' : 'none',
+          height: document.getElementById('project-modal')?.scrollHeight,
+          overflow: 'hidden',
         }}
       >
-        yuh
-      </AddPanel>
+        <AddPanel>
+          {/* Head */}
+          <div
+            style={{
+              padding: '1.5rem',
+              boxSizing: 'border-box',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                gap: '1rem',
+                justifyContent: 'space-between',
+                paddingBottom: '1rem',
+              }}
+            >
+              {/* Title + Cancel */}
+              <AddTitle>Add Team Member</AddTitle>
+              <DeleteIcon fn={() => setIsAdding(false)} />
+            </div>
+            {/* Search */}
+            <TextField
+              value={hackerSearch}
+              onChangeCustomValue={(e) => setHackerSearch(e.target.value)}
+            />
+          </div>
+
+          {/* Searched Options */}
+          <HackerOptions
+            style={{
+              maxHeight:
+                document.getElementById('project-modal')?.scrollHeight / 2,
+              minWidth:
+                document.getElementById('project-modal')?.scrollWidth / 2,
+              paddingBottom: '1.5rem',
+            }}
+          >
+            {/* OPTIMIZATION TODO: debounce search + pull from firebase where applicant is accepted (if possible) */}
+            {hackerSearch ? (
+              applicants?.map((applicant, index) => {
+                const name = `${applicant.basicInfo.firstName} ${applicant.basicInfo.lastName}`;
+                const { email } = applicant.basicInfo;
+                if (
+                  (name.toLowerCase().includes(hackerSearch.toLowerCase()) ||
+                    hackerSearch === '*') &&
+                  applicant.status.applicationStatus === 'accepted' &&
+                  applicant.status.attending
+                ) {
+                  return (
+                    <SelectableHacker
+                      key={index}
+                      onClick={() =>
+                        handleAddHackerToTeam({
+                          discord: '-#-',
+                          email,
+                          id: applicant._id,
+                          name,
+                        })
+                      }
+                    >
+                      {name} <SmallText>{email}</SmallText>
+                    </SelectableHacker>
+                  );
+                }
+                return <></>;
+              })
+            ) : (
+              <EmptyOptions>Begin typing to search</EmptyOptions>
+            )}
+          </HackerOptions>
+        </AddPanel>
+      </AddPanelOverlay>
     </>
   );
 };

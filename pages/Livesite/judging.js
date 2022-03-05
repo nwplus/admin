@@ -27,6 +27,9 @@ export default ({ hackathons }) => {
   const [activeModal, setActiveModal] = useState('');
   const [data, setData] = useState({});
 
+  // for Add Team Member function trigger (/components/Judging/TeamMemberSelector.js)
+  const [innerModalOpen, setInnerModalOpen] = useState(false);
+
   useEffect(() => {
     (async () => {
       setActiveHackathon(await getActiveHackathon);
@@ -74,6 +77,7 @@ export default ({ hackathons }) => {
   };
 
   const handleSave = async () => {
+    console.log(data);
     if (!Object.values(data).every((field) => field === 0 || !!field)) {
       // eslint-disable-next-line no-alert
       alert('All fields required');
@@ -109,7 +113,6 @@ export default ({ hackathons }) => {
     setData({
       ...projects[key],
       id: key,
-      // teamMembers: projects[key].teamMembers?.toString(),
       teamMembers: projects[key].teamMembers,
       teamMembersEmails: projects[key].teamMembersEmails?.toString(),
       sponsorPrizes: projects[key].sponsorPrizes?.toString(),
@@ -142,6 +145,7 @@ export default ({ hackathons }) => {
         handleClose={handleCloseModal}
         handleSave={handleSave}
         modalAction={activeModal}
+        noOverflow={innerModalOpen}
       >
         <Label>Title</Label>
         <Input value={data.title} onChange={(e) => handleChange('title', e)} />
@@ -169,6 +173,7 @@ export default ({ hackathons }) => {
         <TeamMembersSelector
           value={data.teamMembers}
           updateValue={handleChange}
+          fnNoOverflow={setInnerModalOpen}
         />
         <Label>Team Emails (Comma separated)</Label>
         <Input

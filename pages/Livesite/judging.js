@@ -120,10 +120,10 @@ export default ({ hackathons }) => {
     setActiveModal(EDIT);
   };
 
-  const handleChange = (field, e) => {
+  const handleChange = (field, e, custom = false) => {
     setData({
       ...data,
-      [field]: e.target.value,
+      [field]: custom ? e : e.target.value,
     });
   };
 

@@ -113,13 +113,13 @@ const TeamMembersSelector = (props) => {
   const { value, updateValue, fnNoOverflow } = props;
   // onChange => ('teamMembers', e)
 
-  const copyValues = () => {
-    const duplicate = [];
-    value.forEach((item) => {
-      duplicate.push(item);
-    });
-    return duplicate;
-  };
+  //   const copyValues = () => {
+  //     const duplicate = [];
+  //     value.forEach((item) => {
+  //       duplicate.push(item);
+  //     });
+  //     return duplicate;
+  //   };
 
   const [members, setMembers] = useState(value);
   const [renderMembers, setRenderMembers] = useState([]);
@@ -129,12 +129,12 @@ const TeamMembersSelector = (props) => {
   const [applicants, setApplicants] = useState([]);
 
   const handleAddHackerToTeam = (hacker) => {
+    setHackerSearch(''); // doesn't reset... maybe something to do with onChangeCustomValue
     const currentMembers = members;
     members.push(hacker);
     setMembers(currentMembers);
     setTrigger(!trigger);
     setIsAdding(false);
-    setHackerSearch('');
   };
 
   const handleDeleteMember = (index) => {
@@ -191,6 +191,9 @@ const TeamMembersSelector = (props) => {
     }
 
     setRenderMembers(renderArray);
+
+    // Save
+    updateValue('teamMembers', members, true);
   }, [trigger]);
 
   useEffect(() => {
@@ -262,18 +265,19 @@ const TeamMembersSelector = (props) => {
           >
             {/* OPTIMIZATION TODO: debounce search + pull from firebase where applicant is accepted (if possible) */}
             {hackerSearch ? (
-              applicants?.map((applicant, index) => {
+              applicants?.map((applicant) => {
                 const name = `${applicant.basicInfo.firstName} ${applicant.basicInfo.lastName}`;
                 const { email } = applicant.basicInfo;
                 if (
                   (name.toLowerCase().includes(hackerSearch.toLowerCase()) ||
                     hackerSearch === '*') &&
                   applicant.status.applicationStatus === 'accepted' &&
-                  applicant.status.attending
+                  applicant.status.attending &&
+                  !(members.filter((e) => e.id === applicant._id).length > 0)
                 ) {
                   return (
                     <SelectableHacker
-                      key={index}
+                      key={applicant._id}
                       onClick={() =>
                         handleAddHackerToTeam({
                           discord: '-#-',

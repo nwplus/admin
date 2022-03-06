@@ -47,13 +47,18 @@ export default ({ hackathons }) => {
 
   const handleNew = () => {
     setData({
+      charityChoice: '',
       description: '',
-      devpostUrl: '',
-      youtubeUrl: '',
+      links: {
+        youtube: '',
+        devpost: '',
+        sourceCode: '',
+      },
       sponsorPrizes: '',
       teamMembers: '',
-      teamMembersEmails: '',
       title: '',
+      mentorNominations: '',
+      draftStatus: '',
     });
     setActiveModal(NEW);
   };
@@ -71,14 +76,27 @@ export default ({ hackathons }) => {
 
   const formatProject = (project) => {
     project.sponsorPrizes = stringToArr(project.sponsorPrizes);
-    project.teamMembersEmails = stringToArr(project.teamMembersEmails);
-    // project.teamMembers = stringToArr(project.teamMembers);
     return project;
   };
 
   const handleSave = async () => {
     console.log(data);
-    if (!Object.values(data).every((field) => field === 0 || !!field)) {
+
+    const requiredFields = [
+      'title',
+      'description',
+      'teamMembers',
+      'links',
+      'sponsorPrizes',
+    ];
+
+    if (
+      !Object.keys(data).some(
+        (key) =>
+          (requiredFields.includes(key) && data[key] === 0) ||
+          (requiredFields.includes(key) && !!data[key])
+      )
+    ) {
       // eslint-disable-next-line no-alert
       alert('All fields required');
       return;
@@ -114,7 +132,6 @@ export default ({ hackathons }) => {
       ...projects[key],
       id: key,
       teamMembers: projects[key].teamMembers,
-      teamMembersEmails: projects[key].teamMembersEmails?.toString(),
       sponsorPrizes: projects[key].sponsorPrizes?.toString(),
     });
     setActiveModal(EDIT);
@@ -125,6 +142,12 @@ export default ({ hackathons }) => {
       ...data,
       [field]: custom ? e : e.target.value,
     });
+  };
+
+  const handleChangeLink = (linkField, e) => {
+    const currentData = data;
+    currentData.links[linkField] = e.target.value;
+    setData(currentData);
   };
 
   return (
@@ -161,13 +184,23 @@ export default ({ hackathons }) => {
         />
         <Label>Devpost Url</Label>
         <Input
-          value={data.devpostUrl}
-          onChange={(e) => handleChange('devpostUrl', e)}
+          value={data.links?.devpost}
+          onChange={(e) => handleChangeLink('devpost', e)}
         />
         <Label>Youtube Url</Label>
         <Input
-          value={data.youtubeUrl}
-          onChange={(e) => handleChange('youtubeUrl', e)}
+          value={data.links?.youtube}
+          onChange={(e) => handleChangeLink('youtube', e)}
+        />
+        <Label>Source Code Url</Label>
+        <Input
+          value={data.links?.sourceCode}
+          onChange={(e) => handleChangeLink('sourceCode', e)}
+        />
+        <Label>Charity Choice</Label>
+        <Input
+          value={data.charityChoice}
+          onChange={(e) => handleChange('charityChoice', e)}
         />
         <Label>Team Members</Label>
         <TeamMembersSelector
@@ -175,10 +208,15 @@ export default ({ hackathons }) => {
           updateValue={handleChange}
           fnNoOverflow={setInnerModalOpen}
         />
-        <Label>Team Emails (Comma separated)</Label>
+        <Label>Mentor Nominations</Label>
         <Input
-          value={data.teamMembersEmails}
-          onChange={(e) => handleChange('teamMembersEmails', e)}
+          value={data.mentorNominations}
+          onChange={(e) => handleChange('mentorNominations', e)}
+        />
+        <Label>Draft Status</Label>
+        <Input
+          value={data.draftStatus}
+          onChange={(e) => handleChange('draftStatus', e)}
         />
       </Modal>
     </Page>

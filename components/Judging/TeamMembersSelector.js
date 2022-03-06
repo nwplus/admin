@@ -256,16 +256,18 @@ const TeamMembersSelector = (props) => {
           {/* Searched Options */}
           <HackerOptions
             style={{
-              maxHeight:
-                document.getElementById('project-modal')?.scrollHeight / 2,
-              minWidth:
-                document.getElementById('project-modal')?.scrollWidth / 2,
+              maxHeight: document.getElementById('project-modal')
+                ? document.getElementById('project-modal').scrollHeight / 2
+                : 0,
+              minWidth: document.getElementById('project-modal')
+                ? document.getElementById('project-modal').scrollWidth / 2
+                : 0,
               paddingBottom: '1.5rem',
             }}
           >
             {/* OPTIMIZATION TODO: debounce search + pull from firebase where applicant is accepted (if possible) */}
             {hackerSearch ? (
-              applicants?.map((applicant) => {
+              applicants?.map((applicant, index) => {
                 const name = `${applicant.basicInfo.firstName} ${applicant.basicInfo.lastName}`;
                 const { email } = applicant.basicInfo;
                 if (
@@ -273,11 +275,16 @@ const TeamMembersSelector = (props) => {
                     hackerSearch === '*') &&
                   applicant.status.applicationStatus === 'accepted' &&
                   applicant.status.attending &&
-                  !(members.filter((e) => e.id === applicant._id).length > 0)
+                  (members
+                    ? !(
+                        members?.filter((e) => e.id === applicant._id).length >
+                        0
+                      )
+                    : true)
                 ) {
                   return (
                     <SelectableHacker
-                      key={applicant._id}
+                      key={index}
                       onClick={() =>
                         handleAddHackerToTeam({
                           discord: '-#-',
@@ -287,7 +294,7 @@ const TeamMembersSelector = (props) => {
                         })
                       }
                     >
-                      {name} <SmallText>{email}</SmallText>
+                      {name} <SmallText key={index}>{email}</SmallText>
                     </SelectableHacker>
                   );
                 }

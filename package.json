@@ -22,7 +22,7 @@
     "firebase": "^8.0.0",
     "imagemin-optipng": "^8.0.0",
     "json2csv": "^5.0.1",
-    "jszip": "^3.7.0",
+    "jszip": "^3.6.0",
     "moment": "^2.29.1",
     "next": "9.4.4",
     "next-optimized-images": "^2.6.2",

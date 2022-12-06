@@ -32,7 +32,7 @@ const Hackathons = 'Hackathons';
 const InternalWebsitesCollection = 'InternalWebsites';
 const CMSCollection = 'CMS';
 const LivesiteCollection = 'Livesite';
-const HackerEvaluationHackathon = 'cmd-f2022';
+const HackerEvaluationHackathon = 'nwHacks2023';
 
 export const getTimestamp = () => {
   return firebase.firestore.Timestamp.now();

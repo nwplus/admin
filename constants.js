@@ -165,7 +165,7 @@ export const RUBRIC = {
     {
       score: '+2',
       label:
-        'At least 2 small projects or 1 big project (personal, hackathon, or school projects)',
+        'At least 2 small projects or 1 big project (personal, hackathon, or school projects) (1 point for each small project)',
     },
     {
       score: '+1',
@@ -194,7 +194,7 @@ export const RUBRIC = {
     {
       score: '+2',
       label:
-        'At least 2 small projects or 1 big project (personal, hackathon, school)',
+        'At least 2 small projects or 1 big project (personal, hackathon, school) (1 point for each small project)',
     },
     {
       score: '+1',
@@ -246,7 +246,7 @@ export const RUBRIC = {
         'Easy to read, clean, well made (something you would do to apply to a job)',
     },
   ],
-  LONG_ANSWER: [
+  SHORT_ANSWER: [
     {
       score: '+4',
       label:

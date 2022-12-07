@@ -63,7 +63,7 @@ const rubricOptions = [
   { value: 'DEV', label: 'Resume - Developer' },
   { value: 'DESIGN', label: 'Resume - Design' },
   { value: 'GENERAL', label: 'Resume - First Time Hacker' },
-  { value: 'LONG_ANSWER', label: 'Long answer' },
+  { value: 'SHORT_ANSWER', label: 'Short answer' },
 ];
 
 const RubricDropdown = ({ onSelect }) => {
@@ -80,7 +80,7 @@ const RubricDropdown = ({ onSelect }) => {
 
   useEffect(() => {
     const clickOutside = (e) => {
-      if (!dropdownRef.current.contains(e.target)) {
+      if (!dropdownRef.current?.contains(e.target)) {
         setIsOpen(false);
       }
     };

@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { Title5 } from '../Typography';
-import ResponseInput from '../Assessment/responseInput';
-import { COLOR, ASSESSMENT_COLOR } from '../../constants';
-import { getResumeFile } from '../../utility/firebase';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import { Title5 } from "../Typography";
+import ResponseInput from "../Assessment/responseInput";
+import { COLOR, ASSESSMENT_COLOR } from "../../constants";
+import { getResumeFile } from "../../utility/firebase";
 
 const Container = styled.div`
-  ${(p) => !p.shouldDisplay && 'display: none'};
+  ${(p) => !p.shouldDisplay && "display: none"};
   border-radius: 5px;
   border: none;
   padding: 0 20px 20px;
@@ -59,7 +59,13 @@ export default function ApplicantResponse({ shouldDisplay, hacker }) {
 
       <ResponseInput
         label="19 or over?"
-        response={hacker?.basicInfo?.isOfLegalAge ? 'yes' : 'no'}
+        response={
+          hacker?.basicInfo?.isOfLegalAge ??
+          Number(hacker?.basicInfo?.ageByHackathon) >= 19 ??
+          Number(hacker?.basicInfo?.otherAgeByHackathon) >= 19
+            ? 'yes'
+            : 'no'
+        }
       />
 
       <ResponseInput label="School" response={`${hacker?.basicInfo?.school}`} />
@@ -84,8 +90,14 @@ export default function ApplicantResponse({ shouldDisplay, hacker }) {
       <ResponseInput url={resumeURL} label="Resume" response={resumeURL} />
 
       <ResponseInput
-        label="How do you intend to grow at cmd-f?"
+        label="In your own words, describe your definition of a hackathon, and what it means to you."
         response={`${hacker?.skills?.longAnswers1}`}
+      />
+
+      <ResponseInput
+        label="Option 1: How would you like to challenge yourself during this hackathon? /
+        Option 2: What should technology be used for?"
+        response={`${hacker?.skills?.longAnswers2}`}
       />
     </Container>
   );

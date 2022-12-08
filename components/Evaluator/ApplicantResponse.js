@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import { Title5 } from "../Typography";
-import ResponseInput from "../Assessment/responseInput";
-import { COLOR, ASSESSMENT_COLOR } from "../../constants";
-import { getResumeFile } from "../../utility/firebase";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { Title5 } from '../Typography';
+import ResponseInput from '../Assessment/responseInput';
+import { COLOR, ASSESSMENT_COLOR } from '../../constants';
+import { getResumeFile } from '../../utility/firebase';
 
 const Container = styled.div`
-  ${(p) => !p.shouldDisplay && "display: none"};
+  ${(p) => !p.shouldDisplay && 'display: none'};
   border-radius: 5px;
   border: none;
   padding: 0 20px 20px;
@@ -60,8 +60,8 @@ export default function ApplicantResponse({ shouldDisplay, hacker }) {
       <ResponseInput
         label="19 or over?"
         response={
-          hacker?.basicInfo?.isOfLegalAge ??
-          Number(hacker?.basicInfo?.ageByHackathon) >= 19 ??
+          hacker?.basicInfo?.isOfLegalAge ||
+          Number(hacker?.basicInfo?.ageByHackathon) >= 19 ||
           Number(hacker?.basicInfo?.otherAgeByHackathon) >= 19
             ? 'yes'
             : 'no'

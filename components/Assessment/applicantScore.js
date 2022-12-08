@@ -1,21 +1,21 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 // this is the second side bar for the scoringPage
-import React, { useState, useEffect, useContext } from "react";
-import moment from "moment";
-import styled from "styled-components";
+import React, { useState, useEffect, useContext } from 'react';
+import moment from 'moment';
+import styled from 'styled-components';
 import {
   updateApplicantScore,
   updateApplicantStatus,
-} from "../../utility/firebase";
-import { Button } from "./Button";
-import ScoreInput from "./scoreInput";
-import { AuthContext } from "../../utility/auth";
+} from '../../utility/firebase';
+import { Button } from './Button';
+import ScoreInput from './scoreInput';
+import { AuthContext } from '../../utility/auth';
 import {
   ASSESSMENT_COLOR,
   APPLICATION_STATUS,
   MAX_SCORE,
   SCORING,
-} from "../../constants";
+} from '../../constants';
 
 const Main = styled.div`
   padding: 0px 20px;
@@ -106,20 +106,20 @@ export default function ApplicantScore(props) {
       <Main>
         <h4>Scoring</h4>
         <ScoreInput
-          label="Resume/LinkedIn"
+          label='Resume/LinkedIn'
           score={score.ResumeScore}
           handleClick={handleClick}
           maxScore={SCORING.RESUME}
         />
         <ScoreInput
           maxScore={SCORING.ESSAY1}
-          label="Written Response Score 1"
+          label='Written Response Score 1'
           score={score.ResponseOneScore}
           handleClick={handleClick}
         />
         <ScoreInput
           maxScore={SCORING.ESSAY2}
-          label="Written Response Score 2"
+          label='Written Response Score 2'
           score={score.ResponseTwoScore}
           handleClick={handleClick}
         />
@@ -143,7 +143,7 @@ export default function ApplicantScore(props) {
           <br />
           <div style={{ marginTop: '20px', textAlign: 'center' }}>
             <Button
-              width="flex"
+              width='flex'
               bColor={ASSESSMENT_COLOR.BLUE_TEXT}
               onClick={async () => {
                 if (isGraded(score)) {

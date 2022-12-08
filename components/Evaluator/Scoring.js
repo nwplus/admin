@@ -7,7 +7,13 @@ import TextField from '../TextField';
 import AddTagButton from './AddTagButton';
 import { Title5 } from '../Typography';
 import { calculateTotalScore } from '../../utility/utilities';
-import { COLOR, MAX_SCORE, SCORING, TAGS, ASSESSMENT_COLOR } from '../../constants';
+import {
+  COLOR,
+  MAX_SCORE,
+  SCORING,
+  TAGS,
+  ASSESSMENT_COLOR,
+} from '../../constants';
 import { AuthContext } from '../../utility/auth';
 import { updateApplicantScore } from '../../utility/firebase';
 
@@ -111,7 +117,9 @@ export default function Scoring({ shouldDisplay, applicant }) {
           score={scores?.ResponseTwoScore}
           maxScore={SCORING.ESSAY2}
         />
-        {!applicant?.skills?.hackathonsAttended && <Label>First time hacker: + 0.5</Label>}
+        {!applicant?.skills?.hackathonsAttended && (
+          <Label>First time hacker: + 0.5</Label>
+        )}
         <TextField
           customValue={comment}
           onChangeCustomValue={(e) => setComment(e.target.value)}

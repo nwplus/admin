@@ -106,20 +106,20 @@ export default function ApplicantScore(props) {
       <Main>
         <h4>Scoring</h4>
         <ScoreInput
-          label='Resume/LinkedIn'
+          label="Resume/LinkedIn"
           score={score.ResumeScore}
           handleClick={handleClick}
           maxScore={SCORING.RESUME}
         />
         <ScoreInput
           maxScore={SCORING.ESSAY1}
-          label='Written Response Score 1'
+          label="Written Response Score 1"
           score={score.ResponseOneScore}
           handleClick={handleClick}
         />
         <ScoreInput
           maxScore={SCORING.ESSAY2}
-          label='Written Response Score 2'
+          label="Written Response Score 2"
           score={score.ResponseTwoScore}
           handleClick={handleClick}
         />
@@ -143,7 +143,7 @@ export default function ApplicantScore(props) {
           <br />
           <div style={{ marginTop: '20px', textAlign: 'center' }}>
             <Button
-              width='flex'
+              width="flex"
               bColor={ASSESSMENT_COLOR.BLUE_TEXT}
               onClick={async () => {
                 if (isGraded(score)) {

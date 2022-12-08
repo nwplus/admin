@@ -144,6 +144,11 @@ export const SCORING = {
     value: 4,
     weight: 1,
   },
+  BONUS: {
+    label: 'First time hacker',
+    value: 1,
+    weight: 0.5,
+  },
 };
 
 export const MAX_SCORE = Object.values(SCORING).reduce(

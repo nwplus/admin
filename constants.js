@@ -134,10 +134,15 @@ export const SCORING = {
     value: 7,
     weight: 1,
   },
-  ESSAY: {
-    label: 'Short Answer 1',
-    value: 3,
-    weight: 2,
+  ESSAY1: {
+    label: 'Long Answer 1',
+    value: 4,
+    weight: 1,
+  },
+  ESSAY2: {
+    label: 'Long Answer 2',
+    value: 4,
+    weight: 1,
   },
 };
 
@@ -246,7 +251,7 @@ export const RUBRIC = {
         'Easy to read, clean, well made (something you would do to apply to a job)',
     },
   ],
-  SHORT_ANSWER: [
+  LONG_ANSWER: [
     {
       score: '+4',
       label:

@@ -63,7 +63,7 @@ const rubricOptions = [
   { value: 'DEV', label: 'Resume - Developer' },
   { value: 'DESIGN', label: 'Resume - Design' },
   { value: 'GENERAL', label: 'Resume - First Time Hacker' },
-  { value: 'SHORT_ANSWER', label: 'Short answer' },
+  { value: 'LONG_ANSWER', label: 'Long answer' },
 ];
 
 const RubricDropdown = ({ onSelect }) => {

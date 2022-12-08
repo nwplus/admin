@@ -39,7 +39,8 @@ export default function ApplicantScore(props) {
 
   const [score, setScore] = useState({
     ResumeScore: null,
-    ResponseScore: null,
+    ResponseOneScore: null,
+    ResponseTwoScore: null,
   });
 
   useEffect(() => {
@@ -49,7 +50,8 @@ export default function ApplicantScore(props) {
     } else {
       setScore({
         ResumeScore: null,
-        ResponseScore: null,
+        ResponseOneScore: null,
+        ResponseTwoScore: null,
       });
       setHasScore(false);
     }
@@ -72,12 +74,23 @@ export default function ApplicantScore(props) {
           user.email
         );
         break;
-      case 'Written Response Score':
+      case 'Written Response Score 1':
         await updateApplicantScore(
           props.hacker._id,
           {
             ...score,
-            ResponseScore: value,
+            ResponseOneScore: value,
+          },
+          '',
+          user.email
+        );
+        break;
+      case 'Written Response Score 2':
+        await updateApplicantScore(
+          props.hacker._id,
+          {
+            ...score,
+            ResponseTwoScore: value,
           },
           '',
           user.email
@@ -99,9 +112,15 @@ export default function ApplicantScore(props) {
           maxScore={SCORING.RESUME}
         />
         <ScoreInput
-          maxScore={SCORING.ESSAY}
-          label="Written Response Score"
-          score={score.ResponseScore}
+          maxScore={SCORING.ESSAY1}
+          label="Written Response Score 1"
+          score={score.ResponseOneScore}
+          handleClick={handleClick}
+        />
+        <ScoreInput
+          maxScore={SCORING.ESSAY2}
+          label="Written Response Score 2"
+          score={score.ResponseTwoScore}
           handleClick={handleClick}
         />
       </Main>

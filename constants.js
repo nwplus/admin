@@ -134,10 +134,15 @@ export const SCORING = {
     value: 7,
     weight: 1,
   },
-  ESSAY: {
+  ESSAY1: {
     label: 'Short Answer 1',
-    value: 3,
-    weight: 2,
+    value: 4,
+    weight: 1,
+  },
+  ESSAY2: {
+    label: 'Short Answer 2',
+    value: 4,
+    weight: 1,
   },
 };
 

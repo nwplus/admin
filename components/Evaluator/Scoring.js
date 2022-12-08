@@ -61,8 +61,11 @@ export default function Scoring({ shouldDisplay, applicant }) {
       case SCORING.RESUME.label:
         field = 'ResumeScore';
         break;
-      case SCORING.ESSAY.label:
+      case SCORING.ESSAY1.label:
         field = 'ResponseOneScore';
+        break;
+      case SCORING.ESSAY2.label:
+        field = 'ResponseTwoScore';
         break;
       default:
         break;
@@ -88,10 +91,16 @@ export default function Scoring({ shouldDisplay, applicant }) {
           maxScore={SCORING.RESUME}
         />
         <ScoreInput
-          label={SCORING.ESSAY.label}
+          label={SCORING.ESSAY1.label}
           handleClick={handleClick}
           score={scores?.ResponseOneScore}
-          maxScore={SCORING.ESSAY}
+          maxScore={SCORING.ESSAY1}
+        />
+        <ScoreInput
+          label={SCORING.ESSAY2.label}
+          handleClick={handleClick}
+          score={scores?.ResponseTwoScore}
+          maxScore={SCORING.ESSAY2}
         />
         <TextField
           customValue={comment}

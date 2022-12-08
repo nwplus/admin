@@ -1,21 +1,21 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 // this is the second side bar for the scoringPage
-import React, { useState, useEffect, useContext } from 'react';
-import moment from 'moment';
-import styled from 'styled-components';
+import React, { useState, useEffect, useContext } from "react";
+import moment from "moment";
+import styled from "styled-components";
 import {
   updateApplicantScore,
   updateApplicantStatus,
-} from '../../utility/firebase';
-import { Button } from './Button';
-import ScoreInput from './scoreInput';
-import { AuthContext } from '../../utility/auth';
+} from "../../utility/firebase";
+import { Button } from "./Button";
+import ScoreInput from "./scoreInput";
+import { AuthContext } from "../../utility/auth";
 import {
   ASSESSMENT_COLOR,
   APPLICATION_STATUS,
   MAX_SCORE,
   SCORING,
-} from '../../constants';
+} from "../../constants";
 
 const Main = styled.div`
   padding: 0px 20px;
@@ -39,7 +39,8 @@ export default function ApplicantScore(props) {
 
   const [score, setScore] = useState({
     ResumeScore: null,
-    ResponseScore: null,
+    ResponseOneScore: null,
+    ResponseTwoScore: null,
   });
 
   useEffect(() => {
@@ -49,7 +50,8 @@ export default function ApplicantScore(props) {
     } else {
       setScore({
         ResumeScore: null,
-        ResponseScore: null,
+        ResponseOneScore: null,
+        ResponseTwoScore: null,
       });
       setHasScore(false);
     }
@@ -72,12 +74,23 @@ export default function ApplicantScore(props) {
           user.email
         );
         break;
-      case 'Written Response Score':
+      case 'Written Response Score 1':
         await updateApplicantScore(
           props.hacker._id,
           {
             ...score,
-            ResponseScore: value,
+            ResponseOneScore: value,
+          },
+          '',
+          user.email
+        );
+        break;
+      case 'Written Response Score 2':
+        await updateApplicantScore(
+          props.hacker._id,
+          {
+            ...score,
+            ResponseTwoScore: value,
           },
           '',
           user.email
@@ -99,9 +112,15 @@ export default function ApplicantScore(props) {
           maxScore={SCORING.RESUME}
         />
         <ScoreInput
-          maxScore={SCORING.ESSAY}
-          label="Written Response Score"
-          score={score.ResponseScore}
+          maxScore={SCORING.ESSAY1}
+          label="Written Response Score 1"
+          score={score.ResponseOneScore}
+          handleClick={handleClick}
+        />
+        <ScoreInput
+          maxScore={SCORING.ESSAY2}
+          label="Written Response Score 2"
+          score={score.ResponseTwoScore}
           handleClick={handleClick}
         />
       </Main>

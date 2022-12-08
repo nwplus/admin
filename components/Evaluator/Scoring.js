@@ -123,9 +123,9 @@ export default function Scoring({ shouldDisplay, applicant }) {
         Total Score: {totalScore} / {MAX_SCORE}
         {applicant && (
           <SmallText>
-            Last updated by: {applicant?.score?.lastUpdatedBy} at{" "}
+            Last updated by: {applicant?.score?.lastUpdatedBy} at{' '}
             {moment(applicant?.score?.lastUpdated.toDate()).format(
-              "MMM Do, YYYY h:mm:ss A"
+              'MMM Do, YYYY h:mm:ss A'
             )}
           </SmallText>
         )}

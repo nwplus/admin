@@ -13,6 +13,7 @@ import {
   SCORING,
   TAGS,
   ASSESSMENT_COLOR,
+  BONUS_SCORING,
 } from '../../constants';
 import { AuthContext } from '../../utility/auth';
 import { updateApplicantScore } from '../../utility/firebase';
@@ -64,6 +65,15 @@ export default function Scoring({ shouldDisplay, applicant }) {
     setComment(applicant?.score?.comment || '');
   }, [applicant?._id]);
 
+  const qualifyingBonus = () => {
+    const { skills } = applicant;
+    return !skills?.hackathonsAttended
+      ? BONUS_SCORING.FIRST_TIME_HACKER.value *
+          BONUS_SCORING.FIRST_TIME_HACKER.weight
+      : 0;
+  };
+
+  // TODO: For next hackathon, change to camelCase.
   const handleClick = (score, label) => {
     // Switch to whatever the field is in Firebase
     let field = '';
@@ -82,11 +92,7 @@ export default function Scoring({ shouldDisplay, applicant }) {
     }
     const newScores = { ...scores };
     newScores[field] = score;
-    if (newScores.FirstTimeBonus === undefined) {
-      newScores.FirstTimeBonus = applicant?.skills?.hackathonsAttended
-        ? 0
-        : 0.5;
-    }
+    newScores.BonusScore = qualifyingBonus();
     setScores(newScores);
     setTotalScore(calculateTotalScore(newScores));
   };

@@ -144,7 +144,10 @@ export const SCORING = {
     value: 4,
     weight: 1,
   },
-  BONUS: {
+};
+
+export const BONUS_SCORING = {
+  FIRST_TIME_HACKER: {
     label: 'First time hacker',
     value: 1,
     weight: 0.5,

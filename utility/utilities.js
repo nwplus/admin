@@ -1,3 +1,5 @@
+import { SCORING } from '../constants';
+
 // given hex color code, convert to RGBA with given alpha value
 export const hexToRgba = (hex, a = 1) => {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -13,5 +15,9 @@ export const hexToRgba = (hex, a = 1) => {
 export const calculateTotalScore = (hackerScore) => {
   // summing up values score
   const reducer = (accumulator, currentValue) => accumulator + currentValue;
-  return Object.values(hackerScore).reduce(reducer, 0);
+  const maxScore = Object.values(SCORING).reduce(
+    (acc, curr) => acc + curr.value * curr.weight,
+    0
+  );
+  return Math.min(maxScore, Object.values(hackerScore).reduce(reducer, 0));
 };

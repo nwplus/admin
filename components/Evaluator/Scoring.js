@@ -7,7 +7,13 @@ import TextField from '../TextField';
 import AddTagButton from './AddTagButton';
 import { Title5 } from '../Typography';
 import { calculateTotalScore } from '../../utility/utilities';
-import { COLOR, MAX_SCORE, SCORING, TAGS } from '../../constants';
+import {
+  COLOR,
+  MAX_SCORE,
+  SCORING,
+  TAGS,
+  ASSESSMENT_COLOR,
+} from '../../constants';
 import { AuthContext } from '../../utility/auth';
 import { updateApplicantScore } from '../../utility/firebase';
 
@@ -41,6 +47,10 @@ const SmallText = styled.div`
   color: ${COLOR.GREY_500};
 `;
 
+const Label = styled.p`
+  color: ${ASSESSMENT_COLOR.LIGHT_GRAY};
+`;
+
 export default function Scoring({ shouldDisplay, applicant }) {
   const [scores, setScores] = useState({});
   const [totalScore, setTotalScore] = useState(null);
@@ -72,6 +82,11 @@ export default function Scoring({ shouldDisplay, applicant }) {
     }
     const newScores = { ...scores };
     newScores[field] = score;
+    if (newScores.FirstTimeBonus === undefined) {
+      newScores.FirstTimeBonus = applicant?.skills?.hackathonsAttended
+        ? 0
+        : 0.5;
+    }
     setScores(newScores);
     setTotalScore(calculateTotalScore(newScores));
   };
@@ -102,6 +117,9 @@ export default function Scoring({ shouldDisplay, applicant }) {
           score={scores?.ResponseTwoScore}
           maxScore={SCORING.ESSAY2}
         />
+        {!applicant?.skills?.hackathonsAttended && (
+          <Label>First time hacker: + 0.5</Label>
+        )}
         <TextField
           customValue={comment}
           onChangeCustomValue={(e) => setComment(e.target.value)}

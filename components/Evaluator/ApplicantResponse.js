@@ -32,13 +32,42 @@ const Container = styled.div`
   }
 `;
 
+const CONTRIBUTION_ROLE_OPTIONS = Object.freeze({
+  beginner: 'Beginner',
+  designer: 'Designer',
+  developer: 'Developer',
+  pm: 'Product/project manager',
+  other: 'Other',
+});
+
 export default function ApplicantResponse({ shouldDisplay, hacker }) {
   const [resumeURL, setResumeURL] = useState(null);
+  const [contributionRole, setContributionRole] = useState('');
+
+  const fetchContributionRole = (contributionMap) => {
+    const getContribution = (obj) => Object.keys(obj).filter((key) => obj[key]);
+    const contribution = getContribution(contributionMap).map(
+      (e) => CONTRIBUTION_ROLE_OPTIONS[e]
+    );
+    const contributionValues = [];
+    // eslint-disable-next-line no-plusplus
+    for (let k = 0; k < contribution.length; k++) {
+      contributionValues.push(contribution[k]);
+
+      if (k < contribution.length - 1) {
+        contributionValues.push(', ');
+      }
+    }
+
+    setContributionRole(contributionValues);
+  };
+
   useEffect(() => {
     if (hacker) {
       getResumeFile(hacker._id).then(async (url) => {
         setResumeURL(url);
       });
+      fetchContributionRole(hacker?.skills.contributionRole);
     }
   }, [hacker]);
 
@@ -53,9 +82,11 @@ export default function ApplicantResponse({ shouldDisplay, hacker }) {
       <ResponseInput label="Email" response={hacker?.basicInfo?.email} />
 
       <ResponseInput
-        label="Role"
-        response={hacker?.basicInfo?.contributionRole}
+        label="Identify as underrepresented?"
+        response={hacker?.basicInfo?.identifyAsUnderrepresentedOptions}
       />
+
+      <ResponseInput label="Role" response={contributionRole} />
 
       <ResponseInput
         label="19 or over?"
@@ -74,7 +105,7 @@ export default function ApplicantResponse({ shouldDisplay, hacker }) {
 
       <ResponseInput
         label="First time hacker?"
-        response={hacker?.skills?.hackathonsAttended ? 'No' : 'Yes'}
+        response={hacker?.skills?.firstTimeHacker ? 'No' : 'Yes'}
       />
 
       <ResponseInput url label="Github" response={hacker?.skills?.github} />
@@ -90,14 +121,23 @@ export default function ApplicantResponse({ shouldDisplay, hacker }) {
       <ResponseInput url={resumeURL} label="Resume" response={resumeURL} />
 
       <ResponseInput
-        label="In your own words, describe your definition of a hackathon, and what it means to you."
+        label="Why do you want to attend cmd-f 2023?"
         response={`${hacker?.skills?.longAnswers1}`}
       />
 
       <ResponseInput
-        label="Option 1: How would you like to challenge yourself during this hackathon? /
-        Option 2: What should technology be used for?"
+        label="How would you make tech a more welcoming space for underrepresented demographics?"
         response={`${hacker?.skills?.longAnswers2}`}
+      />
+
+      <ResponseInput
+        label="In the past, have there been reasons deterring you from attending hackathons or other tech events? (optional)"
+        response={`${hacker?.skills?.longAnswers3}`}
+      />
+
+      <ResponseInput
+        label="Is there anything you want to let us know to ensure that we can help you feel comfortable throughout the event? (optional)"
+        response={`${hacker?.skills?.longAnswers4}`}
       />
     </Container>
   );

@@ -12,8 +12,8 @@ import {
   MAX_SCORE,
   SCORING,
   TAGS,
-  ASSESSMENT_COLOR,
-  BONUS_SCORING,
+  // ASSESSMENT_COLOR,
+  // BONUS_SCORING,
 } from '../../constants';
 import { AuthContext } from '../../utility/auth';
 import { updateApplicantScore } from '../../utility/firebase';
@@ -48,9 +48,9 @@ const SmallText = styled.div`
   color: ${COLOR.GREY_500};
 `;
 
-const Label = styled.p`
-  color: ${ASSESSMENT_COLOR.LIGHT_GRAY};
-`;
+// const Label = styled.p`
+//   color: ${ASSESSMENT_COLOR.LIGHT_GRAY};
+// `;
 
 export default function Scoring({ shouldDisplay, applicant }) {
   const [scores, setScores] = useState({});
@@ -66,11 +66,13 @@ export default function Scoring({ shouldDisplay, applicant }) {
   }, [applicant?._id]);
 
   const qualifyingBonus = () => {
-    const { skills } = applicant;
-    return !skills?.hackathonsAttended
-      ? BONUS_SCORING.FIRST_TIME_HACKER.value *
-          BONUS_SCORING.FIRST_TIME_HACKER.weight
-      : 0;
+    return false;
+    // manually input if hacker is first time
+    // const { skills } = applicant;
+    // return !skills?.hackathonsAttended
+    //   ? BONUS_SCORING.FIRST_TIME_HACKER.value *
+    //       BONUS_SCORING.FIRST_TIME_HACKER.weight
+    //   : 0;
   };
 
   // TODO: For next hackathon, change to camelCase.
@@ -86,6 +88,12 @@ export default function Scoring({ shouldDisplay, applicant }) {
         break;
       case SCORING.ESSAY2.label:
         field = 'ResponseTwoScore';
+        break;
+      case SCORING.ESSAY3.label:
+        field = 'ResponseThreeScore';
+        break;
+      case SCORING.ESSAY4.label:
+        field = 'ResponseFourScore';
         break;
       default:
         break;
@@ -116,16 +124,32 @@ export default function Scoring({ shouldDisplay, applicant }) {
           handleClick={handleClick}
           score={scores?.ResponseOneScore}
           maxScore={SCORING.ESSAY1}
+          hasMinusOne
         />
         <ScoreInput
           label={SCORING.ESSAY2.label}
           handleClick={handleClick}
           score={scores?.ResponseTwoScore}
           maxScore={SCORING.ESSAY2}
+          hasMinusOne
         />
-        {!applicant?.skills?.hackathonsAttended && (
-          <Label>First time hacker: + 0.5</Label>
-        )}
+        <ScoreInput
+          label={SCORING.ESSAY3.label}
+          handleClick={handleClick}
+          score={scores?.ResponseThreeScore}
+          maxScore={SCORING.ESSAY3}
+          hasMinusOne
+        />
+        <ScoreInput
+          label={SCORING.ESSAY4.label}
+          handleClick={handleClick}
+          score={scores?.ResponseFourScore}
+          maxScore={SCORING.ESSAY4}
+          hasMinusOne
+        />
+        {/* {!applicant?.skills?.hackathonsAttended && (
+          <Label>First time hacker: +1</Label>
+        )} */}
         <TextField
           customValue={comment}
           onChangeCustomValue={(e) => setComment(e.target.value)}

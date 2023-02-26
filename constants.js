@@ -131,7 +131,7 @@ export const APPLICATION_STATUS = {
 export const SCORING = {
   RESUME: {
     label: 'Resume',
-    value: 7,
+    value: 5,
     weight: 1,
   },
   ESSAY1: {
@@ -141,6 +141,16 @@ export const SCORING = {
   },
   ESSAY2: {
     label: 'Long Answer 2',
+    value: 4,
+    weight: 1,
+  },
+  ESSAY3: {
+    label: 'Long Answer 3 (optional)',
+    value: 4,
+    weight: 1,
+  },
+  ESSAY4: {
+    label: 'Long Answer 4 (optional)',
     value: 4,
     weight: 1,
   },
@@ -176,9 +186,8 @@ export const TABS = {
 export const RUBRIC = {
   DEV: [
     {
-      score: '+2',
-      label:
-        'At least 2 small projects or 1 big project (personal, hackathon, or school projects) (1 point for each small project)',
+      score: '+1',
+      label: 'At least 1 tech-related project',
     },
     {
       score: '+1',
@@ -195,20 +204,11 @@ export const RUBRIC = {
     },
     {
       score: '+1',
-      label: 'If have won a hackathon (won: 1st, 2nd, 3rd)',
-    },
-    {
-      score: '+1',
       label:
         'Easy to read, clean, well made (something you would do to apply to a job)',
     },
   ],
   DESIGN: [
-    {
-      score: '+2',
-      label:
-        'At least 2 small projects or 1 big project (personal, hackathon, school) (1 point for each small project)',
-    },
     {
       score: '+1',
       label:
@@ -220,7 +220,8 @@ export const RUBRIC = {
     },
     {
       score: '+1',
-      label: 'If at least one job is design-related',
+      label:
+        'if any of the work experiences are tech-related (work or internship)',
     },
     {
       score: '+1',
@@ -243,15 +244,7 @@ export const RUBRIC = {
     },
     {
       score: '+1',
-      label: 'If project/experience related to tech',
-    },
-    {
-      score: '+1',
       label: 'For each extracurricular activity (1 point each, max 2 points)',
-    },
-    {
-      score: '+1',
-      label: 'If extracurricular activities are tech-related',
     },
     {
       score: '+1',

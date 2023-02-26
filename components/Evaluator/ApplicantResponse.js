@@ -83,7 +83,7 @@ export default function ApplicantResponse({ shouldDisplay, hacker }) {
 
       <ResponseInput
         label="Identify as underrepresented?"
-        response={hacker?.basicInfo?.identifyAsUnderrepresented}
+        response={hacker?.basicInfo?.identifyAsUnderrepresentedOptions}
       />
 
       <ResponseInput label="Role" response={contributionRole} />

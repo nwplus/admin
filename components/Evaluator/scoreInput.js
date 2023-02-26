@@ -18,8 +18,16 @@ const Label = styled.label`
   color: ${ASSESSMENT_COLOR.LIGHT_GRAY};
 `;
 
-export default function ScoreInput({ label, score, handleClick, maxScore }) {
-  const arr = [...Array(maxScore.value + 1).keys()];
+export default function ScoreInput({
+  label,
+  score,
+  handleClick,
+  maxScore,
+  hasMinusOne,
+}) {
+  const arr = hasMinusOne
+    ? [-1, ...Array(maxScore.value + 1).keys()]
+    : [...Array(maxScore.value + 1).keys()];
 
   const handleMultipier = (value, numberLabel) => {
     return handleClick(value * maxScore.weight, numberLabel);

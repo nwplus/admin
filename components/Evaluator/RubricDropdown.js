@@ -62,6 +62,7 @@ const StyledOption = styled.div`
 const rubricOptions = [
   { value: 'DEV', label: 'Resume - Developer' },
   { value: 'DESIGN', label: 'Resume - Design' },
+  { value: 'PM', label: 'Resume - PM' },
   { value: 'GENERAL', label: 'Resume - First Time Hacker' },
   { value: 'LONG_ANSWER', label: 'Long answer' },
 ];

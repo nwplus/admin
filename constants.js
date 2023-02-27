@@ -174,6 +174,30 @@ export const TABS = {
 };
 
 export const RUBRIC = {
+  PM: [
+    {
+      score: '+1',
+      label: 'For any project/experience involving leadership',
+    },
+    {
+      score: '+1',
+      label: 'If one or more of any work experience',
+    },
+    {
+      score: '+1',
+      label:
+        'If any of the work experiences are tech-related (work or internship)',
+    },
+    {
+      score: '+1',
+      label: 'At least one extracurricular activity',
+    },
+    {
+      score: '+1',
+      label:
+        'Easy to read, clean, well made (something you would do to apply to a job)',
+    },
+  ],
   DEV: [
     {
       score: '+1',

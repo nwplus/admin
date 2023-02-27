@@ -144,16 +144,6 @@ export const SCORING = {
     value: 4,
     weight: 1,
   },
-  ESSAY3: {
-    label: 'Long Answer 3 (optional)',
-    value: 4,
-    weight: 1,
-  },
-  ESSAY4: {
-    label: 'Long Answer 4 (optional)',
-    value: 4,
-    weight: 1,
-  },
 };
 
 export const BONUS_SCORING = {

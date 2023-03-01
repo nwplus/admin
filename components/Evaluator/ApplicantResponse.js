@@ -81,6 +81,8 @@ export default function ApplicantResponse({ shouldDisplay, hacker }) {
 
       <ResponseInput label="Email" response={hacker?.basicInfo?.email} />
 
+      <ResponseInput label="Gender" response={`${hacker?.basicInfo?.gender}`} />
+
       <ResponseInput
         label="Identify as underrepresented?"
         response={hacker?.basicInfo?.identifyAsUnderrepresented}

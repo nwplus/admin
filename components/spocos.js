@@ -329,7 +329,10 @@ export default function SponsorshipPage({ hackathonId }) {
               disabled={modalAction === VIEW}
               onChange={(event) => handleChange('tier', event.target.value)}
             >
-              <option default value="inKind">
+              <option default value="startup">
+                Startup
+              </option>
+              <option default value="inkind">
                 In-kind
               </option>
               <option value="bronze">Bronze</option>

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Title5 } from '../Typography';
 import ResponseInput from '../Assessment/responseInput';
 import { COLOR, ASSESSMENT_COLOR } from '../../constants';
-import { getResumeFile } from '../../utility/firebase';
+import { getResumeFile, getWaiverFile } from '../../utility/firebase';
 
 const Container = styled.div`
   ${(p) => !p.shouldDisplay && 'display: none'};
@@ -42,6 +42,7 @@ const CONTRIBUTION_ROLE_OPTIONS = Object.freeze({
 
 export default function ApplicantResponse({ shouldDisplay, hacker }) {
   const [resumeURL, setResumeURL] = useState(null);
+  const [waiverURL, setWaiverURL] = useState(null);
   const [contributionRole, setContributionRole] = useState('');
 
   const fetchContributionRole = (contributionMap) => {
@@ -66,6 +67,9 @@ export default function ApplicantResponse({ shouldDisplay, hacker }) {
     if (hacker) {
       getResumeFile(hacker._id).then(async (url) => {
         setResumeURL(url);
+      });
+      getWaiverFile(hacker._id).then(async (url) => {
+        setWaiverURL(url);
       });
       fetchContributionRole(hacker?.skills.contributionRole);
     }
@@ -121,6 +125,8 @@ export default function ApplicantResponse({ shouldDisplay, hacker }) {
       <ResponseInput url label="LinkedIn" response={hacker?.skills?.linkedin} />
 
       <ResponseInput url={resumeURL} label="Resume" response={resumeURL} />
+
+      <ResponseInput url={waiverURL} label="Waiver" response={waiverURL} />
 
       <ResponseInput
         label="Why do you want to attend cmd-f 2023?"

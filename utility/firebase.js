@@ -694,6 +694,15 @@ export const getResumeFile = async (userId) => {
   }
 };
 
+export const getWaiverFile = async (userId) => {
+  try {
+    const ref = storage.ref(`hackerWaivers/${userId}`);
+    return await ref.getDownloadURL();
+  } catch (e) {
+    return undefined;
+  }
+};
+
 export const getAllResumes = async () => {
   const apps = await db
     .collection('Hackathons')

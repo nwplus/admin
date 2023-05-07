@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import moment from 'moment';
-import Page from '../../components/page';
-import Input from '../../components/input';
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import moment from "moment";
+import Page from "../../components/page";
+import Input from "../../components/input";
 import Card, {
   CardHeader,
   CardButtonContainer,
@@ -10,10 +10,10 @@ import Card, {
   CardContent,
   CardContentButtonContainer,
   CancelButton,
-} from '../../components/card';
-import FeatureFlag from '../../components/FeatureFlag';
+} from "../../components/card";
+import FeatureFlag from "../../components/FeatureFlag";
 // import { UploadContainer } from '../../components/modal';
-import Button from '../../components/button';
+import Button from "../../components/button";
 import {
   formatDate,
   getTimestamp,
@@ -21,9 +21,9 @@ import {
   subscribeToLivesiteData,
   updateLivesiteData,
   uploadLivesiteLogoToStorage,
-} from '../../utility/firebase';
-import { useAuth } from '../../utility/auth';
-import { LIVESITE_NAVBAR, EDIT } from '../../constants';
+} from "../../utility/firebase";
+import { useAuth } from "../../utility/auth";
+import { LIVESITE_NAVBAR, EDIT } from "../../constants";
 
 const Label = styled.p`
   font-weight: bold;
@@ -119,14 +119,14 @@ export default ({ hackathons }) => {
       if (editingDate) {
         setLivesiteData({ ...livesiteData, [field]: editingDate });
       }
-      setEditingDate('');
+      setEditingDate("");
     };
 
     // View: Converts ISO UTC string to local date in format 2017-06-01T08:30
     const domStringDate = moment
       .utc(livesiteData[field])
       .local()
-      .format('YYYY-MM-DDTHH:mm');
+      .format("YYYY-MM-DDTHH:mm");
     return (
       <input
         type="datetime-local"
@@ -158,7 +158,7 @@ export default ({ hackathons }) => {
 
   const LocalDate = ({ date }) => {
     if (date) {
-      return moment(date).format('MMMM Do YYYY, h:mm:ss a');
+      return moment(date).format("MMMM Do YYYY, h:mm:ss a");
     }
     return null;
   };
@@ -205,42 +205,42 @@ export default ({ hackathons }) => {
               <Label>Application Deadline (Hacker app copy)</Label>
               <Input
                 value={livesiteData.applicationDeadline}
-                onChange={(e) => handleChange('applicationDeadline', e)}
+                onChange={(e) => handleChange("applicationDeadline", e)}
               />
               <Label>RSVP Deadline (Hacker app copy)</Label>
               <Input
                 value={livesiteData.rsvpBy}
-                onChange={(e) => handleChange('rsvpBy', e)}
+                onChange={(e) => handleChange("rsvpBy", e)}
               />
               <Label>Waitlist notify time (Hacker app copy)</Label>
               <Input
                 value={livesiteData.offWaitlistNotify}
-                onChange={(e) => handleChange('offWaitlistNotify', e)}
+                onChange={(e) => handleChange("offWaitlistNotify", e)}
               />
-              <Label>Acceptences sent by (Hacker app copy)</Label>
+              <Label>Acceptances sent by (Hacker app copy)</Label>
               <Input
                 value={livesiteData.sendAcceptancesBy}
-                onChange={(e) => handleChange('sendAcceptancesBy', e)}
+                onChange={(e) => handleChange("sendAcceptancesBy", e)}
               />
               <FeatureFlag
                 title="Project Submissions Open"
                 value={livesiteData.submissionsOpen}
-                onChange={() => toggleInput('submissionsOpen')}
+                onChange={() => toggleInput("submissionsOpen")}
               />
               <FeatureFlag
                 title="Judging Open"
                 value={livesiteData.judgingOpen}
-                onChange={() => toggleInput('judgingOpen')}
+                onChange={() => toggleInput("judgingOpen")}
               />
               <FeatureFlag
                 title="Judging Released"
                 value={livesiteData.judgingReleased}
-                onChange={() => toggleInput('judgingReleased')}
+                onChange={() => toggleInput("judgingReleased")}
               />
               <FeatureFlag
                 title="Applications Open"
                 value={livesiteData.applicationsOpen}
-                onChange={() => toggleInput('applicationsOpen')}
+                onChange={() => toggleInput("applicationsOpen")}
               />
 
               <Group>
@@ -287,7 +287,7 @@ export default ({ hackathons }) => {
                 {livesiteData.offWaitlistNotify}
               </Group>
               <Group>
-                <Label>Acceptences sent by (copy)</Label>
+                <Label>Acceptances sent by (copy)</Label>
                 {livesiteData.sendAcceptancesBy}
               </Group>
               <FeatureFlag

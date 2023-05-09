@@ -217,7 +217,7 @@ export default ({ hackathons }) => {
                 value={livesiteData.offWaitlistNotify}
                 onChange={(e) => handleChange('offWaitlistNotify', e)}
               />
-              <Label>Acceptences sent by (Hacker app copy)</Label>
+              <Label>Acceptances sent by (Hacker app copy)</Label>
               <Input
                 value={livesiteData.sendAcceptancesBy}
                 onChange={(e) => handleChange('sendAcceptancesBy', e)}
@@ -287,7 +287,7 @@ export default ({ hackathons }) => {
                 {livesiteData.offWaitlistNotify}
               </Group>
               <Group>
-                <Label>Acceptences sent by (copy)</Label>
+                <Label>Acceptances sent by (copy)</Label>
                 {livesiteData.sendAcceptancesBy}
               </Group>
               <FeatureFlag

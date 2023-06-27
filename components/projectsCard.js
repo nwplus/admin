@@ -79,7 +79,11 @@ export default ({
                     Link
                   </a>
                 </Text>
-                <Text>{project.teamMembers?.toString()}</Text>
+                <Text>
+                  {project.teamMembers.map((item, index) => (
+                    <span key={index}>{item.name} </span>
+                  ))}
+                </Text>
                 <Actions>
                   <Button
                     type={EDIT}

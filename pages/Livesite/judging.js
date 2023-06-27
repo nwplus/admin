@@ -14,6 +14,7 @@ import {
 } from '../../utility/firebase';
 import { EDIT, NEW, LIVESITE_NAVBAR } from '../../constants';
 import ProjectsCard from '../../components/projectsCard';
+import TeamMembersSelector from '../../components/Judging/TeamMembersSelector';
 
 const Label = styled.p`
   font-weight: bold;
@@ -25,6 +26,9 @@ export default ({ hackathons }) => {
   const [projects, setProjects] = useState({});
   const [activeModal, setActiveModal] = useState('');
   const [data, setData] = useState({});
+
+  // for Add Team Member function trigger (/components/Judging/TeamMemberSelector.js)
+  const [innerModalOpen, setInnerModalOpen] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -43,13 +47,18 @@ export default ({ hackathons }) => {
 
   const handleNew = () => {
     setData({
+      charityChoice: '',
       description: '',
-      devpostUrl: '',
-      youtubeUrl: '',
+      links: {
+        youtube: '',
+        devpost: '',
+        sourceCode: '',
+      },
       sponsorPrizes: '',
       teamMembers: '',
-      teamMembersEmails: '',
       title: '',
+      mentorNominations: '',
+      draftStatus: '',
     });
     setActiveModal(NEW);
   };
@@ -67,13 +76,27 @@ export default ({ hackathons }) => {
 
   const formatProject = (project) => {
     project.sponsorPrizes = stringToArr(project.sponsorPrizes);
-    project.teamMembers = stringToArr(project.teamMembers);
-    project.teamMembersEmails = stringToArr(project.teamMembersEmails);
     return project;
   };
 
   const handleSave = async () => {
-    if (!Object.values(data).every((field) => field === 0 || !!field)) {
+    console.log(data);
+
+    const requiredFields = [
+      'title',
+      'description',
+      'teamMembers',
+      'links',
+      'sponsorPrizes',
+    ];
+
+    if (
+      !Object.keys(data).some(
+        (key) =>
+          (requiredFields.includes(key) && data[key] === 0) ||
+          (requiredFields.includes(key) && !!data[key])
+      )
+    ) {
       // eslint-disable-next-line no-alert
       alert('All fields required');
       return;
@@ -108,18 +131,23 @@ export default ({ hackathons }) => {
     setData({
       ...projects[key],
       id: key,
-      teamMembers: projects[key].teamMembers?.toString(),
-      teamMembersEmails: projects[key].teamMembersEmails?.toString(),
+      teamMembers: projects[key].teamMembers,
       sponsorPrizes: projects[key].sponsorPrizes?.toString(),
     });
     setActiveModal(EDIT);
   };
 
-  const handleChange = (field, e) => {
+  const handleChange = (field, e, custom = false) => {
     setData({
       ...data,
-      [field]: e.target.value,
+      [field]: custom ? e : e.target.value,
     });
+  };
+
+  const handleChangeLink = (linkField, e) => {
+    const currentData = data;
+    currentData.links[linkField] = e.target.value;
+    setData(currentData);
   };
 
   return (
@@ -140,6 +168,7 @@ export default ({ hackathons }) => {
         handleClose={handleCloseModal}
         handleSave={handleSave}
         modalAction={activeModal}
+        noOverflow={innerModalOpen}
       >
         <Label>Title</Label>
         <Input value={data.title} onChange={(e) => handleChange('title', e)} />
@@ -155,23 +184,39 @@ export default ({ hackathons }) => {
         />
         <Label>Devpost Url</Label>
         <Input
-          value={data.devpostUrl}
-          onChange={(e) => handleChange('devpostUrl', e)}
+          value={data.links?.devpost}
+          onChange={(e) => handleChangeLink('devpost', e)}
         />
         <Label>Youtube Url</Label>
         <Input
-          value={data.youtubeUrl}
-          onChange={(e) => handleChange('youtubeUrl', e)}
+          value={data.links?.youtube}
+          onChange={(e) => handleChangeLink('youtube', e)}
         />
-        <Label>Team Members (Comma separated)</Label>
+        <Label>Source Code Url</Label>
         <Input
+          value={data.links?.sourceCode}
+          onChange={(e) => handleChangeLink('sourceCode', e)}
+        />
+        <Label>Charity Choice</Label>
+        <Input
+          value={data.charityChoice}
+          onChange={(e) => handleChange('charityChoice', e)}
+        />
+        <Label>Team Members</Label>
+        <TeamMembersSelector
           value={data.teamMembers}
-          onChange={(e) => handleChange('teamMembers', e)}
+          updateValue={handleChange}
+          fnNoOverflow={setInnerModalOpen}
         />
-        <Label>Team Emails (Comma separated)</Label>
+        <Label>Mentor Nominations</Label>
         <Input
-          value={data.teamMembersEmails}
-          onChange={(e) => handleChange('teamMembersEmails', e)}
+          value={data.mentorNominations}
+          onChange={(e) => handleChange('mentorNominations', e)}
+        />
+        <Label>Draft Status</Label>
+        <Input
+          value={data.draftStatus}
+          onChange={(e) => handleChange('draftStatus', e)}
         />
       </Modal>
     </Page>

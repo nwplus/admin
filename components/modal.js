@@ -138,7 +138,7 @@ const ModalBackground = styled.div`
   width: 740px;
   max-width: 100%;
   max-height: 70%;
-  overflow-y: auto;
+  ${(p) => (p.noOverflow ? 'overflow-y: hidden;' : 'overflow-y: auto;')}
 `;
 
 const ButtonContainer = styled.div`
@@ -239,6 +239,7 @@ export default function Modal({
   lastModified,
   children,
   modalTitle,
+  noOverflow,
 }) {
   if (!isOpen) {
     return null;
@@ -277,7 +278,11 @@ export default function Modal({
   return (
     <>
       {isOpen && <BackDropScreen />}
-      <ModalBackground isOpen={isOpen}>
+      <ModalBackground
+        isOpen={isOpen}
+        noOverflow={noOverflow}
+        id="project-modal"
+      >
         <ModalButton type={CLOSE} handleClose={handleClose} />
         {(modalTitle && getTitle(modalTitle)) || getTitle(modalAction)}
         {children}

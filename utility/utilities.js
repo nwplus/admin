@@ -21,3 +21,30 @@ export const calculateTotalScore = (hackerScore) => {
   );
   return Math.min(maxScore, Object.values(hackerScore).reduce(reducer, 0));
 };
+
+// Given an object, flatten all key/values, taking all nested properties to top level
+export const flattenObj = (obj) => {
+  const result = {};
+  for (const index in obj) {
+    if (typeof obj[index] === 'object' && !Array.isArray(obj[index])) {
+      const temp = flattenObj(obj[index]);
+      for (const key of Object.keys(temp)) {
+        result[key] = temp[key];
+      }
+    } else {
+      result[index] = obj[index];
+    }
+  }
+  return result;
+};
+
+// Given an object, order key/value pairs alphabetically
+export const orderObj = (unorderedObj) => {
+  const orderedObj = Object.keys(unorderedObj)
+    .sort()
+    .reduce((obj, key) => {
+      obj[key] = unorderedObj[key];
+      return obj;
+    }, {});
+  return orderedObj;
+};

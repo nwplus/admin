@@ -76,6 +76,7 @@ export const HACKATHON_NAVBAR = {
   spocos: 'Sponsors',
   FeatureFlags: 'Feature Flags',
   BuildConfig: 'Build Config',
+  HackerInfo: 'Hacker Info',
 };
 export const LIVESITE_NAVBAR = {
   announcements: 'Announcements',

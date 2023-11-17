@@ -131,7 +131,7 @@ export default function SponsorshipPage({ hackathonId }) {
       imgName: '',
       lastmod: '',
       lastmodBy: '',
-      tier: 'Inkind',
+      tier: 'inkind',
       id: '',
     });
     setShowEditWindow(true);
@@ -197,7 +197,7 @@ export default function SponsorshipPage({ hackathonId }) {
       imgName: '',
       lastmod: '',
       lastmodBy: '',
-      tier: 'Inkind',
+      tier: 'inkind',
     });
 
     setimgFile(null);

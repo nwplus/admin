@@ -371,9 +371,7 @@ export default function SponsorshipPage({ hackathonId }) {
               onClick={fileClick}
               disabled={modalAction === VIEW}
             />
-
           </div>
-
         </ModalContent>
       </Modal>
     </>

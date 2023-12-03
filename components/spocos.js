@@ -53,6 +53,7 @@ export default function SponsorshipPage({ hackathonId }) {
 
   const [newobj, setnewobj] = useState({
     name: '',
+    blurb: '',
     link: '',
     imgURL: '',
     imgName: '',
@@ -90,6 +91,7 @@ export default function SponsorshipPage({ hackathonId }) {
   const handleEdit = async (id) => {
     setnewobj({
       name: sponsors[id].name,
+      blurb: sponsors[id].blurb,
       link: sponsors[id].link,
       imgURL: sponsors[id].imgURL,
       imgName: sponsors[id].imgName,
@@ -108,6 +110,7 @@ export default function SponsorshipPage({ hackathonId }) {
   const handleView = async (id) => {
     setnewobj({
       name: sponsors[id].name,
+      blurb: sponsors[id].blurb,
       link: sponsors[id].link,
       imgURL: sponsors[id].imgURL,
       imgName: sponsors[id].imgName,
@@ -126,6 +129,7 @@ export default function SponsorshipPage({ hackathonId }) {
   const handleNew = () => {
     setnewobj({
       name: '',
+      blurb: '',
       link: '',
       imgURL: '',
       imgName: '',
@@ -192,6 +196,7 @@ export default function SponsorshipPage({ hackathonId }) {
     // 3. refreshes form
     setnewobj({
       name: '',
+      blurb: '',
       link: '',
       imgURL: '',
       imgName: '',
@@ -241,6 +246,9 @@ export default function SponsorshipPage({ hackathonId }) {
                   <strong>Sponsor Name</strong>
                 </Text>
                 <Text>
+                  <strong>Sponsor Blurb</strong>
+                </Text>
+                <Text>
                   <strong>Link</strong>
                 </Text>
                 <Text>
@@ -267,6 +275,7 @@ export default function SponsorshipPage({ hackathonId }) {
               {Object.entries(sponsors).map(([key, item]) => (
                 <CardContainer key={key} padding="10px 0px 10px 20px">
                   <Text>{item.name}</Text>
+                  <Text>{item.blurb}</Text>
                   <Text>{item.link}</Text>
                   <Text>{item.imgName}</Text>
                   <Text>{item.tier}</Text>
@@ -309,12 +318,11 @@ export default function SponsorshipPage({ hackathonId }) {
             modalAction={modalAction}
             onChange={(event) => handleChange('name', event.target.value)}
           />
-
           <ModalField
-            label="Link"
-            value={newobj.link}
+            label="Sponsor Blurb"
+            value={newobj.blurb}
             modalAction={modalAction}
-            onChange={(event) => handleChange('link', event.target.value)}
+            onChange={(event) => handleChange('blurb', event.target.value)}
           />
 
           <LogoImage>
@@ -322,6 +330,12 @@ export default function SponsorshipPage({ hackathonId }) {
           </LogoImage>
 
           <div>
+            <ModalField
+              label="Link"
+              value={newobj.link}
+              modalAction={modalAction}
+              onChange={(event) => handleChange('link', event.target.value)}
+            />
             <Label>Tier</Label>
 
             <select
@@ -357,7 +371,9 @@ export default function SponsorshipPage({ hackathonId }) {
               onClick={fileClick}
               disabled={modalAction === VIEW}
             />
+
           </div>
+
         </ModalContent>
       </Modal>
     </>

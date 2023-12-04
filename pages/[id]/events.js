@@ -1,78 +1,66 @@
-import React, { useState, useEffect } from 'react';
-import setHours from 'date-fns/setHours';
-import setMinutes from 'date-fns/setMinutes';
+import setHours from 'date-fns/setHours'
+import setMinutes from 'date-fns/setMinutes'
+import React, { useEffect, useState } from 'react'
+import Button from '../../components/button'
+import Card, { CardButtonContainer, CardContent, CardHeader, CardTitle } from '../../components/card'
+import { DateTimePicker } from '../../components/dateTimePicker'
+import Modal, { Label, ModalContent, ModalField } from '../../components/modal'
+import Page from '../../components/page'
 import {
+  ActionsButtonContainer,
+  TableContent,
+  TableData,
+  TableEmptyText,
+  TableHeader,
+  TableRow,
+  TableWrapper,
+} from '../../components/table'
+import { COLOR, DELETE, EDIT, HACKATHON_NAVBAR, NEW, VIEW } from '../../constants'
+import { useAuth } from '../../utility/auth'
+import {
+  addEvent,
+  deleteEvent,
   formatDate,
-  getTimestamp,
+  getEvents,
   getHackathonPaths,
   getHackathons,
-  getEvents,
-  addEvent,
+  getTimestamp,
   updateEvent,
-  deleteEvent,
-} from '../../utility/firebase';
-import Page from '../../components/page';
-import Card, {
-  CardHeader,
-  CardTitle,
-  CardButtonContainer,
-  CardContent,
-} from '../../components/card';
-import Button from '../../components/button';
-import {
-  TableWrapper,
-  TableContent,
-  TableRow,
-  TableHeader,
-  TableData,
-  ActionsButtonContainer,
-  TableEmptyText,
-} from '../../components/table';
-import Modal, { Label, ModalContent, ModalField } from '../../components/modal';
-import {
-  COLOR,
-  EDIT,
-  VIEW,
-  NEW,
-  DELETE,
-  HACKATHON_NAVBAR,
-} from '../../constants';
-import { DateTimePicker } from '../../components/dateTimePicker';
-import { useAuth } from '../../utility/auth';
+} from '../../utility/firebase'
 
 export default function Events({ id, hackathons }) {
-  const [events, setEvents] = useState([]);
-  const [newEvent, setNewEvent] = useState({});
-  const [eventViewing, setEventViewing] = useState({});
-  const [eventEditing, setEventEditing] = useState({});
-  const [eventConfirm, setEventConfirm] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
-  const [alertMsg, setAlertMsg] = useState('');
-  const { email: user } = useAuth().user;
+  const [events, setEvents] = useState([])
+  const [newEvent, setNewEvent] = useState({})
+  const [eventViewing, setEventViewing] = useState({})
+  const [eventEditing, setEventEditing] = useState({})
+  const [eventConfirm, setEventConfirm] = useState({})
+  const [isLoading, setIsLoading] = useState(true)
+  const [alertMsg, setAlertMsg] = useState('')
+  const { email: user } = useAuth().user
 
   const fetchEvents = async () => {
-    const eventsFetched = await getEvents(id);
+    const eventsFetched = await getEvents(id)
     if (Object.keys(eventsFetched).length > 0) {
-      setEvents(eventsFetched);
+      setEvents(eventsFetched)
     }
-    setIsLoading(false);
-  };
+    setIsLoading(false)
+  }
 
   useEffect(() => {
     if (alertMsg.length > 0) {
-      alert(alertMsg);
+      alert(alertMsg)
     }
-  }, [alertMsg]);
+  }, [alertMsg])
 
   useEffect(() => {
-    fetchEvents();
-  }, [window.location.pathname]);
+    fetchEvents()
+  }, [window.location.pathname])
 
   const handleNew = async () => {
-    newEvent.lastModifiedBy = user;
-    newEvent.date = new Date(newEvent.date.toUTCString());
-    const eventID = await addEvent(id, newEvent);
-    newEvent.lastModified = formatDate(getTimestamp().seconds);
+    newEvent.lastModifiedBy = user
+    newEvent.date = new Date(newEvent.date.toUTCString())
+    const eventID = await addEvent(id, newEvent)
+    newEvent.lastModified = formatDate(getTimestamp().seconds)
     setEvents({
       ...events,
       [eventID]: {
@@ -80,61 +68,54 @@ export default function Events({ id, hackathons }) {
         date: formatDate(newEvent.date, true),
         eventID,
       },
-    });
-    setNewEvent({});
-    setAlertMsg(`Successfully added the following event: \n${newEvent.title}`);
-  };
+    })
+    setNewEvent({})
+    setAlertMsg(`Successfully added the following event: \n${newEvent.title}`)
+  }
 
   const handleUpdate = async () => {
-    eventEditing.lastModified = user;
-    eventEditing.date = new Date(eventEditing.date);
-    await updateEvent(id, eventEditing);
-    eventEditing.lastModified = formatDate(getTimestamp().seconds);
+    eventEditing.lastModified = user
+    eventEditing.date = new Date(eventEditing.date)
+    await updateEvent(id, eventEditing)
+    eventEditing.lastModified = formatDate(getTimestamp().seconds)
     setEvents({
       ...events,
       [eventEditing.eventID]: {
         ...eventEditing,
         date: formatDate(eventEditing.date, true),
       },
-    });
-    setEventEditing({});
-    setAlertMsg(
-      `Successfully updated the following event: \n${eventEditing.title}`
-    );
-  };
+    })
+    setEventEditing({})
+    setAlertMsg(`Successfully updated the following event: \n${eventEditing.title}`)
+  }
 
   const handleDelete = (eventID, confirmed = false) => {
     if (!confirmed) {
-      setEventConfirm({ ...events[eventID] });
-      return;
+      setEventConfirm({ ...events[eventID] })
+      return
     }
-    deleteEvent(id, eventID);
+    deleteEvent(id, eventID)
     setEvents(
       Object.keys(events)
-        .filter((curr) => {
-          return curr !== eventID;
+        .filter(curr => {
+          return curr !== eventID
         })
         .reduce((obj, curr) => {
-          obj[curr] = events[curr];
-          return obj;
+          obj[curr] = events[curr]
+          return obj
         }, {})
-    );
-    setEventConfirm(
-      {},
-      setAlertMsg(
-        `Successfully deleted the following event: \n${events[eventID].title}`
-      )
-    );
-  };
+    )
+    setEventConfirm({}, setAlertMsg(`Successfully deleted the following event: \n${events[eventID].title}`))
+  }
 
   const handleInput = (property, value, event, setState) => {
     setState({
       ...event,
       [property]: value,
-    });
-  };
+    })
+  }
 
-  const EventRow = (props) => {
+  const EventRow = props => {
     return (
       <TableRow>
         <TableData>{props.title}</TableData>
@@ -143,36 +124,20 @@ export default function Events({ id, hackathons }) {
         <TableData>{props.lastModified}</TableData>
         <TableData actions>
           <ActionsButtonContainer>
-            <Button
-              type={VIEW}
-              color={COLOR.TRANSPARENT}
-              onClick={() => setEventViewing(events[props.eventID])}
-            />
+            <Button type={VIEW} color={COLOR.TRANSPARENT} onClick={() => setEventViewing(events[props.eventID])} />
           </ActionsButtonContainer>
           <ActionsButtonContainer>
-            <Button
-              type={EDIT}
-              color={COLOR.TRANSPARENT}
-              onClick={() => setEventEditing(events[props.eventID])}
-            />
+            <Button type={EDIT} color={COLOR.TRANSPARENT} onClick={() => setEventEditing(events[props.eventID])} />
           </ActionsButtonContainer>
           <ActionsButtonContainer>
-            <Button
-              type={DELETE}
-              color={COLOR.TRANSPARENT}
-              onClick={() => handleDelete(props.eventID)}
-            />
+            <Button type={DELETE} color={COLOR.TRANSPARENT} onClick={() => handleDelete(props.eventID)} />
           </ActionsButtonContainer>
         </TableData>
       </TableRow>
-    );
-  };
+    )
+  }
   return (
-    <Page
-      currentPath={id}
-      hackathons={hackathons}
-      navbarItems={HACKATHON_NAVBAR}
-    >
+    <Page currentPath={id} hackathons={hackathons} navbarItems={HACKATHON_NAVBAR}>
       <Card>
         <CardHeader>
           <CardTitle>Events</CardTitle>
@@ -218,7 +183,7 @@ export default function Events({ id, hackathons }) {
                     </TableRow>
                   </thead>
                   <tbody>
-                    {Object.keys(events).map((curr) => (
+                    {Object.keys(events).map(curr => (
                       <EventRow
                         key={events[curr].eventID}
                         eventID={events[curr].eventID}
@@ -247,27 +212,15 @@ export default function Events({ id, hackathons }) {
               <ModalField
                 label="Event"
                 modalAction={NEW}
-                onChange={(event) =>
-                  handleInput(
-                    'title',
-                    event.target.value,
-                    newEvent,
-                    setNewEvent
-                  )
-                }
+                onChange={event => handleInput('title', event.target.value, newEvent, setNewEvent)}
               />
             </ModalContent>
             <ModalContent columns={1}>
               <ModalField
                 label="Description"
                 modalAction={NEW}
-                onChange={(event) => {
-                  handleInput(
-                    'text',
-                    event.target.value,
-                    newEvent,
-                    setNewEvent
-                  );
+                onChange={event => {
+                  handleInput('text', event.target.value, newEvent, setNewEvent)
                 }}
               />
             </ModalContent>
@@ -276,22 +229,13 @@ export default function Events({ id, hackathons }) {
                 <Label>Date</Label>
                 <DateTimePicker
                   selected={newEvent.date}
-                  onChange={(date) =>
-                    handleInput('date', date, newEvent, setNewEvent)
-                  }
+                  onChange={date => handleInput('date', date, newEvent, setNewEvent)}
                 />
               </div>
               <ModalField
                 label="Order"
                 modalAction={NEW}
-                onChange={(event) =>
-                  handleInput(
-                    'order',
-                    event.target.value,
-                    newEvent,
-                    setNewEvent
-                  )
-                }
+                onChange={event => handleInput('order', event.target.value, newEvent, setNewEvent)}
               />
             </ModalContent>
           </Modal>
@@ -304,30 +248,14 @@ export default function Events({ id, hackathons }) {
             lastModified={`${eventViewing.lastModified} by ${eventViewing.lastModifiedBy}`}
           >
             <ModalContent columns={1}>
-              <ModalField
-                label="Event"
-                value={eventViewing.title}
-                modalAction={VIEW}
-              />
+              <ModalField label="Event" value={eventViewing.title} modalAction={VIEW} />
             </ModalContent>
             <ModalContent columns={1}>
-              <ModalField
-                label="Description"
-                value={eventViewing.text}
-                modalAction={VIEW}
-              />
+              <ModalField label="Description" value={eventViewing.text} modalAction={VIEW} />
             </ModalContent>
             <ModalContent columns={2}>
-              <ModalField
-                label="Date"
-                value={eventViewing.date}
-                modalAction={VIEW}
-              />
-              <ModalField
-                label="Order"
-                value={eventViewing.order}
-                modalAction={VIEW}
-              />
+              <ModalField label="Date" value={eventViewing.date} modalAction={VIEW} />
+              <ModalField label="Order" value={eventViewing.order} modalAction={VIEW} />
             </ModalContent>
           </Modal>
           {/* Modal for editing event */}
@@ -343,13 +271,8 @@ export default function Events({ id, hackathons }) {
                 label="Event"
                 value={eventEditing.title}
                 modalAction={EDIT}
-                onChange={(event) => {
-                  handleInput(
-                    'title',
-                    event.target.value,
-                    eventEditing,
-                    setEventEditing
-                  );
+                onChange={event => {
+                  handleInput('title', event.target.value, eventEditing, setEventEditing)
                 }}
               />
             </ModalContent>
@@ -358,13 +281,8 @@ export default function Events({ id, hackathons }) {
                 label="Description"
                 value={eventEditing.text}
                 modalAction={EDIT}
-                onChange={(event) => {
-                  handleInput(
-                    'text',
-                    event.target.value,
-                    eventEditing,
-                    setEventEditing
-                  );
+                onChange={event => {
+                  handleInput('text', event.target.value, eventEditing, setEventEditing)
                 }}
               />
             </ModalContent>
@@ -373,22 +291,15 @@ export default function Events({ id, hackathons }) {
                 <Label>Date</Label>
                 <DateTimePicker
                   selected={new Date(eventEditing.date)}
-                  onChange={(date) =>
-                    handleInput('date', date, eventEditing, setEventEditing)
-                  }
+                  onChange={date => handleInput('date', date, eventEditing, setEventEditing)}
                 />
               </div>
               <ModalField
                 label="Order"
                 value={eventEditing.order}
                 modalAction={EDIT}
-                onChange={(event) => {
-                  handleInput(
-                    'order',
-                    event.target.value,
-                    eventEditing,
-                    setEventEditing
-                  );
+                onChange={event => {
+                  handleInput('order', event.target.value, eventEditing, setEventEditing)
                 }}
               />
             </ModalContent>
@@ -402,47 +313,31 @@ export default function Events({ id, hackathons }) {
             modalAction={DELETE}
           >
             <ModalContent columns={1}>
-              <ModalField
-                label="Event"
-                value={eventConfirm.title}
-                modalAction={VIEW}
-              />
+              <ModalField label="Event" value={eventConfirm.title} modalAction={VIEW} />
             </ModalContent>
             <ModalContent columns={1}>
-              <ModalField
-                label="Description"
-                value={eventConfirm.text}
-                modalAction={VIEW}
-              />
+              <ModalField label="Description" value={eventConfirm.text} modalAction={VIEW} />
             </ModalContent>
             <ModalContent columns={2}>
-              <ModalField
-                label="Date"
-                value={eventConfirm.date}
-                modalAction={VIEW}
-              />
-              <ModalField
-                label="Order"
-                value={eventConfirm.order}
-                modalAction={VIEW}
-              />
+              <ModalField label="Date" value={eventConfirm.date} modalAction={VIEW} />
+              <ModalField label="Order" value={eventConfirm.order} modalAction={VIEW} />
             </ModalContent>
           </Modal>
         </CardContent>
       </Card>
     </Page>
-  );
+  )
 }
 export const getStaticPaths = async () => {
-  return getHackathonPaths();
-};
+  return getHackathonPaths()
+}
 
 export const getStaticProps = async ({ params }) => {
-  const hackathons = await getHackathons();
+  const hackathons = await getHackathons()
   return {
     props: {
       hackathons,
       id: params.id,
     },
-  };
-};
+  }
+}

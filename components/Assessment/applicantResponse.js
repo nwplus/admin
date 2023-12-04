@@ -1,11 +1,11 @@
 // this is the third sidebar for the scoring page
 
-import React, { useState, useEffect } from 'react';
-import moment from 'moment';
-import styled from 'styled-components';
-import ResponseInput from './responseInput';
-import { ASSESSMENT_COLOR, TABS } from '../../constants';
-import { getResumeFile } from '../../utility/firebase';
+import moment from 'moment'
+import React, { useEffect, useState } from 'react'
+import styled from 'styled-components'
+import { ASSESSMENT_COLOR, TABS } from '../../constants'
+import { getResumeFile } from '../../utility/firebase'
+import ResponseInput from './responseInput'
 
 const Main = styled.div`
   padding: 20px;
@@ -14,7 +14,7 @@ const Main = styled.div`
   text-align: left;
   overflow-y: scroll;
   height: 85vh;
-`;
+`
 
 const TabContainer = styled.div`
   display: flex;
@@ -22,7 +22,7 @@ const TabContainer = styled.div`
   padding-bottom: 15px;
   border-bottom: 1px gray solid;
   width: 100%;
-`;
+`
 
 const Tab = styled.div`
   margin-right: 20px;
@@ -30,7 +30,7 @@ const Tab = styled.div`
     color: ${ASSESSMENT_COLOR.BLUE_TEXT};
     cursor: pointer;
   }
-`;
+`
 const ExitTab = styled.div`
   color: grey;
   margin-left: auto;
@@ -38,11 +38,11 @@ const ExitTab = styled.div`
     color: ${ASSESSMENT_COLOR.BLUE_TEXT};
     cursor: pointer;
   }
-`;
+`
 
 export default function ApplicantResponse(props) {
-  const { hacker } = props;
-  const [activeTab, setActiveTab] = useState(TABS.OVERVIEW);
+  const { hacker } = props
+  const [activeTab, setActiveTab] = useState(TABS.OVERVIEW)
 
   return (
     <Main>
@@ -60,56 +60,39 @@ export default function ApplicantResponse(props) {
         <CommentTab comments={props.hacker.comments} />
       )}
     </Main>
-  );
+  )
 
   function OverviewTab() {
     return (
       <div style={{ paddingTop: '10px', paddingBottom: '30px' }}>
-        <ResponseInput
-          label="Full name"
-          response={`${hacker.basicInfo?.firstName} ${hacker.basicInfo?.lastName}`}
-        />
+        <ResponseInput label="Full name" response={`${hacker.basicInfo?.firstName} ${hacker.basicInfo?.lastName}`} />
         <ResponseInput label="Email" response={hacker.basicInfo?.email} />
-        <ResponseInput
-          label="Role"
-          response={hacker.basicInfo?.contributionRole}
-        />
-        <ResponseInput
-          label="19 or over?"
-          response={hacker.basicInfo?.isOfLegalAge ? 'yes' : 'no'}
-        />
-        <ResponseInput
-          label="School"
-          response={`Studying ${hacker.basicInfo?.school}`}
-        />
+        <ResponseInput label="Role" response={hacker.basicInfo?.contributionRole} />
+        <ResponseInput label="19 or over?" response={hacker.basicInfo?.isOfLegalAge ? 'yes' : 'no'} />
+        <ResponseInput label="School" response={`Studying ${hacker.basicInfo?.school}`} />
         <ResponseInput label="Major" response={hacker.basicInfo?.major} />
-        <ResponseInput
-          label="Visiting From"
-          response={hacker.basicInfo?.location}
-        />
+        <ResponseInput label="Visiting From" response={hacker.basicInfo?.location} />
         <ResponseInput
           label="Last Updated"
-          response={moment(hacker.submission?.lastUpdated.toDate()).format(
-            'dddd, MMMM Do, YYYY h:mm:ss A'
-          )}
+          response={moment(hacker.submission?.lastUpdated.toDate()).format('dddd, MMMM Do, YYYY h:mm:ss A')}
         />
       </div>
-    );
+    )
   }
 
   function ResumeLink() {
-    const [file, setFile] = useState(null);
-    const [noResume, setNoResume] = useState(false);
+    const [file, setFile] = useState(null)
+    const [noResume, setNoResume] = useState(false)
     useEffect(() => {
       getResumeFile(hacker._id)
-        .then(async (url) => {
-          const data = await fetch(url);
-          setFile(await data.blob());
-          const fileURL = URL.createObjectURL(file);
-          setFile(fileURL);
+        .then(async url => {
+          const data = await fetch(url)
+          setFile(await data.blob())
+          const fileURL = URL.createObjectURL(file)
+          setFile(fileURL)
         })
-        .catch(() => setNoResume(true));
-    }, []);
+        .catch(() => setNoResume(true))
+    }, [])
 
     return !file && noResume === false ? (
       <>Loading</>
@@ -119,32 +102,17 @@ export default function ApplicantResponse(props) {
       <a href={file} target="_blank" rel="noopener noreferrer">
         View Resume
       </a>
-    );
+    )
   }
 
   function ResumeTab() {
     return (
       <div style={{ paddingTop: '10px' }}>
-        <ResponseInput
-          label="Hackathons Attended"
-          response={hacker.skills?.hackathonsAttended}
-        />
+        <ResponseInput label="Hackathons Attended" response={hacker.skills?.hackathonsAttended} />
         <ResponseInput label="Resume" response={ResumeLink()} />
-        <ResponseInput
-          url
-          label="GitHub/GitLab/BitBucket"
-          response={hacker.skills?.github}
-        />
-        <ResponseInput
-          url
-          label="LinkedIn"
-          response={hacker.skills?.linkedin}
-        />
-        <ResponseInput
-          url
-          label="Portfolio"
-          response={hacker.skills?.portfolio}
-        />
+        <ResponseInput url label="GitHub/GitLab/BitBucket" response={hacker.skills?.github} />
+        <ResponseInput url label="LinkedIn" response={hacker.skills?.linkedin} />
+        <ResponseInput url label="Portfolio" response={hacker.skills?.portfolio} />
         <ResponseInput
           openable
           label={
@@ -164,14 +132,13 @@ export default function ApplicantResponse(props) {
               <br />
               1. How would you like to challenge yourself during this hackathon?
               <br />
-              2. Describe a time where you went above and beyond of your role to
-              demonstrate leadership in a project.
+              2. Describe a time where you went above and beyond of your role to demonstrate leadership in a project.
             </div>
           }
           response={props.hacker.skills.longAnswers2}
         />
       </div>
-    );
+    )
   }
 
   function CommentTab() {
@@ -182,8 +149,8 @@ export default function ApplicantResponse(props) {
             <div> {key} </div>
           ))}
         </div>
-      );
+      )
     }
-    return <div> WIP </div>;
+    return <div> WIP </div>
   }
 }

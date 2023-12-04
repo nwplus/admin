@@ -1,45 +1,45 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import Page from '../../components/page';
-import Input from '../../components/input';
-import TextBox from '../../components/textbox';
-import Modal from '../../components/modal';
+import React, { useEffect, useState } from 'react'
+import styled from 'styled-components'
+import Input from '../../components/input'
+import Modal from '../../components/modal'
+import Page from '../../components/page'
+import ProjectsCard from '../../components/projectsCard'
+import TextBox from '../../components/textbox'
+import { EDIT, LIVESITE_NAVBAR, NEW } from '../../constants'
 import {
   createProject,
-  getHackathons,
+  deleteProject,
   getActiveHackathon,
+  getHackathons,
   subscribeToProjects,
   updateProject,
-  deleteProject,
-} from '../../utility/firebase';
-import { EDIT, NEW, LIVESITE_NAVBAR } from '../../constants';
-import ProjectsCard from '../../components/projectsCard';
+} from '../../utility/firebase'
 
 const Label = styled.p`
   font-weight: bold;
   margin: 10px 0;
-`;
+`
 
 export default ({ hackathons }) => {
-  const [activeHackathon, setActiveHackathon] = useState('');
-  const [projects, setProjects] = useState({});
-  const [activeModal, setActiveModal] = useState('');
-  const [data, setData] = useState({});
+  const [activeHackathon, setActiveHackathon] = useState('')
+  const [projects, setProjects] = useState({})
+  const [activeModal, setActiveModal] = useState('')
+  const [data, setData] = useState({})
 
   useEffect(() => {
-    (async () => {
-      setActiveHackathon(await getActiveHackathon);
-    })();
-  });
+    ;(async () => {
+      setActiveHackathon(await getActiveHackathon)
+    })()
+  })
 
   // eslint-disable-next-line consistent-return
   useEffect(() => {
     if (activeHackathon) {
-      return subscribeToProjects(activeHackathon, (p) => {
-        setProjects(p);
-      });
+      return subscribeToProjects(activeHackathon, p => {
+        setProjects(p)
+      })
     }
-  }, [activeHackathon, setProjects]);
+  }, [activeHackathon, setProjects])
 
   const handleNew = () => {
     setData({
@@ -50,84 +50,80 @@ export default ({ hackathons }) => {
       teamMembers: '',
       teamMembersEmails: '',
       title: '',
-    });
-    setActiveModal(NEW);
-  };
+    })
+    setActiveModal(NEW)
+  }
 
   const handleCloseModal = () => {
     // eslint-disable-next-line
     if (confirm('Are you sure? You will lose all progress')) {
-      setActiveModal('');
+      setActiveModal('')
     }
-  };
+  }
 
-  const stringToArr = (str) => {
-    return str?.split(',').map((i) => i.trim());
-  };
+  const stringToArr = str => {
+    return str?.split(',').map(i => i.trim())
+  }
 
-  const formatProject = (project) => {
-    project.sponsorPrizes = stringToArr(project.sponsorPrizes);
-    project.teamMembers = stringToArr(project.teamMembers);
-    project.teamMembersEmails = stringToArr(project.teamMembersEmails);
-    return project;
-  };
+  const formatProject = project => {
+    project.sponsorPrizes = stringToArr(project.sponsorPrizes)
+    project.teamMembers = stringToArr(project.teamMembers)
+    project.teamMembersEmails = stringToArr(project.teamMembersEmails)
+    return project
+  }
 
   const handleSave = async () => {
-    if (!Object.values(data).every((field) => field === 0 || !!field)) {
+    if (!Object.values(data).every(field => field === 0 || !!field)) {
       // eslint-disable-next-line no-alert
-      alert('All fields required');
-      return;
+      alert('All fields required')
+      return
     }
 
     if (data.id) {
-      updateProject(activeHackathon, formatProject(data));
-      setActiveModal('');
-      return;
+      updateProject(activeHackathon, formatProject(data))
+      setActiveModal('')
+      return
     }
     const project = {
       acknowledged: true,
       countAssigned: 0,
       ...formatProject(data),
-    };
-    // eslint-disable-next-line
-    const confirmation = confirm(JSON.stringify(project, null, 4));
-    if (confirmation) {
-      await createProject(activeHackathon, project);
-      setActiveModal('');
     }
-  };
+    // eslint-disable-next-line
+    const confirmation = confirm(JSON.stringify(project, null, 4))
+    if (confirmation) {
+      await createProject(activeHackathon, project)
+      setActiveModal('')
+    }
+  }
 
-  const handleDelete = (key) => {
+  const handleDelete = key => {
     // eslint-disable-next-line no-restricted-globals
     if (confirm('Are you sure? This cannot be undone')) {
-      deleteProject(activeHackathon, key);
+      deleteProject(activeHackathon, key)
     }
-  };
+  }
 
-  const handleEdit = (key) => {
+  const handleEdit = key => {
     setData({
       ...projects[key],
       id: key,
       teamMembers: projects[key].teamMembers?.toString(),
       teamMembersEmails: projects[key].teamMembersEmails?.toString(),
       sponsorPrizes: projects[key].sponsorPrizes?.toString(),
-    });
-    setActiveModal(EDIT);
-  };
+    })
+    setActiveModal(EDIT)
+  }
 
   const handleChange = (field, e) => {
     setData({
       ...data,
       [field]: e.target.value,
-    });
-  };
+    })
+  }
 
   return (
-    <Page
-      currentPath="Livesite"
-      hackathons={hackathons}
-      navbarItems={LIVESITE_NAVBAR}
-    >
+    <Page currentPath="Livesite" hackathons={hackathons} navbarItems={LIVESITE_NAVBAR}>
       <ProjectsCard
         handleEdit={handleEdit}
         handleNew={handleNew}
@@ -142,47 +138,29 @@ export default ({ hackathons }) => {
         modalAction={activeModal}
       >
         <Label>Title</Label>
-        <Input value={data.title} onChange={(e) => handleChange('title', e)} />
+        <Input value={data.title} onChange={e => handleChange('title', e)} />
         <Label>Description</Label>
-        <TextBox
-          defaultValue={data.description}
-          onChange={(e) => handleChange('description', e)}
-        />
+        <TextBox defaultValue={data.description} onChange={e => handleChange('description', e)} />
         <Label>Sponsor Prizes (Comma separated)</Label>
-        <Input
-          value={data.sponsorPrizes}
-          onChange={(e) => handleChange('sponsorPrizes', e)}
-        />
+        <Input value={data.sponsorPrizes} onChange={e => handleChange('sponsorPrizes', e)} />
         <Label>Devpost Url</Label>
-        <Input
-          value={data.devpostUrl}
-          onChange={(e) => handleChange('devpostUrl', e)}
-        />
+        <Input value={data.devpostUrl} onChange={e => handleChange('devpostUrl', e)} />
         <Label>Youtube Url</Label>
-        <Input
-          value={data.youtubeUrl}
-          onChange={(e) => handleChange('youtubeUrl', e)}
-        />
+        <Input value={data.youtubeUrl} onChange={e => handleChange('youtubeUrl', e)} />
         <Label>Team Members (Comma separated)</Label>
-        <Input
-          value={data.teamMembers}
-          onChange={(e) => handleChange('teamMembers', e)}
-        />
+        <Input value={data.teamMembers} onChange={e => handleChange('teamMembers', e)} />
         <Label>Team Emails (Comma separated)</Label>
-        <Input
-          value={data.teamMembersEmails}
-          onChange={(e) => handleChange('teamMembersEmails', e)}
-        />
+        <Input value={data.teamMembersEmails} onChange={e => handleChange('teamMembersEmails', e)} />
       </Modal>
     </Page>
-  );
-};
+  )
+}
 
 export const getStaticProps = async () => {
-  const hackathons = await getHackathons();
+  const hackathons = await getHackathons()
   return {
     props: {
       hackathons,
     },
-  };
-};
+  }
+}

@@ -1,19 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
-import styled from 'styled-components';
-import { COLOR } from '../constants';
-import Icon from './Icon';
+import React, { useEffect, useRef, useState } from 'react'
+import styled from 'styled-components'
+import { COLOR } from '../constants'
+import Icon from './Icon'
 
 const DropdownContainer = styled.div`
   width: 100%;
-`;
+`
 
-const Select = ({
-  type = 'button',
-  isOpened,
-  onKeyDown,
-  onClick,
-  children,
-}) => {
+const Select = ({ type = 'button', isOpened, onKeyDown, onClick, children }) => {
   return (
     <>
       <SelectContent type={type} onKeyDown={onKeyDown} onClick={onClick}>
@@ -22,17 +16,17 @@ const Select = ({
         {children}
       </SelectContent>
     </>
-  );
-};
+  )
+}
 
 const TransformedIcon = styled(Icon)`
   position: absolute;
   right: 1rem;
-  ${(props) =>
+  ${props =>
     props.flip
       ? 'transform-origin: 50% 50%; transform: rotate(180deg); padding-right: 14.75rem;'
       : 'padding-left: 14.75rem;'}
-`;
+`
 
 const SelectContent = styled.button`
   position: relative;
@@ -48,7 +42,7 @@ const SelectContent = styled.button`
   cursor: pointer;
   font-family: inherit;
   font-size: inherit;
-`;
+`
 
 const OptionsContainer = styled.div`
   width: 32%;
@@ -56,7 +50,7 @@ const OptionsContainer = styled.div`
   padding: 0.25rem 0;
   position: fixed;
   z-index: 20;
-`;
+`
 
 const OptionList = styled.ul`
   display: ${({ isOpened }) => (isOpened ? 'block' : 'none')};
@@ -64,7 +58,7 @@ const OptionList = styled.ul`
   margin: 0;
   padding: 0;
   cursor: pointer;
-`;
+`
 
 const Option = styled.li`
   display: block;
@@ -76,36 +70,35 @@ const Option = styled.li`
   color: ${COLOR.BLACK};
   background: ${({ isActive }) => (isActive ? COLOR.GRAY : COLOR.WHITE)};
   cursor: pointer;
-`;
+`
 
 export default function Dropdown({ options, onChange, defaultValue }) {
-  const [isOpened, updateIsOpened] = useState(false);
+  const [isOpened, updateIsOpened] = useState(false)
   const [activeItem, updateActiveItem] = useState(
-    options[options.findIndex((category) => category.label === defaultValue)] ||
-      options[0]
-  );
-  const optionsListRef = useRef(null);
+    options[options.findIndex(category => category.label === defaultValue)] || options[0]
+  )
+  const optionsListRef = useRef(null)
 
-  const handleOptionClick = (item) => {
-    onChange(item);
-    updateActiveItem(item);
-    updateIsOpened(false);
-  };
+  const handleOptionClick = item => {
+    onChange(item)
+    updateActiveItem(item)
+    updateIsOpened(false)
+  }
 
-  const handleButtonKeyDown = (e) => {
+  const handleButtonKeyDown = e => {
     // Enter is pressed
-    e.preventDefault();
+    e.preventDefault()
 
     if (e.keyCode === 13) {
-      updateIsOpened(!isOpened);
+      updateIsOpened(!isOpened)
     }
-  };
+  }
 
   useEffect(() => {
     if (isOpened) {
-      optionsListRef.current.focus();
+      optionsListRef.current.focus()
     }
-  }, [isOpened]);
+  }, [isOpened])
 
   return (
     <DropdownContainer>
@@ -118,13 +111,8 @@ export default function Dropdown({ options, onChange, defaultValue }) {
         {activeItem.label}
       </Select>
       <OptionsContainer>
-        <OptionList
-          tabIndex="-1"
-          ref={optionsListRef}
-          isOpened={isOpened}
-          role="listbox"
-        >
-          {options.map((option) => (
+        <OptionList tabIndex="-1" ref={optionsListRef} isOpened={isOpened} role="listbox">
+          {options.map(option => (
             <Option
               id={option.label}
               key={option.label}
@@ -138,5 +126,5 @@ export default function Dropdown({ options, onChange, defaultValue }) {
         </OptionList>
       </OptionsContainer>
     </DropdownContainer>
-  );
+  )
 }

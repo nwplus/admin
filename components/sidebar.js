@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import NextLink from 'next/link';
-import { COLOR } from '../constants';
-import Icon from './Icon';
-import { logout } from '../utility/firebase';
-import LoadingGif from '../assets/nwplus.gif';
+import NextLink from 'next/link'
+import React, { useEffect, useState } from 'react'
+import styled from 'styled-components'
+import LoadingGif from '../assets/nwplus.gif'
+import { COLOR } from '../constants'
+import { logout } from '../utility/firebase'
+import Icon from './Icon'
 
 const SidebarContainer = styled.div`
   background-color: ${COLOR.PRIMARY};
@@ -14,36 +14,36 @@ const SidebarContainer = styled.div`
   padding: 30px;
   flex-shrink: 0;
   transition: margin 0.3s ease-in-out;
-  margin-left: ${(p) => (p.showSidebar ? '0' : '-300px')};
-`;
+  margin-left: ${p => (p.showSidebar ? '0' : '-300px')};
+`
 
 const HeaderContainer = styled.div`
   display: flex;
-`;
+`
 
 const Header = styled.h1`
   font-weight: bold;
   font-size: 32px;
-`;
+`
 
 const ItemContainer = styled.div`
   display: flex;
   align-items: center;
   color: ${COLOR.DARK_COPY};
-`;
+`
 
 const Label = styled.p`
   padding-left: 10px;
   display: inline-block;
   transition: color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-  ${(p) => p.selected && 'font-weight: 700;'}
-  color: ${(p) => (p.selected ? COLOR.WHITE : COLOR.DARK_COPY)};
-`;
+  ${p => p.selected && 'font-weight: 700;'}
+  color: ${p => (p.selected ? COLOR.WHITE : COLOR.DARK_COPY)};
+`
 
 const IndentedLink = styled.a`
   transition: color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
   display: block;
-  color: ${(p) => (p.selected ? COLOR.WHITE : COLOR.DARK_COPY)};
+  color: ${p => (p.selected ? COLOR.WHITE : COLOR.DARK_COPY)};
   text-decoration: none;
   padding: 10px 0 10px 75px;
   margin: 0 -30px;
@@ -53,8 +53,8 @@ const IndentedLink = styled.a`
   &:focus {
     color: ${COLOR.WHITE};
   }
-  ${(p) => p.selected && `background-color: ${COLOR.PRIMARY_DARK}`}
-`;
+  ${p => p.selected && `background-color: ${COLOR.PRIMARY_DARK}`}
+`
 
 const Link = styled.a`
   font-family: 'HK Grotesk';
@@ -89,13 +89,13 @@ const Link = styled.a`
       fill: ${COLOR.WHITE};
     }
   }
-`;
+`
 
 const LoadingImage = styled.img`
   height: 50px;
   width: 50px;
   padding-left: 10px;
-`;
+`
 
 const Toggle = styled.div`
   position: absolute;
@@ -108,7 +108,7 @@ const Toggle = styled.div`
   color: ${COLOR.DARK_COPY};
 
   i {
-    ${(p) => p.showSidebar && 'transform: rotate(180deg);'}
+    ${p => p.showSidebar && 'transform: rotate(180deg);'}
     transition: transform 0.2s linear;
   }
 
@@ -116,43 +116,39 @@ const Toggle = styled.div`
     color: ${COLOR.WHITE};
     cursor: pointer;
   }
-`;
+`
 
-const getTrailingPath = (currentPath) => {
-  const paths = window.location.href.split('/');
-  const pathIndex = paths.findIndex((val) => val === currentPath);
-  const trailingPathArray = paths.slice(pathIndex + 1);
-  if (
-    pathIndex === -1 ||
-    trailingPathArray.length === 0 ||
-    paths.includes('Livesite')
-  ) {
-    return 'intro';
+const getTrailingPath = currentPath => {
+  const paths = window.location.href.split('/')
+  const pathIndex = paths.findIndex(val => val === currentPath)
+  const trailingPathArray = paths.slice(pathIndex + 1)
+  if (pathIndex === -1 || trailingPathArray.length === 0 || paths.includes('Livesite')) {
+    return 'intro'
   }
-  return trailingPathArray.join('/');
-};
+  return trailingPathArray.join('/')
+}
 
 export default ({ hackathons, currentPath }) => {
-  const [showSidebar, setShowSidebar] = useState(true);
-  const [loading, setLoading] = useState(false);
-  const [ifTimeOut, setIfTimeOut] = useState();
+  const [showSidebar, setShowSidebar] = useState(true)
+  const [loading, setLoading] = useState(false)
+  const [ifTimeOut, setIfTimeOut] = useState()
 
   useEffect(() => {
-    setLoading(false);
-    clearTimeout(ifTimeOut);
-  }, [window.location.pathname]);
+    setLoading(false)
+    clearTimeout(ifTimeOut)
+  }, [window.location.pathname])
 
   const generateLinkTemplate = () => {
-    return `/[id]/${getTrailingPath(currentPath)}`;
-  };
+    return `/[id]/${getTrailingPath(currentPath)}`
+  }
 
-  const generateLink = (id) => {
-    return `/${id}/${getTrailingPath(currentPath)}`;
-  };
+  const generateLink = id => {
+    return `/${id}/${getTrailingPath(currentPath)}`
+  }
 
   const clickToggle = () => {
-    setShowSidebar(!showSidebar);
-  };
+    setShowSidebar(!showSidebar)
+  }
 
   return (
     <>
@@ -161,17 +157,10 @@ export default ({ hackathons, currentPath }) => {
           <Header>nwPlus CMS</Header>
           {loading && <LoadingImage src={LoadingGif} />}
         </HeaderContainer>
-        <NextLink
-          href="/Livesite/announcements"
-          as="/Livesite/announcements"
-          passHref
-        >
+        <NextLink href="/Livesite/announcements" as="/Livesite/announcements" passHref>
           <Link>
             <ItemContainer>
-              <Icon
-                color={currentPath === 'Livesite' && COLOR.WHITE}
-                icon="circle"
-              />
+              <Icon color={currentPath === 'Livesite' && COLOR.WHITE} icon="circle" />
               <Label selected={currentPath === 'Livesite'}>Livesite</Label>
             </ItemContainer>
           </Link>
@@ -182,31 +171,25 @@ export default ({ hackathons, currentPath }) => {
               if (currentPath !== 'faq') {
                 setIfTimeOut(
                   setTimeout(() => {
-                    setLoading(true);
+                    setLoading(true)
                   }, 750)
-                );
+                )
               }
             }}
           >
             <ItemContainer>
-              <Icon
-                color={currentPath === 'faq' && COLOR.WHITE}
-                icon="question-circle"
-              />
+              <Icon color={currentPath === 'faq' && COLOR.WHITE} icon="question-circle" />
               <Label selected={currentPath === 'faq'}>FAQs</Label>
             </ItemContainer>
           </Link>
         </NextLink>
         <ItemContainer>
-          <Icon
-            color={hackathons.includes(currentPath) && COLOR.WHITE}
-            icon="th-list"
-          />
+          <Icon color={hackathons.includes(currentPath) && COLOR.WHITE} icon="th-list" />
           <Label selected={hackathons.includes(currentPath)}>Websites</Label>
         </ItemContainer>
-        {hackathons.map((id) => {
-          const href = generateLinkTemplate(id);
-          const link = generateLink(id);
+        {hackathons.map(id => {
+          const href = generateLinkTemplate(id)
+          const link = generateLink(id)
           return (
             <NextLink key={id} href={href} as={link} passHref>
               <IndentedLink
@@ -214,9 +197,9 @@ export default ({ hackathons, currentPath }) => {
                   if (currentPath !== id) {
                     setIfTimeOut(
                       setTimeout(() => {
-                        setLoading(true);
+                        setLoading(true)
                       }, 750)
-                    );
+                    )
                   }
                 }}
                 selected={currentPath === id}
@@ -224,16 +207,13 @@ export default ({ hackathons, currentPath }) => {
                 {id}
               </IndentedLink>
             </NextLink>
-          );
+          )
         })}
 
         <NextLink href="/eval" as="/eval" passHref>
           <Link>
             <ItemContainer>
-              <Icon
-                color={currentPath === 'eval' && COLOR.WHITE}
-                icon="user-check"
-              />
+              <Icon color={currentPath === 'eval' && COLOR.WHITE} icon="user-check" />
               <Label selected={currentPath === 'eval'}>Evaluator</Label>
             </ItemContainer>
           </Link>
@@ -244,10 +224,10 @@ export default ({ hackathons, currentPath }) => {
           onClick={() => {
             setIfTimeOut(
               setTimeout(() => {
-                setLoading(true);
+                setLoading(true)
               }, 750)
-            );
-            logout();
+            )
+            logout()
           }}
         >
           <ItemContainer>
@@ -261,5 +241,5 @@ export default ({ hackathons, currentPath }) => {
         <Icon icon="chevron-right" />
       </Toggle>
     </>
-  );
-};
+  )
+}

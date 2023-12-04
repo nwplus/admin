@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
-import { Button } from './Button';
-import { getAllResumes } from '../../utility/firebase';
-import Spinner from '../../assets/spinner.svg';
+import React, { useState } from 'react'
+import Spinner from '../../assets/spinner.svg'
+import { getAllResumes } from '../../utility/firebase'
+import { Button } from './Button'
 
 export default function ResumeExportButton() {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false)
   return (
     <>
       <Button
         width="large"
         bColor="black"
         onClick={async () => {
-          setLoading(true);
-          await getAllResumes();
-          setLoading(false);
+          setLoading(true)
+          await getAllResumes()
+          setLoading(false)
         }}
       >
         <div style={{ position: 'relative', textAlign: 'center' }}>
@@ -33,5 +33,5 @@ export default function ResumeExportButton() {
         </div>
       </Button>
     </>
-  );
+  )
 }

@@ -1,35 +1,35 @@
-import React from 'react';
-import styled from 'styled-components';
-import { COLOR, BUTTON_COLOR, TAG_COLOR } from '../constants';
-import Button from '../components/button';
-import { Title1, Title2, Title3, Title4 } from '../components/Typography';
-import Tag from '../components/tag';
-import ScoreInput from '../components/Evaluator/scoreInput';
-import HackerEntry from '../components/Evaluator/HackerEntry';
+import React from 'react'
+import styled from 'styled-components'
+import HackerEntry from '../components/Evaluator/HackerEntry'
+import ScoreInput from '../components/Evaluator/scoreInput'
+import { Title1, Title2, Title3, Title4 } from '../components/Typography'
+import Button from '../components/button'
+import Tag from '../components/tag'
+import { BUTTON_COLOR, COLOR, TAG_COLOR } from '../constants'
 
 const Container = styled.div`
   background-color: ${COLOR.MIDNIGHT_PURPLE};
   padding-bottom: 30px;
-`;
+`
 
 const Section = styled.div`
   margin: 40px;
-`;
+`
 
 const Row = styled.div`
   display: flex;
   margin: 10px;
-`;
+`
 
 const ButtonContainer = styled.div`
   margin: 10px;
-`;
+`
 
-const BUTTON_TEXT = 'Button';
+const BUTTON_TEXT = 'Button'
 
 const TagContainer = styled.div`
   margin: 10px;
-`;
+`
 
 export default function Charcuterie() {
   return (
@@ -38,10 +38,7 @@ export default function Charcuterie() {
         <Section>
           <Row>
             <ButtonContainer>
-              <Button
-                color={BUTTON_COLOR.PRIMARY}
-                contentColor={COLOR.MIDNIGHT_PURPLE}
-              >
+              <Button color={BUTTON_COLOR.PRIMARY} contentColor={COLOR.MIDNIGHT_PURPLE}>
                 {BUTTON_TEXT}
               </Button>
             </ButtonContainer>
@@ -64,10 +61,7 @@ export default function Charcuterie() {
 
           <Row>
             <ButtonContainer>
-              <Button
-                color={BUTTON_COLOR.SECONDARY}
-                contentColor={COLOR.MIDNIGHT_PURPLE}
-              >
+              <Button color={BUTTON_COLOR.SECONDARY} contentColor={COLOR.MIDNIGHT_PURPLE}>
                 {BUTTON_TEXT}
               </Button>
             </ButtonContainer>
@@ -89,12 +83,7 @@ export default function Charcuterie() {
 
           <Row>
             <ButtonContainer>
-              <Button
-                color={COLOR.TRANSPARENT}
-                contentColor={COLOR.NW_TEAL}
-                hoverContentColor={COLOR.TEAL}
-                outlined
-              >
+              <Button color={COLOR.TRANSPARENT} contentColor={COLOR.NW_TEAL} hoverContentColor={COLOR.TEAL} outlined>
                 {BUTTON_TEXT}
               </Button>
             </ButtonContainer>
@@ -120,10 +109,7 @@ export default function Charcuterie() {
 
           <Row>
             <ButtonContainer>
-              <Button
-                color={BUTTON_COLOR.DESTRUCTIVE}
-                contentColor={COLOR.WHITE}
-              >
+              <Button color={BUTTON_COLOR.DESTRUCTIVE} contentColor={COLOR.WHITE}>
                 {BUTTON_TEXT}
               </Button>
             </ButtonContainer>
@@ -147,11 +133,7 @@ export default function Charcuterie() {
         <Section>
           <Row>
             <ButtonContainer>
-              <Button
-                color={BUTTON_COLOR.PRIMARY}
-                contentColor={COLOR.MIDNIGHT_PURPLE}
-                rounded
-              >
+              <Button color={BUTTON_COLOR.PRIMARY} contentColor={COLOR.MIDNIGHT_PURPLE} rounded>
                 {BUTTON_TEXT}
               </Button>
             </ButtonContainer>
@@ -177,11 +159,7 @@ export default function Charcuterie() {
 
           <Row>
             <ButtonContainer>
-              <Button
-                color={BUTTON_COLOR.SECONDARY}
-                contentColor={COLOR.MIDNIGHT_PURPLE}
-                rounded
-              >
+              <Button color={BUTTON_COLOR.SECONDARY} contentColor={COLOR.MIDNIGHT_PURPLE} rounded>
                 {BUTTON_TEXT}
               </Button>
             </ButtonContainer>
@@ -239,11 +217,7 @@ export default function Charcuterie() {
 
           <Row>
             <ButtonContainer>
-              <Button
-                color={BUTTON_COLOR.DESTRUCTIVE}
-                contentColor={COLOR.WHITE}
-                rounded
-              >
+              <Button color={BUTTON_COLOR.DESTRUCTIVE} contentColor={COLOR.WHITE} rounded>
                 {BUTTON_TEXT}
               </Button>
             </ButtonContainer>
@@ -276,12 +250,7 @@ export default function Charcuterie() {
               </Tag>
             </TagContainer>
             <TagContainer>
-              <Tag
-                type="DELETE"
-                color={TAG_COLOR.RED}
-                contentColor={COLOR.WHITE}
-                onDelete={() => alert('delete')}
-              >
+              <Tag type="DELETE" color={TAG_COLOR.RED} contentColor={COLOR.WHITE} onDelete={() => alert('delete')}>
                 Delete World
               </Tag>
             </TagContainer>
@@ -331,15 +300,9 @@ export default function Charcuterie() {
           />
         </Row>
         <Row>
-          <HackerEntry
-            index={2}
-            firstName="Alice"
-            lastName="Lovelace"
-            id={52}
-            selectedHackerID={51}
-          />
+          <HackerEntry index={2} firstName="Alice" lastName="Lovelace" id={52} selectedHackerID={51} />
         </Row>
       </Section>
     </>
-  );
+  )
 }

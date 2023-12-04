@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { Title5 } from '../Typography';
-import ResponseInput from '../Assessment/responseInput';
-import { COLOR, ASSESSMENT_COLOR } from '../../constants';
-import { getResumeFile, getWaiverFile } from '../../utility/firebase';
+import React, { useEffect, useState } from 'react'
+import styled from 'styled-components'
+import { ASSESSMENT_COLOR, COLOR } from '../../constants'
+import { getResumeFile, getWaiverFile } from '../../utility/firebase'
+import ResponseInput from '../Assessment/responseInput'
+import { Title5 } from '../Typography'
 
 const Container = styled.div`
-  ${(p) => !p.shouldDisplay && 'display: none'};
+  ${p => !p.shouldDisplay && 'display: none'};
   border-radius: 5px;
   border: none;
   padding: 0 20px 20px;
@@ -30,7 +30,7 @@ const Container = styled.div`
     border-radius: 10px;
     box-shadow: inset 0 0 6px 6px ${ASSESSMENT_COLOR.UNSCORED_GRAY};
   }
-`;
+`
 
 const CONTRIBUTION_ROLE_OPTIONS = Object.freeze({
   beginner: 'Beginner',
@@ -38,59 +38,51 @@ const CONTRIBUTION_ROLE_OPTIONS = Object.freeze({
   developer: 'Developer',
   pm: 'Product/project manager',
   other: 'Other',
-});
+})
 
 export default function ApplicantResponse({ shouldDisplay, hacker }) {
-  const [resumeURL, setResumeURL] = useState(null);
-  const [waiverURL, setWaiverURL] = useState(null);
-  const [contributionRole, setContributionRole] = useState('');
+  const [resumeURL, setResumeURL] = useState(null)
+  const [waiverURL, setWaiverURL] = useState(null)
+  const [contributionRole, setContributionRole] = useState('')
 
-  const fetchContributionRole = (contributionMap) => {
-    const getContribution = (obj) => Object.keys(obj).filter((key) => obj[key]);
-    const contribution = getContribution(contributionMap).map(
-      (e) => CONTRIBUTION_ROLE_OPTIONS[e]
-    );
-    const contributionValues = [];
+  const fetchContributionRole = contributionMap => {
+    const getContribution = obj => Object.keys(obj).filter(key => obj[key])
+    const contribution = getContribution(contributionMap).map(e => CONTRIBUTION_ROLE_OPTIONS[e])
+    const contributionValues = []
     // eslint-disable-next-line no-plusplus
     for (let k = 0; k < contribution.length; k++) {
-      contributionValues.push(contribution[k]);
+      contributionValues.push(contribution[k])
 
       if (k < contribution.length - 1) {
-        contributionValues.push(', ');
+        contributionValues.push(', ')
       }
     }
 
-    setContributionRole(contributionValues);
-  };
+    setContributionRole(contributionValues)
+  }
 
   useEffect(() => {
     if (hacker) {
-      getResumeFile(hacker._id).then(async (url) => {
-        setResumeURL(url);
-      });
-      getWaiverFile(hacker._id).then(async (url) => {
-        setWaiverURL(url);
-      });
-      fetchContributionRole(hacker?.skills.contributionRole);
+      getResumeFile(hacker._id).then(async url => {
+        setResumeURL(url)
+      })
+      getWaiverFile(hacker._id).then(async url => {
+        setWaiverURL(url)
+      })
+      fetchContributionRole(hacker?.skills.contributionRole)
     }
-  }, [hacker]);
+  }, [hacker])
 
   return (
     <Container shouldDisplay={shouldDisplay}>
       <Title5 color={COLOR.MIDNIGHT_PURPLE}>Applicant Response</Title5>
-      <ResponseInput
-        label="Full Name"
-        response={`${hacker?.basicInfo?.firstName} ${hacker?.basicInfo?.lastName}`}
-      />
+      <ResponseInput label="Full Name" response={`${hacker?.basicInfo?.firstName} ${hacker?.basicInfo?.lastName}`} />
 
       <ResponseInput label="Email" response={hacker?.basicInfo?.email} />
 
       <ResponseInput label="Gender" response={`${hacker?.basicInfo?.gender}`} />
 
-      <ResponseInput
-        label="Identify as underrepresented?"
-        response={hacker?.basicInfo?.identifyAsUnderrepresented}
-      />
+      <ResponseInput label="Identify as underrepresented?" response={hacker?.basicInfo?.identifyAsUnderrepresented} />
 
       <ResponseInput label="Role" response={contributionRole} />
 
@@ -109,18 +101,11 @@ export default function ApplicantResponse({ shouldDisplay, hacker }) {
 
       <ResponseInput label="Major" response={hacker?.basicInfo?.major} />
 
-      <ResponseInput
-        label="First time hacker?"
-        response={hacker?.skills?.firstTimeHacker ? 'No' : 'Yes'}
-      />
+      <ResponseInput label="First time hacker?" response={hacker?.skills?.firstTimeHacker ? 'No' : 'Yes'} />
 
       <ResponseInput url label="Github" response={hacker?.skills?.github} />
 
-      <ResponseInput
-        url
-        label="Personal site"
-        response={hacker?.skills?.portfolio}
-      />
+      <ResponseInput url label="Personal site" response={hacker?.skills?.portfolio} />
 
       <ResponseInput url label="LinkedIn" response={hacker?.skills?.linkedin} />
 
@@ -128,10 +113,7 @@ export default function ApplicantResponse({ shouldDisplay, hacker }) {
 
       <ResponseInput url={waiverURL} label="Waiver" response={waiverURL} />
 
-      <ResponseInput
-        label="Why do you want to attend cmd-f 2023?"
-        response={`${hacker?.skills?.longAnswers1}`}
-      />
+      <ResponseInput label="Why do you want to attend cmd-f 2023?" response={`${hacker?.skills?.longAnswers1}`} />
 
       <ResponseInput
         label="How would you make tech a more welcoming space for underrepresented demographics?"
@@ -148,5 +130,5 @@ export default function ApplicantResponse({ shouldDisplay, hacker }) {
         response={`${hacker?.skills?.longAnswers4}`}
       />
     </Container>
-  );
+  )
 }

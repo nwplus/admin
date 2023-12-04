@@ -1,26 +1,26 @@
-import styled from 'styled-components';
-import { useState, useEffect } from 'react';
-import Page from '../../components/page';
+import { useEffect, useState } from 'react'
+import styled from 'styled-components'
+import Button from '../../components/button'
 import Card, {
+  CancelButton,
+  CardButtonContainer,
+  CardContent,
+  CardContentButtonContainer,
   CardHeader,
   CardTitle,
-  CardContent,
-  CardButtonContainer,
-  CardContentButtonContainer,
-  CancelButton,
-} from '../../components/card';
-import { COLOR, EDIT, HACKATHON_NAVBAR } from '../../constants';
-import Button from '../../components/button';
-import TextBox from '../../components/textbox';
+} from '../../components/card'
+import Page from '../../components/page'
+import TextBox from '../../components/textbox'
+import { COLOR, EDIT, HACKATHON_NAVBAR } from '../../constants'
+import { useAuth } from '../../utility/auth'
 import {
-  updateHackathonField,
-  getHackathonSnapShot,
+  formatDate,
   getHackathonPaths,
+  getHackathonSnapShot,
   getHackathons,
   getTimestamp,
-  formatDate,
-} from '../../utility/firebase';
-import { useAuth } from '../../utility/auth';
+  updateHackathonField,
+} from '../../utility/firebase'
 
 const HeaderText = styled.h2`
   margin: 0;
@@ -31,7 +31,7 @@ const HeaderText = styled.h2`
   padding-bottom: 13px;
   color: ${COLOR.TEXT};
   font-weight: 600;
-`;
+`
 
 const ContentText = styled.p`
   border: none;
@@ -39,74 +39,74 @@ const ContentText = styled.p`
   background-color: ${COLOR.BACKGROUND};
   outline: none;
   color: ${COLOR.TEXT};
-`;
+`
 
 const Label = styled.p`
   background-color: ${COLOR.BACKGROUND};
-`;
+`
 
 const Container = styled.div`
   margin-bottom: 40px;
-`;
+`
 
 export default ({ id, hackathons }) => {
-  const [isEditingObj, setIsEditingObj] = useState({});
-  const [websiteData, setWebsiteData] = useState({});
-  const [editingData, setEditingData] = useState({});
-  const { email: currUserName } = useAuth().user;
+  const [isEditingObj, setIsEditingObj] = useState({})
+  const [websiteData, setWebsiteData] = useState({})
+  const [editingData, setEditingData] = useState({})
+  const { email: currUserName } = useAuth().user
   // TODO need functionality to display data based on what event is currently being viewed
 
   // TODO need to substitute the value at .doc(ID) with current website
-  const getHackathonData = async (doc) => {
-    const data = doc.data().WebsiteData;
-    setWebsiteData(data);
+  const getHackathonData = async doc => {
+    const data = doc.data().WebsiteData
+    setWebsiteData(data)
 
-    let editingDataObj = {};
-    let isEditing = {};
+    let editingDataObj = {}
+    let isEditing = {}
     if (data)
-      Object.keys(data).forEach((type) => {
+      Object.keys(data).forEach(type => {
         isEditing = {
           ...isEditingObj,
           [type]: false,
-        };
+        }
         editingDataObj = {
           ...editingDataObj,
           [type]: {
             header: data[type].header,
             content: data[type].content,
           },
-        };
-      });
-    setIsEditingObj(isEditing);
-    setEditingData(editingDataObj);
-  };
+        }
+      })
+    setIsEditingObj(isEditing)
+    setEditingData(editingDataObj)
+  }
 
   useEffect(() => {
-    const unsubscribe = getHackathonSnapShot(id, getHackathonData);
-    return () => unsubscribe();
-  }, [window.location.pathname]);
+    const unsubscribe = getHackathonSnapShot(id, getHackathonData)
+    return () => unsubscribe()
+  }, [window.location.pathname])
 
-  const handleEdit = (type) => {
+  const handleEdit = type => {
     setIsEditingObj({
       ...isEditingObj,
       [type]: !isEditingObj[type],
-    });
-  };
+    })
+  }
 
-  const handleCancel = (type) => {
+  const handleCancel = type => {
     setIsEditingObj({
       ...isEditingObj,
       [type]: false,
-    });
-  };
+    })
+  }
 
   /**
    * @param {string} type every section in the intro has a type, which is the key in the map of WebsiteData
    * reads the value of the header/content associated with the given type and updates the object in Firebase
    */
-  const handleSave = async (type) => {
-    const time = getTimestamp();
-    const { header, content } = editingData[type];
+  const handleSave = async type => {
+    const time = getTimestamp()
+    const { header, content } = editingData[type]
     const updateObj = {
       WebsiteData: {
         ...websiteData,
@@ -118,52 +118,44 @@ export default ({ id, hackathons }) => {
           time,
         },
       },
-    };
+    }
     try {
-      updateHackathonField(id, updateObj);
+      updateHackathonField(id, updateObj)
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error(error);
+      console.error(error)
       // eslint-disable-next-line no-alert
-      alert('An error occured while trying to update the text section');
+      alert('An error occured while trying to update the text section')
     } finally {
       setIsEditingObj({
         ...isEditingObj,
         [type]: false,
-      });
+      })
     }
-  };
+  }
 
   const handleEditChange = (event, type, isHeader) => {
-    const newVal = event.target.value;
+    const newVal = event.target.value
     const updatedVal = isHeader
       ? { header: newVal, content: editingData[type].content }
-      : { header: editingData[type].header, content: newVal };
+      : { header: editingData[type].header, content: newVal }
     setEditingData({
       ...editingData,
       [type]: updatedVal,
-    });
-  };
+    })
+  }
 
   return (
-    <Page
-      currentPath={id}
-      hackathons={hackathons}
-      navbarItems={HACKATHON_NAVBAR}
-    >
+    <Page currentPath={id} hackathons={hackathons} navbarItems={HACKATHON_NAVBAR}>
       {/* map over every text section in a hackathon's WebsiteData and adds the section name to isEditingObj state */}
       {websiteData ? (
-        Object.keys(websiteData).map((type) => {
+        Object.keys(websiteData).map(type => {
           return (
             <Card key={`card${type}`}>
               <Container>
                 <CardHeader>
                   <CardTitle>{websiteData[type].title}</CardTitle>
-                  <p>
-                    {`Last edited by ${
-                      websiteData[type].editor
-                    } at ${formatDate(websiteData[type].time.seconds)}`}
-                  </p>
+                  <p>{`Last edited by ${websiteData[type].editor} at ${formatDate(websiteData[type].time.seconds)}`}</p>
                   <CardButtonContainer>
                     <Button type={EDIT} onClick={() => handleEdit(type)} />
                   </CardButtonContainer>
@@ -174,16 +166,16 @@ export default ({ id, hackathons }) => {
                       <Label>Header</Label>
                       <TextBox
                         defaultValue={editingData[type].header}
-                        onChange={(event) => {
-                          handleEditChange(event, type, true);
+                        onChange={event => {
+                          handleEditChange(event, type, true)
                         }}
                       />
                       <Label>Body</Label>
                       <TextBox
                         defaultValue={editingData[type].content}
                         resize
-                        onChange={(event) => {
-                          handleEditChange(event, type, false);
+                        onChange={event => {
+                          handleEditChange(event, type, false)
                         }}
                       />
                       <CardContentButtonContainer>
@@ -200,25 +192,25 @@ export default ({ id, hackathons }) => {
                 </CardContent>
               </Container>
             </Card>
-          );
+          )
         })
       ) : (
         <span>No intro options for this page</span>
       )}
     </Page>
-  );
-};
+  )
+}
 
 export const getStaticPaths = async () => {
-  return getHackathonPaths();
-};
+  return getHackathonPaths()
+}
 
 export const getStaticProps = async ({ params }) => {
-  const hackathons = await getHackathons();
+  const hackathons = await getHackathons()
   return {
     props: {
       hackathons,
       id: params.id,
     },
-  };
-};
+  }
+}

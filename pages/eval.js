@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import Scoring from '../components/Evaluator/Scoring';
-import HackerList from '../components/Evaluator/HackerList';
-import ApplicantResponse from '../components/Evaluator/ApplicantResponse';
-import Page from '../components/page';
-import Rubric from '../components/Evaluator/Rubric';
-import { getAllApplicants, getHackathons } from '../utility/firebase';
+import React, { useEffect, useState } from 'react'
+import styled from 'styled-components'
+import ApplicantResponse from '../components/Evaluator/ApplicantResponse'
+import HackerList from '../components/Evaluator/HackerList'
+import Rubric from '../components/Evaluator/Rubric'
+import Scoring from '../components/Evaluator/Scoring'
+import Page from '../components/page'
+import { getAllApplicants, getHackathons } from '../utility/firebase'
 
 const Container = styled.div`
   display: grid;
@@ -17,35 +17,30 @@ const Container = styled.div`
   padding: 1rem;
   background: #f7f7f7;
   word-break: break-word;
-`;
+`
 
 const Column = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
 
-  ${(p) =>
-    p.items
-      ? `height: calc(100vh - ${1 + p.items}rem);`
-      : 'height: calc(100vh - 2rem);'};
-`;
+  ${p => (p.items ? `height: calc(100vh - ${1 + p.items}rem);` : 'height: calc(100vh - 2rem);')};
+`
 
 export default function Eval({ hackathons }) {
-  const [applicants, setApplicants] = useState([]);
-  const [selectedApplicant, setSelectedApplicant] = useState(null);
+  const [applicants, setApplicants] = useState([])
+  const [selectedApplicant, setSelectedApplicant] = useState(null)
 
   useEffect(() => {
-    getAllApplicants(setApplicants);
-  }, []);
+    getAllApplicants(setApplicants)
+  }, [])
 
   // If the list of applicants updates, update the information about the currently selected applicant
   useEffect(() => {
     if (selectedApplicant) {
-      setSelectedApplicant(
-        applicants.find((applicant) => applicant._id === selectedApplicant._id)
-      );
+      setSelectedApplicant(applicants.find(applicant => applicant._id === selectedApplicant._id))
     }
-  }, [applicants]);
+  }, [applicants])
 
   return (
     <Page hackathons={hackathons} currentPath="eval" isFullscreen>
@@ -59,27 +54,21 @@ export default function Eval({ hackathons }) {
           <Rubric />
         </Column>
         <Column>
-          <ApplicantResponse
-            shouldDisplay={!!selectedApplicant}
-            hacker={selectedApplicant}
-          />
+          <ApplicantResponse shouldDisplay={!!selectedApplicant} hacker={selectedApplicant} />
         </Column>
         <Column>
-          <Scoring
-            shouldDisplay={!!selectedApplicant}
-            applicant={selectedApplicant}
-          />
+          <Scoring shouldDisplay={!!selectedApplicant} applicant={selectedApplicant} />
         </Column>
       </Container>
     </Page>
-  );
+  )
 }
 
 export const getStaticProps = async () => {
-  const hackathons = await getHackathons();
+  const hackathons = await getHackathons()
   return {
     props: {
       hackathons,
     },
-  };
-};
+  }
+}

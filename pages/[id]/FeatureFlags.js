@@ -8,6 +8,7 @@ import Card, {
   CardContent,
 } from '../../components/card';
 import Button from '../../components/button';
+import Input from '../../components/input';
 import FeatureFlag from '../../components/FeatureFlag';
 import { COLOR, EDIT, HACKATHON_NAVBAR } from '../../constants';
 import {
@@ -15,10 +16,24 @@ import {
   subscribeToFlags,
   formatDate,
   updateFlags,
+  subscribeToCtaLink,
+  updateCtaLink,
   getHackathonPaths,
   getHackathons,
 } from '../../utility/firebase';
 import { useAuth } from '../../utility/auth';
+
+const Label = styled.p`
+  font-weight: bold;
+  margin: 10px 0;
+`;
+
+const Group = styled.div`
+  margin: 32px 0;
+  &:nth-child(1) {
+    margin-top: 0;
+  }
+`;
 
 const InlineButton = styled.span`
   display: inline;
@@ -36,9 +51,17 @@ export default function FeatureFlags({ id, hackathons }) {
   const [editing, setEditing] = useState(false);
   const [flags, setFlags] = useState({});
   const [editedFlags, setEditedFlags] = useState({});
+  // const [hiringSettings, setHiringSettings] = useState({});
+  // const [editedHiringSettings, setEditedHiringSettings] = useState({});
+  const [ctaLink, setCtaLink] = useState('');
   const { email: user } = useAuth().user;
+
   useEffect(() => {
     return subscribeToFlags(id, setFlags);
+  }, [window.location.href]);
+
+  useEffect(() => {
+    return subscribeToCtaLink(setCtaLink);
   }, [window.location.href]);
 
   useEffect(() => {
@@ -47,16 +70,30 @@ export default function FeatureFlags({ id, hackathons }) {
     }
   }, [editing]);
 
+  const saveInfo = async () => {
+    await saveFlags()
+    await saveCtaLink()
+    setEditing(false);
+  }
+
   const saveFlags = async () => {
     const updateObj = editedFlags;
     updateObj.lastEdited = getTimestamp();
     updateObj.lastEditedBy = user;
     await updateFlags(id, updateObj);
-    setEditing(false);
+  };
+
+  const saveCtaLink = async () => {
+    await updateCtaLink(ctaLink)
   };
 
   const EditFlagsComponent = () => (
     <>
+      <Label>CTA link</Label>
+      <Input
+        value={ctaLink}
+        onChange={(e) => setCtaLink(e.target.value)}
+      />
       {Object.entries(editedFlags).map(([key, value]) => {
         if (key === 'lastEdited' || key === 'lastEditedBy') {
           return null;
@@ -76,7 +113,7 @@ export default function FeatureFlags({ id, hackathons }) {
       })}
       <InlineButtonContainer>
         <InlineButton>
-          <Button onClick={() => saveFlags()}>Save</Button>
+          <Button onClick={() => saveInfo()}>Save</Button>
         </InlineButton>
         <InlineButton>
           <Button
@@ -93,6 +130,10 @@ export default function FeatureFlags({ id, hackathons }) {
 
   const ViewFlagsComponent = () => (
     <>
+      <Group>
+        <Label>CTA link</Label>
+        {ctaLink}
+      </Group>
       {Object.entries(flags).map(([key, value]) => {
         if (key === 'lastEdited' || key === 'lastEditedBy') {
           return null;

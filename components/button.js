@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Icon from './Icon';
-import { COLOR, EDIT, VIEW, NEW, CLOSE, DELETE } from '../constants';
+import { COLOR, EDIT, VIEW, NEW, CLOSE, DELETE, CHECK } from '../constants';
 
 const StyledButton = styled.button`
   ${(props) =>
@@ -83,6 +83,7 @@ const Button = ({
     {type === VIEW && <Icon icon="search" />}
     {type === DELETE && <Icon icon="times" color="red" />}
     {type === CLOSE && <Icon icon="times" color={contentColor} />}
+    {type === CHECK && <Icon icon="check" color={contentColor} />}
     {children}
   </StyledButton>
 );

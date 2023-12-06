@@ -4,6 +4,7 @@ export const VIEW = 'VIEW';
 export const CLOSE = 'CLOSE';
 export const DELETE = 'DELETE';
 export const SAVE = 'SAVE';
+export const CHECK = 'CHECK';
 export const COLOR = {
   BACKGROUND: '#F8F8F8',
   WHITE: '#FFFFFF',

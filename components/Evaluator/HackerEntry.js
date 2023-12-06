@@ -1,24 +1,24 @@
-import React from 'react';
-import styled from 'styled-components';
-import { ASSESSMENT_COLOR, MAX_SCORE, COLOR } from '../../constants';
+import React from 'react'
+import styled from 'styled-components'
+import { ASSESSMENT_COLOR, COLOR, MAX_SCORE } from '../../constants'
 
 const HackerName = styled.span`
   font-size: 15px;
   line-height: 19px;
   color: ${COLOR.MIDNIGHT_PURPLE_DEEP};
   font-weight: bold;
-`;
+`
 
 const HackerInfoText = styled.span`
   font-size: 15px;
   line-height: 19px;
   color: ${COLOR.MIDNIGHT_PURPLE_DEEP};
-`;
+`
 
 const StyledInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
-`;
+`
 
 const StyledHackerEntryDiv = styled.div`
   height: 56px;
@@ -28,8 +28,8 @@ const StyledHackerEntryDiv = styled.div`
   align-items: center;
   gap: 18px;
   cursor: pointer;
-  ${(p) => p.selected && `background: ${ASSESSMENT_COLOR.LIGHT_BLUE};`}
-`;
+  ${p => p.selected && `background: ${ASSESSMENT_COLOR.LIGHT_BLUE};`}
+`
 
 const StyledTag = styled.div`
   display: inline-flex;
@@ -43,7 +43,7 @@ const StyledTag = styled.div`
   border-radius: 4px;
   height: 16px;
   margin-left: auto;
-`;
+`
 
 export default function HackerEntry({
   index,
@@ -56,10 +56,7 @@ export default function HackerEntry({
   isSelected = false,
 }) {
   return (
-    <StyledHackerEntryDiv
-      onClick={() => selectHacker(id)}
-      selected={isSelected}
-    >
+    <StyledHackerEntryDiv onClick={() => selectHacker(id)} selected={isSelected}>
       <HackerName>{index}</HackerName>
       <StyledInfoContainer>
         <HackerName>
@@ -71,5 +68,5 @@ export default function HackerEntry({
       </StyledInfoContainer>
       {hasCompleted && <StyledTag>Completed</StyledTag>}
     </StyledHackerEntryDiv>
-  );
+  )
 }

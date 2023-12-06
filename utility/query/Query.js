@@ -3,48 +3,48 @@ import {
   mKeys,
   sKeys,
   // negationKeys,
-} from './constants/QueryConstants';
-import LogicFilter from './LogicFilter';
-import MFilter from './MFilter';
-import SFilter from './SFilter';
-import NegationFilter from './NegationFilter';
-import MaxGroup from './MaxGroup';
-import MinGroup from './MinGroup';
-import AvgGroup from './AvgGroup';
-import CountGroup from './CountGroup';
-import SumGroup from './SumGroup';
+} from './constants/QueryConstants'
+import LogicFilter from './LogicFilter'
+import MFilter from './MFilter'
+import SFilter from './SFilter'
+import NegationFilter from './NegationFilter'
+import MaxGroup from './MaxGroup'
+import MinGroup from './MinGroup'
+import AvgGroup from './AvgGroup'
+import CountGroup from './CountGroup'
+import SumGroup from './SumGroup'
 
 const createFilter = (filterKeys, filter) => {
-  const key = filterKeys[0];
+  const key = filterKeys[0]
   if (logicKeys.includes(key)) {
-    return new LogicFilter(filter);
+    return new LogicFilter(filter)
   }
   if (mKeys.includes(key)) {
-    return new MFilter(filter);
+    return new MFilter(filter)
   }
   if (sKeys.includes(key)) {
-    return new SFilter(filter[key]);
+    return new SFilter(filter[key])
   }
-  return new NegationFilter(filter[key]);
-};
+  return new NegationFilter(filter[key])
+}
 
 const createGroup = (applyKey, func, field) => {
   if (func === 'MAX') {
-    return new MaxGroup(applyKey, field);
+    return new MaxGroup(applyKey, field)
   }
   if (func === 'MIN') {
-    return new MinGroup(applyKey, field);
+    return new MinGroup(applyKey, field)
   }
   if (func === 'AVG') {
-    return new AvgGroup(applyKey, field);
+    return new AvgGroup(applyKey, field)
   }
   if (func === 'COUNT') {
-    return new CountGroup(applyKey, field);
+    return new CountGroup(applyKey, field)
   }
-  return new SumGroup(applyKey, field);
-};
+  return new SumGroup(applyKey, field)
+}
 
-const createQuery = (query) => {
+const createQuery = query => {
   const queryResult = {
     dataset: '',
     columns: [],
@@ -52,158 +52,158 @@ const createQuery = (query) => {
     apply: undefined,
     order: undefined,
     filter: undefined,
-  };
+  }
 
-  const order = query.ORDER;
-  const group = query.GROUPBY;
-  const filter = query.WHERE;
+  const order = query.ORDER
+  const group = query.GROUPBY
+  const filter = query.WHERE
 
   if (filter) {
-    const filterKeys = Object.keys(filter);
+    const filterKeys = Object.keys(filter)
     if (filterKeys.length === 1) {
-      queryResult.filter = createFilter(filterKeys, filter);
+      queryResult.filter = createFilter(filterKeys, filter)
     }
   }
 
   if (group) {
-    queryResult.group = group.COLUMN;
-    queryResult.apply = group.APPLY.map((rule) => {
-      const applyKey = Object.keys(rule)[0];
-      const func = Object.keys(rule[applyKey])[0];
-      const field = rule[applyKey][func];
-      return createGroup(applyKey, func, field);
-    });
+    queryResult.group = group.COLUMN
+    queryResult.apply = group.APPLY.map(rule => {
+      const applyKey = Object.keys(rule)[0]
+      const func = Object.keys(rule[applyKey])[0]
+      const field = rule[applyKey][func]
+      return createGroup(applyKey, func, field)
+    })
   }
   if (order) {
-    queryResult.order = order;
+    queryResult.order = order
   }
-  return queryResult;
-};
+  return queryResult
+}
 
 const equateGroupValues = (a, b) => {
   for (let i = 0; i < a.length; i += 1) {
     if (a[i] !== b[i]) {
-      return false;
+      return false
     }
   }
-  return true;
-};
+  return true
+}
 
 const aggregateData = (data, group, apply) => {
-  let aggregatedData = [];
+  let aggregatedData = []
   if (group && apply) {
-    const groups = {};
-    const groupValues = [];
-    data.forEach((entry) => {
-      const groupEntryValues = [entry[group]];
-      let index = 0;
+    const groups = {}
+    const groupValues = []
+    data.forEach(entry => {
+      const groupEntryValues = [entry[group]]
+      let index = 0
       while (index < groupValues.length) {
         if (equateGroupValues(groupValues[index], groupEntryValues)) {
-          break;
+          break
         }
-        index += 1;
+        index += 1
       }
       if (index < groupValues.length) {
-        groups[String(index)].push(entry);
+        groups[String(index)].push(entry)
       } else {
-        groups[String(groupValues.length)] = [entry];
-        groupValues.push(groupEntryValues);
+        groups[String(groupValues.length)] = [entry]
+        groupValues.push(groupEntryValues)
       }
-    });
-    const groupKeys = Object.keys(groups);
-    groupKeys.forEach((groupKey) => {
-      const groupEntries = groups[groupKey];
-      const applyFields = {};
-      apply.forEach((rule) => {
-        const applyKey = rule.getApplyKey();
-        applyFields[applyKey] = rule.executeApplyRuleOnGroup(groupEntries);
-      });
+    })
+    const groupKeys = Object.keys(groups)
+    groupKeys.forEach(groupKey => {
+      const groupEntries = groups[groupKey]
+      const applyFields = {}
+      apply.forEach(rule => {
+        const applyKey = rule.getApplyKey()
+        applyFields[applyKey] = rule.executeApplyRuleOnGroup(groupEntries)
+      })
       aggregatedData.push({
         [group]: groups[groupKey][0][group],
         ...applyFields,
-      });
-    });
+      })
+    })
   } else {
-    aggregatedData = data;
+    aggregatedData = data
   }
-  return aggregatedData;
-};
+  return aggregatedData
+}
 
 const executeQuery = (query, data) => {
-  if (Object.keys(query).length === 0) return data;
-  let result = [...data];
-  const { group, apply, order, filter } = query;
+  if (Object.keys(query).length === 0) return data
+  let result = [...data]
+  const { group, apply, order, filter } = query
   if (filter) {
-    result = result.filter((dataEntry) => {
-      return filter.evaluateDataOnFilter(dataEntry);
-    });
+    result = result.filter(dataEntry => {
+      return filter.evaluateDataOnFilter(dataEntry)
+    })
   }
-  result = aggregateData(result, group, apply);
+  result = aggregateData(result, group, apply)
   if (order) {
-    const direction = order.dir;
-    const { keys } = order;
+    const direction = order.dir
+    const { keys } = order
     result = result.sort((a, b) => {
       for (const key of keys) {
         if (a[key] > b[key]) {
-          return direction === 'UP' ? 1 : -1;
+          return direction === 'UP' ? 1 : -1
         }
         if (a[key] < b[key]) {
-          return direction === 'DOWN' ? 1 : -1;
+          return direction === 'DOWN' ? 1 : -1
         }
       }
-      return 0;
-    });
+      return 0
+    })
   }
-  return result;
-};
+  return result
+}
 
 const calculateColumn = (key, func, data) => {
-  if (func === 'Count') return data.length;
+  if (func === 'Count') return data.length
 
-  let result = 0;
+  let result = 0
   if (func === 'Sum') {
-    data.forEach((entry) => {
+    data.forEach(entry => {
       if (typeof entry[key] === 'number') {
-        result += entry[key];
+        result += entry[key]
       }
-    });
-    return result;
+    })
+    return result
   }
 
   if (func === 'Average') {
-    let count = 0;
-    data.forEach((entry) => {
+    let count = 0
+    data.forEach(entry => {
       if (typeof entry[key] === 'number') {
-        result += entry[key];
-        count += 1;
+        result += entry[key]
+        count += 1
       }
-    });
-    return (result / count).toFixed(1);
+    })
+    return (result / count).toFixed(1)
   }
 
   if (func === 'Max') {
-    result = Number.MIN_SAFE_INTEGER;
-    data.forEach((entry) => {
+    result = Number.MIN_SAFE_INTEGER
+    data.forEach(entry => {
       if (typeof entry[key] === 'number') {
-        result = Math.max(result, entry[key]);
+        result = Math.max(result, entry[key])
       }
-    });
-    if (result === Number.MIN_SAFE_INTEGER) return 'Error';
-    return result;
+    })
+    if (result === Number.MIN_SAFE_INTEGER) return 'Error'
+    return result
   }
 
   if (func === 'Min') {
-    result = Number.MAX_SAFE_INTEGER;
-    data.forEach((entry) => {
+    result = Number.MAX_SAFE_INTEGER
+    data.forEach(entry => {
       if (typeof entry[key] === 'number') {
-        result = Math.min(result, entry[key]);
+        result = Math.min(result, entry[key])
       }
-    });
-    if (result === Number.MAX_SAFE_INTEGER) return 'Error';
-    return result;
+    })
+    if (result === Number.MAX_SAFE_INTEGER) return 'Error'
+    return result
   }
 
-  return -1;
-};
+  return -1
+}
 
-export { createQuery, executeQuery, calculateColumn };
+export { createQuery, executeQuery, calculateColumn }

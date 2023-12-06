@@ -1,10 +1,10 @@
-export const EDIT = 'EDIT';
-export const NEW = 'NEW';
-export const VIEW = 'VIEW';
-export const CLOSE = 'CLOSE';
-export const DELETE = 'DELETE';
-export const SAVE = 'SAVE';
-export const CHECK = 'CHECK';
+export const EDIT = 'EDIT'
+export const NEW = 'NEW'
+export const VIEW = 'VIEW'
+export const CLOSE = 'CLOSE'
+export const DELETE = 'DELETE'
+export const SAVE = 'SAVE'
+export const CHECK = 'CHECK'
 export const COLOR = {
   BACKGROUND: '#F8F8F8',
   WHITE: '#FFFFFF',
@@ -32,14 +32,14 @@ export const COLOR = {
   GREY_500: '#BDBAC3',
   GREY_200: '#F0EEf2',
   EVAL_GREY: '#EEEEEE',
-};
+}
 export const BUTTON_COLOR = {
   PRIMARY: 'linear-gradient(92.58deg, #0DEFE1 0%, #78FF96 100%)',
   SECONDARY: '#FFFFFF',
   OUTLINE: 'Transparent',
   DESTRUCTIVE: '#F65C5C',
   HOVER_PRIMARY: 'linear-gradient(90deg, #D7FFF0 0%, #7BFFCF 100%)',
-};
+}
 export const TAG_COLOR = {
   TEAL: '#00BCBC',
   BLUE: '#2F80ED',
@@ -48,7 +48,7 @@ export const TAG_COLOR = {
   RED: '#F83D3D',
   ORANGE: '#FFA644',
   YELLOW: '#FFF463',
-};
+}
 export const TAGS = [
   {
     text: 'seattle bus',
@@ -62,15 +62,15 @@ export const TAGS = [
     text: 'travel reimbursement',
     color: TAG_COLOR.PURPLE,
   },
-];
-export const FAQ = 'FAQ';
+]
+export const FAQ = 'FAQ'
 export const FAQCategory = Object.freeze({
   GENERAL: 'General',
   LOGS: 'Logistics',
   TEAMS: 'Teams & Projects',
   MISC: 'Miscellaneous',
-});
-export const SPONSORSHIP = 'SPONSORSHIP';
+})
+export const SPONSORSHIP = 'SPONSORSHIP'
 export const HACKATHON_NAVBAR = {
   intro: 'Intro',
   events: 'Events',
@@ -78,14 +78,14 @@ export const HACKATHON_NAVBAR = {
   FeatureFlags: 'Feature Flags',
   BuildConfig: 'Build Config',
   HackerInfo: 'Hacker Info',
-};
+}
 export const LIVESITE_NAVBAR = {
   announcements: 'Announcements',
   quicklinks: 'Quicklinks',
   schedule: 'Schedule',
   settings: 'Settings',
   judging: 'Judging',
-};
+}
 
 export const ASSESSMENT_COLOR = {
   PRIMARY: '#2D2937',
@@ -104,7 +104,7 @@ export const ASSESSMENT_COLOR = {
   BLUE_TEXT: '#2F80ED',
   TOOLBAR_GRAY: '#FAFAFA',
   BLUE_BORDER: '#21258A',
-};
+}
 
 // Assessment portal
 export const APPLICATION_STATUS = {
@@ -128,7 +128,7 @@ export const APPLICATION_STATUS = {
     textColor: 'white',
     text: 'completed',
   },
-};
+}
 
 export const SCORING = {
   RESUME: {
@@ -146,7 +146,7 @@ export const SCORING = {
     value: 4,
     weight: 1,
   },
-};
+}
 
 export const BONUS_SCORING = {
   FIRST_TIME_HACKER: {
@@ -154,12 +154,9 @@ export const BONUS_SCORING = {
     value: 1,
     weight: 0.5,
   },
-};
+}
 
-export const MAX_SCORE = Object.values(SCORING).reduce(
-  (acc, curr) => acc + curr.value * curr.weight,
-  0
-);
+export const MAX_SCORE = Object.values(SCORING).reduce((acc, curr) => acc + curr.value * curr.weight, 0)
 
 export const SORT = {
   TIMESTAMP: 'Timestamp',
@@ -167,13 +164,13 @@ export const SORT = {
   FIRST_NAME: 'First Name',
   SCORE: 'Total Score',
   STATUS: 'Status',
-};
+}
 
 export const TABS = {
   OVERVIEW: 'Overview',
   RESUME: 'Resume',
   COMMENTS: 'Comments',
-};
+}
 
 export const RUBRIC = {
   PM: [
@@ -187,8 +184,7 @@ export const RUBRIC = {
     },
     {
       score: '+1',
-      label:
-        'If any of the work experiences are tech-related (work or internship)',
+      label: 'If any of the work experiences are tech-related (work or internship)',
     },
     {
       score: '+1',
@@ -196,8 +192,7 @@ export const RUBRIC = {
     },
     {
       score: '+1',
-      label:
-        'Easy to read, clean, well made (something you would do to apply to a job)',
+      label: 'Easy to read, clean, well made (something you would do to apply to a job)',
     },
   ],
   DEV: [
@@ -211,8 +206,7 @@ export const RUBRIC = {
     },
     {
       score: '+1',
-      label:
-        'If any of the work experiences are tech-related (work or internship)',
+      label: 'If any of the work experiences are tech-related (work or internship)',
     },
     {
       score: '+1',
@@ -220,15 +214,13 @@ export const RUBRIC = {
     },
     {
       score: '+1',
-      label:
-        'Easy to read, clean, well made (something you would do to apply to a job)',
+      label: 'Easy to read, clean, well made (something you would do to apply to a job)',
     },
   ],
   DESIGN: [
     {
       score: '+1',
-      label:
-        'For a design project linked to tech (examples: website design, app design) (not examples: sculpture)',
+      label: 'For a design project linked to tech (examples: website design, app design) (not examples: sculpture)',
     },
     {
       score: '+1',
@@ -236,8 +228,7 @@ export const RUBRIC = {
     },
     {
       score: '+1',
-      label:
-        'if any of the work experiences are tech-related (work or internship)',
+      label: 'if any of the work experiences are tech-related (work or internship)',
     },
     {
       score: '+1',
@@ -245,8 +236,7 @@ export const RUBRIC = {
     },
     {
       score: '+1',
-      label:
-        'Easy to read, clean, well made (something you would do to apply to a job)',
+      label: 'Easy to read, clean, well made (something you would do to apply to a job)',
     },
   ],
   GENERAL: [
@@ -264,15 +254,13 @@ export const RUBRIC = {
     },
     {
       score: '+1',
-      label:
-        'Easy to read, clean, well made (something you would do to apply to a job)',
+      label: 'Easy to read, clean, well made (something you would do to apply to a job)',
     },
   ],
   LONG_ANSWER: [
     {
       score: '+4',
-      label:
-        'Above and beyond | Damn this is some quality writing | You think we need to accept this applicant',
+      label: 'Above and beyond | Damn this is some quality writing | You think we need to accept this applicant',
     },
     {
       score: '+3',
@@ -281,8 +269,7 @@ export const RUBRIC = {
     },
     {
       score: '+2',
-      label:
-        'One meaningful and realistic statement | Connect with impact to self or society (the why behind it)',
+      label: 'One meaningful and realistic statement | Connect with impact to self or society (the why behind it)',
     },
     {
       score: '+1',
@@ -294,8 +281,7 @@ export const RUBRIC = {
     },
     {
       score: '-1',
-      label:
-        'Spelling and grammar mistakes makes it hard to read or understand the text',
+      label: 'Spelling and grammar mistakes makes it hard to read or understand the text',
     },
   ],
-};
+}

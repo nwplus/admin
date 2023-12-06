@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import HackerEntry from './HackerEntry';
-import Icon from '../Icon';
-import Input from '../input';
-import { COLOR, ASSESSMENT_COLOR } from '../../constants';
-import { Title5 } from '../Typography';
-import ExportModal from '../Assessment/ExportModal';
+import React, { useEffect, useState } from 'react'
+import styled from 'styled-components'
+import { ASSESSMENT_COLOR, COLOR } from '../../constants'
+import ExportModal from '../Assessment/ExportModal'
+import Icon from '../Icon'
+import { Title5 } from '../Typography'
+import Input from '../input'
+import HackerEntry from './HackerEntry'
 
 const Container = styled.div`
   height: 60%;
@@ -15,26 +15,26 @@ const Container = styled.div`
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-`;
+`
 
 const HeadContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 1rem;
-`;
+`
 
 const ButtonContainer = styled.div`
   display: flex;
   gap: 20px;
-`;
+`
 
 const StyledIcon = styled(Icon)`
   pointer-events: all;
   &:hover {
     cursor: pointer;
   }
-`;
+`
 
 const SearchContainer = styled.div`
   display: flex;
@@ -42,11 +42,11 @@ const SearchContainer = styled.div`
   gap: 20px;
   margin: 1.5rem 0 1rem 0;
   width: 100%;
-`;
+`
 
 const StyledInput = styled(Input)`
   margin: 0;
-`;
+`
 
 const ListContainer = styled.div`
   flex-grow: 1;
@@ -66,73 +66,65 @@ const ListContainer = styled.div`
     border-radius: 10px;
     box-shadow: inset 0 0 6px 6px ${ASSESSMENT_COLOR.UNSCORED_GRAY};
   }
-`;
+`
 
-export default function HackerList({
-  applicants,
-  selectedApplicant,
-  setSelectedApplicant = () => {},
-}) {
-  const [search, setSearch] = useState('');
-  const [debouncedSearch, setDebouncedSearch] = useState('');
-  const [filtered, setFiltered] = useState([]);
+export default function HackerList({ applicants, selectedApplicant, setSelectedApplicant = () => {} }) {
+  const [search, setSearch] = useState('')
+  const [debouncedSearch, setDebouncedSearch] = useState('')
+  const [filtered, setFiltered] = useState([])
   // State for search and filter icons
-  const [searchActive, setSearchActive] = useState(false);
-  const [filterActive, setFilterActive] = useState(false);
-  const [showExportModal, setShowExportModal] = useState(false);
+  const [searchActive, setSearchActive] = useState(false)
+  const [filterActive, setFilterActive] = useState(false)
+  const [showExportModal, setShowExportModal] = useState(false)
 
   // debounce search
   useEffect(() => {
     const handler = setTimeout(() => {
-      setDebouncedSearch(search);
-    }, 20);
+      setDebouncedSearch(search)
+    }, 20)
 
     return () => {
       // teardown
-      clearTimeout(handler);
-    };
-  }, [search]);
+      clearTimeout(handler)
+    }
+  }, [search])
 
   // filter applicants based off of search term and/or filter state
   useEffect(() => {
-    const filteredBySearch = applicants.filter((applicant) => {
+    const filteredBySearch = applicants.filter(applicant => {
       if (debouncedSearch === '') {
-        return true;
+        return true
       }
       const [name, email] = [
         `${applicant.basicInfo.firstName.toLowerCase()} ${applicant.basicInfo.lastName.toLowerCase()}`,
         applicant.basicInfo.email.toLowerCase(),
-      ];
-      return name.includes(debouncedSearch) || email.includes(debouncedSearch);
-    });
+      ]
+      return name.includes(debouncedSearch) || email.includes(debouncedSearch)
+    })
 
     // If filterActive is true, we filter out those that are already completed
     // If filterActive is false, we don't filter any applications
-    const filteredByComplete = filteredBySearch.filter((applicant) => {
+    const filteredByComplete = filteredBySearch.filter(applicant => {
       if (!filterActive) {
-        return true;
+        return true
       }
-      return !applicant.score || Object.keys(applicant.score.scores).length < 3;
-    });
+      return !applicant.score || Object.keys(applicant.score.scores).length < 3
+    })
 
-    setFiltered(filteredByComplete);
-  }, [debouncedSearch, filterActive, applicants]);
+    setFiltered(filteredByComplete)
+  }, [debouncedSearch, filterActive, applicants])
 
   const closeSearch = () => {
-    setSearchActive(false);
-    setSearch('');
-  };
+    setSearchActive(false)
+    setSearch('')
+  }
 
   return (
     <Container>
       <HeadContainer>
         {searchActive ? (
           <SearchContainer>
-            <StyledInput
-              placeholder="Search"
-              value={search}
-              onChange={(e) => setSearch(e.target.value.toLowerCase())}
-            />
+            <StyledInput placeholder="Search" value={search} onChange={e => setSearch(e.target.value.toLowerCase())} />
             <StyledIcon icon="close" onClick={closeSearch} />
           </SearchContainer>
         ) : (
@@ -145,10 +137,7 @@ export default function HackerList({
                 color={!filterActive && COLOR.GREY_500}
                 onClick={() => setFilterActive(!filterActive)}
               />
-              <StyledIcon
-                icon="file-arrow-down"
-                onClick={() => setShowExportModal(true)}
-              />
+              <StyledIcon icon="file-arrow-down" onClick={() => setShowExportModal(true)} />
             </ButtonContainer>
           </>
         )}
@@ -163,19 +152,13 @@ export default function HackerList({
             lastName={applicant.basicInfo.lastName}
             score={applicant.score}
             selectHacker={() => setSelectedApplicant(applicant)}
-            hasCompleted={
-              applicant.score &&
-              applicant.score.scores &&
-              Object.keys(applicant.score.scores).length >= 3
-            }
-            isSelected={
-              selectedApplicant && selectedApplicant._id === applicant._id
-            }
+            hasCompleted={applicant.score && applicant.score.scores && Object.keys(applicant.score.scores).length >= 3}
+            isSelected={selectedApplicant && selectedApplicant._id === applicant._id}
           />
         ))}
       </ListContainer>
 
       {showExportModal && <ExportModal setShowing={setShowExportModal} />}
     </Container>
-  );
+  )
 }

@@ -1,107 +1,100 @@
-import styled from 'styled-components';
-import moment from 'moment';
-import { useContext, useEffect, useState } from 'react';
-import Button from '../button';
-import ScoreInput from './scoreInput';
-import TextField from '../TextField';
-import AddTagButton from './AddTagButton';
-import { Title5 } from '../Typography';
-import { calculateTotalScore } from '../../utility/utilities';
-import {
-  COLOR,
-  MAX_SCORE,
-  SCORING,
-  TAGS,
-  // ASSESSMENT_COLOR,
-  // BONUS_SCORING,
-} from '../../constants';
-import { AuthContext } from '../../utility/auth';
-import { updateApplicantScore } from '../../utility/firebase';
+import moment from 'moment'
+import { useContext, useEffect, useState } from 'react'
+import styled from 'styled-components'
+import { COLOR, MAX_SCORE, SCORING, TAGS } from '../../constants'
+import { AuthContext } from '../../utility/auth'
+import { updateApplicantScore } from '../../utility/firebase'
+import { calculateTotalScore } from '../../utility/utilities'
+import TextField from '../TextField'
+import { Title5 } from '../Typography'
+import Button from '../button'
+import AddTagButton from './AddTagButton'
+import ScoreInput from './scoreInput'
 
 const Container = styled.div`
-  ${(p) => !p.shouldDisplay && 'display: none'};
+  ${p => !p.shouldDisplay && 'display: none'};
   padding: 0 1rem 1rem 1rem;
   background: #fff;
   border-radius: 4px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
   box-sizing: border-box;
-`;
+`
 
 const ScoreInputs = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
-`;
+`
 
 const BottomSection = styled.div`
   flex-direction: column;
   gap: 20px;
   margin-top: 28px;
-`;
+`
 
 const StyledButton = styled(Button)`
   margin-top: 12px;
-`;
+`
 
 const SmallText = styled.div`
   font-size: 0.8em;
   color: ${COLOR.GREY_500};
-`;
+`
 
 // const Label = styled.p`
 //   color: ${ASSESSMENT_COLOR.LIGHT_GRAY};
 // `;
 
 export default function Scoring({ shouldDisplay, applicant }) {
-  const [scores, setScores] = useState({});
-  const [totalScore, setTotalScore] = useState(null);
-  const [comment, setComment] = useState('');
+  const [scores, setScores] = useState({})
+  const [totalScore, setTotalScore] = useState(null)
+  const [comment, setComment] = useState('')
 
-  const { user } = useContext(AuthContext);
+  const { user } = useContext(AuthContext)
 
   useEffect(() => {
-    setScores(applicant?.score?.scores || {});
-    setTotalScore(applicant?.score?.totalScore || null);
-    setComment(applicant?.score?.comment || '');
-  }, [applicant?._id]);
+    setScores(applicant?.score?.scores || {})
+    setTotalScore(applicant?.score?.totalScore || null)
+    setComment(applicant?.score?.comment || '')
+  }, [applicant?._id])
 
   const qualifyingBonus = () => {
-    return false;
+    return false
     // manually input if hacker is first time
     // const { skills } = applicant;
     // return !skills?.hackathonsAttended
     //   ? BONUS_SCORING.FIRST_TIME_HACKER.value *
     //       BONUS_SCORING.FIRST_TIME_HACKER.weight
     //   : 0;
-  };
+  }
 
   // TODO: For next hackathon, change to camelCase.
   const handleClick = (score, label) => {
     // Switch to whatever the field is in Firebase
-    let field = '';
+    let field = ''
     switch (label) {
       case SCORING.RESUME.label:
-        field = 'ResumeScore';
-        break;
+        field = 'ResumeScore'
+        break
       case SCORING.ESSAY1.label:
-        field = 'ResponseOneScore';
-        break;
+        field = 'ResponseOneScore'
+        break
       case SCORING.ESSAY2.label:
-        field = 'ResponseTwoScore';
-        break;
+        field = 'ResponseTwoScore'
+        break
       default:
-        break;
+        break
     }
-    const newScores = { ...scores };
-    newScores[field] = score;
-    newScores.BonusScore = qualifyingBonus();
-    setScores(newScores);
-    setTotalScore(calculateTotalScore(newScores));
-  };
+    const newScores = { ...scores }
+    newScores[field] = score
+    newScores.BonusScore = qualifyingBonus()
+    setScores(newScores)
+    setTotalScore(calculateTotalScore(newScores))
+  }
 
   const handleSave = async () => {
-    await updateApplicantScore(applicant._id, scores, comment, user.email);
-  };
+    await updateApplicantScore(applicant._id, scores, comment, user.email)
+  }
 
   return (
     <Container shouldDisplay={shouldDisplay}>
@@ -132,7 +125,7 @@ export default function Scoring({ shouldDisplay, applicant }) {
         )} */}
         <TextField
           customValue={comment}
-          onChangeCustomValue={(e) => setComment(e.target.value)}
+          onChangeCustomValue={e => setComment(e.target.value)}
           placeholder="Add your comment here"
         />
       </ScoreInputs>
@@ -142,19 +135,13 @@ export default function Scoring({ shouldDisplay, applicant }) {
         {applicant && (
           <SmallText>
             Last updated by: {applicant?.score?.lastUpdatedBy} at{' '}
-            {moment(applicant?.score?.lastUpdated.toDate()).format(
-              'MMM Do, YYYY h:mm:ss A'
-            )}
+            {moment(applicant?.score?.lastUpdated.toDate()).format('MMM Do, YYYY h:mm:ss A')}
           </SmallText>
         )}
-        <StyledButton
-          color={COLOR.MIDNIGHT_PURPLE_LIGHT}
-          contentColor={COLOR.WHITE}
-          onClick={handleSave}
-        >
+        <StyledButton color={COLOR.MIDNIGHT_PURPLE_LIGHT} contentColor={COLOR.WHITE} onClick={handleSave}>
           Save
         </StyledButton>
       </BottomSection>
     </Container>
-  );
+  )
 }

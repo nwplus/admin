@@ -1,16 +1,16 @@
-import styled from 'styled-components';
-import { formatDate } from '../utility/firebase';
-import nwplusLogo from '../assets/nwplus.svg';
+import styled from 'styled-components'
+import nwplusLogo from '../assets/nwplus.svg'
+import { formatDate } from '../utility/firebase'
 
 const NwplusImage = styled.img`
   width: 150px;
   height: 150px;
-`;
+`
 
 const Container = styled.div`
   width: 100vw;
   height: 100vh;
-`;
+`
 
 const MainContent = styled.div`
   width: 400px;
@@ -26,17 +26,17 @@ const MainContent = styled.div`
   right: 0;
 
   margin: auto;
-`;
+`
 
 const TextLine = styled.p`
   margin: 5% 0;
-`;
+`
 
 const BoldedTextLine = styled.p`
   margin: 5% 0;
   font-size: 24;
   font-weight: bold;
-`;
+`
 
 export default function CMSUnderConstructionPage({ date }) {
   return (
@@ -46,12 +46,10 @@ export default function CMSUnderConstructionPage({ date }) {
         <BoldedTextLine>nwPlus CMS</BoldedTextLine>
         <TextLine> The CMS is under maintenance. </TextLine>
         <TextLine>
-          {typeof date !== 'boolean'
-            ? `It will be back up at ${formatDate(date.seconds)}`
-            : 'It will be back up soon!'}
+          {typeof date !== 'boolean' ? `It will be back up at ${formatDate(date.seconds)}` : 'It will be back up soon!'}
         </TextLine>
         <TextLine>Please come back later.</TextLine>
       </MainContent>
     </Container>
-  );
+  )
 }

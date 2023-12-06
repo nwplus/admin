@@ -20,6 +20,8 @@ import {
   updateCtaLink,
   getHackathonPaths,
   getHackathons,
+  subscribeToHiringSettings,
+  updateHiringSettings,
 } from '../../utility/firebase';
 import { useAuth } from '../../utility/auth';
 
@@ -39,25 +41,29 @@ const InlineButton = styled.span`
   display: inline;
   float: right;
   margin: 0 16px;
-  padding-bottom: 32px;
 `;
 
 const InlineButtonContainer = styled.div`
   display: inline-block;
   float: right;
-  margin-top: -40px;
+  margin-top: 40px;
 `;
+
 export default function FeatureFlags({ id, hackathons }) {
   const [editing, setEditing] = useState(false);
   const [flags, setFlags] = useState({});
   const [editedFlags, setEditedFlags] = useState({});
-  // const [hiringSettings, setHiringSettings] = useState({});
-  // const [editedHiringSettings, setEditedHiringSettings] = useState({});
+  const [hiringSettings, setHiringSettings] = useState({});
+  const [editedHiringSettings, setEditedHiringSettings] = useState({});
   const [ctaLink, setCtaLink] = useState('');
   const { email: user } = useAuth().user;
 
   useEffect(() => {
     return subscribeToFlags(id, setFlags);
+  }, [window.location.href]);
+
+  useEffect(() => {
+    return subscribeToHiringSettings(setHiringSettings);
   }, [window.location.href]);
 
   useEffect(() => {
@@ -67,11 +73,13 @@ export default function FeatureFlags({ id, hackathons }) {
   useEffect(() => {
     if (!editing) {
       setEditedFlags({});
+      setEditedHiringSettings({});
     }
   }, [editing]);
 
   const saveInfo = async () => {
     await saveFlags()
+    await saveHiringSettings()
     await saveCtaLink()
     setEditing(false);
   }
@@ -83,13 +91,40 @@ export default function FeatureFlags({ id, hackathons }) {
     await updateFlags(id, updateObj);
   };
 
+  const saveHiringSettings = async () => {
+    const updateObj = editedHiringSettings;
+    updateObj.lastEdited = getTimestamp();
+    updateObj.lastEditedBy = user;
+    await updateHiringSettings(updateObj);
+  };
+
   const saveCtaLink = async () => {
     await updateCtaLink(ctaLink)
   };
 
+  const stringFromKey = (key) => {
+    const isUpperCase = (i) => {
+        return key[i] === key[i].toUpperCase()
+    }
+    let keyString = '';
+    for (let i = 0; i < key.length; i++) {
+        if (i == 0) {
+            keyString += key[i].toUpperCase();
+            continue;
+        }
+        if (isUpperCase(i) && !isUpperCase(i + 1)) {
+            keyString += ' ';
+            keyString += key[i].toLowerCase();
+        } else {
+            keyString += key[i];
+        }
+    }
+    return keyString;
+}
   const EditFlagsComponent = () => (
     <>
-      <Label>CTA link</Label>
+    <div style={{display: 'flex', flexDirection: 'column'}}>
+    <Label>CTA link</Label>
       <Input
         value={ctaLink}
         onChange={(e) => setCtaLink(e.target.value)}
@@ -111,6 +146,20 @@ export default function FeatureFlags({ id, hackathons }) {
           />
         );
       })}
+      {Object.entries(editedHiringSettings).map(([key, value]) => {
+        if (key === 'lastEdited' || key === 'lastEditedBy') {
+          return null;
+        }
+        return (
+          <div>
+            <Label>{stringFromKey(key)}</Label>
+            <Input
+              value={value}
+              onChange={(e) => {setEditedHiringSettings({...editedHiringSettings, key: e.target.value})}}
+            />
+          </div>
+        );
+      })}
       <InlineButtonContainer>
         <InlineButton>
           <Button onClick={() => saveInfo()}>Save</Button>
@@ -125,6 +174,8 @@ export default function FeatureFlags({ id, hackathons }) {
           </Button>
         </InlineButton>
       </InlineButtonContainer>
+    </div>
+      
     </>
   );
 
@@ -139,6 +190,16 @@ export default function FeatureFlags({ id, hackathons }) {
           return null;
         }
         return <FeatureFlag disabled title={key} value={value} />;
+      })}
+      {/* hiring, errors: wrong key, extra key, missing key?.. */}
+      {Object.entries(hiringSettings).map(([key, value]) => {
+        if (key === 'lastEdited' || key === 'lastEditedBy') {
+          return null;
+        }
+        return <Group>
+          <Label>{stringFromKey(key)}</Label>
+          {value}
+        </Group>
       })}
     </>
   );
@@ -179,6 +240,7 @@ export default function FeatureFlags({ id, hackathons }) {
                   setEditing(false);
                 } else {
                   setEditedFlags(flags);
+                  setEditedHiringSettings(hiringSettings);
                   setEditing(true);
                 }
               }}

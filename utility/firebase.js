@@ -5,7 +5,12 @@ import 'firebase/auth';
 import 'firebase/storage';
 import JSZip from 'jszip';
 import download from 'downloadjs';
-import { calculateTotalScore, flattenObj, orderObj } from './utilities';
+import {
+  calculateTotalScore,
+  flattenObj,
+  orderObj,
+  filterHackerInfoFields,
+} from './utilities';
 import { APPLICATION_STATUS, FAQ, FAQCategory } from '../constants';
 
 if (!firebase.apps.length) {
@@ -608,7 +613,13 @@ export const getHackerInfo = async (callback, hackathon, collection) => {
     .doc(hackathon)
     .collection(collection)
     .onSnapshot((snap) => {
-      callback(snap.docs.map((doc) => orderObj(flattenObj(doc.data()))));
+      callback(
+        snap.docs.map((doc) => {
+          return orderObj(
+            flattenObj(filterHackerInfoFields(doc.data(), collection))
+          );
+        })
+      );
     });
   return res;
 };

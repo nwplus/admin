@@ -1,4 +1,9 @@
-import { logicKeys, mKeys, negationKeys, sKeys } from './constants/QueryConstants'
+import {
+  logicKeys,
+  mKeys,
+  // negationKeys,
+  sKeys,
+} from './constants/QueryConstants'
 
 import MFilter from './MFilter'
 import SFilter from './SFilter'

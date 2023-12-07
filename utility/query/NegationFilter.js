@@ -1,7 +1,13 @@
-import { logicKeys, mKeys, negationKeys, sKeys } from './constants/QueryConstants'
+import {
+  logicKeys,
+  mKeys,
+  // negationKeys,
+  sKeys,
+} from './constants/QueryConstants'
 
 import MFilter from './MFilter'
 import SFilter from './SFilter'
+// eslint-disable-next-line import/no-cycle
 import LogicFilter from './LogicFilter'
 
 export default class NegationFilter {

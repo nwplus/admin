@@ -140,7 +140,7 @@ export default function Hiring({ id, hackathons }) {
           </CardHeader>
         </Card>
       </Page>
-    );
+    )
   }
 
   return (
@@ -171,7 +171,7 @@ export default function Hiring({ id, hackathons }) {
           {editing ? (
             <>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <Label>CTA link</Label>
+                <Label>CTA link</Label>
                 <Input value={editedCtaLink} onChange={e => setEditedCtaLink(e.target.value)} />
                 {Object.entries(editedFlags).map(([key, value]) => {
                   if (key === 'lastEdited' || key === 'lastEditedBy') {
@@ -236,7 +236,8 @@ export default function Hiring({ id, hackathons }) {
                 if (key === 'lastEdited' || key === 'lastEditedBy') {
                   return null
                 }
-                return (<Group>
+                return (
+                  <Group>
                     <Label>{stringFromKey(key)}</Label>
                     {value}
                   </Group>

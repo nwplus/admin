@@ -1,12 +1,7 @@
 import styled from 'styled-components'
 import { useEffect, useState } from 'react'
 import Page from '../../components/page'
-import Card, {
-  CardHeader,
-  CardButtonContainer,
-  CardTitle,
-  CardContent,
-} from '../../components/card'
+import Card, { CardHeader, CardButtonContainer, CardTitle, CardContent } from '../../components/card'
 import Button from '../../components/button'
 import FeatureFlag from '../../components/FeatureFlag'
 import { COLOR, EDIT, HACKATHON_NAVBAR } from '../../constants'

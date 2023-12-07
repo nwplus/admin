@@ -10,11 +10,11 @@ export default ({ id, hackathons }) => {
 }
 
 export const getStaticPaths = async () => {
-  return getHackathonPaths();
-};
+  return getHackathonPaths()
+}
 
 export const getStaticProps = async ({ params }) => {
-  const hackathons = await getHackathons();
+  const hackathons = await getHackathons()
   return {
     props: {
       hackathons,

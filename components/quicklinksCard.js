@@ -1,15 +1,8 @@
-import React from 'react';
-import styled from 'styled-components';
-import Card, {
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardButtonContainer,
-  CardContainer,
-  TableContainer,
-} from './card';
-import Button from './button';
-import { NEW, EDIT, DELETE, COLOR } from '../constants';
+import React from 'react'
+import styled from 'styled-components'
+import { COLOR, DELETE, EDIT, NEW } from '../constants'
+import Button from './button'
+import Card, { CardButtonContainer, CardContainer, CardContent, CardHeader, CardTitle, TableContainer } from './card'
 
 const Text = styled.p`
   padding-right: 12px;
@@ -19,21 +12,15 @@ const Text = styled.p`
   overflow: hidden;
   text-overflow: ellipsis;
   color: ${COLOR.BODY_TEXT};
-`;
+`
 
 const Actions = styled.div`
   flex: 1;
   display: flex;
   justify-content: flex-start;
-`;
+`
 
-export default ({
-  isLoading,
-  handleNew,
-  handleEdit,
-  handleDelete,
-  quicklinks,
-}) => {
+export default ({ isLoading, handleNew, handleEdit, handleDelete, quicklinks }) => {
   return (
     <Card>
       <CardHeader>
@@ -47,9 +34,7 @@ export default ({
 
       <CardContent>
         <TableContainer>
-          {isLoading && (
-            <CardContainer padding="10px 28px"> Loading... </CardContainer>
-          )}
+          {isLoading && <CardContainer padding="10px 28px"> Loading... </CardContainer>}
           {!isLoading && (
             <CardContainer padding="10px 0px 10px 20px">
               <Text>
@@ -71,25 +56,14 @@ export default ({
           )}
           <div>
             {Object.entries(quicklinks).map(([key, quicklink]) => (
-              <CardContainer
-                key={quicklink.href + quicklink.label}
-                padding="10px 0px 10px 20px"
-              >
+              <CardContainer key={quicklink.href + quicklink.label} padding="10px 0px 10px 20px">
                 <Text>{quicklink.label}</Text>
                 <Text>{quicklink.href}</Text>
                 <Text>{quicklink.category}</Text>
                 <Text>{quicklink.common ? 'true' : 'false'}</Text>
                 <Actions>
-                  <Button
-                    type={EDIT}
-                    color={COLOR.TRANSPARENT}
-                    onClick={() => handleEdit(key)}
-                  />
-                  <Button
-                    type={DELETE}
-                    color={COLOR.TRANSPARENT}
-                    onClick={() => handleDelete(key)}
-                  />
+                  <Button type={EDIT} color={COLOR.TRANSPARENT} onClick={() => handleEdit(key)} />
+                  <Button type={DELETE} color={COLOR.TRANSPARENT} onClick={() => handleDelete(key)} />
                 </Actions>
               </CardContainer>
             ))}
@@ -97,5 +71,5 @@ export default ({
         </TableContainer>
       </CardContent>
     </Card>
-  );
-};
+  )
+}

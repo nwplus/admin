@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { ASSESSMENT_COLOR, SORT } from '../../constants';
-import Arrow from '../../assets/arrow.svg';
-import Filter from '../../assets/filter.svg';
-import MagnifyingGlass from '../../assets/magnifyingGlass.svg';
-import { Button } from './Button';
-import AcceptingModal from './acceptingModal';
-import ExportModal from './ExportModal';
-import { logout } from '../../utility/firebase';
+import React, { useState } from 'react'
+import styled from 'styled-components'
+import Arrow from '../../assets/arrow.svg'
+import Filter from '../../assets/filter.svg'
+import MagnifyingGlass from '../../assets/magnifyingGlass.svg'
+import { ASSESSMENT_COLOR, SORT } from '../../constants'
+import { logout } from '../../utility/firebase'
+import { Button } from './Button'
+import ExportModal from './ExportModal'
+import AcceptingModal from './acceptingModal'
 
 const ToolBarContainer = styled.div`
   width: 100%;
   background: ${ASSESSMENT_COLOR.TOOLBAR_GRAY};
   display: flex;
-`;
+`
 
 const Search = styled.input`
   width: 480px;
@@ -32,16 +32,16 @@ const Search = styled.input`
   :focus {
     color: ${ASSESSMENT_COLOR.BLACK};
   }
-`;
+`
 
 const SortContainer = styled.div`
   display: flex;
-`;
+`
 
 const SortByText = styled.p`
   color: ${ASSESSMENT_COLOR.DARK_GRAY};
   font-size: 16px;
-`;
+`
 
 const SortSelect = styled.select`
   height: 48px;
@@ -51,46 +51,42 @@ const SortSelect = styled.select`
   border-radius: 4px;
   border: 1px solid ${ASSESSMENT_COLOR.UNSCORED_GRAY};
   padding: 0px 12px;
-`;
+`
 
 const DownArrow = styled.img`
   cursor: pointer;
-`;
+`
 
 const UpArrow = styled.img`
   cursor: pointer;
   transform: scale(1, -1);
-`;
+`
 
 const FilterIcon = styled.img`
   cursor: pointer;
   margin-left: 30px;
-`;
+`
 
 export default function ToolBar({ search, sort, reverse, reversed }) {
-  const [showExport, setShowExport] = useState(false);
-  const [showAcceptance, setShowAcceptance] = useState(false);
+  const [showExport, setShowExport] = useState(false)
+  const [showAcceptance, setShowAcceptance] = useState(false)
   return (
     <ToolBarContainer>
-      <Button
-        bColor={ASSESSMENT_COLOR.RED}
-        width="flex"
-        onClick={() => logout()}
-      >
+      <Button bColor={ASSESSMENT_COLOR.RED} width="flex" onClick={() => logout()}>
         Logout
       </Button>
       <Search
         type="text"
         placeholder="Search"
-        onChange={(event) => {
-          search(event.target.value);
+        onChange={event => {
+          search(event.target.value)
         }}
       />
       <SortContainer>
         <SortByText>Sort by: </SortByText>
         <SortSelect
-          onChange={(event) => {
-            sort(event.target.value);
+          onChange={event => {
+            sort(event.target.value)
           }}
         >
           <option value={SORT.TIMESTAMP}>{SORT.TIMESTAMP}</option>
@@ -110,7 +106,7 @@ export default function ToolBar({ search, sort, reverse, reversed }) {
         width="flex"
         bColor="black"
         onClick={async () => {
-          setShowAcceptance(true);
+          setShowAcceptance(true)
         }}
       >
         Accept
@@ -119,7 +115,7 @@ export default function ToolBar({ search, sort, reverse, reversed }) {
         width=" "
         bColor="black"
         onClick={async () => {
-          setShowExport(true);
+          setShowExport(true)
         }}
       >
         Export
@@ -127,5 +123,5 @@ export default function ToolBar({ search, sort, reverse, reversed }) {
       {showAcceptance && <AcceptingModal setShowing={setShowAcceptance} />}
       {showExport && <ExportModal setShowing={setShowExport} />}
     </ToolBarContainer>
-  );
+  )
 }

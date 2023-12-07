@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import nwPlusReversed from '../assets/nwplus-reversed.gif';
+import styled from 'styled-components'
+import nwPlusReversed from '../assets/nwplus-reversed.gif'
 
 const LoadingScreenContainer = styled.div`
   display: flex;
@@ -7,17 +7,17 @@ const LoadingScreenContainer = styled.div`
   justify-content: center;
   height: 100vh;
   text-align: center;
-`;
+`
 
 const LoadingImage = styled.img`
   height: 100px;
   width: 100px;
   margin: auto;
-`;
+`
 
 const LoadingDiv = styled.div`
   font-size: 40px;
-`;
+`
 export default function LoadingPage() {
   return (
     <LoadingScreenContainer>
@@ -26,5 +26,5 @@ export default function LoadingPage() {
         <LoadingDiv>Authenticating...</LoadingDiv>
       </div>
     </LoadingScreenContainer>
-  );
+  )
 }

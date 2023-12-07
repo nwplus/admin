@@ -1,8 +1,8 @@
-import styled from 'styled-components';
-import Button from '../button';
-import Tag from '../tag';
-import { ASSESSMENT_COLOR, COLOR } from '../../constants';
-import { updateApplicantTags } from '../../utility/firebase';
+import styled from 'styled-components'
+import { ASSESSMENT_COLOR, COLOR } from '../../constants'
+import { updateApplicantTags } from '../../utility/firebase'
+import Button from '../button'
+import Tag from '../tag'
 
 const ModalContainer = styled.div`
   background: white;
@@ -14,27 +14,27 @@ const ModalContainer = styled.div`
   min-width: 226px;
   position: absolute;
   bottom: 0;
-`;
+`
 
 const TitleContainer = styled.span`
   font-weight: bold;
   font-size: 13px;
   line-height: 16px;
   color: ${ASSESSMENT_COLOR.DARK_GRAY};
-`;
+`
 
 const ExistingTagsContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 9px;
   margin: 10px 0;
-`;
+`
 
 const NotAddedTagsContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin: 10px 0 20px;
-`;
+`
 
 const TagDropDown = styled.div`
   cursor: pointer;
@@ -44,20 +44,18 @@ const TagDropDown = styled.div`
   &:hover {
     background: ${ASSESSMENT_COLOR.LIGHT_BLUE};
   }
-`;
+`
 
 function NotAddedTags({ hackerId, allTags, applicantTags = [] }) {
-  const tags = allTags.filter(
-    (tag) => !applicantTags.some((addedTag) => addedTag.text === tag.text)
-  );
+  const tags = allTags.filter(tag => !applicantTags.some(addedTag => addedTag.text === tag.text))
 
   return (
     <NotAddedTagsContainer>
       {tags &&
-        tags.map((tag) => (
+        tags.map(tag => (
           <TagDropDown
             onClick={() => {
-              updateApplicantTags(hackerId, [...applicantTags, tag]);
+              updateApplicantTags(hackerId, [...applicantTags, tag])
             }}
           >
             <Tag color={tag.color} contentColor={COLOR.WHITE}>
@@ -66,14 +64,14 @@ function NotAddedTags({ hackerId, allTags, applicantTags = [] }) {
           </TagDropDown>
         ))}
     </NotAddedTagsContainer>
-  );
+  )
 }
 
 function AddedTags({ hackerId, applicantTags }) {
   return (
     <ExistingTagsContainer>
       {applicantTags &&
-        applicantTags.map((tag) => (
+        applicantTags.map(tag => (
           <div>
             <Tag
               type="DELETE"
@@ -82,7 +80,7 @@ function AddedTags({ hackerId, applicantTags }) {
               onDelete={() =>
                 updateApplicantTags(
                   hackerId,
-                  applicantTags.filter((applicantTag) => applicantTag !== tag)
+                  applicantTags.filter(applicantTag => applicantTag !== tag)
                 )
               }
             >
@@ -91,32 +89,19 @@ function AddedTags({ hackerId, applicantTags }) {
           </div>
         ))}
     </ExistingTagsContainer>
-  );
+  )
 }
 
-export default function AddTagModal({
-  setShowing,
-  allTags,
-  hackerId,
-  applicantTags,
-}) {
+export default function AddTagModal({ setShowing, allTags, hackerId, applicantTags }) {
   return (
     <ModalContainer>
       <TitleContainer>Tag As</TitleContainer>
-      <NotAddedTags
-        hackerId={hackerId}
-        allTags={allTags}
-        applicantTags={applicantTags}
-      />
+      <NotAddedTags hackerId={hackerId} allTags={allTags} applicantTags={applicantTags} />
       <TitleContainer>Existing Tags</TitleContainer>
-      <AddedTags
-        hackerId={hackerId}
-        tags={applicantTags}
-        applicantTags={applicantTags}
-      />
+      <AddedTags hackerId={hackerId} tags={applicantTags} applicantTags={applicantTags} />
       <Button color="white" type="button" onClick={() => setShowing(false)}>
         Done
       </Button>
     </ModalContainer>
-  );
+  )
 }

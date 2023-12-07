@@ -1,5 +1,5 @@
-import React, { useRef, useEffect } from 'react';
-import styled from 'styled-components';
+import React, { useEffect, useRef } from 'react'
+import styled from 'styled-components'
 
 const GreyDiv = styled.div`
   height: 100vh;
@@ -7,7 +7,7 @@ const GreyDiv = styled.div`
   background: rgba(0, 0, 0, 0.4);
   position: absolute;
   z-index: 99;
-`;
+`
 
 const ModalDiv = styled.div`
   width: 400px;
@@ -22,31 +22,31 @@ const ModalDiv = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-`;
+`
 
 export default function Modal({ children, setShowing }) {
-  const backgroundRef = useRef();
+  const backgroundRef = useRef()
   useEffect(() => {
     const escFunction = ({ keyCode }) => {
       if (keyCode === 27) {
-        setShowing(false);
+        setShowing(false)
       }
-    };
-    document.addEventListener('keyup', escFunction, false);
+    }
+    document.addEventListener('keyup', escFunction, false)
     return () => {
-      document.removeEventListener('keyup', escFunction, false);
-    };
-  });
+      document.removeEventListener('keyup', escFunction, false)
+    }
+  })
   return (
     <GreyDiv
       ref={backgroundRef}
-      onClick={(e) => {
+      onClick={e => {
         if (backgroundRef.current && backgroundRef.current === e.target) {
-          setShowing(false);
+          setShowing(false)
         }
       }}
     >
       <ModalDiv>{children}</ModalDiv>
     </GreyDiv>
-  );
+  )
 }

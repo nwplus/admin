@@ -123,9 +123,7 @@ export const getEvent = (eventID, data) => {
         text: data.text || 'Empty text description for event',
         date: data.date ? formatDate(data.date.seconds) : formatDate(getTimestamp().seconds),
         order: data.order >= 0 ? data.order : -1,
-        lastModified: data.lastModified
-          ? formatDate(data.lastModified.seconds)
-          : formatDate(getTimestamp().seconds),
+        lastModified: data.lastModified ? formatDate(data.lastModified.seconds) : formatDate(getTimestamp().seconds),
         lastModifiedBy: data.lastModifiedBy || 'Unknown user',
       }
     : null
@@ -193,7 +191,9 @@ const getFaq = (faqID, faqData) => {
         question: faqData.question ? faqData.question : 'Empty question field',
         answer: faqData.answer ? faqData.answer : 'Empty answer field',
         category: faqData.category ? getFaqCategory(faqData.category) : FAQCategory.MISC,
-        lastModified: faqData.lastModified ? formatDate(faqData.lastModified.seconds) : formatDate(getTimestamp().seconds),
+        lastModified: faqData.lastModified
+          ? formatDate(faqData.lastModified.seconds)
+          : formatDate(getTimestamp().seconds),
         lastModifiedBy: faqData.lastModifiedBy || 'Unknown user',
         hackathonIDs: faqData.hackathonIDs ? faqData.hackathonIDs : [],
       }
@@ -417,12 +417,7 @@ export const updateLivesiteData = async data => {
 }
 
 export const getLivesiteQuicklinks = async (hackathon, callback) => {
-  const eventIDs = await db
-    .collection('Hackathons')
-    .doc(hackathon)
-    .collection('QuickLinks')
-    .orderBy('label')
-    .get()
+  const eventIDs = await db.collection('Hackathons').doc(hackathon).collection('QuickLinks').orderBy('label').get()
   return callback(
     eventIDs.docs.map(doc => {
       return doc.data()
@@ -478,12 +473,7 @@ export const getLivesiteEvent = (eventID, data) => {
 }
 
 export const getLivesiteEvents = async hackathon => {
-  const eventIDs = await db
-    .collection('Hackathons')
-    .doc(hackathon)
-    .collection('DayOf')
-    .orderBy('startTime')
-    .get()
+  const eventIDs = await db.collection('Hackathons').doc(hackathon).collection('DayOf').orderBy('startTime').get()
   const events = {}
   eventIDs.docs.forEach(doc => {
     const currEvent = getLivesiteEvent(doc.id, doc.data())

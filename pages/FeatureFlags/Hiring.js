@@ -53,15 +53,14 @@ export default function Hiring({ id, hackathons }) {
   const { email: user } = useAuth().user
 
   useEffect(() => {
-    return subscribeToFlags(id, setFlags)
-  }, [window.location.href])
-
-  useEffect(() => {
-    return subscribeToHiringSettings(setHiringSettings)
-  }, [window.location.href])
-
-  useEffect(() => {
-    return subscribeToCtaLink(setCtaLink)
+    const flagsSubscription = subscribeToFlags(id, setFlags)
+    const hiringSettingsSubscription = subscribeToHiringSettings(setHiringSettings)
+    const ctaLinkSubscription = subscribeToCtaLink(setCtaLink)
+    return () => {
+      flagsSubscription()
+      hiringSettingsSubscription()
+      ctaLinkSubscription()
+    }
   }, [window.location.href])
 
   useEffect(() => {

@@ -56,6 +56,7 @@ export default function Hiring({ id, hackathons }) {
   const [hiringSettings, setHiringSettings] = useState({});
   const [editedHiringSettings, setEditedHiringSettings] = useState({});
   const [ctaLink, setCtaLink] = useState('');
+  const [editedCtaLink, setEditedCtaLink] = useState('');
   const { email: user } = useAuth().user;
 
   useEffect(() => {
@@ -99,7 +100,7 @@ export default function Hiring({ id, hackathons }) {
   };
 
   const saveCtaLink = async () => {
-    await updateCtaLink(ctaLink)
+    await updateCtaLink(editedCtaLink)
   };
 
   const handleHiringSettingsChange = (key, newValue) => {
@@ -167,6 +168,7 @@ export default function Hiring({ id, hackathons }) {
                 if (editing) {
                   setEditing(false);
                 } else {
+                  setEditedCtaLink(ctaLink);
                   setEditedFlags(flags);
                   setEditedHiringSettings(hiringSettings);
                   setEditing(true);
@@ -181,8 +183,8 @@ export default function Hiring({ id, hackathons }) {
             <div style={{display: 'flex', flexDirection: 'column'}}>
             <Label>CTA link</Label>
               <Input
-                value={ctaLink}
-                onChange={(e) => setCtaLink(e.target.value)}
+                value={editedCtaLink}
+                onChange={(e) => setEditedCtaLink(e.target.value)}
               />
               {Object.entries(editedFlags).map(([key, value]) => {
                 if (key === 'lastEdited' || key === 'lastEditedBy') {

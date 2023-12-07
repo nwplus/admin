@@ -151,17 +151,3 @@ export default function HackathonFeatureFlags({ id, hackathons }) {
     </Page>
   );
 }
-
-export const getStaticPaths = async () => {
-  return getHackathonPaths();
-};
-
-export const getStaticProps = async ({ params }) => {
-  const hackathons = await getHackathons();
-  return {
-    props: {
-      hackathons,
-      id: params.id,
-    },
-  };
-};

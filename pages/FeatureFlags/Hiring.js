@@ -86,51 +86,51 @@ export default function Hiring({ id, hackathons }) {
   }
 
   const saveFlags = async () => {
-    const updateObj = editedFlags;
-    updateObj.lastEdited = getTimestamp();
-    updateObj.lastEditedBy = user;
-    await updateFlags(id, updateObj);
-  };
+    const updateObj = editedFlags
+    updateObj.lastEdited = getTimestamp()
+    updateObj.lastEditedBy = user
+    await updateFlags(id, updateObj)
+  }
 
   const saveHiringSettings = async () => {
-    const updateObj = editedHiringSettings;
-    updateObj.lastEdited = getTimestamp();
-    updateObj.lastEditedBy = user;
-    await updateHiringSettings(updateObj);
-  };
+    const updateObj = editedHiringSettings
+    updateObj.lastEdited = getTimestamp()
+    updateObj.lastEditedBy = user
+    await updateHiringSettings(updateObj)
+  }
 
   const saveCtaLink = async () => {
     await updateCtaLink(editedCtaLink)
-  };
+  }
 
   const handleHiringSettingsChange = (key, newValue) => {
     setEditedHiringSettings({
-      ...editedHiringSettings, 
-      [key]: newValue
+      ...editedHiringSettings,
+      [key]: newValue,
     })
-  };
+  }
 
   /*
   * Converts a string from "thisTypeOfCase" to "This type of case"
   */
-  const stringFromKey = (key) => {
-    const isUpperCase = (i) => {
+  const stringFromKey = key => {
+    const isUpperCase = i => {
         return key[i] === key[i].toUpperCase()
     }
-    let keyString = '';
+    let keyString = ''
     for (let i = 0; i < key.length; i++) {
-        if (i == 0) {
-            keyString += key[i].toUpperCase();
-            continue;
+        if (i === 0) {
+            keyString += key[i].toUpperCase()
+            continue
         }
         if (isUpperCase(i) && !isUpperCase(i + 1)) {
-            keyString += ' ';
-            keyString += key[i].toLowerCase();
+            keyString += ' '
+            keyString += key[i].toLowerCase()
         } else {
-            keyString += key[i];
+            keyString += key[i]
         }
     }
-    return keyString;
+    return keyString
   }
 
   if (!flags) {
@@ -166,12 +166,12 @@ export default function Hiring({ id, hackathons }) {
               type={EDIT}
               onClick={() => {
                 if (editing) {
-                  setEditing(false);
+                  setEditing(false)
                 } else {
-                  setEditedCtaLink(ctaLink);
-                  setEditedFlags(flags);
-                  setEditedHiringSettings(hiringSettings);
-                  setEditing(true);
+                  setEditedCtaLink(ctaLink)
+                  setEditedFlags(flags)
+                  setEditedHiringSettings(hiringSettings)
+                  setEditing(true)
                 }
               }}
             />
@@ -188,7 +188,7 @@ export default function Hiring({ id, hackathons }) {
               />
               {Object.entries(editedFlags).map(([key, value]) => {
                 if (key === 'lastEdited' || key === 'lastEditedBy') {
-                  return null;
+                  return null
                 }
                 return (
                   <FeatureFlag
@@ -198,14 +198,14 @@ export default function Hiring({ id, hackathons }) {
                       setEditedFlags({
                         ...editedFlags,
                         [key]: !value,
-                      });
+                      })
                     }}
                   />
                 );
               })}
               {Object.entries(editedHiringSettings).map(([key, value]) => {
                 if (key === 'lastEdited' || key === 'lastEditedBy') {
-                  return null;
+                  return null
                 }
                 return (
                   <div>
@@ -241,13 +241,13 @@ export default function Hiring({ id, hackathons }) {
               </Group>
               {Object.entries(flags).map(([key, value]) => {
                 if (key === 'lastEdited' || key === 'lastEditedBy') {
-                  return null;
+                  return null
                 }
                 return <FeatureFlag disabled title={key} value={value} />;
               })}
               {Object.entries(hiringSettings).map(([key, value]) => {
                 if (key === 'lastEdited' || key === 'lastEditedBy') {
-                  return null;
+                  return null
                 }
                 return <Group>
                   <Label>{stringFromKey(key)}</Label>

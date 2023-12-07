@@ -338,21 +338,21 @@ export const updateHiringSettings = async hiringSettings => {
   return db.collection(Hackathons).doc('www').update(doc);
 };
 
-export const subscribeToCtaLink = (cb) => {
+export const subscribeToCtaLink = cb => {
   return db
     .collection(Hackathons)
     .doc('www')
-    .onSnapshot((snap) => {
-      cb(snap.data().CTALink);
-    });
-};
+    .onSnapshot(snap => {
+      cb(snap.data().CTALink)
+    })
+}
 
 export const updateCtaLink = async ctaLink => {
   const doc = {
     CTALink: ctaLink,
-  };
-  return db.collection(Hackathons).doc('www').update(doc);
-};
+  }
+  return db.collection(Hackathons).doc('www').update(doc)
+}
 
 /// www-specific end
 
@@ -417,7 +417,12 @@ export const updateLivesiteData = async data => {
 }
 
 export const getLivesiteQuicklinks = async (hackathon, callback) => {
-  const eventIDs = await db.collection('Hackathons').doc(hackathon).collection('QuickLinks').orderBy('label').get()
+  const eventIDs = await db
+    .collection('Hackathons')
+    .doc(hackathon)
+    .collection('QuickLinks')
+    .orderBy('label')
+    .get()
   return callback(
     eventIDs.docs.map(doc => {
       return doc.data()
@@ -473,7 +478,12 @@ export const getLivesiteEvent = (eventID, data) => {
 }
 
 export const getLivesiteEvents = async hackathon => {
-  const eventIDs = await db.collection('Hackathons').doc(hackathon).collection('DayOf').orderBy('startTime').get()
+  const eventIDs = await db
+    .collection('Hackathons')
+    .doc(hackathon)
+    .collection('DayOf')
+    .orderBy('startTime')
+    .get()
   const events = {}
   eventIDs.docs.forEach(doc => {
     const currEvent = getLivesiteEvent(doc.id, doc.data())

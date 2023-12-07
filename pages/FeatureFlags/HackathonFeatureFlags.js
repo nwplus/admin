@@ -10,14 +10,7 @@ import Card, {
 import Button from '../../components/button'
 import FeatureFlag from '../../components/FeatureFlag'
 import { COLOR, EDIT, HACKATHON_NAVBAR } from '../../constants'
-import {
-  getTimestamp,
-  subscribeToFlags,
-  formatDate,
-  updateFlags,
-  getHackathonPaths,
-  getHackathons,
-} from '../../utility/firebase'
+import { getTimestamp, subscribeToFlags, formatDate, updateFlags } from '../../utility/firebase'
 import { useAuth } from '../../utility/auth'
 
 const InlineButton = styled.span`
@@ -59,7 +52,7 @@ export default function HackathonFeatureFlags({ id, hackathons }) {
     <>
       {Object.entries(editedFlags).map(([key, value]) => {
         if (key === 'lastEdited' || key === 'lastEditedBy') {
-          return null;
+          return null
         }
         return (
           <FeatureFlag
@@ -69,10 +62,10 @@ export default function HackathonFeatureFlags({ id, hackathons }) {
               setEditedFlags({
                 ...editedFlags,
                 [key]: !value,
-              });
+              })
             }}
           />
-        );
+        )
       })}
       <InlineButtonContainer>
         <InlineButton>
@@ -89,7 +82,7 @@ export default function HackathonFeatureFlags({ id, hackathons }) {
         </InlineButton>
       </InlineButtonContainer>
     </>
-  );
+  )
 
   const ViewFlagsComponent = () => (
     <>
@@ -100,30 +93,22 @@ export default function HackathonFeatureFlags({ id, hackathons }) {
         return <FeatureFlag disabled title={key} value={value} />
       })}
     </>
-  );
+  )
 
   if (!flags) {
     return (
-      <Page
-        currentPath={id}
-        hackathons={hackathons}
-        navbarItems={HACKATHON_NAVBAR}
-      >
+      <Page currentPath={id} hackathons={hackathons} navbarItems={HACKATHON_NAVBAR}>
         <Card>
           <CardHeader>
             <CardTitle>No Feature Flags for {id}</CardTitle>
           </CardHeader>
         </Card>
       </Page>
-    );
+    )
   }
 
   return (
-    <Page
-      currentPath={id}
-      hackathons={hackathons}
-      navbarItems={HACKATHON_NAVBAR}
-    >
+    <Page currentPath={id} hackathons={hackathons} navbarItems={HACKATHON_NAVBAR}>
       <Card>
         <CardHeader>
           <CardTitle>Feature Flags for {id}</CardTitle>
@@ -144,10 +129,8 @@ export default function HackathonFeatureFlags({ id, hackathons }) {
             />
           </CardButtonContainer>
         </CardHeader>
-        <CardContent>
-          {editing ? <EditFlagsComponent /> : <ViewFlagsComponent />}
-        </CardContent>
+        <CardContent>{editing ? <EditFlagsComponent /> : <ViewFlagsComponent />}</CardContent>
       </Card>
     </Page>
-  );
+  )
 }

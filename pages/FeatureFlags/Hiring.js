@@ -1,12 +1,7 @@
 import styled from 'styled-components'
 import { useEffect, useState } from 'react'
 import Page from '../../components/page'
-import Card, {
-  CardHeader,
-  CardButtonContainer,
-  CardTitle,
-  CardContent,
-} from '../../components/card'
+import Card, { CardHeader, CardButtonContainer, CardTitle, CardContent } from '../../components/card'
 import Button from '../../components/button'
 import Input from '../../components/input'
 import FeatureFlag from '../../components/FeatureFlag'
@@ -148,9 +143,7 @@ export default function Hiring({ id, hackathons }) {
       <Card>
         <CardHeader>
           <CardTitle>Feature Flags for {id}</CardTitle>
-          <p>{`Last edited by ${flags.lastEditedBy} at ${formatDate(
-            flags.lastEdited?.seconds
-          )}`}</p>
+          <p>{`Last edited by ${flags.lastEditedBy} at ${formatDate(flags.lastEdited?.seconds)}`}</p>
           <CardButtonContainer>
             <Button
               type={EDIT}
@@ -197,10 +190,7 @@ export default function Hiring({ id, hackathons }) {
                   return (
                     <div>
                       <Label>{stringFromKey(key)}</Label>
-                      <Input
-                        value={value}
-                        onChange={e => handleHiringSettingsChange(key, e.target.value)}
-                      />
+                      <Input value={value} onChange={e => handleHiringSettingsChange(key, e.target.value)} />
                     </div>
                   )
                 })}

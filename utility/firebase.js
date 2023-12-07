@@ -193,9 +193,7 @@ const getFaq = (faqID, faqData) => {
         question: faqData.question ? faqData.question : 'Empty question field',
         answer: faqData.answer ? faqData.answer : 'Empty answer field',
         category: faqData.category ? getFaqCategory(faqData.category) : FAQCategory.MISC,
-        lastModified: faqData.lastModified
-          ? formatDate(faqData.lastModified.seconds)
-          : formatDate(getTimestamp().seconds),
+        lastModified: faqData.lastModified ? formatDate(faqData.lastModified.seconds) : formatDate(getTimestamp().seconds),
         lastModifiedBy: faqData.lastModifiedBy || 'Unknown user',
         hackathonIDs: faqData.hackathonIDs ? faqData.hackathonIDs : [],
       }
@@ -473,9 +471,7 @@ export const getLivesiteEvent = (eventID, data) => {
         key: data.key || eventID,
         name: data.name || 'Empty event field',
         description: data.description || 'Empty text description for event',
-        lastModified: data.lastModified
-          ? formatDate(data.lastModified.seconds)
-          : formatDate(getTimestamp().seconds),
+        lastModified: data.lastModified ? formatDate(data.lastModified.seconds) : formatDate(getTimestamp().seconds),
         lastModifiedBy: data.lastModifiedBy || 'Unknown user',
       }
     : null
@@ -596,16 +592,7 @@ export const getCSVData = async () => {
     .get()
   const CSV = apps.docs.map(doc => {
     const {
-      basicInfo: {
-        firstName,
-        lastName,
-        email,
-        educationLevel,
-        phoneNumber,
-        school,
-        location,
-        major,
-      },
+      basicInfo: { firstName, lastName, email, educationLevel, phoneNumber, school, location, major },
       status: { applicationStatus },
       skills: { hackathonsAttended },
     } = doc.data()
@@ -718,14 +705,9 @@ export const updateApplicantScore = async (applicantID, scores, comment, adminEm
 }
 
 export const updateApplicantStatus = async (userId, applicationStatus) => {
-  return db
-    .collection('Hackathons')
-    .doc(HackerEvaluationHackathon)
-    .collection('Applicants')
-    .doc(userId)
-    .update({
-      'status.applicationStatus': applicationStatus,
-    })
+  return db.collection('Hackathons').doc(HackerEvaluationHackathon).collection('Applicants').doc(userId).update({
+    'status.applicationStatus': applicationStatus,
+  })
 }
 
 export const getApplicantTags = async (userId, callback) => {

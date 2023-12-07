@@ -107,9 +107,7 @@ export default function HackathonFeatureFlags({ id, hackathons }) {
       <Card>
         <CardHeader>
           <CardTitle>Feature Flags for {id}</CardTitle>
-          <p>{`Last edited by ${flags.lastEditedBy} at ${formatDate(
-            flags.lastEdited?.seconds
-          )}`}</p>
+          <p>{`Last edited by ${flags.lastEditedBy} at ${formatDate(flags.lastEdited?.seconds)}`}</p>
           <CardButtonContainer>
             <Button
               type={EDIT}

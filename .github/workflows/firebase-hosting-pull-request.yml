@@ -32,3 +32,4 @@ jobs:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_NWPLUS_UBC }}'
           projectId: nwplus-ubc
+          firebaseToolsVersion: 10.9.2

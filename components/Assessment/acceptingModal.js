@@ -1,12 +1,9 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { APPLICATION_STATUS, ASSESSMENT_COLOR } from '../../constants';
-import {
-  getApplicantsToAccept,
-  updateApplicantStatus,
-} from '../../utility/firebase';
-import { Button } from './Button';
-import Modal from './Modal';
+import React, { useState } from 'react'
+import styled from 'styled-components'
+import { APPLICATION_STATUS, ASSESSMENT_COLOR } from '../../constants'
+import { getApplicantsToAccept, updateApplicantStatus } from '../../utility/firebase'
+import { Button } from './Button'
+import Modal from './Modal'
 
 const ScoreInput = styled.input`
   font-size: 16px;
@@ -19,35 +16,35 @@ const ScoreInput = styled.input`
   :focus {
     color: ${ASSESSMENT_COLOR.BLACK};
   }
-`;
+`
 const TotalApplicantsP = styled.p`
   font-weight: bold;
-`;
+`
 
 const FlexDiv = styled.div`
   display: flex;
-`;
+`
 
-const acceptApplicant = async (applicant) => {
-  return updateApplicantStatus(applicant._id, APPLICATION_STATUS.accepted.text);
-};
+const acceptApplicant = async applicant => {
+  return updateApplicantStatus(applicant._id, APPLICATION_STATUS.accepted.text)
+}
 
 export default function AcceptingModal({ setShowing }) {
-  const [totalApplicants, setTotalApplicants] = useState(0);
-  const [score, setScore] = useState(undefined);
-  const [applicantsToAccept, setApplicants] = useState([]);
+  const [totalApplicants, setTotalApplicants] = useState(0)
+  const [score, setScore] = useState(undefined)
+  const [applicantsToAccept, setApplicants] = useState([])
 
   const getApplicants = async () => {
-    const apps = await getApplicantsToAccept(score);
-    setTotalApplicants(apps.length);
-    setApplicants(apps);
-  };
+    const apps = await getApplicantsToAccept(score)
+    setTotalApplicants(apps.length)
+    setApplicants(apps)
+  }
 
   const acceptApplicants = async () => {
-    if (!applicantsToAccept) return;
-    await Promise.all(applicantsToAccept.map((app) => acceptApplicant(app)));
-    setShowing(false);
-  };
+    if (!applicantsToAccept) return
+    await Promise.all(applicantsToAccept.map(app => acceptApplicant(app)))
+    setShowing(false)
+  }
 
   return (
     <Modal setShowing={setShowing}>
@@ -55,9 +52,9 @@ export default function AcceptingModal({ setShowing }) {
       {/* <ScoreInput /> */}
       <FlexDiv>
         <ScoreInput
-          onChange={(e) => {
+          onChange={e => {
             // eslint-disable-next-line no-restricted-globals
-            if (!isNaN(e.target.value)) setScore(e.target.value);
+            if (!isNaN(e.target.value)) setScore(e.target.value)
           }}
           value={score ?? ''}
           placeholder="minimum score"
@@ -67,7 +64,7 @@ export default function AcceptingModal({ setShowing }) {
       <FlexDiv style={{ justifyContent: 'center' }}>
         <Button
           onClick={() => {
-            getApplicants();
+            getApplicants()
           }}
           disabled={!(score > 0)}
           width="flex"
@@ -77,7 +74,7 @@ export default function AcceptingModal({ setShowing }) {
         </Button>
         <Button
           onClick={() => {
-            acceptApplicants();
+            acceptApplicants()
           }}
           disabled={!(totalApplicants > 0)}
           width="flex"
@@ -87,5 +84,5 @@ export default function AcceptingModal({ setShowing }) {
         </Button>
       </FlexDiv>
     </Modal>
-  );
+  )
 }

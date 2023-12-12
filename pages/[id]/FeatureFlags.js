@@ -1,65 +1,60 @@
-import styled from 'styled-components';
-import { useEffect, useState } from 'react';
-import Page from '../../components/page';
-import Card, {
-  CardHeader,
-  CardButtonContainer,
-  CardTitle,
-  CardContent,
-} from '../../components/card';
-import Button from '../../components/button';
-import FeatureFlag from '../../components/FeatureFlag';
-import { COLOR, EDIT, HACKATHON_NAVBAR } from '../../constants';
+import { useEffect, useState } from 'react'
+import styled from 'styled-components'
+import FeatureFlag from '../../components/FeatureFlag'
+import Button from '../../components/button'
+import Card, { CardButtonContainer, CardContent, CardHeader, CardTitle } from '../../components/card'
+import Page from '../../components/page'
+import { COLOR, EDIT, HACKATHON_NAVBAR } from '../../constants'
+import { useAuth } from '../../utility/auth'
 import {
-  getTimestamp,
-  subscribeToFlags,
   formatDate,
-  updateFlags,
   getHackathonPaths,
   getHackathons,
-} from '../../utility/firebase';
-import { useAuth } from '../../utility/auth';
+  getTimestamp,
+  subscribeToFlags,
+  updateFlags,
+} from '../../utility/firebase'
 
 const InlineButton = styled.span`
   display: inline;
   float: right;
   margin: 0 16px;
   padding-bottom: 32px;
-`;
+`
 
 const InlineButtonContainer = styled.div`
   display: inline-block;
   float: right;
   margin-top: -40px;
-`;
+`
 export default function FeatureFlags({ id, hackathons }) {
-  const [editing, setEditing] = useState(false);
-  const [flags, setFlags] = useState({});
-  const [editedFlags, setEditedFlags] = useState({});
-  const { email: user } = useAuth().user;
+  const [editing, setEditing] = useState(false)
+  const [flags, setFlags] = useState({})
+  const [editedFlags, setEditedFlags] = useState({})
+  const { email: user } = useAuth().user
   useEffect(() => {
-    return subscribeToFlags(id, setFlags);
-  }, [window.location.href]);
+    return subscribeToFlags(id, setFlags)
+  }, [window.location.href])
 
   useEffect(() => {
     if (!editing) {
-      setEditedFlags({});
+      setEditedFlags({})
     }
-  }, [editing]);
+  }, [editing])
 
   const saveFlags = async () => {
-    const updateObj = editedFlags;
-    updateObj.lastEdited = getTimestamp();
-    updateObj.lastEditedBy = user;
-    await updateFlags(id, updateObj);
-    setEditing(false);
-  };
+    const updateObj = editedFlags
+    updateObj.lastEdited = getTimestamp()
+    updateObj.lastEditedBy = user
+    await updateFlags(id, updateObj)
+    setEditing(false)
+  }
 
   const EditFlagsComponent = () => (
     <>
       {Object.entries(editedFlags).map(([key, value]) => {
         if (key === 'lastEdited' || key === 'lastEditedBy') {
-          return null;
+          return null
         }
         return (
           <FeatureFlag
@@ -69,10 +64,10 @@ export default function FeatureFlags({ id, hackathons }) {
               setEditedFlags({
                 ...editedFlags,
                 [key]: !value,
-              });
+              })
             }}
           />
-        );
+        )
       })}
       <InlineButtonContainer>
         <InlineButton>
@@ -89,79 +84,67 @@ export default function FeatureFlags({ id, hackathons }) {
         </InlineButton>
       </InlineButtonContainer>
     </>
-  );
+  )
 
   const ViewFlagsComponent = () => (
     <>
       {Object.entries(flags).map(([key, value]) => {
         if (key === 'lastEdited' || key === 'lastEditedBy') {
-          return null;
+          return null
         }
-        return <FeatureFlag disabled title={key} value={value} />;
+        return <FeatureFlag disabled title={key} value={value} />
       })}
     </>
-  );
+  )
 
   if (!flags) {
     return (
-      <Page
-        currentPath={id}
-        hackathons={hackathons}
-        navbarItems={HACKATHON_NAVBAR}
-      >
+      <Page currentPath={id} hackathons={hackathons} navbarItems={HACKATHON_NAVBAR}>
         <Card>
           <CardHeader>
             <CardTitle>No Feature Flags for {id}</CardTitle>
           </CardHeader>
         </Card>
       </Page>
-    );
+    )
   }
 
   return (
-    <Page
-      currentPath={id}
-      hackathons={hackathons}
-      navbarItems={HACKATHON_NAVBAR}
-    >
+    <Page currentPath={id} hackathons={hackathons} navbarItems={HACKATHON_NAVBAR}>
       <Card>
         <CardHeader>
           <CardTitle>Feature Flags for {id}</CardTitle>
-          <p>{`Last edited by ${flags.lastEditedBy} at ${formatDate(
-            flags.lastEdited?.seconds
-          )}`}</p>
+          <p>{`Last edited by ${flags.lastEditedBy} at ${formatDate(flags.lastEdited?.seconds)}`}</p>
           <CardButtonContainer>
             <Button
               type={EDIT}
               onClick={() => {
                 if (editing) {
-                  setEditing(false);
+                  setEditing(false)
                 } else {
-                  setEditedFlags(flags);
-                  setEditing(true);
+                  setEditedFlags(flags)
+                  setEditing(true)
                 }
               }}
             />
           </CardButtonContainer>
         </CardHeader>
-        <CardContent>
-          {editing ? <EditFlagsComponent /> : <ViewFlagsComponent />}
-        </CardContent>
+        <CardContent>{editing ? <EditFlagsComponent /> : <ViewFlagsComponent />}</CardContent>
       </Card>
     </Page>
-  );
+  )
 }
 
 export const getStaticPaths = async () => {
-  return getHackathonPaths();
-};
+  return getHackathonPaths()
+}
 
 export const getStaticProps = async ({ params }) => {
-  const hackathons = await getHackathons();
+  const hackathons = await getHackathons()
   return {
     props: {
       hackathons,
       id: params.id,
     },
-  };
-};
+  }
+}

@@ -1,5 +1,5 @@
-import DatePicker from 'react-datepicker';
-import { InputField } from './input';
+import DatePicker from 'react-datepicker'
+import { InputField } from './input'
 
 export const DateTimePicker = ({ selected, onChange }) => {
   return (
@@ -12,7 +12,7 @@ export const DateTimePicker = ({ selected, onChange }) => {
       timeCaption="Time"
       dateFormat="yyyy-MM-dd h:mm aa"
     />
-  );
-};
+  )
+}
 
-export default DateTimePicker;
+export default DateTimePicker

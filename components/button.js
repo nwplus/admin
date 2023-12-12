@@ -1,21 +1,18 @@
-import React from 'react';
-import styled from 'styled-components';
-import Icon from './Icon';
-import { COLOR, EDIT, VIEW, NEW, CLOSE, DELETE } from '../constants';
+import React from 'react'
+import styled from 'styled-components'
+import { CLOSE, COLOR, DELETE, EDIT, NEW, VIEW } from '../constants'
+import Icon from './Icon'
 
 const StyledButton = styled.button`
-  ${(props) =>
+  ${props =>
     props.outlined
-      ? `border: 2px solid ${
-          props.disabled ? COLOR.INACTIVE_DARK_GRAY : props.contentColor
-        }`
+      ? `border: 2px solid ${props.disabled ? COLOR.INACTIVE_DARK_GRAY : props.contentColor}`
       : `border: none`};
   font-family: 'HK Grotesk';
   font-weight: bold;
-  ${(props) => props.isText && 'padding: 6px 24px; height: 40px;'}
-  ${(props) =>
-    !props.isText && props.contentColor === COLOR.BLACK && 'padding: 10px;'}
-  ${(props) =>
+  ${props => props.isText && 'padding: 6px 24px; height: 40px;'}
+  ${props => !props.isText && props.contentColor === COLOR.BLACK && 'padding: 10px;'}
+  ${props =>
     !props.disabled
       ? props.color
         ? `color: ${props.contentColor}; background: ${props.color};`
@@ -23,27 +20,21 @@ const StyledButton = styled.button`
       : `color: ${COLOR.INACTIVE_DARK_GRAY}; background: ${
           props.outlined ? COLOR.TRANSPARENT : COLOR.UNSELECTED_GRAY
         };`}
-  border-radius: ${(props) =>
-    props.rounded
-      ? props.inline
-        ? '0 100px 100px 0'
-        : '100px'
-      : props.inline
-      ? '0 8px 8px 0'
-      : '8px'};
+  border-radius: ${props =>
+    props.rounded ? (props.inline ? '0 100px 100px 0' : '100px') : props.inline ? '0 8px 8px 0' : '8px'};
   cursor: pointer;
   display: flex;
   align-items: center;
   font-size: 16px;
   &:hover {
-    color: ${(props) => props.hoverContentColor};
-    background: ${(props) => props.hoverBackgroundColor};
+    color: ${props => props.hoverContentColor};
+    background: ${props => props.hoverBackgroundColor};
   }
-`;
+`
 
 const StyledIcon = styled(Icon)`
-  ${(props) => props.hasText && 'margin-right: 8px;'}
-`;
+  ${props => props.hasText && 'margin-right: 8px;'}
+`
 
 /* color specifies the background color, contentColor specifies the color of the text/icon
     (i.e. content) within the button. contentColor is needed because:
@@ -85,6 +76,6 @@ const Button = ({
     {type === CLOSE && <Icon icon="times" color={contentColor} />}
     {children}
   </StyledButton>
-);
+)
 
-export default Button;
+export default Button

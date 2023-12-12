@@ -1,27 +1,27 @@
-import React from 'react';
-import styled, { css } from 'styled-components';
-import { COLOR } from '../constants';
-import Eye from '../assets/eye.svg';
+import React from 'react'
+import styled, { css } from 'styled-components'
+import Eye from '../assets/eye.svg'
+import { COLOR } from '../constants'
 
 const Container = styled.div`
   display: flex;
   cursor: pointer;
   padding: 10px;
-`;
+`
 
 const ButtonContainer = css`
   width: 125px;
-`;
+`
 
 const ButtonContainerLeft = styled.div`
   ${ButtonContainer}
   border-radius: 100px 0px 0px 100px;
-`;
+`
 
 const ButtonContainerRight = styled.div`
   ${ButtonContainer}
   border-radius: 0px 100px 100px 0px;
-`;
+`
 
 const Button = css`
   display: flex;
@@ -29,23 +29,23 @@ const Button = css`
   height: 35px;
   justify-content: center;
   align-items: center;
-`;
+`
 
 const UnselectedButton = styled.div`
   ${Button}
   background-color: ${COLOR.LIGHT_GRAY};
   color: ${COLOR.UNSELECTED_GRAY};
-`;
+`
 
 const SelectedButton = styled.div`
   ${Button}
   background-color: ${COLOR.LIGHT_PURPLE};
   color: ${COLOR.MIDNIGHT_PURPLE};
-`;
+`
 
 const EyeImage = styled.img`
   padding-right: 3px;
-`;
+`
 
 export default ({ leftText, rightText, isLeftSelected, setIsLeftSelected }) => {
   return (
@@ -71,5 +71,5 @@ export default ({ leftText, rightText, isLeftSelected, setIsLeftSelected }) => {
         )}
       </ButtonContainerRight>
     </Container>
-  );
-};
+  )
+}

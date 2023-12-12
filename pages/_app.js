@@ -1,12 +1,12 @@
-import React from 'react';
-import Head from 'next/head';
-import Auth from '../utility/auth';
-import CMSControl from '../utility/CMSControl';
+import Head from 'next/head'
+import React from 'react'
+import CMSControl from '../utility/CMSControl'
+import Auth from '../utility/auth'
 
-import '../utility/firebase';
+import '../utility/firebase'
 
-import '../assets/fonts/style.css';
-import '../app.css';
+import '../app.css'
+import '../assets/fonts/style.css'
 
 // // Only execute on client side
 // if (typeof window !== 'undefined') {
@@ -35,7 +35,7 @@ function MyApp({ Component, pageProps }) {
         <Component {...pageProps} />
       </Auth>
     </CMSControl>
-  );
+  )
 }
 
 // Only uncomment this method if you have blocking data requirements for
@@ -50,4 +50,4 @@ function MyApp({ Component, pageProps }) {
 //   return { ...appProps }
 // }
 
-export default MyApp;
+export default MyApp

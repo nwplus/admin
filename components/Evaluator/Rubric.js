@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import styled from 'styled-components';
-import { ASSESSMENT_COLOR, COLOR, RUBRIC } from '../../constants';
-import { Title5 } from '../Typography';
-import Teapots from '../../assets/teapots.svg';
-import RubricEntry from './RubricEntry';
-import RubricDropdown from './RubricDropdown';
+import { useState } from 'react'
+import styled from 'styled-components'
+import Teapots from '../../assets/teapots.svg'
+import { ASSESSMENT_COLOR, COLOR, RUBRIC } from '../../constants'
+import { Title5 } from '../Typography'
+import RubricDropdown from './RubricDropdown'
+import RubricEntry from './RubricEntry'
 
 const Container = styled.div`
   height: 40%;
@@ -14,11 +14,11 @@ const Container = styled.div`
   border-radius: 4px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
   box-sizing: border-box;
-`;
+`
 
 const HeadContainer = styled.div`
   padding: 0 1rem;
-`;
+`
 
 const ContentContainer = styled.div`
   flex-grow: 1;
@@ -27,7 +27,7 @@ const ContentContainer = styled.div`
   flex-direction: column;
   align-items: center;
   overflow-y: auto;
-`;
+`
 
 const StyledTable = styled.table`
   overflow-y: auto;
@@ -46,7 +46,7 @@ const StyledTable = styled.table`
     border-radius: 10px;
     box-shadow: inset 0 0 6px 6px ${ASSESSMENT_COLOR.UNSCORED_GRAY};
   }
-`;
+`
 
 const EmptyValueContentContainer = styled.div`
   width: 100%;
@@ -55,37 +55,34 @@ const EmptyValueContentContainer = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-`;
+`
 
 const StyledImg = styled.img`
   width: 100%;
   height: 60%;
-`;
+`
 
 const StyledText = styled.div`
   color: ${COLOR.INACTIVE_DARK_GRAY};
   text-align: center;
   font-size: 0.8em;
   margin-top: 10px;
-`;
+`
 
 const Rubric = () => {
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState(null)
   return (
     <Container>
       <HeadContainer>
         <Title5 color={COLOR.MIDNIGHT_PURPLE}>Rubric</Title5>
-        <RubricDropdown onSelect={(val) => setSelected(val)} />
+        <RubricDropdown onSelect={val => setSelected(val)} />
       </HeadContainer>
       <ContentContainer>
         {selected !== null ? (
           <StyledTable>
             <tbody>
-              {RUBRIC[selected].map((rubricEntry) => (
-                <RubricEntry
-                  score={rubricEntry.score}
-                  label={rubricEntry.label}
-                />
+              {RUBRIC[selected].map(rubricEntry => (
+                <RubricEntry score={rubricEntry.score} label={rubricEntry.label} />
               ))}
             </tbody>
           </StyledTable>
@@ -99,7 +96,7 @@ const Rubric = () => {
         )}
       </ContentContainer>
     </Container>
-  );
-};
+  )
+}
 
-export default Rubric;
+export default Rubric

@@ -1,38 +1,38 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import PopoutWindow from './PopoutWindow';
-import { Button } from './Button';
-import { ASSESSMENT_COLOR, COLOR } from '../../constants';
-import OpenLinkIcon from '../../assets/openLinkIcon.svg';
+import React, { useState } from 'react'
+import styled from 'styled-components'
+import OpenLinkIcon from '../../assets/openLinkIcon.svg'
+import { ASSESSMENT_COLOR, COLOR } from '../../constants'
+import { Button } from './Button'
+import PopoutWindow from './PopoutWindow'
 
 const Label = styled.label`
   color: ${ASSESSMENT_COLOR.LIGHT_GRAY};
-`;
+`
 
 const Container = styled.div`
   margin-top: 15px;
-`;
+`
 
 const URL = styled.a`
   color: ${COLOR.MIDNIGHT_PURPLE_LIGHT};
   text-decoration: none;
   font-weight: bold;
-`;
+`
 
 const URLContainer = styled.div`
   display: flex;
-`;
+`
 
 const OpenIcon = styled.a`
   margin-left: auto;
   cursor: pointer;
   margin-right: 10px;
-`;
+`
 
-const NO_RESPONSE = 'No Response';
+const NO_RESPONSE = 'No Response'
 
 export default function ResponseInput({ url, label, response, openable }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
 
   const OpenButton = () => (
     <div style={{ textAlign: 'center' }}>
@@ -40,13 +40,13 @@ export default function ResponseInput({ url, label, response, openable }) {
         bColor={ASSESSMENT_COLOR.BLUE_TEXT}
         width="flex"
         onClick={() => {
-          setOpen(!open);
+          setOpen(!open)
         }}
       >
         {open ? 'Close window' : 'Open in new window'}
       </Button>
     </div>
-  );
+  )
 
   const ResponseArea = ({ fontSize }) => (
     <div
@@ -75,7 +75,7 @@ export default function ResponseInput({ url, label, response, openable }) {
         </URLContainer>
       )}
     </div>
-  );
+  )
 
   return (
     <Container>
@@ -91,5 +91,5 @@ export default function ResponseInput({ url, label, response, openable }) {
         </PopoutWindow>
       )}
     </Container>
-  );
+  )
 }

@@ -1,7 +1,7 @@
-import React from 'react';
-import CSVButton from './CSVButton';
-import Modal from './Modal';
-import ResumeExportButton from './ResumeExportButton';
+import React from 'react'
+import CSVButton from './CSVButton'
+import Modal from './Modal'
+import ResumeExportButton from './ResumeExportButton'
 
 export default function ExportModal({ setShowing }) {
   return (
@@ -10,5 +10,5 @@ export default function ExportModal({ setShowing }) {
       <CSVButton />
       <ResumeExportButton />
     </Modal>
-  );
+  )
 }

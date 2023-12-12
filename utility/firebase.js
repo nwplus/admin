@@ -1,12 +1,12 @@
 /* eslint-disable no-console */
-import firebase from 'firebase/app';
-import 'firebase/firestore';
-import 'firebase/auth';
-import 'firebase/storage';
-import JSZip from 'jszip';
-import download from 'downloadjs';
-import { calculateTotalScore } from './utilities';
-import { APPLICATION_STATUS, FAQ, FAQCategory } from '../constants';
+import download from 'downloadjs'
+import firebase from 'firebase/app'
+import 'firebase/auth'
+import 'firebase/firestore'
+import 'firebase/storage'
+import JSZip from 'jszip'
+import { APPLICATION_STATUS, FAQ, FAQCategory } from '../constants'
+import { calculateTotalScore } from './utilities'
 
 if (!firebase.apps.length) {
   const config = {
@@ -18,121 +18,101 @@ if (!firebase.apps.length) {
     appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
     storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
     messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  };
-  firebase.initializeApp(config);
+  }
+  firebase.initializeApp(config)
 }
 
-export const db = firebase.firestore();
-export const storage = firebase.storage();
-export const { firestore } = firebase;
+export const db = firebase.firestore()
+export const storage = firebase.storage()
+export const { firestore } = firebase
 
-const webCollection = 'Website_content';
-const faqCollection = FAQ;
-const Hackathons = 'Hackathons';
-const InternalWebsitesCollection = 'InternalWebsites';
-const CMSCollection = 'CMS';
-const LivesiteCollection = 'Livesite';
-const HackerEvaluationHackathon = 'nwHacks2024';
+const webCollection = 'Website_content'
+const faqCollection = FAQ
+const Hackathons = 'Hackathons'
+const InternalWebsitesCollection = 'InternalWebsites'
+const CMSCollection = 'CMS'
+const LivesiteCollection = 'Livesite'
+const HackerEvaluationHackathon = 'nwHacks2024'
 
 export const getTimestamp = () => {
-  return firebase.firestore.Timestamp.now();
-};
+  return firebase.firestore.Timestamp.now()
+}
 
 // formats timestamp to yyyy-mm-dd hh:mm of type string
 export const formatDate = (date, isGMT = false) => {
   if (!date) {
-    date = getTimestamp().seconds;
+    date = getTimestamp().seconds
   }
-  const timeZoneOffset = new Date().getTimezoneOffset() * 60000;
+  const timeZoneOffset = new Date().getTimezoneOffset() * 60000
   if (!isGMT) {
-    date = new Date(date * 1000);
+    date = new Date(date * 1000)
   }
   // convert to RFC3339 then to yyyy-mm-dd hh:mm
-  return new Date(date - timeZoneOffset)
-    .toISOString()
-    .slice(0, -1)
-    .slice(0, -7)
-    .replace('T', ' ');
-};
+  return new Date(date - timeZoneOffset).toISOString().slice(0, -1).slice(0, -7).replace('T', ' ')
+}
 
 export const getDocument = async (hackathon, collection) => {
   if (collection === hackathon) {
-    const ref = db.collection(webCollection).doc(hackathon);
-    const data = await ref.get();
-    return data.data();
+    const ref = db.collection(webCollection).doc(hackathon)
+    const data = await ref.get()
+    return data.data()
   }
-  const ref = db
-    .collection(webCollection)
-    .doc(hackathon)
-    .collection(collection);
-  return (await ref.get()).docs.map((doc) => ({
+  const ref = db.collection(webCollection).doc(hackathon).collection(collection)
+  return (await ref.get()).docs.map(doc => ({
     id: doc.id,
     data: doc.data(),
-  }));
-};
+  }))
+}
 
 export const updateDocument = (hackathon, collection, docId, object) => {
-  db.collection(webCollection)
-    .doc(hackathon)
-    .collection(collection)
-    .doc(docId)
-    .update(object);
-};
+  db.collection(webCollection).doc(hackathon).collection(collection).doc(docId).update(object)
+}
 
 export const addDocument = async (hackathon, collection, object) => {
-  const ref = await db
-    .collection(webCollection)
-    .doc(hackathon)
-    .collection(collection)
-    .add(object);
-  return ref.id;
-};
+  const ref = await db.collection(webCollection).doc(hackathon).collection(collection).add(object)
+  return ref.id
+}
 
 export const deleteDocument = async (hackathon, collection, docId) => {
-  await db
-    .collection(webCollection)
-    .doc(hackathon)
-    .collection(collection)
-    .doc(docId)
-    .delete();
-};
+  await db.collection(webCollection).doc(hackathon).collection(collection).doc(docId).delete()
+}
 
 export const getHackathons = async () => {
   return db
     .collection('Hackathons')
     .get()
-    .then((querySnapshot) => {
-      const hackathons = [];
-      querySnapshot.forEach((doc) => {
-        hackathons.push(doc.id);
-      });
-      return hackathons;
-    });
-};
+    .then(querySnapshot => {
+      const hackathons = []
+      querySnapshot.forEach(doc => {
+        hackathons.push(doc.id)
+      })
+      return hackathons
+    })
+}
 
 export const getHackathonPaths = async () => {
-  const hackathons = await getHackathons();
-  const paths = hackathons.map((id) => {
+  const hackathons = await getHackathons()
+  const paths = hackathons.map(id => {
     return {
       params: { id },
-    };
-  });
+    }
+  })
   return {
     paths,
     fallback: false,
-  };
-};
+  }
+}
 
 export const updateHackathonField = async (hackathonId, updateObj) => {
-  db.collection(Hackathons).doc(hackathonId).update(updateObj);
-};
+  db.collection(Hackathons).doc(hackathonId).update(updateObj)
+}
 
 export const getHackathonSnapShot = (hackathonId, callback) => {
   return db
     .collection(Hackathons)
     .doc(hackathonId)
-    .onSnapshot((doc) => callback(doc));
-};
+    .onSnapshot(doc => callback(doc))
+}
 
 export const getEvent = (eventID, data) => {
   return data
@@ -141,38 +121,26 @@ export const getEvent = (eventID, data) => {
         key: data.key || eventID,
         title: data.title || 'Empty event field',
         text: data.text || 'Empty text description for event',
-        date: data.date
-          ? formatDate(data.date.seconds)
-          : formatDate(getTimestamp().seconds),
+        date: data.date ? formatDate(data.date.seconds) : formatDate(getTimestamp().seconds),
         order: data.order >= 0 ? data.order : -1,
-        lastModified: data.lastModified
-          ? formatDate(data.lastModified.seconds)
-          : formatDate(getTimestamp().seconds),
+        lastModified: data.lastModified ? formatDate(data.lastModified.seconds) : formatDate(getTimestamp().seconds),
         lastModifiedBy: data.lastModifiedBy || 'Unknown user',
       }
-    : null;
-};
+    : null
+}
 
-export const getEvents = async (hackathon) => {
-  const eventIDs = await db
-    .collection('Hackathons')
-    .doc(hackathon)
-    .collection('Events')
-    .get();
-  const events = {};
-  eventIDs.docs.forEach((doc) => {
-    const currEvent = getEvent(doc.id, doc.data());
-    if (currEvent) events[doc.id] = currEvent;
-  });
-  return events;
-};
+export const getEvents = async hackathon => {
+  const eventIDs = await db.collection('Hackathons').doc(hackathon).collection('Events').get()
+  const events = {}
+  eventIDs.docs.forEach(doc => {
+    const currEvent = getEvent(doc.id, doc.data())
+    if (currEvent) events[doc.id] = currEvent
+  })
+  return events
+}
 
 export const addEvent = async (hackathon, event) => {
-  const ref = db
-    .collection('Hackathons')
-    .doc(hackathon)
-    .collection('Events')
-    .doc();
+  const ref = db.collection('Hackathons').doc(hackathon).collection('Events').doc()
   await ref.set({
     title: event.title,
     key: ref.id,
@@ -181,17 +149,13 @@ export const addEvent = async (hackathon, event) => {
     order: event.order,
     lastModified: getTimestamp(),
     lastModifiedBy: event.lastModifiedBy,
-  });
-  return ref.id;
-};
+  })
+  return ref.id
+}
 
 export const updateEvent = async (hackathon, event) => {
-  const ref = db
-    .collection('Hackathons')
-    .doc(hackathon)
-    .collection('Events')
-    .doc(event.eventID);
-  const currDate = getTimestamp();
+  const ref = db.collection('Hackathons').doc(hackathon).collection('Events').doc(event.eventID)
+  const currDate = getTimestamp()
   await ref.update({
     title: event.title || 'Empty event field',
     key: event.key || event.eventID,
@@ -200,30 +164,25 @@ export const updateEvent = async (hackathon, event) => {
     order: event.order || -1,
     lastModified: currDate,
     lastModifiedBy: event.lastModifiedBy,
-  });
-};
+  })
+}
 
 export const deleteEvent = async (hackathon, eventID) => {
-  await db
-    .collection('Hackathons')
-    .doc(hackathon)
-    .collection('Events')
-    .doc(eventID)
-    .delete();
-};
+  await db.collection('Hackathons').doc(hackathon).collection('Events').doc(eventID).delete()
+}
 
-const getFaqCategory = (faqCategory) => {
+const getFaqCategory = faqCategory => {
   switch (faqCategory) {
     case FAQCategory.LOGS:
-      return FAQCategory.LOGS;
+      return FAQCategory.LOGS
     case FAQCategory.TEAMS:
-      return FAQCategory.TEAMS;
+      return FAQCategory.TEAMS
     case FAQCategory.MISC:
-      return FAQCategory.MISC;
+      return FAQCategory.MISC
     default:
-      return FAQCategory.GENERAL;
+      return FAQCategory.GENERAL
   }
-};
+}
 
 const getFaq = (faqID, faqData) => {
   return faqData
@@ -231,33 +190,31 @@ const getFaq = (faqID, faqData) => {
         id: faqID,
         question: faqData.question ? faqData.question : 'Empty question field',
         answer: faqData.answer ? faqData.answer : 'Empty answer field',
-        category: faqData.category
-          ? getFaqCategory(faqData.category)
-          : FAQCategory.MISC,
+        category: faqData.category ? getFaqCategory(faqData.category) : FAQCategory.MISC,
         lastModified: faqData.lastModified
           ? formatDate(faqData.lastModified.seconds)
           : formatDate(getTimestamp().seconds),
         lastModifiedBy: faqData.lastModifiedBy || 'Unknown user',
         hackathonIDs: faqData.hackathonIDs ? faqData.hackathonIDs : [],
       }
-    : null;
-};
+    : null
+}
 
 export const getFaqs = async () => {
-  const faqIDs = await db.collection(faqCollection).get();
-  const faqs = {};
-  faqIDs.docs.forEach((doc) => {
-    const currFaq = getFaq(doc.id, doc.data());
+  const faqIDs = await db.collection(faqCollection).get()
+  const faqs = {}
+  faqIDs.docs.forEach(doc => {
+    const currFaq = getFaq(doc.id, doc.data())
     if (currFaq) {
-      faqs[doc.id] = currFaq;
+      faqs[doc.id] = currFaq
     }
-  });
-  return faqs;
-};
+  })
+  return faqs
+}
 
-export const addFaq = async (faq) => {
-  const ref = db.collection(faqCollection).doc();
-  const currDate = getTimestamp();
+export const addFaq = async faq => {
+  const ref = db.collection(faqCollection).doc()
+  const currDate = getTimestamp()
   await ref.set({
     question: faq.question,
     category: faq.category,
@@ -265,12 +222,12 @@ export const addFaq = async (faq) => {
     lastModified: currDate,
     lastModifiedBy: faq.lastModifiedBy,
     hackathonIDs: faq.hackathonIDs,
-  });
-  return ref.id;
-};
+  })
+  return ref.id
+}
 export const updateFaq = async (faqID, faq) => {
-  const ref = db.collection(faqCollection).doc(faqID);
-  const currDate = getTimestamp();
+  const ref = db.collection(faqCollection).doc(faqID)
+  const currDate = getTimestamp()
   await ref.update({
     question: faq.question || 'Empty Question Field',
     category: faq.category || 'None',
@@ -278,220 +235,192 @@ export const updateFaq = async (faqID, faq) => {
     lastModified: currDate,
     lastModifiedBy: faq.lastModifiedBy,
     hackathonIDs: faq.hackathonIDs,
-  });
-};
-export const deleteFaq = async (faqID) => {
-  await db.collection(faqCollection).doc(faqID).delete();
-};
+  })
+}
+export const deleteFaq = async faqID => {
+  await db.collection(faqCollection).doc(faqID).delete()
+}
 
 export const updateSponsor = async (website, sponsor) => {
   if (sponsor.id) {
-    const ref = db
-      .collection('Hackathons')
-      .doc(website)
-      .collection('Sponsors')
-      .doc(sponsor.id);
-    await ref.set(sponsor);
-    return sponsor.id;
+    const ref = db.collection('Hackathons').doc(website).collection('Sponsors').doc(sponsor.id)
+    await ref.set(sponsor)
+    return sponsor.id
   }
-  delete sponsor.id;
-  const ref = db
-    .collection('Hackathons')
-    .doc(website)
-    .collection('Sponsors')
-    .doc();
-  await ref.set(sponsor);
-  return ref.id;
-};
+  delete sponsor.id
+  const ref = db.collection('Hackathons').doc(website).collection('Sponsors').doc()
+  await ref.set(sponsor)
+  return ref.id
+}
 
 export const deleteSponsor = async (website, sponsorId) => {
-  const ref = db
-    .collection('Hackathons')
-    .doc(website)
-    .collection('Sponsors')
-    .doc(sponsorId);
-  await ref.delete();
-};
-export const getSponsors = async (website) => {
-  const refs = await db
-    .collection('Hackathons')
-    .doc(website)
-    .collection('Sponsors')
-    .get();
-  const sponsors = {};
-  refs.docs.forEach((doc) => {
-    sponsors[doc.id] = doc.data();
-  });
-  return sponsors;
-};
+  const ref = db.collection('Hackathons').doc(website).collection('Sponsors').doc(sponsorId)
+  await ref.delete()
+}
+export const getSponsors = async website => {
+  const refs = await db.collection('Hackathons').doc(website).collection('Sponsors').get()
+  const sponsors = {}
+  refs.docs.forEach(doc => {
+    sponsors[doc.id] = doc.data()
+  })
+  return sponsors
+}
 
 export const uploadSponsorImageToStorage = async (website, file) => {
   try {
-    const ref = storage.ref(`sponsor/${website}/${file.name}`);
-    const uploadData = await ref.put(file);
-    return uploadData.ref.getDownloadURL();
+    const ref = storage.ref(`sponsor/${website}/${file.name}`)
+    const uploadData = await ref.put(file)
+    return uploadData.ref.getDownloadURL()
   } catch (e) {
     // eslint-disable-next-line no-alert
-    alert(e);
-    return null;
+    alert(e)
+    return null
   }
-};
+}
 
-export const uploadLivesiteLogoToStorage = async (file) => {
+export const uploadLivesiteLogoToStorage = async file => {
   try {
-    const ref = storage.ref(`logo.svg`);
-    const uploadData = await ref.put(file);
-    return uploadData.ref.getDownloadURL();
+    const ref = storage.ref(`logo.svg`)
+    const uploadData = await ref.put(file)
+    return uploadData.ref.getDownloadURL()
   } catch (e) {
     // eslint-disable-next-line no-alert
-    alert(e);
-    return null;
+    alert(e)
+    return null
   }
-};
+}
 
 export const getImageFilebyName = async (website, imgURL) => {
-  const imgId = imgURL.split('/').slice(-1)[0];
-  const ref = await storage
-    .ref(`sponsor/${website}`)
-    .child(imgId)
-    .getDownloadURL();
-  return ref;
-};
+  const imgId = imgURL.split('/').slice(-1)[0]
+  const ref = await storage.ref(`sponsor/${website}`).child(imgId).getDownloadURL()
+  return ref
+}
 export const deleteSponsorImagefromStorage = async (website, imgName) => {
-  const ref = storage.ref(`sponsor/${website}/${imgName}`);
-  await ref.delete();
-};
+  const ref = storage.ref(`sponsor/${website}/${imgName}`)
+  await ref.delete()
+}
 
 export const logout = async () => {
-  await firebase.auth().signOut();
-};
+  await firebase.auth().signOut()
+}
 
 export const subscribeToFlags = (id, cb) => {
   return db
     .collection(Hackathons)
     .doc(id)
-    .onSnapshot((snap) => {
-      cb(snap.data().featureFlags);
-    });
-};
+    .onSnapshot(snap => {
+      cb(snap.data().featureFlags)
+    })
+}
 
 export const updateFlags = async (id, flags) => {
   const doc = {
     featureFlags: flags,
-  };
-  return db.collection(Hackathons).doc(id).update(doc);
-};
+  }
+  return db.collection(Hackathons).doc(id).update(doc)
+}
 
 export const updateTags = async (id, tags) => {
-  const doc = { tags };
-  return db.collection(Hackathons).doc(id).update(doc);
-};
+  const doc = { tags }
+  return db.collection(Hackathons).doc(id).update(doc)
+}
 
-export const subscribeToCMSStatus = (dateCallback) => {
+export const subscribeToCMSStatus = dateCallback => {
   return db
     .collection(InternalWebsitesCollection)
     .doc(CMSCollection)
-    .onSnapshot((snap) => {
-      const { offUntilDate } = snap.data();
-      dateCallback(offUntilDate);
-    });
-};
+    .onSnapshot(snap => {
+      const { offUntilDate } = snap.data()
+      dateCallback(offUntilDate)
+    })
+}
 
-const livesiteDocRef = db
-  .collection(InternalWebsitesCollection)
-  .doc(LivesiteCollection);
+const livesiteDocRef = db.collection(InternalWebsitesCollection).doc(LivesiteCollection)
 
-export const getActiveHackathon = livesiteDocRef
-  .get()
-  .then((doc) => doc.data()?.activeHackathon);
+export const getActiveHackathon = livesiteDocRef.get().then(doc => doc.data()?.activeHackathon)
 
-const announcementsRef = (hackathon) => {
-  return db.collection(Hackathons).doc(hackathon).collection('Announcements');
-};
+const announcementsRef = hackathon => {
+  return db.collection(Hackathons).doc(hackathon).collection('Announcements')
+}
 
 export const subscribeToLivesiteAnnouncements = (hackathon, callback) => {
   return announcementsRef(hackathon)
     .orderBy('timestamp', 'desc')
-    .onSnapshot((querySnapshot) => {
-      const announcements = {};
-      querySnapshot.docs.forEach((doc) => {
-        announcements[doc.id] = doc.data();
-      });
-      callback(announcements);
-    });
-};
+    .onSnapshot(querySnapshot => {
+      const announcements = {}
+      querySnapshot.docs.forEach(doc => {
+        announcements[doc.id] = doc.data()
+      })
+      callback(announcements)
+    })
+}
 
 export const updateAnnouncement = async (hackathon, announcement) => {
   if (announcement.id) {
-    const ref = announcementsRef(hackathon).doc(announcement.id);
-    delete announcement.id;
-    await ref.set(announcement);
-    return announcement.id;
+    const ref = announcementsRef(hackathon).doc(announcement.id)
+    delete announcement.id
+    await ref.set(announcement)
+    return announcement.id
   }
-  announcement.timestamp = Date.now();
-  const ref = await announcementsRef(hackathon).doc().set(announcement);
-  console.log(ref);
-  return ref;
-};
+  announcement.timestamp = Date.now()
+  const ref = await announcementsRef(hackathon).doc().set(announcement)
+  console.log(ref)
+  return ref
+}
 
 export const deleteAnnouncement = async (hackathon, id) => {
-  await announcementsRef(hackathon).doc(id).delete();
-};
+  await announcementsRef(hackathon).doc(id).delete()
+}
 
-export const subscribeToLivesiteData = (callback) => {
-  return livesiteDocRef.onSnapshot((doc) => callback(doc.data()));
-};
+export const subscribeToLivesiteData = callback => {
+  return livesiteDocRef.onSnapshot(doc => callback(doc.data()))
+}
 
-export const updateLivesiteData = async (data) => {
-  return livesiteDocRef.update(data);
-};
+export const updateLivesiteData = async data => {
+  return livesiteDocRef.update(data)
+}
 
 export const getLivesiteQuicklinks = async (hackathon, callback) => {
-  const eventIDs = await db
-    .collection('Hackathons')
-    .doc(hackathon)
-    .collection('QuickLinks')
-    .orderBy('label')
-    .get();
+  const eventIDs = await db.collection('Hackathons').doc(hackathon).collection('QuickLinks').orderBy('label').get()
   return callback(
-    eventIDs.docs.map((doc) => {
-      return doc.data();
+    eventIDs.docs.map(doc => {
+      return doc.data()
     })
-  );
-};
+  )
+}
 
-const quicklinksRef = (hackathon) => {
-  return db.collection(Hackathons).doc(hackathon).collection('QuickLinks');
-};
+const quicklinksRef = hackathon => {
+  return db.collection(Hackathons).doc(hackathon).collection('QuickLinks')
+}
 
 export const subscribeToLivesiteQuicklinks = (hackathon, callback) => {
   return quicklinksRef(hackathon)
     .orderBy('label')
-    .onSnapshot((querySnapshot) => {
-      const quicklinks = {};
-      querySnapshot.docs.forEach((doc) => {
-        quicklinks[doc.id] = doc.data();
-      });
-      callback(quicklinks);
-    });
-};
+    .onSnapshot(querySnapshot => {
+      const quicklinks = {}
+      querySnapshot.docs.forEach(doc => {
+        quicklinks[doc.id] = doc.data()
+      })
+      callback(quicklinks)
+    })
+}
 
 export const updateQuicklink = async (hackathon, quicklink) => {
   if (quicklink.id) {
-    quicklink.lastModified = getTimestamp();
-    const ref = quicklinksRef(hackathon).doc(quicklink.id);
-    delete quicklink.id;
-    await ref.set(quicklink);
-    return quicklink.id;
+    quicklink.lastModified = getTimestamp()
+    const ref = quicklinksRef(hackathon).doc(quicklink.id)
+    delete quicklink.id
+    await ref.set(quicklink)
+    return quicklink.id
   }
-  quicklink.lastModified = getTimestamp();
-  const ref = await quicklinksRef(hackathon).doc().set(quicklink);
-  return ref;
-};
+  quicklink.lastModified = getTimestamp()
+  const ref = await quicklinksRef(hackathon).doc().set(quicklink)
+  return ref
+}
 
 export const deleteQuicklink = async (hackathon, id) => {
-  await quicklinksRef(hackathon).doc(id).delete();
-};
+  await quicklinksRef(hackathon).doc(id).delete()
+}
 
 export const getLivesiteEvent = (eventID, data) => {
   return data
@@ -501,136 +430,112 @@ export const getLivesiteEvent = (eventID, data) => {
         key: data.key || eventID,
         name: data.name || 'Empty event field',
         description: data.description || 'Empty text description for event',
-        lastModified: data.lastModified
-          ? formatDate(data.lastModified.seconds)
-          : formatDate(getTimestamp().seconds),
+        lastModified: data.lastModified ? formatDate(data.lastModified.seconds) : formatDate(getTimestamp().seconds),
         lastModifiedBy: data.lastModifiedBy || 'Unknown user',
       }
-    : null;
-};
+    : null
+}
 
-export const getLivesiteEvents = async (hackathon) => {
-  const eventIDs = await db
-    .collection('Hackathons')
-    .doc(hackathon)
-    .collection('DayOf')
-    .orderBy('startTime')
-    .get();
-  const events = {};
-  eventIDs.docs.forEach((doc) => {
-    const currEvent = getLivesiteEvent(doc.id, doc.data());
-    if (currEvent) events[doc.id] = currEvent;
-  });
-  return events;
-};
+export const getLivesiteEvents = async hackathon => {
+  const eventIDs = await db.collection('Hackathons').doc(hackathon).collection('DayOf').orderBy('startTime').get()
+  const events = {}
+  eventIDs.docs.forEach(doc => {
+    const currEvent = getLivesiteEvent(doc.id, doc.data())
+    if (currEvent) events[doc.id] = currEvent
+  })
+  return events
+}
 
 export const addLivesiteEvent = async (hackathon, event) => {
-  const ref = db
-    .collection('Hackathons')
-    .doc(hackathon)
-    .collection('DayOf')
-    .doc();
-  delete event.eventID;
-  delete event.key;
+  const ref = db.collection('Hackathons').doc(hackathon).collection('DayOf').doc()
+  delete event.eventID
+  delete event.key
   await ref.set({
     ...event,
     lastModified: getTimestamp(),
-  });
-  return ref.id;
-};
+  })
+  return ref.id
+}
 
 export const updateLivesiteEvent = async (hackathon, event) => {
-  const ref = db
-    .collection('Hackathons')
-    .doc(hackathon)
-    .collection('DayOf')
-    .doc(event.eventID);
-  delete event.eventID;
-  delete event.key;
+  const ref = db.collection('Hackathons').doc(hackathon).collection('DayOf').doc(event.eventID)
+  delete event.eventID
+  delete event.key
   await ref.update({
     ...event,
     lastModified: getTimestamp(),
-  });
-};
+  })
+}
 
 export const deleteLivesiteEvent = async (hackathon, eventID) => {
-  await db
-    .collection('Hackathons')
-    .doc(hackathon)
-    .collection('DayOf')
-    .doc(eventID)
-    .delete();
-};
+  await db.collection('Hackathons').doc(hackathon).collection('DayOf').doc(eventID).delete()
+}
 
 export const createProject = async (hackathon, project) => {
-  await db
-    .collection('Hackathons')
-    .doc(hackathon)
-    .collection('Projects')
-    .add(project);
-};
+  await db.collection('Hackathons').doc(hackathon).collection('Projects').add(project)
+}
 
-const projectsRef = (hackathon) => {
-  return db.collection(Hackathons).doc(hackathon).collection('Projects');
-};
+const projectsRef = hackathon => {
+  return db.collection(Hackathons).doc(hackathon).collection('Projects')
+}
 
 export const subscribeToProjects = (hackathon, callback) => {
   return projectsRef(hackathon)
     .orderBy('title')
-    .onSnapshot((querySnapshot) => {
-      const projects = {};
-      querySnapshot.docs.forEach((doc) => {
-        projects[doc.id] = doc.data();
-      });
-      callback(projects);
-    });
-};
+    .onSnapshot(querySnapshot => {
+      const projects = {}
+      querySnapshot.docs.forEach(doc => {
+        projects[doc.id] = doc.data()
+      })
+      callback(projects)
+    })
+}
 
 export const updateProject = async (hackathon, project) => {
   if (project.id) {
-    const ref = projectsRef(hackathon).doc(project.id);
-    delete project.id;
-    await ref.set(project);
-    return project.id;
+    const ref = projectsRef(hackathon).doc(project.id)
+    delete project.id
+    await ref.set(project)
+    return project.id
   }
-  const ref = await projectsRef(hackathon).doc().set(project);
-  console.log(ref);
-  return ref;
-};
+  const ref = await projectsRef(hackathon).doc().set(project)
+  console.log(ref)
+  return ref
+}
 
 export const deleteProject = async (hackathon, id) => {
-  await projectsRef(hackathon).doc(id).delete();
-};
+  await projectsRef(hackathon).doc(id).delete()
+}
 
 // Asessment portal
-export const getAllApplicants = async (callback) => {
+export const getAllApplicants = async callback => {
   return db
     .collection('Hackathons')
     .doc(HackerEvaluationHackathon)
     .collection('Applicants')
     .where('status.applicationStatus', '!=', 'inProgress')
-    .onSnapshot((snap) => {
-      callback(snap.docs.map((doc) => doc.data()));
-    });
-};
+    .onSnapshot(snap => {
+      callback(snap.docs.map(doc => doc.data()))
+    })
+}
 
-export const getApplicantsToAccept = async (score) => {
+export const getApplicantsToAccept = async score => {
   const applicants = await db
     .collection('Hackathons')
     .doc(HackerEvaluationHackathon)
     .collection('Applicants')
     .where('score.totalScore', '>=', score - 1)
-    .get();
+    .get()
   return applicants.docs
-    .filter((app) => {
-      const appStatus = app.data().status.applicationStatus;
-      const newHacker = app.data().skills.hackathonsAttended === 0;
-      if (appStatus !== APPLICATION_STATUS.scored.text) return false;
-      if (newHacker) return true;
-      return app.data().score.totalScore >= score;
+    .filter(app => {
+      const appStatus = app.data().status.applicationStatus
+      const newHacker = app.data().skills.hackathonsAttended === 0
+      if (appStatus !== APPLICATION_STATUS.scored.text) return false
+      if (newHacker) return true
+      return app.data().score.totalScore >= score
     })
-    .map((doc) => doc.data());
-};
+    .map(doc => doc.data())
+}
 
 export const getCSVData = async () => {
   const apps = await db
@@ -638,23 +543,14 @@ export const getCSVData = async () => {
     .doc(HackerEvaluationHackathon)
     .collection('Applicants')
     .where('status.applicationStatus', '!=', 'inProgress')
-    .get();
-  const CSV = apps.docs.map((doc) => {
+    .get()
+  const CSV = apps.docs.map(doc => {
     const {
-      basicInfo: {
-        firstName,
-        lastName,
-        email,
-        educationLevel,
-        phoneNumber,
-        school,
-        location,
-        major,
-      },
+      basicInfo: { firstName, lastName, email, educationLevel, phoneNumber, school, location, major },
       status: { applicationStatus },
       skills: { hackathonsAttended },
-    } = doc.data();
-    const totalScore = doc.data().score?.totalScore ?? '?';
+    } = doc.data()
+    const totalScore = doc.data().score?.totalScore ?? '?'
     return [
       firstName,
       lastName,
@@ -667,8 +563,8 @@ export const getCSVData = async () => {
       applicationStatus,
       major,
       hackathonsAttended,
-    ];
-  });
+    ]
+  })
   CSV.unshift([
     'First Name',
     'last Name',
@@ -681,27 +577,27 @@ export const getCSVData = async () => {
     'Application Status',
     'Major',
     'First time hacker?',
-  ]);
-  return CSV;
-};
+  ])
+  return CSV
+}
 
-export const getResumeFile = async (userId) => {
+export const getResumeFile = async userId => {
   try {
-    const ref = storage.ref(`applicantResumes/${userId}`);
-    return await ref.getDownloadURL();
+    const ref = storage.ref(`applicantResumes/${userId}`)
+    return await ref.getDownloadURL()
   } catch (e) {
-    return undefined;
+    return undefined
   }
-};
+}
 
-export const getWaiverFile = async (userId) => {
+export const getWaiverFile = async userId => {
   try {
-    const ref = storage.ref(`hackerWaivers/${userId}`);
-    return await ref.getDownloadURL();
+    const ref = storage.ref(`hackerWaivers/${userId}`)
+    return await ref.getDownloadURL()
   } catch (e) {
-    return undefined;
+    return undefined
   }
-};
+}
 
 export const getAllResumes = async () => {
   const apps = await db
@@ -709,49 +605,44 @@ export const getAllResumes = async () => {
     .doc(HackerEvaluationHackathon)
     .collection('Applicants')
     .where('status.applicationStatus', '!=', 'inProgress')
-    .get();
+    .get()
 
-  const sharableApps = apps.docs.filter((app) => {
+  const sharableApps = apps.docs.filter(app => {
     const {
       termsAndConditions: { shareWithSponsors },
-    } = app.data();
-    return shareWithSponsors;
-  });
+    } = app.data()
+    return shareWithSponsors
+  })
 
-  const namesAndIds = sharableApps.map((doc) => {
+  const namesAndIds = sharableApps.map(doc => {
     const {
       basicInfo: { firstName, lastName },
-    } = doc.data();
+    } = doc.data()
     return {
       id: doc.id,
       name: `${firstName} ${lastName}`,
-    };
-  });
+    }
+  })
 
-  const urlPromises = namesAndIds.map(async (info) => {
-    const url = await getResumeFile(info.id);
-    return { ...info, url };
-  });
+  const urlPromises = namesAndIds.map(async info => {
+    const url = await getResumeFile(info.id)
+    return { ...info, url }
+  })
 
-  const APPUrls = await Promise.all(urlPromises);
+  const APPUrls = await Promise.all(urlPromises)
 
-  const zip = new JSZip();
+  const zip = new JSZip()
   const zipPromises = APPUrls.map(async ({ url, name }) => {
-    const resume = (await fetch(url)).blob();
-    zip.file(`${name}.pdf`, resume, { binary: true });
-  });
-  await Promise.all(zipPromises);
-  const finishedZip = await zip.generateAsync({ type: 'blob' });
-  download(finishedZip, 'Resumes', 'application/zip');
-};
+    const resume = (await fetch(url)).blob()
+    zip.file(`${name}.pdf`, resume, { binary: true })
+  })
+  await Promise.all(zipPromises)
+  const finishedZip = await zip.generateAsync({ type: 'blob' })
+  download(finishedZip, 'Resumes', 'application/zip')
+}
 
-export const updateApplicantScore = async (
-  applicantID,
-  scores,
-  comment,
-  adminEmail
-) => {
-  const totalScore = scores ? calculateTotalScore(scores) : null;
+export const updateApplicantScore = async (applicantID, scores, comment, adminEmail) => {
+  const totalScore = scores ? calculateTotalScore(scores) : null
   db.collection('Hackathons')
     .doc(HackerEvaluationHackathon)
     .collection('Applicants')
@@ -764,19 +655,14 @@ export const updateApplicantScore = async (
         lastUpdated: firebase.firestore.Timestamp.now(),
         lastUpdatedBy: adminEmail,
       },
-    });
-};
+    })
+}
 
 export const updateApplicantStatus = async (userId, applicationStatus) => {
-  return db
-    .collection('Hackathons')
-    .doc(HackerEvaluationHackathon)
-    .collection('Applicants')
-    .doc(userId)
-    .update({
-      'status.applicationStatus': applicationStatus,
-    });
-};
+  return db.collection('Hackathons').doc(HackerEvaluationHackathon).collection('Applicants').doc(userId).update({
+    'status.applicationStatus': applicationStatus,
+  })
+}
 
 export const getApplicantTags = async (userId, callback) => {
   return db
@@ -784,10 +670,10 @@ export const getApplicantTags = async (userId, callback) => {
     .doc(HackerEvaluationHackathon)
     .collection('Applicants')
     .doc(userId)
-    .onSnapshot((snap) => {
-      callback(snap.data().applicantTags ?? []);
-    });
-};
+    .onSnapshot(snap => {
+      callback(snap.data().applicantTags ?? [])
+    })
+}
 
 export const updateApplicantTags = async (userId, applicantTags) => {
   return db
@@ -795,5 +681,5 @@ export const updateApplicantTags = async (userId, applicantTags) => {
     .doc(HackerEvaluationHackathon)
     .collection('Applicants')
     .doc(userId)
-    .update({ applicantTags });
-};
+    .update({ applicantTags })
+}

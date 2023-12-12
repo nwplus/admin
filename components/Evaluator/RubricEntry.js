@@ -1,12 +1,12 @@
-import styled from 'styled-components';
-import { COLOR } from '../../constants';
+import styled from 'styled-components'
+import { COLOR } from '../../constants'
 
 const Container = styled.tr`
   display: flex;
   align-items: center;
   border-bottom: 0.5px solid ${COLOR.EVAL_GREY};
   padding: 10px 0px;
-`;
+`
 
 const StyledScore = styled.td`
   border-radius: 5px;
@@ -22,12 +22,12 @@ const StyledScore = styled.td`
   border-color: ${COLOR.EVAL_GREY};
   margin-right: 15px;
   font-weight: bold;
-`;
+`
 
 const StyledText = styled.td`
   color: ${COLOR.MIDNIGHT_PURPLE};
   width: 70%;
-`;
+`
 
 const RubricEntry = ({ score, label }) => {
   return (
@@ -35,7 +35,7 @@ const RubricEntry = ({ score, label }) => {
       <StyledScore>{score}</StyledScore>
       <StyledText>{label}</StyledText>
     </Container>
-  );
-};
+  )
+}
 
-export default RubricEntry;
+export default RubricEntry

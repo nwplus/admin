@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { COLOR } from '../constants';
+import styled from 'styled-components'
+import { COLOR } from '../constants'
 
 export const TableWrapper = styled.div`
   max-height: 512px;
@@ -8,18 +8,18 @@ export const TableWrapper = styled.div`
   border: 1px solid ${COLOR.BLACK};
   box-sizing: border-box;
   border-radius: 3px;
-`;
+`
 
 export const TableContent = styled.table`
   background-color: ${COLOR.WHITE};
   table-layout: fixed;
   width: 100%;
-`;
+`
 
 export const TableRow = styled.tr`
   height: 56px;
   vertical-align: middle;
-`;
+`
 
 export const TableHeader = styled.th`
   position: sticky;
@@ -28,7 +28,7 @@ export const TableHeader = styled.th`
   background-color: ${COLOR.WHITE};
 
   text-align: left !important;
-  width: ${(props) => (props.narrow ? '40px' : '95px')};
+  width: ${props => (props.narrow ? '40px' : '95px')};
   height: 12px;
 
   font-size: 16px;
@@ -37,12 +37,10 @@ export const TableHeader = styled.th`
   margin-top: 26px;
   margin-bottom: 18px;
   padding-left: 28px;
-`;
+`
 
 export const TableData = styled.td`
-  ${(props) =>
-    !props.actions &&
-    'max-width: 280px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;'}
+  ${props => !props.actions && 'max-width: 280px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;'}
 
   height: 12px;
   vertical-align: middle !important;
@@ -56,7 +54,7 @@ export const TableData = styled.td`
 
   border-top: 2px solid ${COLOR.GRAY} !important;
   color: ${COLOR.BODY_TEXT};
-`;
+`
 
 export const ActionsButtonContainer = styled.div`
   display: inline-block;
@@ -66,7 +64,7 @@ export const ActionsButtonContainer = styled.div`
   height: 48px;
   background-color: Transparent;
   border: 0;
-`;
+`
 
 export const TableEmptyText = styled.td`
   text-align: center !important;
@@ -78,4 +76,4 @@ export const TableEmptyText = styled.td`
 
   margin-top: 32px;
   margin-bottom: 32px;
-`;
+`

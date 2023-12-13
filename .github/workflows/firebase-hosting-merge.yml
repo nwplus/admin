@@ -34,3 +34,4 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_NWPLUS_UBC }}'
           channelId: live
           projectId: nwplus-ubc
+          firebaseToolsVersion: 12.9.1

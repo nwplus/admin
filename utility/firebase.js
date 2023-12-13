@@ -1,12 +1,12 @@
 /* eslint-disable no-console */
-import download from 'downloadjs'
 import firebase from 'firebase/app'
-import 'firebase/auth'
 import 'firebase/firestore'
+import 'firebase/auth'
 import 'firebase/storage'
 import JSZip from 'jszip'
+import download from 'downloadjs'
+import { calculateTotalScore, flattenObj, orderObj, filterHackerInfoFields } from './utilities'
 import { APPLICATION_STATUS, FAQ, FAQCategory } from '../constants'
-import { calculateTotalScore } from './utilities'
 
 if (!firebase.apps.length) {
   const config = {
@@ -505,6 +505,21 @@ export const updateProject = async (hackathon, project) => {
 
 export const deleteProject = async (hackathon, id) => {
   await projectsRef(hackathon).doc(id).delete()
+}
+
+export const getHackerInfo = async (callback, hackathon, collection) => {
+  const res = []
+  db.collection('Hackathons')
+    .doc(hackathon)
+    .collection(collection)
+    .onSnapshot(snap => {
+      callback(
+        snap.docs.map(doc => {
+          return orderObj(flattenObj(filterHackerInfoFields(doc.data(), collection)))
+        })
+      )
+    })
+  return res
 }
 
 // Asessment portal

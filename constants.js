@@ -4,6 +4,7 @@ export const VIEW = 'VIEW'
 export const CLOSE = 'CLOSE'
 export const DELETE = 'DELETE'
 export const SAVE = 'SAVE'
+export const CHECK = 'CHECK'
 export const COLOR = {
   BACKGROUND: '#F8F8F8',
   WHITE: '#FFFFFF',
@@ -76,6 +77,7 @@ export const HACKATHON_NAVBAR = {
   spocos: 'Sponsors',
   FeatureFlags: 'Feature Flags',
   BuildConfig: 'Build Config',
+  HackerInfo: 'Hacker Info',
 }
 export const LIVESITE_NAVBAR = {
   announcements: 'Announcements',

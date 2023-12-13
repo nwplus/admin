@@ -8,11 +8,14 @@ export const TableWrapper = styled.div`
   border: 1px solid ${COLOR.BLACK};
   box-sizing: border-box;
   border-radius: 3px;
+
+  max-width: ${props => (props.maxWidth ? props.maxWidth : '')};
+  overflow-x: ${props => (props.maxWidth ? 'scroll' : '')};
 `
 
 export const TableContent = styled.table`
   background-color: ${COLOR.WHITE};
-  table-layout: fixed;
+  table-layout: ${props => (props.layout ? props.layout : 'fixed')};
   width: 100%;
 `
 

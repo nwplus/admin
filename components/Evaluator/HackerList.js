@@ -146,10 +146,10 @@ export default function HackerList({ applicants, selectedApplicant, setSelectedA
         {filtered.map((applicant, i) => (
           <HackerEntry
             key={applicant._id}
-            index={applicant.index || i}
-            id={applicant.id || 'tbd'}
-            firstName={applicant.basicInfo.firstName}
-            lastName={applicant.basicInfo.lastName}
+            index={i}
+            id={applicant._id}
+            // firstName={applicant.basicInfo.firstName}
+            // lastName={applicant.basicInfo.lastName}
             score={applicant.score}
             selectHacker={() => setSelectedApplicant(applicant)}
             hasCompleted={applicant.score && applicant.score.scores && Object.keys(applicant.score.scores).length >= 3}

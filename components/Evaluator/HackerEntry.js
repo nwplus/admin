@@ -2,11 +2,21 @@ import React from 'react'
 import styled from 'styled-components'
 import { ASSESSMENT_COLOR, COLOR, MAX_SCORE } from '../../constants'
 
+const HackerIndex = styled.span`
+  font-size: 15px;
+  line-height: 19px;
+  color: ${COLOR.MIDNIGHT_PURPLE_DEEP};
+  font-weight: bold;
+  width: 40px;
+  text-align: center;
+`
+
 const HackerName = styled.span`
   font-size: 15px;
   line-height: 19px;
   color: ${COLOR.MIDNIGHT_PURPLE_DEEP};
   font-weight: bold;
+  text-align: start;
 `
 
 const HackerInfoText = styled.span`
@@ -18,6 +28,7 @@ const HackerInfoText = styled.span`
 const StyledInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
+  min-width: 150px;
 `
 
 const StyledHackerEntryDiv = styled.div`
@@ -28,6 +39,7 @@ const StyledHackerEntryDiv = styled.div`
   align-items: center;
   gap: 18px;
   cursor: pointer;
+  justify-content: space-between;
   ${p => p.selected && `background: ${ASSESSMENT_COLOR.LIGHT_BLUE};`}
 `
 
@@ -43,12 +55,14 @@ const StyledTag = styled.div`
   border-radius: 4px;
   height: 16px;
   margin-left: auto;
+  min-width: 80px;
+  justify-content: center;
 `
 
 export default function HackerEntry({
   index,
-  firstName,
-  lastName,
+  // firstName,
+  // lastName,
   id,
   score,
   selectHacker,
@@ -57,13 +71,14 @@ export default function HackerEntry({
 }) {
   return (
     <StyledHackerEntryDiv onClick={() => selectHacker(id)} selected={isSelected}>
-      <HackerName>{index}</HackerName>
+      <HackerIndex>{index}</HackerIndex>
       <StyledInfoContainer>
         <HackerName>
-          {firstName} {lastName}
+          {/* {firstName} {lastName} */}
+          Applicant {index}
         </HackerName>
         <HackerInfoText>
-          ID #{id} &nbsp;|&nbsp; Score: {score?.totalScore ?? '?'}/{MAX_SCORE}
+          Score: {score?.totalScore ?? '?'}/{MAX_SCORE}
         </HackerInfoText>
       </StyledInfoContainer>
       {hasCompleted && <StyledTag>Completed</StyledTag>}

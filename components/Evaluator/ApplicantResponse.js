@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { ASSESSMENT_COLOR, COLOR } from '../../constants'
-import { getResumeFile, getWaiverFile } from '../../utility/firebase'
+import { getResumeFile } from '../../utility/firebase'
 import ResponseInput from '../Assessment/responseInput'
 import { Title5 } from '../Typography'
 
@@ -42,7 +42,7 @@ const CONTRIBUTION_ROLE_OPTIONS = Object.freeze({
 
 export default function ApplicantResponse({ shouldDisplay, hacker }) {
   const [resumeURL, setResumeURL] = useState(null)
-  const [waiverURL, setWaiverURL] = useState(null)
+  // const [waiverURL, setWaiverURL] = useState(null)
   const [contributionRole, setContributionRole] = useState('')
 
   const fetchContributionRole = contributionMap => {
@@ -66,9 +66,9 @@ export default function ApplicantResponse({ shouldDisplay, hacker }) {
       getResumeFile(hacker._id).then(async url => {
         setResumeURL(url)
       })
-      getWaiverFile(hacker._id).then(async url => {
-        setWaiverURL(url)
-      })
+      // getWaiverFile(hacker._id).then(async url => {
+      //   setWaiverURL(url)
+      // })
       fetchContributionRole(hacker?.skills.contributionRole)
     }
   }, [hacker])
@@ -76,59 +76,38 @@ export default function ApplicantResponse({ shouldDisplay, hacker }) {
   return (
     <Container shouldDisplay={shouldDisplay}>
       <Title5 color={COLOR.MIDNIGHT_PURPLE}>Applicant Response</Title5>
-      <ResponseInput label="Full Name" response={`${hacker?.basicInfo?.firstName} ${hacker?.basicInfo?.lastName}`} />
-
-      <ResponseInput label="Email" response={hacker?.basicInfo?.email} />
-
-      <ResponseInput label="Gender" response={`${hacker?.basicInfo?.gender}`} />
-
-      <ResponseInput label="Identify as underrepresented?" response={hacker?.basicInfo?.identifyAsUnderrepresented} />
+      <ResponseInput label="Firebase ID" response={`${hacker?._id}`} />
 
       <ResponseInput label="Role" response={contributionRole} />
 
+      <ResponseInput label="Is this your first hackathon?" response={hacker?.skills?.firstTimeHacker ? 'yes' : 'no'} />
+
+      {/* <ResponseInput url={waiverURL} label="Waiver" response={waiverURL} /> */}
+
       <ResponseInput
-        label="19 or over?"
-        response={
-          hacker?.basicInfo?.isOfLegalAge ||
-          Number(hacker?.basicInfo?.ageByHackathon) >= 19 ||
-          Number(hacker?.basicInfo?.otherAgeByHackathon) >= 19
-            ? 'yes'
-            : 'no'
-        }
+        label="In your own words, describe your definition of a hackathon, and what it means to you."
+        response={`${hacker?.skills?.longAnswers1}`}
       />
 
-      <ResponseInput label="School" response={`${hacker?.basicInfo?.school}`} />
+      <ResponseInput
+        label="Describe a project that you worked on and a useful skill that you learned from it?"
+        response={`${hacker?.skills?.longAnswers2}`}
+      />
 
-      <ResponseInput label="Major" response={hacker?.basicInfo?.major} />
+      {hacker?.skills?.longAnswers3 && (
+        <ResponseInput
+          label="What character (from a movie, show, book, etc.) do you relate to most and why?"
+          response={`${hacker?.skills?.longAnswers3}`}
+        />
+      )}
 
-      <ResponseInput label="First time hacker?" response={hacker?.skills?.firstTimeHacker ? 'No' : 'Yes'} />
+      <ResponseInput url={resumeURL} label="Resume" response={resumeURL} />
 
       <ResponseInput url label="Github" response={hacker?.skills?.github} />
 
       <ResponseInput url label="Personal site" response={hacker?.skills?.portfolio} />
 
       <ResponseInput url label="LinkedIn" response={hacker?.skills?.linkedin} />
-
-      <ResponseInput url={resumeURL} label="Resume" response={resumeURL} />
-
-      <ResponseInput url={waiverURL} label="Waiver" response={waiverURL} />
-
-      <ResponseInput label="Why do you want to attend cmd-f 2023?" response={`${hacker?.skills?.longAnswers1}`} />
-
-      <ResponseInput
-        label="How would you make tech a more welcoming space for underrepresented demographics?"
-        response={`${hacker?.skills?.longAnswers2}`}
-      />
-
-      <ResponseInput
-        label="In the past, have there been reasons deterring you from attending hackathons or other tech events? (optional)"
-        response={`${hacker?.skills?.longAnswers3}`}
-      />
-
-      <ResponseInput
-        label="Is there anything you want to let us know to ensure that we can help you feel comfortable throughout the event? (optional)"
-        response={`${hacker?.skills?.longAnswers4}`}
-      />
     </Container>
   )
 }

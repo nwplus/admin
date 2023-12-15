@@ -141,9 +141,19 @@ export const SCORING = {
     value: 4,
     weight: 1,
   },
-  ESSAY2: {
+  ESSAY2NOESSAY3: {
     label: 'Long Answer 2',
     value: 4,
+    weight: 1,
+  },
+  ESSAY2: {
+    label: 'Long Answer 2',
+    value: 3,
+    weight: 1,
+  },
+  ESSAY3: {
+    label: 'Long Answer 3',
+    value: 1,
     weight: 1,
   },
 }
@@ -156,7 +166,8 @@ export const BONUS_SCORING = {
   },
 }
 
-export const MAX_SCORE = Object.values(SCORING).reduce((acc, curr) => acc + curr.value * curr.weight, 0)
+// export const MAX_SCORE = Object.values(SCORING).reduce((acc, curr) => acc + curr.value * curr.weight, 0)
+export const MAX_SCORE = 13 // hardcoded for nwHacks 2024
 
 export const SORT = {
   TIMESTAMP: 'Timestamp',

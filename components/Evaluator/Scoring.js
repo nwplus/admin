@@ -79,8 +79,14 @@ export default function Scoring({ shouldDisplay, applicant }) {
       case SCORING.ESSAY1.label:
         field = 'ResponseOneScore'
         break
+      case SCORING.ESSAY2NOESSAY3.label:
+        field = 'ResponseTwoScore'
+        break
       case SCORING.ESSAY2.label:
         field = 'ResponseTwoScore'
+        break
+      case SCORING.ESSAY3.label:
+        field = 'ResponseThreeScore'
         break
       default:
         break
@@ -113,13 +119,31 @@ export default function Scoring({ shouldDisplay, applicant }) {
           maxScore={SCORING.ESSAY1}
           hasMinusOne
         />
-        <ScoreInput
-          label={SCORING.ESSAY2.label}
-          handleClick={handleClick}
-          score={scores?.ResponseTwoScore}
-          maxScore={SCORING.ESSAY2}
-          hasMinusOne
-        />
+        {applicant?.skills?.longAnswers3 ? (
+          <ScoreInput
+            label={SCORING.ESSAY2.label}
+            handleClick={handleClick}
+            score={scores?.ResponseTwoScore}
+            maxScore={SCORING.ESSAY2}
+            hasMinusOne
+          />
+        ) : (
+          <ScoreInput
+            label={SCORING.ESSAY2NOESSAY3.label}
+            handleClick={handleClick}
+            score={scores?.ResponseTwoScore}
+            maxScore={SCORING.ESSAY2NOESSAY3}
+            hasMinusOne
+          />
+        )}
+        {applicant?.skills?.longAnswers3 && (
+          <ScoreInput
+            label={SCORING.ESSAY3.label}
+            handleClick={handleClick}
+            score={scores?.ResponseThreeScore}
+            maxScore={SCORING.ESSAY3}
+          />
+        )}
         {/* {!applicant?.skills?.hackathonsAttended && (
           <Label>First time hacker: +1</Label>
         )} */}

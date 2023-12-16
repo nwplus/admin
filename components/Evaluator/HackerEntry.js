@@ -50,7 +50,12 @@ const StyledTag = styled.div`
   font-size: 13px;
   line-height: 16px;
   color: ${COLOR.WHITE};
-  ${p => (p.isComplete ? `background: ${COLOR.GREEN};` : `background: ${COLOR.RED};`)}
+  ${p =>
+    p.status === 'accepted'
+      ? `background: ${COLOR.GREEN};`
+      : p.status === 'scored'
+      ? `background: ${COLOR.BLUE};`
+      : `background: ${COLOR.RED};`}
   padding: 0px 5px;
   border-radius: 4px;
   height: 16px;
@@ -66,9 +71,21 @@ export default function HackerEntry({
   id,
   score,
   selectHacker,
-  hasCompleted = false,
+  status = '',
+  // hasCompleted = false,
   isSelected = false,
 }) {
+  const getStyleTag = () => {
+    switch (status) {
+      case 'accepted':
+        return <StyledTag status={status}>Accepted</StyledTag>
+      case 'scored':
+        return <StyledTag status={status}>Graded</StyledTag>
+      default:
+        return <StyledTag status={status}>Ungraded</StyledTag>
+    }
+  }
+
   return (
     <StyledHackerEntryDiv onClick={() => selectHacker(id)} selected={isSelected}>
       <HackerIndex>{index}</HackerIndex>
@@ -81,11 +98,7 @@ export default function HackerEntry({
           Score: {score?.totalScore ?? '?'}/{MAX_SCORE}
         </HackerInfoText>
       </StyledInfoContainer>
-      {hasCompleted ? (
-        <StyledTag isComplete={hasCompleted}>Graded</StyledTag>
-      ) : (
-        <StyledTag isComplete={hasCompleted}>Ungraded</StyledTag>
-      )}
+      {getStyleTag()}
     </StyledHackerEntryDiv>
   )
 }

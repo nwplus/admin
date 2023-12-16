@@ -111,7 +111,7 @@ export default function HackerList({ applicants, selectedApplicant, setSelectedA
       return (
         !applicant.score ||
         Object.keys(applicant.score.scores).length < 3 ||
-        applicant.status.applicationStatus !== 'scored'
+        applicant.status.applicationStatus !== 'accepted'
       )
     })
 
@@ -156,12 +156,8 @@ export default function HackerList({ applicants, selectedApplicant, setSelectedA
             // lastName={applicant.basicInfo.lastName}
             score={applicant.score}
             selectHacker={() => setSelectedApplicant(applicant)}
-            hasCompleted={
-              applicant.score &&
-              applicant.score.scores &&
-              Object.keys(applicant.score.scores).length >= 3 &&
-              applicant.status.applicationStatus === 'scored'
-            }
+            // hasCompleted={applicant.score && applicant.score.scores && Object.keys(applicant.score.scores).length >= 3}
+            status={applicant.status.applicationStatus}
             isSelected={selectedApplicant && selectedApplicant._id === applicant._id}
           />
         ))}

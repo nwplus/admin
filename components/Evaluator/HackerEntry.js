@@ -49,8 +49,8 @@ const StyledTag = styled.div`
   border: none;
   font-size: 13px;
   line-height: 16px;
-  color: ${COLOR.LIGHT_PURPLE};
-  background: ${COLOR.MIDNIGHT_PURPLE};
+  color: ${COLOR.WHITE};
+  ${p => (p.isComplete ? `background: ${COLOR.GREEN};` : `background: ${COLOR.RED};`)}
   padding: 0px 5px;
   border-radius: 4px;
   height: 16px;
@@ -81,7 +81,11 @@ export default function HackerEntry({
           Score: {score?.totalScore ?? '?'}/{MAX_SCORE}
         </HackerInfoText>
       </StyledInfoContainer>
-      {hasCompleted && <StyledTag>Completed</StyledTag>}
+      {hasCompleted ? (
+        <StyledTag isComplete={hasCompleted}>Graded</StyledTag>
+      ) : (
+        <StyledTag isComplete={hasCompleted}>Ungraded</StyledTag>
+      )}
     </StyledHackerEntryDiv>
   )
 }

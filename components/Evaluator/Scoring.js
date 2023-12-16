@@ -1,9 +1,9 @@
 import moment from 'moment'
 import { useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { COLOR, MAX_SCORE, SCORING, TAGS } from '../../constants'
+import { APPLICATION_STATUS, COLOR, MAX_SCORE, SCORING, TAGS } from '../../constants'
 import { AuthContext } from '../../utility/auth'
-import { updateApplicantScore } from '../../utility/firebase'
+import { updateApplicantScore, updateApplicantStatus } from '../../utility/firebase'
 import { calculateTotalScore } from '../../utility/utilities'
 import TextField from '../TextField'
 import { Title5 } from '../Typography'
@@ -100,6 +100,7 @@ export default function Scoring({ shouldDisplay, applicant }) {
 
   const handleSave = async () => {
     await updateApplicantScore(applicant._id, scores, comment, user.email)
+    await updateApplicantStatus(applicant._id, APPLICATION_STATUS.scored.text)
   }
 
   return (

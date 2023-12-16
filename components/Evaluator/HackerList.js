@@ -108,7 +108,11 @@ export default function HackerList({ applicants, selectedApplicant, setSelectedA
       if (!filterActive) {
         return true
       }
-      return !applicant.score || Object.keys(applicant.score.scores).length < 3
+      return (
+        !applicant.score ||
+        Object.keys(applicant.score.scores).length < 3 ||
+        applicant.status.applicationStatus !== 'scored'
+      )
     })
 
     setFiltered(filteredByComplete)
@@ -152,7 +156,12 @@ export default function HackerList({ applicants, selectedApplicant, setSelectedA
             // lastName={applicant.basicInfo.lastName}
             score={applicant.score}
             selectHacker={() => setSelectedApplicant(applicant)}
-            hasCompleted={applicant.score && applicant.score.scores && Object.keys(applicant.score.scores).length >= 3}
+            hasCompleted={
+              applicant.score &&
+              applicant.score.scores &&
+              Object.keys(applicant.score.scores).length >= 3 &&
+              applicant.status.applicationStatus === 'scored'
+            }
             isSelected={selectedApplicant && selectedApplicant._id === applicant._id}
           />
         ))}

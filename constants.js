@@ -15,6 +15,7 @@ export const COLOR = {
   BLACK: '#000000',
   DARK_COPY: '#A198A6',
   RED: '#EB5757',
+  GREEN: '#50C878',
   DARK_GRAY: '#606060',
   TRANSPARENT: 'Transparent',
   BODY_TEXT: '#5A5A5A',

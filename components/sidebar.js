@@ -219,6 +219,15 @@ export default ({ hackathons, currentPath }) => {
           </Link>
         </NextLink>
 
+        <NextLink href="/status" as="/status" passHref>
+          <Link>
+            <ItemContainer>
+              <Icon color={currentPath === 'status' && COLOR.WHITE} icon="clipboard" />
+              <Label selected={currentPath === 'status'}>Status Changer</Label>
+            </ItemContainer>
+          </Link>
+        </NextLink>
+
         <Link
           href="#!"
           onClick={() => {

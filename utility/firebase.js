@@ -320,6 +320,42 @@ export const updateFlags = async (id, flags) => {
   return db.collection(Hackathons).doc(id).update(doc)
 }
 
+// www-specific
+
+export const subscribeToHiringSettings = cb => {
+  return db
+    .collection(Hackathons)
+    .doc('www')
+    .onSnapshot(snap => {
+      cb(snap.data().hiring)
+    })
+}
+
+export const updateHiringSettings = async hiringSettings => {
+  const doc = {
+    hiring: hiringSettings,
+  }
+  return db.collection(Hackathons).doc('www').update(doc)
+}
+
+export const subscribeToCtaLink = cb => {
+  return db
+    .collection(Hackathons)
+    .doc('www')
+    .onSnapshot(snap => {
+      cb(snap.data().CTALink)
+    })
+}
+
+export const updateCtaLink = async ctaLink => {
+  const doc = {
+    CTALink: ctaLink,
+  }
+  return db.collection(Hackathons).doc('www').update(doc)
+}
+
+/// www-specific end
+
 export const updateTags = async (id, tags) => {
   const doc = { tags }
   return db.collection(Hackathons).doc(id).update(doc)

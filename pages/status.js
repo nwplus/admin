@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import Page from '../components/page'
 import { getHackathons, getApplicants, updateApplicantStatus } from '../utility/firebase'
 import Button from '../components/button'
+import Checkbox from '../components/checkbox'
 
 const Container = styled.div`
   display: flex;
@@ -26,6 +27,12 @@ const Text = styled.div`
   font-size: 24px;
 `
 
+const FormatOptions = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+`
+
 const ApplicantsInput = styled.textarea`
   resize: vertical;
 `
@@ -47,6 +54,7 @@ const hackerStatuses = [
 ]
 
 export default function Status({ hackathons }) {
+  const [emailFormat, setEmailFormat] = useState('\n')
   const [emails, setEmails] = useState('')
   const [hackathonSelected, setHackathonSelected] = useState('')
   const [statusSelected, setStatusSelected] = useState('')
@@ -74,7 +82,7 @@ export default function Status({ hackathons }) {
     setError('')
     if (!validateInputs()) return
 
-    let emailList = emails.split(',')
+    let emailList = emails.split(emailFormat)
     emailList = emailList.map(email => email.trim())
 
     const applicants = await getApplicants(hackathonSelected)
@@ -112,7 +120,11 @@ export default function Status({ hackathons }) {
       <Container>
         {success && <Success>{success}</Success>}
         {error && <Error>{error}</Error>}
-        <Text>Enter emails, separated by a comma:</Text>
+        <Text>Enter emails:</Text>
+        <FormatOptions>
+          <Checkbox label="Separated by newline" checked={emailFormat === '\n'} onClick={() => setEmailFormat('\n')} />
+          <Checkbox label="Separated by comma" checked={emailFormat === ','} onClick={() => setEmailFormat(',')} />
+        </FormatOptions>
         <ApplicantsInput
           placeholder="e.g. alvin.kam.33@gmail.com,heyitsme@hotmail.com..."
           value={emails}

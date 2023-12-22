@@ -558,6 +558,10 @@ export const getHackerInfo = async (callback, hackathon, collection) => {
   return res
 }
 
+export const getApplicants = async hackathon => {
+  const data = await db.collection('Hackathons').doc(hackathon).collection('Applicants').get()
+  return data.docs.map(doc => doc.data())
+}
 // Asessment portal
 export const getAllApplicants = async callback => {
   return db
@@ -709,10 +713,15 @@ export const updateApplicantScore = async (applicantID, scores, comment, adminEm
     })
 }
 
-export const updateApplicantStatus = async (userId, applicationStatus) => {
-  return db.collection('Hackathons').doc(HackerEvaluationHackathon).collection('Applicants').doc(userId).update({
-    'status.applicationStatus': applicationStatus,
-  })
+export const updateApplicantStatus = async (userId, applicationStatus, hackathon) => {
+  return db
+    .collection('Hackathons')
+    .doc(hackathon || HackerEvaluationHackathon)
+    .collection('Applicants')
+    .doc(userId)
+    .update({
+      'status.applicationStatus': applicationStatus,
+    })
 }
 
 export const getApplicantTags = async (userId, callback) => {

@@ -15,6 +15,7 @@ export const COLOR = {
   BLACK: '#000000',
   DARK_COPY: '#A198A6',
   RED: '#EB5757',
+  GREEN: '#50C878',
   DARK_GRAY: '#606060',
   TRANSPARENT: 'Transparent',
   BODY_TEXT: '#5A5A5A',
@@ -141,9 +142,19 @@ export const SCORING = {
     value: 4,
     weight: 1,
   },
-  ESSAY2: {
+  ESSAY2NOESSAY3: {
     label: 'Long Answer 2',
     value: 4,
+    weight: 1,
+  },
+  ESSAY2: {
+    label: 'Long Answer 2',
+    value: 3,
+    weight: 1,
+  },
+  ESSAY3: {
+    label: 'Long Answer 3',
+    value: 1,
     weight: 1,
   },
 }
@@ -156,7 +167,8 @@ export const BONUS_SCORING = {
   },
 }
 
-export const MAX_SCORE = Object.values(SCORING).reduce((acc, curr) => acc + curr.value * curr.weight, 0)
+// export const MAX_SCORE = Object.values(SCORING).reduce((acc, curr) => acc + curr.value * curr.weight, 0)
+export const MAX_SCORE = 13 // hardcoded for nwHacks 2024
 
 export const SORT = {
   TIMESTAMP: 'Timestamp',

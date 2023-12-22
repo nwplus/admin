@@ -1,9 +1,9 @@
 import moment from 'moment'
 import { useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { COLOR, MAX_SCORE, SCORING, TAGS } from '../../constants'
+import { APPLICATION_STATUS, COLOR, MAX_SCORE, SCORING, TAGS } from '../../constants'
 import { AuthContext } from '../../utility/auth'
-import { updateApplicantScore } from '../../utility/firebase'
+import { updateApplicantScore, updateApplicantStatus } from '../../utility/firebase'
 import { calculateTotalScore } from '../../utility/utilities'
 import TextField from '../TextField'
 import { Title5 } from '../Typography'
@@ -79,8 +79,14 @@ export default function Scoring({ shouldDisplay, applicant }) {
       case SCORING.ESSAY1.label:
         field = 'ResponseOneScore'
         break
+      case SCORING.ESSAY2NOESSAY3.label:
+        field = 'ResponseTwoScore'
+        break
       case SCORING.ESSAY2.label:
         field = 'ResponseTwoScore'
+        break
+      case SCORING.ESSAY3.label:
+        field = 'ResponseThreeScore'
         break
       default:
         break
@@ -94,6 +100,7 @@ export default function Scoring({ shouldDisplay, applicant }) {
 
   const handleSave = async () => {
     await updateApplicantScore(applicant._id, scores, comment, user.email)
+    await updateApplicantStatus(applicant._id, APPLICATION_STATUS.scored.text)
   }
 
   return (
@@ -113,13 +120,31 @@ export default function Scoring({ shouldDisplay, applicant }) {
           maxScore={SCORING.ESSAY1}
           hasMinusOne
         />
-        <ScoreInput
-          label={SCORING.ESSAY2.label}
-          handleClick={handleClick}
-          score={scores?.ResponseTwoScore}
-          maxScore={SCORING.ESSAY2}
-          hasMinusOne
-        />
+        {applicant?.skills?.longAnswers3 ? (
+          <ScoreInput
+            label={SCORING.ESSAY2.label}
+            handleClick={handleClick}
+            score={scores?.ResponseTwoScore}
+            maxScore={SCORING.ESSAY2}
+            hasMinusOne
+          />
+        ) : (
+          <ScoreInput
+            label={SCORING.ESSAY2NOESSAY3.label}
+            handleClick={handleClick}
+            score={scores?.ResponseTwoScore}
+            maxScore={SCORING.ESSAY2NOESSAY3}
+            hasMinusOne
+          />
+        )}
+        {applicant?.skills?.longAnswers3 && (
+          <ScoreInput
+            label={SCORING.ESSAY3.label}
+            handleClick={handleClick}
+            score={scores?.ResponseThreeScore}
+            maxScore={SCORING.ESSAY3}
+          />
+        )}
         {/* {!applicant?.skills?.hackathonsAttended && (
           <Label>First time hacker: +1</Label>
         )} */}

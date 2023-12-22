@@ -38,10 +38,24 @@ const StyledIcon = styled(Icon)`
 
 const SearchContainer = styled.div`
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  margin: 0 0 1rem 0;
+`
+
+const SearchInputContainer = styled.div`
+  display: flex;
   align-items: center;
   gap: 20px;
-  margin: 1.5rem 0 1rem 0;
+  margin: 1rem 0 0.5rem 0;
   width: 100%;
+`
+
+const SearchInstructions = styled.p`
+  font-size: 14px;
+  margin: 0;
 `
 
 const StyledInput = styled(Input)`
@@ -95,11 +109,12 @@ export default function HackerList({ applicants, selectedApplicant, setSelectedA
       if (debouncedSearch === '') {
         return true
       }
-      const [name, email] = [
+      const [name, email, id] = [
         `${applicant.basicInfo.firstName.toLowerCase()} ${applicant.basicInfo.lastName.toLowerCase()}`,
         applicant.basicInfo.email.toLowerCase(),
+        applicant._id.toLowerCase(),
       ]
-      return name.includes(debouncedSearch) || email.includes(debouncedSearch)
+      return name.includes(debouncedSearch) || email.includes(debouncedSearch) || id.includes(debouncedSearch)
     })
 
     // If filterActive is true, we filter out those that are already completed
@@ -128,8 +143,15 @@ export default function HackerList({ applicants, selectedApplicant, setSelectedA
       <HeadContainer>
         {searchActive ? (
           <SearchContainer>
-            <StyledInput placeholder="Search" value={search} onChange={e => setSearch(e.target.value.toLowerCase())} />
-            <StyledIcon icon="close" onClick={closeSearch} />
+            <SearchInputContainer>
+              <StyledInput
+                placeholder="Search"
+                value={search}
+                onChange={e => setSearch(e.target.value.toLowerCase())}
+              />
+              <StyledIcon icon="close" onClick={closeSearch} />
+            </SearchInputContainer>
+            <SearchInstructions>Search by name, email, or firebase doc ID</SearchInstructions>
           </SearchContainer>
         ) : (
           <>

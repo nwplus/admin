@@ -42,7 +42,15 @@ const ButtonContainer = styled.div`
   margin-top: 8px;
 `
 
-const hackerStatuses = ['applied', 'waitlisted', 'rejected', 'accepted', 'inProgress']
+const hackerStatuses = [
+  'applied',
+  'waitlisted',
+  'rejected',
+  'accepted',
+  'acceptedAndAttending',
+  'acceptedUnRSVP',
+  'inProgress',
+]
 
 export default function Status({ hackathons }) {
   const [emailFormat, setEmailFormat] = useState('\n')

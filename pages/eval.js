@@ -33,6 +33,8 @@ export default function Eval({ hackathons }) {
 
   useEffect(() => {
     getAllApplicants(setApplicants)
+
+    // assign applicant numbers 1 - n (firebase field)
   }, [])
 
   // If the list of applicants updates, update the information about the currently selected applicant

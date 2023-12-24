@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import styled from 'styled-components'
-import Page from '../components/page'
-import { getHackathons, getApplicants, updateApplicantStatus } from '../utility/firebase'
 import Button from '../components/button'
 import Checkbox from '../components/checkbox'
+import Page from '../components/page'
+import { getApplicants, getHackathons, updateApplicantStatus } from '../utility/firebase'
 
 const Container = styled.div`
   display: flex;
@@ -42,15 +42,7 @@ const ButtonContainer = styled.div`
   margin-top: 8px;
 `
 
-const hackerStatuses = [
-  'applied',
-  'waitlisted',
-  'rejected',
-  'accepted',
-  'acceptedAndAttending',
-  'acceptedUnRSVP',
-  'inProgress',
-]
+const hackerStatuses = ['applied', 'waitlisted', 'rejected', 'accepted', 'inProgress']
 
 export default function Status({ hackathons }) {
   const [emailFormat, setEmailFormat] = useState('\n')

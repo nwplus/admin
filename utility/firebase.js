@@ -1,12 +1,12 @@
 /* eslint-disable no-console */
+import download from 'downloadjs'
 import firebase from 'firebase/app'
-import 'firebase/firestore'
 import 'firebase/auth'
+import 'firebase/firestore'
 import 'firebase/storage'
 import JSZip from 'jszip'
-import download from 'downloadjs'
-import { calculateTotalScore, flattenObj, orderObj, filterHackerInfoFields } from './utilities'
 import { APPLICATION_STATUS, FAQ, FAQCategory } from '../constants'
+import { calculateTotalScore, filterHackerInfoFields, flattenObj, orderObj } from './utilities'
 
 if (!firebase.apps.length) {
   const config = {
@@ -570,7 +570,9 @@ export const getAllApplicants = async callback => {
     .collection('Applicants')
     .where('status.applicationStatus', '!=', 'inProgress')
     .onSnapshot(snap => {
-      callback(snap.docs.map(doc => doc.data()))
+      callback(
+        snap.docs.map(doc => doc.data()).sort((a, b) => a.basicInfo.firstName.localeCompare(b.basicInfo.firstName))
+      )
     })
 }
 

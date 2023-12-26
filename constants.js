@@ -139,17 +139,17 @@ export const SCORING = {
   },
   ESSAY1: {
     label: 'Long Answer 1',
-    value: 4,
+    value: 3,
     weight: 1,
   },
-  ESSAY2NOESSAY3: {
-    label: 'Long Answer 2',
+  ESSAY1NOESSAY3: {
+    label: 'Long Answer 1',
     value: 4,
     weight: 1,
   },
   ESSAY2: {
     label: 'Long Answer 2',
-    value: 3,
+    value: 4,
     weight: 1,
   },
   ESSAY3: {

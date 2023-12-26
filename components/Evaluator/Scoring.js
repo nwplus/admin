@@ -79,8 +79,8 @@ export default function Scoring({ shouldDisplay, applicant }) {
       case SCORING.ESSAY1.label:
         field = 'ResponseOneScore'
         break
-      case SCORING.ESSAY2NOESSAY3.label:
-        field = 'ResponseTwoScore'
+      case SCORING.ESSAY1NOESSAY3.label:
+        field = 'ResponseOneScore'
         break
       case SCORING.ESSAY2.label:
         field = 'ResponseTwoScore'
@@ -113,30 +113,30 @@ export default function Scoring({ shouldDisplay, applicant }) {
           score={scores?.ResumeScore}
           maxScore={SCORING.RESUME}
         />
-        <ScoreInput
-          label={SCORING.ESSAY1.label}
-          handleClick={handleClick}
-          score={scores?.ResponseOneScore}
-          maxScore={SCORING.ESSAY1}
-          hasMinusOne
-        />
         {applicant?.skills?.longAnswers3 ? (
           <ScoreInput
-            label={SCORING.ESSAY2.label}
+            label={SCORING.ESSAY1.label}
             handleClick={handleClick}
-            score={scores?.ResponseTwoScore}
-            maxScore={SCORING.ESSAY2}
+            score={scores?.ResponseOneScore}
+            maxScore={SCORING.ESSAY1}
             hasMinusOne
           />
         ) : (
           <ScoreInput
-            label={SCORING.ESSAY2NOESSAY3.label}
+            label={SCORING.ESSAY1NOESSAY3.label}
             handleClick={handleClick}
-            score={scores?.ResponseTwoScore}
-            maxScore={SCORING.ESSAY2NOESSAY3}
+            score={scores?.ResponseOneScore}
+            maxScore={SCORING.ESSAY1NOESSAY3}
             hasMinusOne
           />
         )}
+        <ScoreInput
+          label={SCORING.ESSAY2.label}
+          handleClick={handleClick}
+          score={scores?.ResponseTwoScore}
+          maxScore={SCORING.ESSAY2}
+          hasMinusOne
+        />
         {applicant?.skills?.longAnswers3 && (
           <ScoreInput
             label={SCORING.ESSAY3.label}

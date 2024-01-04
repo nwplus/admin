@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { ASSESSMENT_COLOR, COLOR } from '../../constants'
 import ExportModal from '../Assessment/ExportModal'
+import AcceptingModal from '../Assessment/acceptingModal'
 import Icon from '../Icon'
 import { Title5 } from '../Typography'
 import Input from '../input'
@@ -86,6 +87,7 @@ export default function HackerList({ applicants, selectedApplicant, setSelectedA
   const [search, setSearch] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
   const [filtered, setFiltered] = useState([])
+  const [showAcceptance, setShowAcceptance] = useState(false)
   // State for search and filter icons
   const [searchActive, setSearchActive] = useState(false)
   const [filterActive, setFilterActive] = useState(false)
@@ -140,6 +142,7 @@ export default function HackerList({ applicants, selectedApplicant, setSelectedA
 
   return (
     <Container>
+      {showAcceptance && <AcceptingModal setShowing={setShowAcceptance} />}
       <HeadContainer>
         {searchActive ? (
           <SearchContainer>
@@ -163,6 +166,7 @@ export default function HackerList({ applicants, selectedApplicant, setSelectedA
                 color={!filterActive && COLOR.GREY_500}
                 onClick={() => setFilterActive(!filterActive)}
               />
+              <StyledIcon icon="check" onClick={() => setShowAcceptance(true)} />
               <StyledIcon icon="file-arrow-down" onClick={() => setShowExportModal(true)} />
             </ButtonContainer>
           </>

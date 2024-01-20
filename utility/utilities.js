@@ -69,6 +69,9 @@ export const filterHackerInfoFields = (obj, collection) => {
     newObj.dietaryRestriction = returnTrueKey(obj.basicInfo?.dietaryRestriction)
     newObj.pronouns = returnTrueKey(obj.basicInfo?.pronouns)
     newObj.role = returnTrueKey(obj.skills?.contributionRole)
+    newObj.MLHCodeOfConduct = obj.termsAndConditions?.MLHCodeOfConduct
+    newObj.MLHPrivacyPolicy = obj.termsAndConditions?.MLHPrivacyPolicy
+    newObj.MLHEmailSubscription = obj.termsAndConditions?.MLHEmailSubscription
   } else if (collection === 'Projects') {
     newObj = { ...obj }
     delete newObj.grades

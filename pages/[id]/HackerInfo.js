@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import styled from 'styled-components'
 import { CSVLink } from 'react-csv'
 import { getHackathonPaths, getHackathons, getHackerInfo } from '../../utility/firebase'
@@ -207,6 +207,72 @@ export default function HackerInfo({ id, hackathons }) {
       </TableRow>
     )
   }
+
+  const renderTable = useMemo(
+    () => (
+      <TableWrapper maxWidth="calc(100vw - 400px)">
+        <TableContent layout="auto">
+          {filteredData.length > 0 && (
+            <>
+              <thead>
+                <TableRow>
+                  {filteredTableKeys.map(key => (
+                    <TableHeader key={key}>
+                      {calculate[key] ? (
+                        <CalculateResult>
+                          {`${calculate[key]}: ${calculateColumn(key, calculate[key], filteredData)}`}
+                          <Button
+                            type={CLOSE}
+                            onClick={() => {
+                              const newCalculate = { ...calculate }
+                              delete newCalculate[key]
+                              setCalculate(newCalculate)
+                            }}
+                            color={COLOR.TRANSPARENT}
+                            contentColor={COLOR.DARK_GRAY}
+                          />
+                        </CalculateResult>
+                      ) : (
+                        <Calculate
+                          value={calculate[key]}
+                          onChange={e => {
+                            const newCalculate = { ...calculate }
+                            newCalculate[key] = e.target.value
+                            setCalculate(newCalculate)
+                          }}
+                        >
+                          <option value="" disabled selected hidden>
+                            Calculate
+                          </option>
+                          {calculateFunctions.map(func => (
+                            <option value={func} key={`calc-${key}-${func}`}>
+                              {func}
+                            </option>
+                          ))}
+                        </Calculate>
+                      )}
+                    </TableHeader>
+                  ))}
+                </TableRow>
+                <TableRow>
+                  {filteredTableKeys.map(key => (
+                    <TableHeader key={key}>{key}</TableHeader>
+                  ))}
+                </TableRow>
+              </thead>
+              <tbody>
+                {filteredData.map(entry => (
+                  <HackerInfoRow key={entry} data={entry} />
+                ))}
+              </tbody>
+            </>
+          )}
+        </TableContent>
+      </TableWrapper>
+    ),
+    [filteredTableKeys, filteredData, calculate]
+  )
+
   return (
     <Page currentPath={id} hackathons={hackathons} navbarItems={HACKATHON_NAVBAR}>
       <Buttons>
@@ -400,65 +466,7 @@ export default function HackerInfo({ id, hackathons }) {
           </Menu>
         </FilterOptions>
       </Filters>
-      <TableWrapper maxWidth="calc(100vw - 400px)">
-        <TableContent layout="auto">
-          {filteredData.length > 0 && (
-            <>
-              <thead>
-                <TableRow>
-                  {filteredTableKeys.map(key => (
-                    <TableHeader key={key}>
-                      {calculate[key] ? (
-                        <CalculateResult>
-                          {`${calculate[key]}: ${calculateColumn(key, calculate[key], filteredData)}`}
-                          <Button
-                            type={CLOSE}
-                            onClick={() => {
-                              const newCalculate = { ...calculate }
-                              delete newCalculate[key]
-                              setCalculate(newCalculate)
-                            }}
-                            color={COLOR.TRANSPARENT}
-                            contentColor={COLOR.DARK_GRAY}
-                          />
-                        </CalculateResult>
-                      ) : (
-                        <Calculate
-                          value={calculate[key]}
-                          onChange={e => {
-                            const newCalculate = { ...calculate }
-                            newCalculate[key] = e.target.value
-                            setCalculate(newCalculate)
-                          }}
-                        >
-                          <option value="" disabled selected hidden>
-                            Calculate
-                          </option>
-                          {calculateFunctions.map(func => (
-                            <option value={func} key={`calc-${key}-${func}`}>
-                              {func}
-                            </option>
-                          ))}
-                        </Calculate>
-                      )}
-                    </TableHeader>
-                  ))}
-                </TableRow>
-                <TableRow>
-                  {filteredTableKeys.map(key => (
-                    <TableHeader key={key}>{key}</TableHeader>
-                  ))}
-                </TableRow>
-              </thead>
-              <tbody>
-                {filteredData.map(entry => (
-                  <HackerInfoRow key={entry} data={entry} />
-                ))}
-              </tbody>
-            </>
-          )}
-        </TableContent>
-      </TableWrapper>
+      {renderTable}
     </Page>
   )
 }

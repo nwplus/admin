@@ -575,10 +575,10 @@ export const getAllApplicants = async callback => {
           .map(doc => doc.data())
           .filter(a => a.basicInfo.identifyAsUnderrepresented !== 'no') // cmd-f filter; remove after
           .sort((a, b) => {
-            const firstNameComparison = a.basicInfo.legalFirstName.localeCompare(b.basicInfo.legalFirstName)
+            const firstNameComparison = a.basicInfo.legalFirstName?.localeCompare(b.basicInfo.legalFirstName)
             return firstNameComparison !== 0
               ? firstNameComparison
-              : a.basicInfo.legalLastName.localeCompare(b.basicInfo.legalLastName)
+              : a.basicInfo.legalLastName?.localeCompare(b.basicInfo.legalLastName)
           })
       )
     })

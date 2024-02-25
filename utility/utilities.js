@@ -56,8 +56,8 @@ const returnTrueKey = obj => {
 // Specifically for hacker info page - fixes/removes certain fields for table display
 export const filterHackerInfoFields = (obj, collection) => {
   let newObj = {}
-  delete obj.questionnaire.eventsAttended
   if (collection === 'Applicants') {
+    delete obj.questionnaire?.eventsAttended
     newObj = {
       id: obj._id,
       ...obj.basicInfo,
@@ -72,6 +72,12 @@ export const filterHackerInfoFields = (obj, collection) => {
     newObj.MLHCodeOfConduct = obj.termsAndConditions?.MLHCodeOfConduct
     newObj.MLHPrivacyPolicy = obj.termsAndConditions?.MLHPrivacyPolicy
     newObj.MLHEmailSubscription = obj.termsAndConditions?.MLHEmailSubscription
+    newObj.day1Breakfast = obj.dayOf?.day1?.breakfast?.length ? 'yes' : 'no'
+    newObj.day1Lunch = obj.dayOf?.day1?.lunch?.length ? 'yes' : 'no'
+    newObj.day1Dinner = obj.dayOf?.day1?.dinner?.length ? 'yes' : 'no'
+    newObj.day2Breakfast = obj.dayOf?.day2?.breakfast?.length ? 'yes' : 'no'
+    newObj.day2Lunch = obj.dayOf?.day2?.lunch?.length ? 'yes' : 'no'
+    newObj.day2Dinner = obj.dayOf?.day2?.dinner?.length ? 'yes' : 'no'
   } else if (collection === 'Projects') {
     newObj = { ...obj }
     delete newObj.grades

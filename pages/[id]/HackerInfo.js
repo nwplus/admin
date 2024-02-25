@@ -133,7 +133,7 @@ export default function HackerInfo({ id, hackathons }) {
   useEffect(() => {
     clearFilters()
     getHackerInfo(setUnfilteredData, id, currTable)
-  }, [currTable])
+  }, [currTable, id])
 
   useEffect(() => {
     if (unfilteredData.length > 0) {

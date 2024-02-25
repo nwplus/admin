@@ -84,19 +84,16 @@ export default function ApplicantResponse({ shouldDisplay, hacker }) {
 
       {/* <ResponseInput url={waiverURL} label="Waiver" response={waiverURL} /> */}
 
-      <ResponseInput
-        label="In your own words, describe your definition of a hackathon, and what it means to you."
-        response={`${hacker?.skills?.longAnswers1}`}
-      />
+      <ResponseInput label="Why do you want to attend cmd-f 2024?" response={`${hacker?.skills?.longAnswers1}`} />
 
       <ResponseInput
-        label="Describe a project that you worked on and a useful skill that you learned from it?"
+        label="How would you make tech a more welcoming space for underrepresented demographics?"
         response={`${hacker?.skills?.longAnswers2}`}
       />
 
       {hacker?.skills?.longAnswers3 && (
         <ResponseInput
-          label="What character (from a movie, show, book, etc.) do you relate to most and why?"
+          label="Tell us about a project you're really proud of and what you learned from it."
           response={`${hacker?.skills?.longAnswers3}`}
         />
       )}

@@ -32,7 +32,7 @@ const Hackathons = 'Hackathons'
 const InternalWebsitesCollection = 'InternalWebsites'
 const CMSCollection = 'CMS'
 const LivesiteCollection = 'Livesite'
-const HackerEvaluationHackathon = 'nwHacks2024'
+const HackerEvaluationHackathon = 'cmd-f2024'
 
 export const getTimestamp = () => {
   return firebase.firestore.Timestamp.now()
@@ -571,7 +571,10 @@ export const getAllApplicants = async callback => {
     .where('status.applicationStatus', '!=', 'inProgress')
     .onSnapshot(snap => {
       callback(
-        snap.docs.map(doc => doc.data()).sort((a, b) => a.basicInfo.firstName.localeCompare(b.basicInfo.firstName))
+        snap.docs
+          .map(doc => doc.data())
+          .filter(a => a.basicInfo.identifyAsUnderrepresented !== 'no') // cmd-f filter; remove after
+          .sort((a, b) => a.basicInfo.legalFirstName.localeCompare(b.basicInfo.legalFirstName))
       )
     })
 }

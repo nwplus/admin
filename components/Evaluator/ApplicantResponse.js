@@ -80,7 +80,10 @@ export default function ApplicantResponse({ shouldDisplay, hacker }) {
 
       <ResponseInput label="Role" response={contributionRole} />
 
-      <ResponseInput label="Is this your first hackathon?" response={hacker?.skills?.firstTimeHacker ? 'yes' : 'no'} />
+      <ResponseInput
+        label="Is this your first hackathon?"
+        response={hacker?.skills?.numHackathonsAttended === '0' ? 'yes' : 'no'}
+      />
 
       {/* <ResponseInput url={waiverURL} label="Waiver" response={waiverURL} /> */}
 

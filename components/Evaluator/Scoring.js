@@ -143,6 +143,7 @@ export default function Scoring({ shouldDisplay, applicant }) {
             handleClick={handleClick}
             score={scores?.ResponseThreeScore}
             maxScore={SCORING.ESSAY3}
+            hasMinusOne
           />
         )}
         {/* {!applicant?.skills?.hackathonsAttended && (

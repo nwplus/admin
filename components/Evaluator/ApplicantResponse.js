@@ -85,6 +85,11 @@ export default function ApplicantResponse({ shouldDisplay, hacker }) {
         response={hacker?.skills?.numHackathonsAttended === '0' ? 'yes' : 'no'}
       />
 
+      <ResponseInput
+        label="Do you identify as part of an underrepresented gender in the technology industry?"
+        response={hacker?.basicInfo?.identifyAsUnderrepresented}
+      />
+
       {/* <ResponseInput url={waiverURL} label="Waiver" response={waiverURL} /> */}
 
       <ResponseInput label="Why do you want to attend cmd-f 2024?" response={`${hacker?.skills?.longAnswers1}`} />

@@ -128,7 +128,9 @@ export default function HackerList({ applicants, selectedApplicant, setSelectedA
       return (
         !applicant.score ||
         Object.keys(applicant.score.scores).length < 3 ||
-        applicant.status.applicationStatus !== 'accepted'
+        applicant.status.applicationStatus !== 'accepted' ||
+        applicant.status.applicationStatus !== 'acceptedAndAttending' ||
+        applicant.status.applicationStatus !== 'acceptedUnRSVP'
       )
     })
 

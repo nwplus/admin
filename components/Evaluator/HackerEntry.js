@@ -51,7 +51,10 @@ const StyledTag = styled.div`
   line-height: 16px;
   color: ${COLOR.WHITE};
   ${p =>
-    p.status === 'accepted'
+    p.status === 'accepted' ||
+    p.status === 'acceptedAndAttending' ||
+    p.status === 'acceptedUnRSVP' ||
+    p.status === 'waitlisted'
       ? `background: ${COLOR.GREEN};`
       : p.status === 'scored'
       ? `background: ${COLOR.BLUE};`
@@ -79,8 +82,16 @@ export default function HackerEntry({
     switch (status) {
       case 'accepted':
         return <StyledTag status={status}>Accepted</StyledTag>
+      case 'acceptedAndAttending':
+        return <StyledTag status={status}>RSVPed</StyledTag>
+      case 'acceptedUnRSVP':
+        return <StyledTag status={status}>UnRSVPed</StyledTag>
       case 'scored':
         return <StyledTag status={status}>Graded</StyledTag>
+      case 'waitlisted':
+        return <StyledTag status={status}>Waitlisted</StyledTag>
+      case 'rejected':
+        return <StyledTag status={status}>Rejected</StyledTag>
       default:
         return <StyledTag status={status}>Ungraded</StyledTag>
     }

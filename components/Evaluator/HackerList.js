@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { ASSESSMENT_COLOR, COLOR } from '../../constants'
+import { ASSESSMENT_COLOR, COLOR, NUM_SCORES } from '../../constants'
 import ExportModal from '../Assessment/ExportModal'
 import AcceptingModal from '../Assessment/acceptingModal'
 import Icon from '../Icon'
@@ -133,7 +133,7 @@ export default function HackerList({ applicants, selectedApplicant, setSelectedA
       if (!filterActive) {
         return true
       }
-      return !applicant.score || Object.keys(applicant.score.scores).length < 3
+      return !applicant.score || Object.keys(applicant.score.scores).length < NUM_SCORES
     })
 
     setFiltered(filteredByComplete)

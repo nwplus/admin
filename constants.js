@@ -95,6 +95,9 @@ export const ASSESSMENT_COLOR = {
   BLACK: '#000000',
   DARK_COPY: '#A198A6',
   RED: '#EB5757',
+  GREEN: '#50C878',
+  BLUE: '#4285F4',
+  YELLOW: '#FFD700',
   DARK_GRAY: '#4F4F4F',
   INPUT_GRAY: '#F4F4F4',
   TRANSPARENT: 'Transparent',
@@ -102,7 +105,6 @@ export const ASSESSMENT_COLOR = {
   LIGHT_GRAY: '#828282',
   UNSCORED_GRAY: '#E0E0E0',
   LIGHT_BLUE: '#F0EEF2',
-  BLUE_TEXT: '#2F80ED',
   TOOLBAR_GRAY: '#FAFAFA',
   BLUE_BORDER: '#21258A',
 }
@@ -114,15 +116,41 @@ export const APPLICATION_STATUS = {
     textColor: 'white',
     text: 'applied',
   },
+  waitlisted: {
+    color: ASSESSMENT_COLOR.RED,
+    textColor: 'white',
+    text: 'waitlisted',
+    displayText: 'Waitlisted',
+  },
+  rejected: {
+    color: ASSESSMENT_COLOR.YELLOW,
+    textColor: 'white',
+    text: 'rejected',
+    displayText: 'Rejected',
+  },
   scored: {
-    color: ASSESSMENT_COLOR.BLUE_TEXT,
+    color: ASSESSMENT_COLOR.BLUE,
     textColor: 'white',
     text: 'scored',
+    displayText: 'Graded',
   },
   accepted: {
-    color: 'green',
+    color: ASSESSMENT_COLOR.GREEN,
     textColor: 'white',
     text: 'accepted',
+    displayText: 'Accepted',
+  },
+  acceptedAndAttending: {
+    color: ASSESSMENT_COLOR.GREEN,
+    textColor: 'white',
+    text: 'acceptedAndAttending',
+    displayText: 'RSVPed',
+  },
+  acceptedUnRSVP: {
+    color: ASSESSMENT_COLOR.GREEN,
+    textColor: 'white',
+    text: 'acceptedUnRSVP',
+    displayText: 'UnRSVPed',
   },
   completed: {
     color: COLOR.MIDNIGHT_PURPLE,
@@ -130,6 +158,8 @@ export const APPLICATION_STATUS = {
     text: 'completed',
   },
 }
+
+export const NUM_SCORES = 4
 
 export const SCORING = {
   RESUME: {

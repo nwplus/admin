@@ -574,12 +574,7 @@ export const getAllApplicants = async callback => {
         snap.docs
           .map(doc => doc.data())
           .filter(a => a.basicInfo.identifyAsUnderrepresented !== 'no') // cmd-f filter; remove after
-          .sort((a, b) => {
-            const firstNameComparison = a.basicInfo.legalFirstName?.localeCompare(b.basicInfo.legalFirstName)
-            return firstNameComparison !== 0
-              ? firstNameComparison
-              : a.basicInfo.legalLastName?.localeCompare(b.basicInfo.legalLastName)
-          })
+          .sort((a, b) => a.submission?.lastUpdated - b.submission?.lastUpdated)
       )
     })
 }

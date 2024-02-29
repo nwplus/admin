@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { ASSESSMENT_COLOR, COLOR } from '../../constants'
+import { ASSESSMENT_COLOR, COLOR, NUM_SCORES } from '../../constants'
 import ExportModal from '../Assessment/ExportModal'
 import AcceptingModal from '../Assessment/acceptingModal'
 import Icon from '../Icon'
@@ -112,7 +112,15 @@ export default function HackerList({ applicants, selectedApplicant, setSelectedA
         return true
       }
       const [name, email, id] = [
-        `${applicant.basicInfo.firstName.toLowerCase()} ${applicant.basicInfo.lastName.toLowerCase()}`,
+        `${
+          applicant.basicInfo.firstName
+            ? applicant.basicInfo.firstName.toLowerCase()
+            : applicant.basicInfo.legalFirstName.toLowerCase()
+        } ${
+          applicant.basicInfo.lastName
+            ? applicant.basicInfo.lastName.toLowerCase()
+            : applicant.basicInfo.legalLastName.toLowerCase()
+        }`,
         applicant.basicInfo.email.toLowerCase(),
         applicant._id.toLowerCase(),
       ]
@@ -125,13 +133,7 @@ export default function HackerList({ applicants, selectedApplicant, setSelectedA
       if (!filterActive) {
         return true
       }
-      return (
-        !applicant.score ||
-        Object.keys(applicant.score.scores).length < 3 ||
-        applicant.status.applicationStatus !== 'accepted' ||
-        applicant.status.applicationStatus !== 'acceptedAndAttending' ||
-        applicant.status.applicationStatus !== 'acceptedUnRSVP'
-      )
+      return !applicant.score || Object.keys(applicant.score.scores).length < NUM_SCORES
     })
 
     setFiltered(filteredByComplete)

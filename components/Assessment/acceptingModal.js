@@ -68,7 +68,7 @@ export default function AcceptingModal({ setShowing }) {
           }}
           disabled={!(score > 0)}
           width="flex"
-          bColor={ASSESSMENT_COLOR.BLUE_TEXT}
+          bColor={ASSESSMENT_COLOR.BLUE}
         >
           See count
         </Button>

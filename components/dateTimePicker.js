@@ -1,7 +1,7 @@
 import DatePicker from 'react-datepicker'
 import { InputField } from './input'
 
-export const DateTimePicker = ({ selected, onChange }) => {
+export const DateTimePicker = ({ selected, onChange, timeIntervals = 30 }) => {
   return (
     <DatePicker
       customInput={<InputField />}
@@ -10,6 +10,7 @@ export const DateTimePicker = ({ selected, onChange }) => {
       showTimeSelect
       timeFormat="HH:mm"
       timeCaption="Time"
+      timeIntervals={timeIntervals}
       dateFormat="yyyy-MM-dd h:mm aa"
     />
   )

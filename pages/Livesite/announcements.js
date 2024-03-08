@@ -7,6 +7,8 @@ import AnnouncementsCard from '../../components/announcementsCard'
 import Modal from '../../components/modal'
 import Page from '../../components/page'
 import TextBox from '../../components/textbox'
+import Checkbox from '../../components/checkbox'
+import { DateTimePicker } from '../../components/dateTimePicker'
 import { EDIT, LIVESITE_NAVBAR, NEW } from '../../constants'
 import { useAuth } from '../../utility/auth'
 import {
@@ -19,6 +21,11 @@ import {
 
 const StyledTextBox = styled(TextBox)`
   margin-bottom: 12px;
+`
+const ScheduleOptions = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
 `
 
 const Markdown = ({ content }) => (
@@ -47,6 +54,8 @@ export default ({ hackathons }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [activeModal, setActiveModal] = useState('')
   const [currentAnnouncement, setCurrentAnnouncement] = useState({})
+  const [announcementTimeOption, setAnnouncementTimeOption] = useState('immediate')
+  const [announcementTime, setAnnouncementTime] = useState(Date.now())
   const { email: user } = useAuth().user
 
   useEffect(() => {
@@ -94,7 +103,14 @@ export default ({ hackathons }) => {
   }
 
   const handleSave = () => {
-    updateAnnouncement(activeHackathon, currentAnnouncement)
+    const announcement = { ...currentAnnouncement }
+    announcement.type = announcementTimeOption
+    if (announcementTimeOption === 'immediate') {
+      announcement.announcementTime = Date.now()
+    } else if (announcementTimeOption === 'scheduled') {
+      announcement.announcementTime = Date.parse(announcementTime)
+    }
+    updateAnnouncement(activeHackathon, announcement)
     setActiveModal('')
   }
 
@@ -136,9 +152,29 @@ export default ({ hackathons }) => {
             modalAction={NEW}
             onChange={event => changeCurrentAnnouncement(event.target.value)}
           />
-          <strong>Preview:</strong>
+          <strong>Schedule Announcement</strong>
+          <ScheduleOptions>
+            <Checkbox
+              label="Announce immediately"
+              checked={announcementTimeOption === 'immediate'}
+              onClick={() => setAnnouncementTimeOption('immediate')}
+            />
+            <Checkbox
+              label="Schedule a time"
+              checked={announcementTimeOption === 'scheduled'}
+              onClick={() => setAnnouncementTimeOption('scheduled')}
+            />
+            {announcementTimeOption === 'scheduled' && (
+              <DateTimePicker
+                selected={announcementTime}
+                onChange={date => setAnnouncementTime(date)}
+                timeIntervals={1}
+              />
+            )}
+          </ScheduleOptions>
+          {/* <strong>Preview:</strong>
           <Markdown content={currentAnnouncement.content} />
-          <p>just now @ {announcementDateFormat(Date.now())}</p>
+          <p>just now @ {announcementDateFormat(Date.now())}</p> */}
         </div>
       </Modal>
     </Page>

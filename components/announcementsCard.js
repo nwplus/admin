@@ -1,7 +1,7 @@
 import moment from 'moment'
 import React from 'react'
 import styled from 'styled-components'
-import { COLOR, DELETE, EDIT, NEW } from '../constants'
+import { COLOR, DELETE, NEW } from '../constants'
 import Button from './button'
 import Card, { CardButtonContainer, CardContainer, CardContent, CardHeader, CardTitle, TableContainer } from './card'
 
@@ -21,7 +21,7 @@ const Actions = styled.div`
   justify-content: flex-start;
 `
 
-export default ({ isLoading, handleNew, handleEdit, handleDelete, announcements }) => {
+export default ({ isLoading, handleNew, handleDelete, announcements }) => {
   return (
     <Card>
       <CardHeader>

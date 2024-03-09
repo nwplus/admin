@@ -1,7 +1,7 @@
 import moment from 'moment'
 import React from 'react'
 import styled from 'styled-components'
-import { COLOR, DELETE, EDIT, NEW } from '../constants'
+import { COLOR, DELETE, NEW } from '../constants'
 import Button from './button'
 import Card, { CardButtonContainer, CardContainer, CardContent, CardHeader, CardTitle, TableContainer } from './card'
 
@@ -21,7 +21,7 @@ const Actions = styled.div`
   justify-content: flex-start;
 `
 
-export default ({ isLoading, handleNew, handleEdit, handleDelete, announcements }) => {
+export default ({ isLoading, handleNew, handleDelete, announcements }) => {
   return (
     <Card>
       <CardHeader>
@@ -42,7 +42,10 @@ export default ({ isLoading, handleNew, handleEdit, handleDelete, announcements 
                 <strong>Announcement</strong>
               </Text>
               <Text>
-                <strong>Time</strong>
+                <strong>Type</strong>
+              </Text>
+              <Text>
+                <strong>Announced</strong>
               </Text>
               <Text>
                 <strong>Actions</strong>
@@ -53,9 +56,10 @@ export default ({ isLoading, handleNew, handleEdit, handleDelete, announcements 
             {Object.entries(announcements).map(([key, announcement]) => (
               <CardContainer key={announcement.timestamp} padding="10px 0px 10px 20px">
                 <Text style={{ flex: '3 3 0' }}>{announcement.content}</Text>
-                <Text>{moment(announcement.timestamp).fromNow()}</Text>
+                <Text>{announcement.type}</Text>
+                <Text>{moment(announcement.announcementTime).fromNow()}</Text>
                 <Actions>
-                  <Button type={EDIT} color={COLOR.TRANSPARENT} onClick={() => handleEdit(key)} />
+                  {/* <Button type={EDIT} color={COLOR.TRANSPARENT} onClick={() => handleEdit(key)} /> */}
                   <Button type={DELETE} color={COLOR.TRANSPARENT} onClick={() => handleDelete(key)} />
                 </Actions>
               </CardContainer>

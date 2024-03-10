@@ -78,6 +78,7 @@ export const filterHackerInfoFields = (obj, collection) => {
     newObj.day2Breakfast = obj.dayOf?.day2?.breakfast?.length || 0
     newObj.day2Lunch = obj.dayOf?.day2?.lunch?.length || 0
     newObj.day2Dinner = obj.dayOf?.day2?.dinner?.length || 0
+    newObj.checkedIn = obj.dayOf?.checkedIn || false
   } else if (collection === 'Projects') {
     newObj = { ...obj }
     delete newObj.grades

@@ -92,6 +92,7 @@ export const filterHackerInfoFields = (obj, collection) => {
       obj.basicInfo?.culturalBackground,
       obj.basicInfo?.otherCulturalBackground || ''
     )
+    newObj.race = createStringFromSelection(obj.basicInfo?.race, obj.basicInfo?.otherRace || '')
     newObj.MLHCodeOfConduct = obj.termsAndConditions?.MLHCodeOfConduct
     newObj.MLHPrivacyPolicy = obj.termsAndConditions?.MLHPrivacyPolicy
     newObj.MLHEmailSubscription = obj.termsAndConditions?.MLHEmailSubscription

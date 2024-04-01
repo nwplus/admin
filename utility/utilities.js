@@ -53,6 +53,24 @@ const returnTrueKey = obj => {
   return ''
 }
 
+// create string from multiselect object (true/false selection)
+const createStringFromSelection = (selection, other = '') => {
+  if (!selection) return other
+  const commonSelect = Object.keys(selection)
+    .filter(key => {
+      if (other && key === 'other') {
+        // if there is an 'other' option where user can input a custom answer, ignore the key
+        return false
+      }
+      return selection[key]
+    })
+    .join(', ')
+
+  const res = commonSelect + (commonSelect && other ? ', ' : '') + other // add custom answer to the end
+
+  return res
+}
+
 // Specifically for hacker info page - fixes/removes certain fields for table display
 export const filterHackerInfoFields = (obj, collection) => {
   let newObj = {}
@@ -67,8 +85,14 @@ export const filterHackerInfoFields = (obj, collection) => {
     }
     newObj.ethnicity = returnTrueKey(obj.basicInfo?.ethnicity)
     newObj.dietaryRestriction = returnTrueKey(obj.basicInfo?.dietaryRestriction)
-    newObj.pronouns = returnTrueKey(obj.basicInfo?.pronouns)
+    newObj.pronouns = createStringFromSelection(obj.basicInfo?.pronouns, obj.basicInfo?.otherPronoun || '')
     newObj.role = returnTrueKey(obj.skills?.contributionRole)
+    newObj.major = createStringFromSelection(obj.basicInfo?.major, obj.basicInfo?.otherMajor || '')
+    newObj.culturalBackground = createStringFromSelection(
+      obj.basicInfo?.culturalBackground,
+      obj.basicInfo?.otherCulturalBackground || ''
+    )
+    newObj.race = createStringFromSelection(obj.basicInfo?.race, obj.basicInfo?.otherRace || '')
     newObj.MLHCodeOfConduct = obj.termsAndConditions?.MLHCodeOfConduct
     newObj.MLHPrivacyPolicy = obj.termsAndConditions?.MLHPrivacyPolicy
     newObj.MLHEmailSubscription = obj.termsAndConditions?.MLHEmailSubscription

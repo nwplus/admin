@@ -185,8 +185,8 @@ export default ({ hackathons, currentPath }) => {
           </Link>
         </NextLink>
         <ItemContainer>
-          <Icon color={currentPath.includes('hackerapps') && COLOR.WHITE} icon="file-alt" />
-          <Label selected={currentPath.includes('hackerapps')}>Hacker Apps</Label>
+          <Icon color={currentPath && currentPath.includes('hackerapps') && COLOR.WHITE} icon="file-alt" />
+          <Label selected={currentPath && currentPath.includes('hackerapps')}>Hacker Apps</Label>
         </ItemContainer>
         {HACKATHONS.map(id => {
           const href = "/hackerapps/[id]"

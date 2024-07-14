@@ -5,6 +5,7 @@ import LoadingGif from '../assets/nwplus.gif'
 import { COLOR } from '../constants'
 import { logout } from '../utility/firebase'
 import Icon from './Icon'
+import { HACKATHONS } from '../constants'
 
 const SidebarContainer = styled.div`
   background-color: ${COLOR.PRIMARY};
@@ -183,6 +184,32 @@ export default ({ hackathons, currentPath }) => {
             </ItemContainer>
           </Link>
         </NextLink>
+        <ItemContainer>
+          <Icon color={currentPath.includes('hackerapps') && COLOR.WHITE} icon="file-alt" />
+          <Label selected={currentPath.includes('hackerapps')}>Hacker Apps</Label>
+        </ItemContainer>
+        {HACKATHONS.map(id => {
+          const href = "/hackerapps/[id]"
+          const link = `/hackerapps/${id}`
+          return (
+            <NextLink key={id} href={href} as={link} passHref>
+              <IndentedLink
+                onClick={() => {
+                  if (currentPath !== `hackerapps/${id}`) {
+                    setIfTimeOut(
+                      setTimeout(() => {
+                        setLoading(true)
+                      }, 750)
+                    )
+                  }
+                }}
+                selected={currentPath === `hackerapps/${id}`}
+              >
+                {id}
+              </IndentedLink>
+            </NextLink>
+          )
+        })}
         <ItemContainer>
           <Icon color={hackathons.includes(currentPath) && COLOR.WHITE} icon="th-list" />
           <Label selected={hackathons.includes(currentPath)}>Websites</Label>

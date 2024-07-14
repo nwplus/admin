@@ -327,3 +327,5 @@ export const RUBRIC = {
     },
   ],
 }
+
+export const HACKATHONS = ['HackCamp2024', 'nwHacks2025', 'cmd-f2025']

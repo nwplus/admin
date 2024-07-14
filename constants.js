@@ -87,6 +87,11 @@ export const LIVESITE_NAVBAR = {
   settings: 'Settings',
   judging: 'Judging',
 }
+export const HACKER_APP_NAVBAR = {
+  welcome: 'Welcome',
+  basicinfo: 'Basic Info',
+  skills: 'Skills',
+}
 
 export const ASSESSMENT_COLOR = {
   PRIMARY: '#2D2937',

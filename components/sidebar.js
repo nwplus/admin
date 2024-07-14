@@ -189,8 +189,8 @@ export default ({ hackathons, currentPath }) => {
           <Label selected={currentPath && currentPath.includes('hackerapps')}>Hacker Apps</Label>
         </ItemContainer>
         {HACKATHONS.map(id => {
-          const href = "/hackerapps/[id]"
-          const link = `/hackerapps/${id}`
+          const href = "/hackerapps/[id]/welcome"
+          const link = `/hackerapps/${id}/welcome`
           return (
             <NextLink key={id} href={href} as={link} passHref>
               <IndentedLink

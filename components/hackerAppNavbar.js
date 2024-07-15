@@ -9,8 +9,10 @@ const Container = styled.div`
   background-color: ${COLOR.LIGHT_GRAY};
   border-radius: 8px;
   padding: 12px;
-  gap: 10px;
+  gap: 20px;
   width: 100px;
+  height: 110px;
+  justify-content: center;
 `
 
 const NavLink = styled.a`
@@ -44,8 +46,6 @@ export default ({ items, setTimeOut, setLoading, currentPath }) => {
   return (
     <Container>
       {Object.entries(items).map(([key, value]) => {
-        console.log(currentPage)
-        console.log(key)
         return (
         <Link key={key} href={getHref(currentPath, key)} as={`${key}`} passHref>
           <NavLink onClick={() => onClick(key)} selected={currentPage === key}>

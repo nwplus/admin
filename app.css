@@ -2,3 +2,18 @@ body {
   margin: 0;
   font-family: 'HK Grotesk';
 } 
+
+.ql-snow .ql-editor {
+  font-family: 'HK Grotesk';
+}
+
+.ql-container {
+  border-bottom-left-radius: 0.5em;
+  border-bottom-right-radius: 0.5em;
+}
+
+.ql-toolbar {
+  display: block;
+  border-top-left-radius: 0.5em;
+  border-top-right-radius: 0.5em;
+}

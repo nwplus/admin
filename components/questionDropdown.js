@@ -63,12 +63,10 @@ const options = [
     QUESTION_TYPES.UPLOAD,
   ]
 
-const QuestionDropdown = ({ onSelect }) => {
-  const [selectedValue, setSelectedValue] = useState(null)
+const QuestionDropdown = ({ onSelect, defaultValue }) => {
   const [isOpen, setIsOpen] = useState(false)
 
   const onChange = option => {
-    setSelectedValue(option)
     onSelect(option)
     setIsOpen(false)
   }
@@ -86,9 +84,9 @@ const QuestionDropdown = ({ onSelect }) => {
 
   return (
     <Container>
-      <SelectContainer isOpen={isOpen} ref={dropdownRef} hasValue={!!selectedValue} onClick={() => setIsOpen(!isOpen)}>
+      <SelectContainer isOpen={isOpen} ref={dropdownRef} hasValue={!!defaultValue} onClick={() => setIsOpen(!isOpen)}>
         <RowContent>
-          <div>{selectedValue === null ? 'Select a question type' : selectedValue}</div>
+          <div>{defaultValue === null ? 'Select a question type' : defaultValue}</div>
           {isOpen ? <img src={DropdownArrow} alt="" style={{transform: "rotate(90deg)", transition: "transform 0.3s ease"}} /> : <img src={DropdownArrow} alt="" style={{transition: "transform 0.3s ease"}}/>}
         </RowContent>
         <OptionsContainer isOpen={isOpen}>

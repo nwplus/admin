@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { getHackathonPaths, getHackathons } from '../../../utility/firebase'
 import Page from '../../../components/page'
 import { HACKER_APP_NAVBAR, COLOR } from '../../../constants'
+import QuestionCard from '../../../components/questionCard'
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -22,10 +23,9 @@ export default ({id, hackathons}) => {
         <HeaderContainer>
             <Header>3. Add skills and long answer questions</Header>
         </HeaderContainer>
-        hacker app qs for {id}: skills
+        <QuestionCard/>
     </Page>
     </>
-    
   )
 }
 

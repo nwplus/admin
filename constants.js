@@ -334,3 +334,15 @@ export const RUBRIC = {
 }
 
 export const HACKATHONS = ['HackCamp2024', 'nwHacks2025', 'cmd-f2025']
+
+export const QUESTION_TYPES = Object.freeze({
+  MCQ: 'Multiple Choice',
+  DROPDOWN: 'Dropdown', 
+  SELECTALL: 'Select All',
+  SHORTANS: 'Short Answer',
+  LONGANS: 'Long Answer', 
+  CHECKBOX: 'Checkbox',
+  SCHOOL: 'School',
+  COUNTRY: 'Country',
+  UPLOAD: 'File Upload'
+})

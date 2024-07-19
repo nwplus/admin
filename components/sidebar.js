@@ -2,10 +2,9 @@ import NextLink from 'next/link'
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import LoadingGif from '../assets/nwplus.gif'
-import { COLOR } from '../constants'
+import { COLOR, HACKATHONS } from '../constants'
 import { logout } from '../utility/firebase'
 import Icon from './Icon'
-import { HACKATHONS } from '../constants'
 
 const SidebarContainer = styled.div`
   background-color: ${COLOR.PRIMARY};
@@ -189,7 +188,7 @@ export default ({ hackathons, currentPath }) => {
           <Label selected={currentPath && currentPath.includes('hackerapps')}>Hacker Apps</Label>
         </ItemContainer>
         {HACKATHONS.map(id => {
-          const href = "/hackerapps/[id]/welcome"
+          const href = '/hackerapps/[id]/welcome'
           const link = `/hackerapps/${id}/welcome`
           return (
             <NextLink key={id} href={href} as={link} passHref>

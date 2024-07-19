@@ -47,13 +47,13 @@ export default ({ items, setTimeOut, setLoading, currentPath }) => {
     <Container>
       {Object.entries(items).map(([key, value]) => {
         return (
-        <Link key={key} href={getHref(currentPath, key)} as={`${key}`} passHref>
-          <NavLink onClick={() => onClick(key)} selected={currentPage === key}>
-            {value}
-          </NavLink>
-        </Link>
+          <Link key={key} href={getHref(currentPath, key)} as={`${key}`} passHref>
+            <NavLink onClick={() => onClick(key)} selected={currentPage === key}>
+              {value}
+            </NavLink>
+          </Link>
         )
-        })}
+      })}
     </Container>
   )
 }

@@ -35,7 +35,15 @@ const Children = styled.div`
   ${p => !p.isFullscreen && !p.hackerAppHeader && 'padding: 40px 0;'}
 `
 
-export default ({ hackathons, currentPath, children, navbarItems, isFullscreen, hackerAppHeader, hackerAppNavbarItems }) => {
+export default ({
+  hackathons,
+  currentPath,
+  children,
+  navbarItems,
+  isFullscreen,
+  hackerAppHeader,
+  hackerAppNavbarItems,
+}) => {
   const [loading, setLoading] = useState(false)
   const [timeOut, setTimeOut] = useState()
 
@@ -55,10 +63,17 @@ export default ({ hackathons, currentPath, children, navbarItems, isFullscreen, 
                 <Header>Hacker Application / {hackerAppHeader}</Header>
                 {loading && <LoadingImage src={LoadingGif} />}
               </HeaderContainer>
-              <div style={{display: "flex", marginTop: "60px", gap: "75px"}}>
-                <HackerAppNavbar items={hackerAppNavbarItems} setLoading={setLoading} currentPath={currentPath} setTimeOut={setTimeOut}/>
-                <Children isFullscreen={isFullscreen} hackerAppHeader={hackerAppHeader}>{children}</Children>
-              </div>   
+              <div style={{ display: 'flex', marginTop: '60px', gap: '75px' }}>
+                <HackerAppNavbar
+                  items={hackerAppNavbarItems}
+                  setLoading={setLoading}
+                  currentPath={currentPath}
+                  setTimeOut={setTimeOut}
+                />
+                <Children isFullscreen={isFullscreen} hackerAppHeader={hackerAppHeader}>
+                  {children}
+                </Children>
+              </div>
             </>
           )}
           {navbarItems && (
@@ -70,7 +85,11 @@ export default ({ hackathons, currentPath, children, navbarItems, isFullscreen, 
               <Navbar items={navbarItems} setLoading={setLoading} currentPath={currentPath} setTimeOut={setTimeOut} />
             </>
           )}
-          {!hackerAppHeader && <Children isFullscreen={isFullscreen} hackerAppHeader={hackerAppHeader}>{children}</Children>}
+          {!hackerAppHeader && (
+            <Children isFullscreen={isFullscreen} hackerAppHeader={hackerAppHeader}>
+              {children}
+            </Children>
+          )}
         </Content>
       </div>
     </Container>

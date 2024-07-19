@@ -4,10 +4,10 @@ import CMSControl from '../utility/CMSControl'
 import Auth from '../utility/auth'
 
 import '../utility/firebase'
-import 'react-quill/dist/quill.snow.css';
+import 'react-quill/dist/quill.snow.css'
 import '../app.css'
 import '../assets/fonts/style.css'
-import "react-toggle/style.css"
+import 'react-toggle/style.css'
 
 // // Only execute on client side
 // if (typeof window !== 'undefined') {

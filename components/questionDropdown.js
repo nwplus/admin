@@ -52,16 +52,16 @@ const StyledOption = styled.div`
 `
 
 const options = [
-    QUESTION_TYPES.MCQ, 
-    QUESTION_TYPES.DROPDOWN,
-    QUESTION_TYPES.SELECTALL,
-    QUESTION_TYPES.SHORTANS,
-    QUESTION_TYPES.LONGANS,
-    QUESTION_TYPES.CHECKBOX,
-    QUESTION_TYPES.SCHOOL,
-    QUESTION_TYPES.COUNTRY,
-    QUESTION_TYPES.UPLOAD,
-  ]
+  QUESTION_TYPES.MCQ,
+  QUESTION_TYPES.DROPDOWN,
+  QUESTION_TYPES.SELECTALL,
+  QUESTION_TYPES.SHORTANS,
+  QUESTION_TYPES.LONGANS,
+  QUESTION_TYPES.CHECKBOX,
+  QUESTION_TYPES.SCHOOL,
+  QUESTION_TYPES.COUNTRY,
+  QUESTION_TYPES.UPLOAD,
+]
 
 const QuestionDropdown = ({ onSelect, defaultValue }) => {
   const [isOpen, setIsOpen] = useState(false)
@@ -87,13 +87,15 @@ const QuestionDropdown = ({ onSelect, defaultValue }) => {
       <SelectContainer isOpen={isOpen} ref={dropdownRef} hasValue={!!defaultValue} onClick={() => setIsOpen(!isOpen)}>
         <RowContent>
           <div>{defaultValue === null ? 'Select a question type' : defaultValue}</div>
-          {isOpen ? <img src={DropdownArrow} alt="" style={{transform: "rotate(90deg)", transition: "transform 0.3s ease"}} /> : <img src={DropdownArrow} alt="" style={{transition: "transform 0.3s ease"}}/>}
+          {isOpen ? (
+            <img src={DropdownArrow} alt="" style={{ transform: 'rotate(90deg)', transition: 'transform 0.3s ease' }} />
+          ) : (
+            <img src={DropdownArrow} alt="" style={{ transition: 'transform 0.3s ease' }} />
+          )}
         </RowContent>
         <OptionsContainer isOpen={isOpen}>
           {options.map(o => (
-            <StyledOption onClick={() => onChange(o)}>
-              {o}
-            </StyledOption>
+            <StyledOption onClick={() => onChange(o)}>{o}</StyledOption>
           ))}
         </OptionsContainer>
       </SelectContainer>

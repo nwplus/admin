@@ -30,81 +30,85 @@ const StyledQuestionButton = styled.button`
   }
 `
 
-export default ({id, hackathons}) => {
-  const [questions, setQuestions] = useState([{"title": "", 
-                                              "description": "", 
-                                              "type": "", 
-                                              "options": [""], 
-                                              "other": false, 
-                                              "required": false}]);
+export default ({ id, hackathons }) => {
+  const [questions, setQuestions] = useState([
+    { title: '', description: '', type: '', options: [''], other: false, required: false },
+  ])
 
   const addQuestion = () => {
-    setQuestions([...questions, {"title": "", 
-      "description": "", 
-      "type": "", 
-      "options": [""], 
-      "other": false, 
-      "required": false}]);
-  };
+    setQuestions([...questions, { title: '', description: '', type: '', options: [''], other: false, required: false }])
+  }
 
-  const removeQuestion = (index) => {
-    const newQuestions = questions.filter((_, i) => i !== index);
-    setQuestions(newQuestions);
-  };
+  const removeQuestion = index => {
+    const newQuestions = questions.filter((_, i) => i !== index)
+    setQuestions(newQuestions)
+  }
 
   const handleChange = (index, field, value) => {
-    const newQuestions = [...questions];
-    newQuestions[index][field] = value;
-    setQuestions(newQuestions);
-  };
+    const newQuestions = [...questions]
+    newQuestions[index][field] = value
+    setQuestions(newQuestions)
+  }
 
-  const moveUp = (index) => {
+  const moveUp = index => {
     if (index > 0) {
-      const newQuestions = [...questions];
-      [newQuestions[index - 1], newQuestions[index]] = [newQuestions[index], newQuestions[index - 1]];
-      setQuestions(newQuestions);
+      const newQuestions = [...questions]
+      ;[newQuestions[index - 1], newQuestions[index]] = [newQuestions[index], newQuestions[index - 1]]
+      setQuestions(newQuestions)
     }
-  };
+  }
 
-  const moveDown = (index) => {
+  const moveDown = index => {
     if (index < questions.length - 1) {
-      const newQuestions = [...questions];
-      [newQuestions[index + 1], newQuestions[index]] = [newQuestions[index], newQuestions[index + 1]];
-      setQuestions(newQuestions);
+      const newQuestions = [...questions]
+      ;[newQuestions[index + 1], newQuestions[index]] = [newQuestions[index], newQuestions[index + 1]]
+      setQuestions(newQuestions)
     }
-  };
+  }
 
-  const duplicateQuestion = (index) => {
-    const newQuestions = [...questions];
-    const duplicate = { ...newQuestions[index] };
-    newQuestions.splice(index + 1, 0, duplicate);
-    setQuestions(newQuestions);
-  };
+  const duplicateQuestion = index => {
+    const newQuestions = [...questions]
+    const duplicate = { ...newQuestions[index] }
+    newQuestions.splice(index + 1, 0, duplicate)
+    setQuestions(newQuestions)
+  }
 
   return (
     <>
-    <Page currentPath={"hackerapps/" + id} hackathons={hackathons} hackerAppHeader={id} hackerAppNavbarItems={HACKER_APP_NAVBAR}>
+      <Page
+        currentPath={`hackerapps/${id}`}
+        hackathons={hackathons}
+        hackerAppHeader={id}
+        hackerAppNavbarItems={HACKER_APP_NAVBAR}
+      >
         <HeaderContainer>
-            <Header>2. Add basic information questions</Header>
+          <Header>2. Add basic information questions</Header>
         </HeaderContainer>
-        <div style={{display: "flex", flexDirection: "column", gap: "10px"}}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
           {questions.map((question, index) => (
             <>
-              <QuestionCard question={question} id={index} removeQuestion={removeQuestion} handleChange={handleChange} moveUp={moveUp} moveDown={moveDown} duplicateQuestion={duplicateQuestion}/>
+              <QuestionCard
+                question={question}
+                id={index}
+                removeQuestion={removeQuestion}
+                handleChange={handleChange}
+                moveUp={moveUp}
+                moveDown={moveDown}
+                duplicateQuestion={duplicateQuestion}
+              />
               <StyledQuestionButton onClick={addQuestion}>
-              <Icon className="test" color={COLOR.MIDNIGHT_PURPLE_DEEP} icon="plus-circle"/>
+                <Icon className="test" color={COLOR.MIDNIGHT_PURPLE_DEEP} icon="plus-circle" />
               </StyledQuestionButton>
             </>
           ))}
         </div>
-        
-    </Page>
+      </Page>
     </>
   )
 }
 
 export const getStaticPaths = async () => {
-  return getHackathonPaths();
+  return getHackathonPaths()
 }
 
 export const getStaticProps = async ({ params }) => {

@@ -17,6 +17,8 @@ module.exports = {
     'no-await-in-loop': 0,
     'no-continue': 0,
     'no-restricted-syntax': 0,
+    'no-alert': 0,
+    'no-confirm': 0,
     radix: 0,
     'no-param-reassign': 0,
     'prettier/prettier': [

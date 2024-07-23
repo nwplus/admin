@@ -51,7 +51,7 @@ const StyledOption = styled.div`
   }
 `
 
-const options = Object.values(QUESTION_TYPES);
+const options = Object.values(QUESTION_TYPES)
 
 const QuestionDropdown = ({ onSelect, defaultValue }) => {
   const [isOpen, setIsOpen] = useState(false)
@@ -85,7 +85,9 @@ const QuestionDropdown = ({ onSelect, defaultValue }) => {
         </RowContent>
         <OptionsContainer isOpen={isOpen}>
           {options.map(o => (
-            <StyledOption key={o} onClick={() => onChange(o)}>{o}</StyledOption>
+            <StyledOption key={o} onClick={() => onChange(o)}>
+              {o}
+            </StyledOption>
           ))}
         </OptionsContainer>
       </SelectContainer>

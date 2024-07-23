@@ -39,12 +39,12 @@ const Children = styled.div`
 
 const StyledHackerAppSection = styled.div`
   display: flex;
-  margin-top: 60px; 
+  margin-top: 60px;
   gap: 75px;
 `
 
 const StyledButton = styled(Button)`
-  display: flex; 
+  display: flex;
   align-items: center;
   gap: 10px;
 `
@@ -72,10 +72,6 @@ export default ({
     clearTimeout(timeOut)
   }, [currentPath])
 
-  const handleSave = questions => {
-    // to be implemented in the future
-  }
-
   return (
     <Container>
       <Sidebar currentPath={currentPath} hackathons={hackathons} />
@@ -88,7 +84,11 @@ export default ({
                   <Header>Hacker Application / {hackerAppHeader}</Header>
                   {loading && <LoadingImage src={LoadingGif} />}
                 </HeaderContainer>
-                <StyledButton color={COLOR.MIDNIGHT_PURPLE_DEEP} contentColor={COLOR.WHITE} hoverBackgroundColor={COLOR.MIDNIGHT_PURPLE_LIGHT} onClick={handleSave}>
+                <StyledButton
+                  color={COLOR.MIDNIGHT_PURPLE_DEEP}
+                  contentColor={COLOR.WHITE}
+                  hoverBackgroundColor={COLOR.MIDNIGHT_PURPLE_LIGHT}
+                >
                   <Icon color={COLOR.WHITE} icon="save" />
                   Save
                 </StyledButton>

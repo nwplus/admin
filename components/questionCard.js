@@ -60,11 +60,11 @@ const StyledField = styled.input`
 `
 
 const StyledToggle = styled(Toggle)`
-  &.react-toggle--checked .react-toggle-track  {
-    background: linear-gradient(92.58deg, #0DEFE1 0%, #78FF96 100%);
+  &.react-toggle--checked .react-toggle-track {
+    background: linear-gradient(92.58deg, #0defe1 0%, #78ff96 100%);
   }
 
-  &.react-toggle--checked .react-toggle-thumb  {
+  &.react-toggle--checked .react-toggle-thumb {
     left: 31px !important;
   }
 
@@ -138,7 +138,7 @@ const QuestionCard = ({ question, removeQuestion, id, moveUp, moveDown, handleCh
       <TitleBar>
         <Bar style={{ width: '90%' }}>
           <Icon color={COLOR.MIDNIGHT_PURPLE_DEEP} icon="question-circle" />
-          <StyledField type="text" placeholder="Untitled" value={question.title} readOnly/>
+          <StyledField type="text" placeholder="Untitled" value={question.title} readOnly />
         </Bar>
         <Bar>
           <StyledQuestionButton onClick={() => setToggled(!isToggled)}>

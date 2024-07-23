@@ -58,4 +58,4 @@ const HackerAppNavbar = ({ items, setTimeOut, setLoading, currentPath }) => {
   )
 }
 
-export default HackerAppNavbar;
+export default HackerAppNavbar

@@ -41,10 +41,17 @@ export default ({ id, hackathons }) => {
     { title: '', description: '', type: '', options: [''], other: false, required: false },
   ])
 
-  const addQuestion = (index) => {
-    const newQuestions = [...questions];
-    newQuestions.splice(index + 1, 0, { title: '', description: '', type: '', options: [''], other: false, required: false });
-    setQuestions(newQuestions);
+  const addQuestion = index => {
+    const newQuestions = [...questions]
+    newQuestions.splice(index + 1, 0, {
+      title: '',
+      description: '',
+      type: '',
+      options: [''],
+      other: false,
+      required: false,
+    })
+    setQuestions(newQuestions)
   }
 
   const removeQuestion = index => {
@@ -104,7 +111,11 @@ export default ({ id, hackathons }) => {
                 moveDown={moveDown}
                 duplicateQuestion={duplicateQuestion}
               />
-              <StyledQuestionButton onClick={() => {addQuestion(index)}}>
+              <StyledQuestionButton
+                onClick={() => {
+                  addQuestion(index)
+                }}
+              >
                 <Icon color={COLOR.MIDNIGHT_PURPLE_DEEP} icon="plus-circle" />
               </StyledQuestionButton>
             </React.Fragment>

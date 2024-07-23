@@ -13,7 +13,7 @@ const StyledReactQuill = styled(ReactQuill)`
   color: ${COLOR.MIDNIGHT_PURPLE_DEEP};
 
   .ql-snow .ql-editor {
-  font-family: 'HK Grotesk';
+    font-family: 'HK Grotesk';
   }
 
   .ql-container {
@@ -77,12 +77,7 @@ export default ({ id, hackathons }) => {
             customValue={title}
             onChangeCustomValue={e => setTitle(e.target.value)}
           />
-          <StyledReactQuill
-            theme="snow"
-            modules={descModules}
-            formats={formats}
-            placeholder="Write a description..."
-          />
+          <StyledReactQuill theme="snow" modules={descModules} formats={formats} placeholder="Write a description..." />
         </StyledTextComponent>
       </Page>
     </>

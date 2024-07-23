@@ -35,6 +35,12 @@ const Children = styled.div`
   ${p => !p.isFullscreen && !p.hackerAppHeader && 'padding: 40px 0;'}
 `
 
+const StyledHackerAppSection = styled.div`
+  display: flex;
+  margin-top: 60px; 
+  gap: 75px;
+`
+
 export default ({
   hackathons,
   currentPath,
@@ -63,7 +69,7 @@ export default ({
                 <Header>Hacker Application / {hackerAppHeader}</Header>
                 {loading && <LoadingImage src={LoadingGif} />}
               </HeaderContainer>
-              <div style={{ display: 'flex', marginTop: '60px', gap: '75px' }}>
+              <StyledHackerAppSection>
                 <HackerAppNavbar
                   items={hackerAppNavbarItems}
                   setLoading={setLoading}
@@ -73,7 +79,7 @@ export default ({
                 <Children isFullscreen={isFullscreen} hackerAppHeader={hackerAppHeader}>
                   {children}
                 </Children>
-              </div>
+              </StyledHackerAppSection>
             </>
           )}
           {navbarItems && (

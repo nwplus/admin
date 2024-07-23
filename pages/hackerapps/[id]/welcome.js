@@ -6,6 +6,35 @@ import Page from '../../../components/page'
 import { COLOR, HACKER_APP_NAVBAR } from '../../../constants'
 import { getHackathonPaths, getHackathons } from '../../../utility/firebase'
 
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
+
+const StyledReactQuill = styled(ReactQuill)`
+  height: 220px;
+  color: ${COLOR.MIDNIGHT_PURPLE_DEEP};
+
+  .ql-snow .ql-editor {
+  font-family: 'HK Grotesk';
+  }
+
+  .ql-container {
+    border-bottom-left-radius: 0.5em;
+    border-bottom-right-radius: 0.5em;
+  }
+
+  .ql-toolbar {
+    display: block;
+    border-top-left-radius: 0.5em;
+    border-top-right-radius: 0.5em;
+  }
+`
+
+const StyledTextComponent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  margin: 30px 0px;
+`
+
 const HeaderContainer = styled.div`
   display: flex;
 `
@@ -28,8 +57,6 @@ const descModules = {
 
 const formats = ['bold', 'italic', 'underline', 'strike', 'blockquote', 'list', 'bullet', 'indent', 'link']
 
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
-
 export default ({ id, hackathons }) => {
   const [title, setTitle] = useState('')
   return (
@@ -44,20 +71,19 @@ export default ({ id, hackathons }) => {
           <Header>1. Add a title and description</Header>
         </HeaderContainer>
         This will be the first message applicants will see before applying to a hackathon.
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '30px', margin: '30px 0px' }}>
+        <StyledTextComponent>
           <TextField
             placeholder="Add the title here..."
             customValue={title}
             onChangeCustomValue={e => setTitle(e.target.value)}
           />
-          <ReactQuill
+          <StyledReactQuill
             theme="snow"
             modules={descModules}
             formats={formats}
             placeholder="Write a description..."
-            style={{ height: '220px', color: `${COLOR.MIDNIGHT_PURPLE_DEEP}` }}
           />
-        </div>
+        </StyledTextComponent>
       </Page>
     </>
   )

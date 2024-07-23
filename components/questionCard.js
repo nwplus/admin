@@ -52,12 +52,46 @@ const StyledField = styled.input`
   overflow: auto;
   border: none;
   font-family: 'HK Grotesk';
-  cursor: none;
   &:focus {
     border: none;
     background-color: none;
     outline: 0;
   }
+`
+
+const StyledToggle = styled(Toggle)`
+  &.react-toggle--checked .react-toggle-track  {
+    background: linear-gradient(92.58deg, #0DEFE1 0%, #78FF96 100%);
+  }
+
+  &.react-toggle--checked .react-toggle-thumb  {
+    left: 31px !important;
+  }
+
+  .react-toggle-track {
+    background-color: transparent !important;
+    border: 2px solid #2c2543;
+    margin: 0 !important;
+    height: 20px !important;
+  }
+
+  .react-toggle-thumb {
+    background-color: #2c2543 !important;
+    top: 4px !important;
+    width: 16px !important;
+    height: 16px !important;
+  }
+
+  &.react-toggle:not(.react-toggle--checked) .react-toggle-thumb {
+    left: 5px !important;
+  }
+`
+
+const StyledQuestionCard = styled.div`
+  border: 1px solid ${COLOR.MIDNIGHT_PURPLE_DEEP};
+  border-radius: 16px;
+  padding: 30px;
+  width: 40vw;
 `
 
 const Bar = styled.div`
@@ -67,6 +101,18 @@ const Bar = styled.div`
   i {
     transform: scale(1.3);
   }
+`
+
+const StyledOtherToggle = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`
+
+const StyledOptions = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 `
 
 const QuestionCard = ({ question, removeQuestion, id, moveUp, moveDown, handleChange, duplicateQuestion }) => {
@@ -89,18 +135,11 @@ const QuestionCard = ({ question, removeQuestion, id, moveUp, moveDown, handleCh
   }
 
   return (
-    <div
-      style={{
-        border: `1px solid ${COLOR.MIDNIGHT_PURPLE_DEEP}`,
-        borderRadius: '16px',
-        padding: '30px',
-        width: '40vw',
-      }}
-    >
+    <StyledQuestionCard>
       <TitleBar>
         <Bar style={{ width: '90%' }}>
           <Icon color={COLOR.MIDNIGHT_PURPLE_DEEP} icon="question-circle" />
-          <StyledField type="text" placeholder="Untitled" value={question.title} readonly />
+          <StyledField type="text" placeholder="Untitled" value={question.title} readOnly/>
         </Bar>
         <Bar>
           <StyledQuestionButton onClick={() => setToggled(!isToggled)}>
@@ -145,7 +184,7 @@ const QuestionCard = ({ question, removeQuestion, id, moveUp, moveDown, handleCh
       ) ? (
         <div>
           <QuestionTitle color={`${COLOR.MIDNIGHT_PURPLE_DEEP}`}>Options</QuestionTitle>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <StyledOptions>
             {question.options.map((option, index) => (
               <OptionsContent key={index}>
                 <TextField
@@ -158,31 +197,31 @@ const QuestionCard = ({ question, removeQuestion, id, moveUp, moveDown, handleCh
                 </StyledQuestionButton>
               </OptionsContent>
             ))}
-          </div>
+          </StyledOptions>
           <StyledQuestionButton onClick={addOption}>
-            <Icon className="test" color={COLOR.MIDNIGHT_PURPLE_DEEP} icon="plus-circle" />
+            <Icon color={COLOR.MIDNIGHT_PURPLE_DEEP} icon="plus-circle" />
           </StyledQuestionButton>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <StyledOtherToggle>
             <QuestionTitle color={`${COLOR.MIDNIGHT_PURPLE_DEEP}`}>Add Other</QuestionTitle>
-            <Toggle
+            <StyledToggle
               checked={question.other}
               icons={false}
               onChange={() => handleChange(id, 'other', !question.other)}
             />
-          </div>
+          </StyledOtherToggle>
         </div>
       ) : null}
       {isToggled && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', justifyContent: 'flex-end' }}>
-          <Toggle
+        <StyledOtherToggle style={{ justifyContent: 'flex-end' }}>
+          <StyledToggle
             checked={question.required}
             icons={false}
             onChange={() => handleChange(id, 'required', !question.required)}
           />
           <QuestionTitle color={`${COLOR.MIDNIGHT_PURPLE_DEEP}`}>Required</QuestionTitle>
-        </div>
+        </StyledOtherToggle>
       )}
-    </div>
+    </StyledQuestionCard>
   )
 }
 

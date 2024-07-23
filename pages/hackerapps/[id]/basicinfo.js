@@ -30,6 +30,12 @@ const StyledQuestionButton = styled.button`
   }
 `
 
+const QuestionsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`
+
 export default ({ id, hackathons }) => {
   const [questions, setQuestions] = useState([
     { title: '', description: '', type: '', options: [''], other: false, required: false },
@@ -84,7 +90,7 @@ export default ({ id, hackathons }) => {
         <HeaderContainer>
           <Header>2. Add basic information questions</Header>
         </HeaderContainer>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <QuestionsContainer>
           {questions.map((question, index) => (
             <>
               <QuestionCard
@@ -97,11 +103,11 @@ export default ({ id, hackathons }) => {
                 duplicateQuestion={duplicateQuestion}
               />
               <StyledQuestionButton onClick={addQuestion}>
-                <Icon className="test" color={COLOR.MIDNIGHT_PURPLE_DEEP} icon="plus-circle" />
+                <Icon color={COLOR.MIDNIGHT_PURPLE_DEEP} icon="plus-circle" />
               </StyledQuestionButton>
             </>
           ))}
-        </div>
+        </QuestionsContainer>
       </Page>
     </>
   )

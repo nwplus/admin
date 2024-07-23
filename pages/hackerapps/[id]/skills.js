@@ -41,8 +41,10 @@ export default ({ id, hackathons }) => {
     { title: '', description: '', type: '', options: [''], other: false, required: false },
   ])
 
-  const addQuestion = () => {
-    setQuestions([...questions, { title: '', description: '', type: '', options: [''], other: false, required: false }])
+  const addQuestion = (index) => {
+    const newQuestions = [...questions];
+    newQuestions.splice(index + 1, 0, { title: '', description: '', type: '', options: [''], other: false, required: false });
+    setQuestions(newQuestions);
   }
 
   const removeQuestion = index => {
@@ -92,7 +94,7 @@ export default ({ id, hackathons }) => {
         </HeaderContainer>
         <QuestionsContainer>
           {questions.map((question, index) => (
-            <>
+            <React.Fragment key={index}>
               <QuestionCard
                 question={question}
                 id={index}
@@ -102,10 +104,10 @@ export default ({ id, hackathons }) => {
                 moveDown={moveDown}
                 duplicateQuestion={duplicateQuestion}
               />
-              <StyledQuestionButton onClick={addQuestion}>
+              <StyledQuestionButton onClick={() => {addQuestion(index)}}>
                 <Icon color={COLOR.MIDNIGHT_PURPLE_DEEP} icon="plus-circle" />
               </StyledQuestionButton>
-            </>
+            </React.Fragment>
           ))}
         </QuestionsContainer>
       </Page>

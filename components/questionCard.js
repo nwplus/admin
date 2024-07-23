@@ -116,8 +116,7 @@ const StyledOptions = styled.div`
 `
 
 const QuestionCard = ({ question, removeQuestion, id, moveUp, moveDown, handleChange, duplicateQuestion }) => {
-  // const [required, setRequired] = useState(question.required || false)
-  const [isToggled, setToggled] = useState(question.toggled || true)
+  const [isToggled, setToggled] = useState(true)
 
   const handleOptionChange = (index, value) => {
     const newOptions = [...question.options]

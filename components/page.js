@@ -5,6 +5,8 @@ import { COLOR } from '../constants'
 import Navbar from './navbar'
 import Sidebar from './sidebar'
 import HackerAppNavbar from './hackerAppNavbar'
+import Button from './button'
+import Icon from './Icon'
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -35,6 +37,24 @@ const Children = styled.div`
   ${p => !p.isFullscreen && !p.hackerAppHeader && 'padding: 40px 0;'}
 `
 
+const StyledHackerAppSection = styled.div`
+  display: flex;
+  margin-top: 60px;
+  gap: 75px;
+`
+
+const StyledButton = styled(Button)`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`
+
+const StyledHackerAppNav = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`
+
 export default ({
   hackathons,
   currentPath,
@@ -59,11 +79,21 @@ export default ({
         <Content isFullscreen={isFullscreen}>
           {hackerAppHeader && (
             <>
-              <HeaderContainer>
-                <Header>Hacker Application / {hackerAppHeader}</Header>
-                {loading && <LoadingImage src={LoadingGif} />}
-              </HeaderContainer>
-              <div style={{ display: 'flex', marginTop: '60px', gap: '75px' }}>
+              <StyledHackerAppNav>
+                <HeaderContainer>
+                  <Header>Hacker Application / {hackerAppHeader}</Header>
+                  {loading && <LoadingImage src={LoadingGif} />}
+                </HeaderContainer>
+                <StyledButton
+                  color={COLOR.MIDNIGHT_PURPLE_DEEP}
+                  contentColor={COLOR.WHITE}
+                  hoverBackgroundColor={COLOR.MIDNIGHT_PURPLE_LIGHT}
+                >
+                  <Icon color={COLOR.WHITE} icon="save" />
+                  Save
+                </StyledButton>
+              </StyledHackerAppNav>
+              <StyledHackerAppSection>
                 <HackerAppNavbar
                   items={hackerAppNavbarItems}
                   setLoading={setLoading}
@@ -73,7 +103,7 @@ export default ({
                 <Children isFullscreen={isFullscreen} hackerAppHeader={hackerAppHeader}>
                   {children}
                 </Children>
-              </div>
+              </StyledHackerAppSection>
             </>
           )}
           {navbarItems && (

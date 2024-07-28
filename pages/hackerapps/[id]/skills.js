@@ -30,13 +30,28 @@ const StyledQuestionButton = styled.button`
   }
 `
 
+const QuestionsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`
+
 export default ({ id, hackathons }) => {
   const [questions, setQuestions] = useState([
     { title: '', description: '', type: '', options: [''], other: false, required: false },
   ])
 
-  const addQuestion = () => {
-    setQuestions([...questions, { title: '', description: '', type: '', options: [''], other: false, required: false }])
+  const addQuestion = index => {
+    const newQuestions = [...questions]
+    newQuestions.splice(index + 1, 0, {
+      title: '',
+      description: '',
+      type: '',
+      options: [''],
+      other: false,
+      required: false,
+    })
+    setQuestions(newQuestions)
   }
 
   const removeQuestion = index => {
@@ -84,9 +99,9 @@ export default ({ id, hackathons }) => {
         <HeaderContainer>
           <Header>3. Add skills and long answer questions</Header>
         </HeaderContainer>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <QuestionsContainer>
           {questions.map((question, index) => (
-            <>
+            <React.Fragment key={index}>
               <QuestionCard
                 question={question}
                 id={index}
@@ -96,12 +111,16 @@ export default ({ id, hackathons }) => {
                 moveDown={moveDown}
                 duplicateQuestion={duplicateQuestion}
               />
-              <StyledQuestionButton onClick={addQuestion}>
-                <Icon className="test" color={COLOR.MIDNIGHT_PURPLE_DEEP} icon="plus-circle" />
+              <StyledQuestionButton
+                onClick={() => {
+                  addQuestion(index)
+                }}
+              >
+                <Icon color={COLOR.MIDNIGHT_PURPLE_DEEP} icon="plus-circle" />
               </StyledQuestionButton>
-            </>
+            </React.Fragment>
           ))}
-        </div>
+        </QuestionsContainer>
       </Page>
     </>
   )

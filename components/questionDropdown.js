@@ -51,17 +51,7 @@ const StyledOption = styled.div`
   }
 `
 
-const options = [
-  QUESTION_TYPES.MCQ,
-  QUESTION_TYPES.DROPDOWN,
-  QUESTION_TYPES.SELECTALL,
-  QUESTION_TYPES.SHORTANS,
-  QUESTION_TYPES.LONGANS,
-  QUESTION_TYPES.CHECKBOX,
-  QUESTION_TYPES.SCHOOL,
-  QUESTION_TYPES.COUNTRY,
-  QUESTION_TYPES.UPLOAD,
-]
+const options = Object.values(QUESTION_TYPES)
 
 const QuestionDropdown = ({ onSelect, defaultValue }) => {
   const [isOpen, setIsOpen] = useState(false)
@@ -95,7 +85,9 @@ const QuestionDropdown = ({ onSelect, defaultValue }) => {
         </RowContent>
         <OptionsContainer isOpen={isOpen}>
           {options.map(o => (
-            <StyledOption onClick={() => onChange(o)}>{o}</StyledOption>
+            <StyledOption key={o} onClick={() => onChange(o)}>
+              {o}
+            </StyledOption>
           ))}
         </OptionsContainer>
       </SelectContainer>

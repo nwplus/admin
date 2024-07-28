@@ -31,7 +31,7 @@ const getHref = (currentPath, key) => {
   return currentPath.includes('Livesite') ? `/Livesite/${key}` : `/hackerapps/[id]/${key}`
 }
 
-export default ({ items, setTimeOut, setLoading, currentPath }) => {
+const HackerAppNavbar = ({ items, setTimeOut, setLoading, currentPath }) => {
   const currentPage = window.location.pathname.split('/')[3]
   const onClick = ({ path }) => {
     if (!window.location.href.includes(path)) {
@@ -57,3 +57,5 @@ export default ({ items, setTimeOut, setLoading, currentPath }) => {
     </Container>
   )
 }
+
+export default HackerAppNavbar

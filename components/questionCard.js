@@ -52,6 +52,8 @@ const StyledField = styled.input`
   overflow: auto;
   border: none;
   font-family: 'HK Grotesk';
+  user-select: none;
+  cursor: default;
   &:focus {
     border: none;
     background-color: none;

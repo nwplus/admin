@@ -9,9 +9,14 @@ import {
   getHackathons,
   updateHackerAppQuestions,
   getHackerAppQuestions,
+  getHackerAppQuestionsMetadata,
+  formatDate,
+  getTimestamp,
+  updateHackerAppQuestionsMetadata,
 } from '../../../utility/firebase'
 import Button from '../../../components/button'
 import Icon from '../../../components/Icon'
+import { useAuth } from '../../../utility/auth'
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 
@@ -62,6 +67,13 @@ const StyledButton = styled(Button)`
   right: 80px;
 `
 
+const StyledMetadataP = styled.p`
+  position: absolute;
+  top: 100px;
+  right: 80px;
+  color: ${COLOR.MIDNIGHT_PURPLE};
+`
+
 const descModules = {
   toolbar: [
     ['bold', 'italic', 'underline', 'strike', 'blockquote'],
@@ -76,6 +88,8 @@ const formats = ['bold', 'italic', 'underline', 'strike', 'blockquote', 'list', 
 export default ({ id, hackathons }) => {
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
+  const [metadata, setMetadata] = useState({})
+  const { email: user } = useAuth().user
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -83,12 +97,20 @@ export default ({ id, hackathons }) => {
       setTitle(questions[0].title || '')
       setContent(questions[0].content || '')
     }
+    const fetchMetadata = async () => {
+      const fetchedMetadata = await getHackerAppQuestionsMetadata(id, 'Welcome')
+      setMetadata(fetchedMetadata)
+    }
     fetchQuestions()
+    fetchMetadata()
   }, [id])
 
   const handleSave = async hackathon => {
     const questions = [{ title: title, content: content }]
     await updateHackerAppQuestions(hackathon, questions, 'Welcome')
+    const newMetadata = { lastEditedAt: getTimestamp(), lastEditedBy: user }
+    setMetadata(newMetadata)
+    await updateHackerAppQuestionsMetadata(hackathon, 'Welcome', newMetadata)
     alert('Questions were saved to the database!')
   }
 
@@ -111,6 +133,9 @@ export default ({ id, hackathons }) => {
           <Icon color={COLOR.WHITE} icon="save" />
           Save
         </StyledButton>
+        <StyledMetadataP>{`Last Edited by ${metadata.lastEditedBy} at ${formatDate(
+          metadata.lastEditedAt?.seconds
+        )}`}</StyledMetadataP>
         <HeaderContainer>
           <Header>1. Add a title and description</Header>
         </HeaderContainer>

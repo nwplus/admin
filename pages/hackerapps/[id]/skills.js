@@ -5,12 +5,17 @@ import {
   getHackathons,
   getHackerAppQuestions,
   updateHackerAppQuestions,
+  getHackerAppQuestionsMetadata,
+  formatDate,
+  getTimestamp,
+  updateHackerAppQuestionsMetadata,
 } from '../../../utility/firebase'
 import Page from '../../../components/page'
 import { HACKER_APP_NAVBAR, COLOR } from '../../../constants'
 import QuestionCard from '../../../components/questionCard'
 import Icon from '../../../components/Icon'
 import Button from '../../../components/button'
+import { useAuth } from '../../../utility/auth'
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -51,17 +56,31 @@ const StyledButton = styled(Button)`
   right: 80px;
 `
 
+const StyledMetadataP = styled.p`
+  position: absolute;
+  top: 100px;
+  right: 80px;
+  color: ${COLOR.MIDNIGHT_PURPLE};
+`
+
 export default ({ id, hackathons }) => {
   const [questions, setQuestions] = useState([
     { title: '', description: '', type: '', options: [''], other: false, required: false },
   ])
+  const [metadata, setMetadata] = useState({})
+  const { email: user } = useAuth().user
 
   useEffect(() => {
     const fetchQuestions = async () => {
       const appQuestions = await getHackerAppQuestions(id, 'Skills')
       setQuestions(appQuestions)
     }
+    const fetchMetadata = async () => {
+      const fetchedMetadata = await getHackerAppQuestionsMetadata(id, 'Skills')
+      setMetadata(fetchedMetadata)
+    }
     fetchQuestions()
+    fetchMetadata()
   }, [id])
 
   const addQuestion = index => {
@@ -113,6 +132,9 @@ export default ({ id, hackathons }) => {
 
   const handleSave = async hackathon => {
     await updateHackerAppQuestions(hackathon, questions, 'Skills')
+    const newMetadata = { lastEditedAt: getTimestamp(), lastEditedBy: user }
+    setMetadata(newMetadata)
+    await updateHackerAppQuestionsMetadata(hackathon, 'Skills', newMetadata)
     alert('Questions were saved to the database!')
   }
 
@@ -135,6 +157,9 @@ export default ({ id, hackathons }) => {
           <Icon color={COLOR.WHITE} icon="save" />
           Save
         </StyledButton>
+        <StyledMetadataP>{`Last Edited by ${metadata.lastEditedBy} at ${formatDate(
+          metadata.lastEditedAt?.seconds
+        )}`}</StyledMetadataP>
         <HeaderContainer>
           <Header>3. Add skills and long answer questions</Header>
         </HeaderContainer>

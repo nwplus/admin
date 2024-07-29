@@ -1,10 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { getHackathonPaths, getHackathons } from '../../../utility/firebase'
+import {
+  getHackathonPaths,
+  getHackathons,
+  getHackerAppQuestions,
+  updateHackerAppQuestions,
+} from '../../../utility/firebase'
 import Page from '../../../components/page'
 import { HACKER_APP_NAVBAR, COLOR } from '../../../constants'
 import QuestionCard from '../../../components/questionCard'
 import Icon from '../../../components/Icon'
+import Button from '../../../components/button'
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -36,10 +42,30 @@ const QuestionsContainer = styled.div`
   gap: 10px;
 `
 
+const StyledButton = styled(Button)`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: absolute;
+  top: 60px;
+  right: 80px;
+`
+
 export default ({ id, hackathons }) => {
   const [questions, setQuestions] = useState([
     { title: '', description: '', type: '', options: [''], other: false, required: false },
   ])
+
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      const questions = await getHackerAppQuestions(id, 'Skills')
+      setQuestions(questions)
+    }
+    fetchQuestions()
+    return () => {
+      setQuestions([{ title: '', description: '', type: '', options: [''], other: false, required: false }])
+    }
+  }, [id])
 
   const addQuestion = index => {
     const newQuestions = [...questions]
@@ -88,6 +114,11 @@ export default ({ id, hackathons }) => {
     setQuestions(newQuestions)
   }
 
+  const handleSave = async (hackathon, questions) => {
+    await updateHackerAppQuestions(hackathon, questions, 'Skills')
+    alert('Questions were saved to the database!')
+  }
+
   return (
     <>
       <Page
@@ -96,6 +127,17 @@ export default ({ id, hackathons }) => {
         hackerAppHeader={id}
         hackerAppNavbarItems={HACKER_APP_NAVBAR}
       >
+        <StyledButton
+          color={COLOR.MIDNIGHT_PURPLE_DEEP}
+          contentColor={COLOR.WHITE}
+          hoverBackgroundColor={COLOR.MIDNIGHT_PURPLE_LIGHT}
+          onClick={() => {
+            handleSave(id, questions)
+          }}
+        >
+          <Icon color={COLOR.WHITE} icon="save" />
+          Save
+        </StyledButton>
         <HeaderContainer>
           <Header>3. Add skills and long answer questions</Header>
         </HeaderContainer>

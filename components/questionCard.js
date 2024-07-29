@@ -140,7 +140,7 @@ const QuestionCard = ({ question, removeQuestion, id, moveUp, moveDown, handleCh
       <TitleBar>
         <Bar style={{ width: '90%' }}>
           <Icon color={COLOR.MIDNIGHT_PURPLE_DEEP} icon="question-circle" />
-          <StyledField type="text" placeholder="Untitled" value={question.title} readOnly />
+          <StyledField type="text" placeholder="Untitled" value={question.title || ''} readOnly />
         </Bar>
         <Bar>
           <StyledQuestionButton onClick={() => setToggled(!isToggled)}>
@@ -166,17 +166,17 @@ const QuestionCard = ({ question, removeQuestion, id, moveUp, moveDown, handleCh
           <QuestionTitle color={`${COLOR.MIDNIGHT_PURPLE_DEEP}`}>Question</QuestionTitle>
           <TextField
             placeholder="Question title"
-            customValue={question.title}
+            customValue={question.title || ''}
             onChangeCustomValue={e => handleChange(id, 'title', e.target.value)}
           />
           <QuestionTitle color={`${COLOR.MIDNIGHT_PURPLE_DEEP}`}>Description (optional)</QuestionTitle>
           <TextField
             placeholder="Question description"
-            customValue={question.description}
+            customValue={question.description || ''}
             onChangeCustomValue={e => handleChange(id, 'description', e.target.value)}
           />
           <QuestionTitle color={`${COLOR.MIDNIGHT_PURPLE_DEEP}`}>Question Type</QuestionTitle>
-          <QuestionDropdown onSelect={o => handleChange(id, 'type', o)} defaultValue={question.type} />
+          <QuestionDropdown onSelect={o => handleChange(id, 'type', o)} defaultValue={question.type || ''} />
         </>
       )}
       {isToggled &&
@@ -186,7 +186,7 @@ const QuestionCard = ({ question, removeQuestion, id, moveUp, moveDown, handleCh
         <div>
           <QuestionTitle color={`${COLOR.MIDNIGHT_PURPLE_DEEP}`}>Options</QuestionTitle>
           <StyledOptions>
-            {question.options.map((option, index) => (
+            {(question.options || []).map((option, index) => (
               <OptionsContent key={index}>
                 <TextField
                   placeholder={`Option ${index + 1}`}
@@ -205,7 +205,7 @@ const QuestionCard = ({ question, removeQuestion, id, moveUp, moveDown, handleCh
           <StyledOtherToggle>
             <QuestionTitle color={`${COLOR.MIDNIGHT_PURPLE_DEEP}`}>Add Other</QuestionTitle>
             <StyledToggle
-              checked={question.other}
+              checked={question.other || false}
               icons={false}
               onChange={() => handleChange(id, 'other', !question.other)}
             />
@@ -215,7 +215,7 @@ const QuestionCard = ({ question, removeQuestion, id, moveUp, moveDown, handleCh
       {isToggled && (
         <StyledOtherToggle style={{ justifyContent: 'flex-end' }}>
           <StyledToggle
-            checked={question.required}
+            checked={question.required || false}
             icons={false}
             onChange={() => handleChange(id, 'required', !question.required)}
           />

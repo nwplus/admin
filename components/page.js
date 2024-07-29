@@ -5,8 +5,6 @@ import { COLOR } from '../constants'
 import Navbar from './navbar'
 import Sidebar from './sidebar'
 import HackerAppNavbar from './hackerAppNavbar'
-import Button from './button'
-import Icon from './Icon'
 
 const HeaderContainer = styled.div`
   display: flex;

@@ -58,12 +58,12 @@ export default ({ id, hackathons }) => {
 
   useEffect(() => {
     const fetchQuestions = async () => {
-      const questions = await getHackerAppQuestions(id, 'BasicInfo')
-      setQuestions(questions)
+      const appQuestions = await getHackerAppQuestions(id, 'BasicInfo')
+      setQuestions(appQuestions)
     }
     fetchQuestions()
     return () => {
-      setQuestions([{ title: '', description: '', type: '', options: [''], other: false, required: false }])
+      setQuestions([])
     }
   }, [id])
 

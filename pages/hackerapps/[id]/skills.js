@@ -58,12 +58,12 @@ export default ({ id, hackathons }) => {
 
   useEffect(() => {
     const fetchQuestions = async () => {
-      const questions = await getHackerAppQuestions(id, 'Skills')
-      setQuestions(questions)
+      const appQuestions = await getHackerAppQuestions(id, 'Skills')
+      setQuestions(appQuestions)
     }
     fetchQuestions()
     return () => {
-      setQuestions([{ title: '', description: '', type: '', options: [''], other: false, required: false }])
+      setQuestions([])
     }
   }, [id])
 
@@ -114,7 +114,7 @@ export default ({ id, hackathons }) => {
     setQuestions(newQuestions)
   }
 
-  const handleSave = async (hackathon, questions) => {
+  const handleSave = async hackathon => {
     await updateHackerAppQuestions(hackathon, questions, 'Skills')
     alert('Questions were saved to the database!')
   }

@@ -129,7 +129,7 @@ export default ({ id, hackathons }) => {
           contentColor={COLOR.WHITE}
           hoverBackgroundColor={COLOR.MIDNIGHT_PURPLE_LIGHT}
           onClick={() => {
-            handleSave(id, questions)
+            handleSave(id)
           }}
         >
           <Icon color={COLOR.WHITE} icon="save" />

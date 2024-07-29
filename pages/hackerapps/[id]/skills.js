@@ -62,9 +62,6 @@ export default ({ id, hackathons }) => {
       setQuestions(appQuestions)
     }
     fetchQuestions()
-    return () => {
-      setQuestions([])
-    }
   }, [id])
 
   const addQuestion = index => {

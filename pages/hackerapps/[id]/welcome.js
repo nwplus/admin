@@ -84,10 +84,6 @@ export default ({ id, hackathons }) => {
       setContent(questions[0].content || '')
     }
     fetchQuestions()
-    return () => {
-      setTitle('')
-      setContent('')
-    }
   }, [id])
 
   const handleSave = async hackathon => {

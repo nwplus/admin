@@ -766,7 +766,7 @@ export const updateHackerAppQuestions = async (selectedHackathon, questions, cat
   })
 
   questions.forEach((question, index) => {
-    const newDocRef = categoryRef.doc(`${index}`)
+    const newDocRef = categoryRef.doc(`${index.toString().padStart(3, '0')}`)
     batch.set(newDocRef, question)
   })
   await batch.commit()

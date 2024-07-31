@@ -126,8 +126,8 @@ export default ({ id, hackathons }) => {
           color={COLOR.MIDNIGHT_PURPLE_DEEP}
           contentColor={COLOR.WHITE}
           hoverBackgroundColor={COLOR.MIDNIGHT_PURPLE_LIGHT}
-          onClick={() => {
-            handleSave(id)
+          onClick={async () => {
+            await handleSave(id)
           }}
         >
           <Icon color={COLOR.WHITE} icon="save" />

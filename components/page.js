@@ -5,8 +5,6 @@ import { COLOR } from '../constants'
 import Navbar from './navbar'
 import Sidebar from './sidebar'
 import HackerAppNavbar from './hackerAppNavbar'
-import Button from './button'
-import Icon from './Icon'
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -41,12 +39,6 @@ const StyledHackerAppSection = styled.div`
   display: flex;
   margin-top: 60px;
   gap: 75px;
-`
-
-const StyledButton = styled(Button)`
-  display: flex;
-  align-items: center;
-  gap: 10px;
 `
 
 const StyledHackerAppNav = styled.div`
@@ -84,14 +76,6 @@ export default ({
                   <Header>Hacker Application / {hackerAppHeader}</Header>
                   {loading && <LoadingImage src={LoadingGif} />}
                 </HeaderContainer>
-                <StyledButton
-                  color={COLOR.MIDNIGHT_PURPLE_DEEP}
-                  contentColor={COLOR.WHITE}
-                  hoverBackgroundColor={COLOR.MIDNIGHT_PURPLE_LIGHT}
-                >
-                  <Icon color={COLOR.WHITE} icon="save" />
-                  Save
-                </StyledButton>
               </StyledHackerAppNav>
               <StyledHackerAppSection>
                 <HackerAppNavbar

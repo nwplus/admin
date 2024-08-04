@@ -176,7 +176,11 @@ const QuestionCard = ({ question, removeQuestion, id, moveUp, moveDown, handleCh
             onChangeCustomValue={e => handleChange(id, 'description', e.target.value)}
           />
           <QuestionTitle color={`${COLOR.MIDNIGHT_PURPLE_DEEP}`}>Question Type</QuestionTitle>
-          <QuestionDropdown onSelect={o => handleChange(id, 'type', o)} defaultValue={question.type || ''} />
+          <QuestionDropdown
+            onSelect={o => handleChange(id, 'type', o)}
+            defaultValue={question.type || ''}
+            options={Object.values(QUESTION_TYPES)}
+          />
         </>
       )}
       {isToggled &&
@@ -221,6 +225,16 @@ const QuestionCard = ({ question, removeQuestion, id, moveUp, moveDown, handleCh
           />
           <QuestionTitle color={`${COLOR.MIDNIGHT_PURPLE_DEEP}`}>Required</QuestionTitle>
         </StyledOtherToggle>
+      )}
+      {isToggled && (
+        <>
+          <QuestionTitle color={`${COLOR.MIDNIGHT_PURPLE_DEEP}`}>Form Input Field</QuestionTitle>
+          <QuestionDropdown
+            onSelect={o => handleChange(id, 'type', o)}
+            defaultValue={question.type || ''}
+            options={Object.values(QUESTION_TYPES)}
+          />
+        </>
       )}
     </StyledQuestionCard>
   )

@@ -51,9 +51,9 @@ const StyledOption = styled.div`
   }
 `
 
-const options = Object.values(QUESTION_TYPES)
+// const options = Object.values(QUESTION_TYPES)
 
-const QuestionDropdown = ({ onSelect, defaultValue }) => {
+const QuestionDropdown = ({ onSelect, defaultValue, options }) => {
   const [isOpen, setIsOpen] = useState(false)
 
   const onChange = option => {

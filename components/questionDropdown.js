@@ -51,9 +51,7 @@ const StyledOption = styled.div`
   }
 `
 
-// const options = Object.values(QUESTION_TYPES)
-
-const QuestionDropdown = ({ onSelect, defaultValue, options }) => {
+const QuestionDropdown = ({ onSelect, defaultValue, options, locked = null }) => {
   const [isOpen, setIsOpen] = useState(false)
 
   const onChange = option => {
@@ -77,19 +75,21 @@ const QuestionDropdown = ({ onSelect, defaultValue, options }) => {
       <SelectContainer isOpen={isOpen} ref={dropdownRef} hasValue={!!defaultValue} onClick={() => setIsOpen(!isOpen)}>
         <RowContent>
           <div>{defaultValue === null ? 'Select a question type' : defaultValue}</div>
-          {isOpen ? (
+          {!locked && isOpen ? (
             <img src={DropdownArrow} alt="" style={{ transform: 'rotate(90deg)', transition: 'transform 0.3s ease' }} />
           ) : (
             <img src={DropdownArrow} alt="" style={{ transition: 'transform 0.3s ease' }} />
           )}
         </RowContent>
-        <OptionsContainer isOpen={isOpen}>
-          {options.map(o => (
-            <StyledOption key={o} onClick={() => onChange(o)}>
-              {o}
-            </StyledOption>
-          ))}
-        </OptionsContainer>
+        {!locked && (
+          <OptionsContainer isOpen={isOpen}>
+            {options.map(o => (
+              <StyledOption key={o} onClick={() => onChange(o)}>
+                {o}
+              </StyledOption>
+            ))}
+          </OptionsContainer>
+        )}
       </SelectContainer>
     </Container>
   )

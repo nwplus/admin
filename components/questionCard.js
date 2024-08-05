@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Toggle from 'react-toggle'
 import TextField from './TextField'
-import { COLOR, QUESTION_TYPES } from '../constants'
+import { BASIC_INFO_FORM_INPUT_FIELDS, COLOR, QUESTION_TYPES, SKILLS_FORM_INPUT_FIELDS } from '../constants'
 import QuestionDropdown from './questionDropdown'
 import Icon from './Icon'
 
@@ -117,8 +117,37 @@ const StyledOptions = styled.div`
   gap: 10px;
 `
 
-const QuestionCard = ({ question, removeQuestion, id, moveUp, moveDown, handleChange, duplicateQuestion }) => {
+const QuestionCard = ({
+  question,
+  removeQuestion,
+  id,
+  moveUp,
+  moveDown,
+  handleChange,
+  duplicateQuestion,
+  locked,
+  questions,
+}) => {
   const [isToggled, setToggled] = useState(true)
+  const [formInputOptions, setFormInputOptions] = useState(BASIC_INFO_FORM_INPUT_FIELDS)
+
+  useEffect(() => {
+    const pathSegments = location.pathname.split('/')
+    const currentSection = pathSegments[pathSegments.length - 1]
+
+    let allOptions
+    if (currentSection === 'basicinfo') {
+      allOptions = BASIC_INFO_FORM_INPUT_FIELDS
+    } else if (currentSection === 'skills') {
+      allOptions = SKILLS_FORM_INPUT_FIELDS
+    }
+    const selectedFormInputs = questions.map(q => q.formInput)
+    const filteredOptions = allOptions.filter(
+      option => !selectedFormInputs.includes(option) || option === question.formInput
+    )
+
+    setFormInputOptions(filteredOptions)
+  }, [location.pathname, questions, question.formInput])
 
   const handleOptionChange = (index, value) => {
     const newOptions = [...question.options]
@@ -175,6 +204,13 @@ const QuestionCard = ({ question, removeQuestion, id, moveUp, moveDown, handleCh
             customValue={question.description || ''}
             onChangeCustomValue={e => handleChange(id, 'description', e.target.value)}
           />
+          <QuestionTitle color={`${COLOR.MIDNIGHT_PURPLE_DEEP}`}>Form Input Field</QuestionTitle>
+          <QuestionDropdown
+            onSelect={o => handleChange(id, 'formInput', o)}
+            defaultValue={question.formInput || ''}
+            options={formInputOptions}
+            locked={locked}
+          />
           <QuestionTitle color={`${COLOR.MIDNIGHT_PURPLE_DEEP}`}>Question Type</QuestionTitle>
           <QuestionDropdown
             onSelect={o => handleChange(id, 'type', o)}
@@ -225,16 +261,6 @@ const QuestionCard = ({ question, removeQuestion, id, moveUp, moveDown, handleCh
           />
           <QuestionTitle color={`${COLOR.MIDNIGHT_PURPLE_DEEP}`}>Required</QuestionTitle>
         </StyledOtherToggle>
-      )}
-      {isToggled && (
-        <>
-          <QuestionTitle color={`${COLOR.MIDNIGHT_PURPLE_DEEP}`}>Form Input Field</QuestionTitle>
-          <QuestionDropdown
-            onSelect={o => handleChange(id, 'type', o)}
-            defaultValue={question.type || ''}
-            options={Object.values(QUESTION_TYPES)}
-          />
-        </>
       )}
     </StyledQuestionCard>
   )

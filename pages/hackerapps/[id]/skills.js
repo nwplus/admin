@@ -65,7 +65,7 @@ const StyledMetadataP = styled.p`
 
 export default ({ id, hackathons }) => {
   const [questions, setQuestions] = useState([
-    { title: '', description: '', type: '', options: [''], other: false, required: false },
+    { title: '', description: '', type: '', options: [''], other: false, required: false, formInput: '' },
   ])
   const [metadata, setMetadata] = useState({})
   const { email: user } = useAuth().user
@@ -92,6 +92,7 @@ export default ({ id, hackathons }) => {
       options: [''],
       other: false,
       required: false,
+      formInput: '',
     })
     setQuestions(newQuestions)
   }
@@ -174,6 +175,8 @@ export default ({ id, hackathons }) => {
                 moveUp={moveUp}
                 moveDown={moveDown}
                 duplicateQuestion={duplicateQuestion}
+                locked={question.formInput}
+                questions={questions}
               />
               <StyledQuestionButton
                 onClick={() => {

@@ -344,5 +344,43 @@ export const QUESTION_TYPES = Object.freeze({
   CHECKBOX: 'Checkbox',
   SCHOOL: 'School',
   COUNTRY: 'Country',
+  MAJOR: 'Major',
   UPLOAD: 'File Upload',
 })
+
+export const BASIC_INFO_FORM_INPUT_FIELDS = [
+  'academicYear',
+  'ageByHackathon',
+  'canadianStatus',
+  'countryOfResidence',
+  'culturalBackground',
+  'dietaryRestriction',
+  'disability',
+  'educationLevel',
+  'email',
+  'gender',
+  'graduation',
+  'haveTransExperience',
+  'identifyAsUnderrepresented',
+  'indigenousIdentification',
+  'legalFirstName',
+  'legalLastName',
+  'legalMiddleName',
+  'major',
+  'phoneNumber',
+  'preferredName',
+  'pronouns',
+  'race',
+  'school',
+]
+
+export const SKILLS_FORM_INPUT_FIELDS = [
+  'contributionRole',
+  'github',
+  'linkedin',
+  'longAnswers1',
+  'longAnswers2',
+  'longAnswers3',
+  'longAnswers4',
+  'longAnswers5',
+]

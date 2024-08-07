@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import DropdownArrow from '../assets/arrowDropdown.svg'
-import { COLOR, QUESTION_TYPES } from '../constants'
+import { COLOR } from '../constants'
 
 const Container = styled.div`
   width: 100%;
@@ -11,6 +11,7 @@ const SelectContainer = styled.div`
   border-radius: ${p => (p.isOpen ? '5px 5px 0 0' : '5px')};
   cursor: pointer;
   position: relative;
+  background-color: ${p => (p.locked ? COLOR.GREY_200 : COLOR.WHITE)};
 `
 
 const RowContent = styled.div`
@@ -51,9 +52,7 @@ const StyledOption = styled.div`
   }
 `
 
-const options = Object.values(QUESTION_TYPES)
-
-const QuestionDropdown = ({ onSelect, defaultValue }) => {
+const QuestionDropdown = ({ onSelect, defaultValue, options, locked = null }) => {
   const [isOpen, setIsOpen] = useState(false)
 
   const onChange = option => {
@@ -74,22 +73,30 @@ const QuestionDropdown = ({ onSelect, defaultValue }) => {
 
   return (
     <Container>
-      <SelectContainer isOpen={isOpen} ref={dropdownRef} hasValue={!!defaultValue} onClick={() => setIsOpen(!isOpen)}>
+      <SelectContainer
+        isOpen={isOpen}
+        ref={dropdownRef}
+        hasValue={!!defaultValue}
+        onClick={() => setIsOpen(!isOpen)}
+        locked={locked}
+      >
         <RowContent>
           <div>{defaultValue === null ? 'Select a question type' : defaultValue}</div>
-          {isOpen ? (
+          {!locked && isOpen ? (
             <img src={DropdownArrow} alt="" style={{ transform: 'rotate(90deg)', transition: 'transform 0.3s ease' }} />
           ) : (
             <img src={DropdownArrow} alt="" style={{ transition: 'transform 0.3s ease' }} />
           )}
         </RowContent>
-        <OptionsContainer isOpen={isOpen}>
-          {options.map(o => (
-            <StyledOption key={o} onClick={() => onChange(o)}>
-              {o}
-            </StyledOption>
-          ))}
-        </OptionsContainer>
+        {!locked && (
+          <OptionsContainer isOpen={isOpen}>
+            {options.map(o => (
+              <StyledOption key={o} onClick={() => onChange(o)}>
+                {o}
+              </StyledOption>
+            ))}
+          </OptionsContainer>
+        )}
       </SelectContainer>
     </Container>
   )

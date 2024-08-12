@@ -65,7 +65,7 @@ const StyledMetadataP = styled.p`
 
 export default ({ id, hackathons }) => {
   const [questions, setQuestions] = useState([
-    { title: '', description: '', type: '', options: [''], other: false, required: false, formInput: '' },
+    { title: '', description: '', type: '', options: [''], other: false, required: false, formInput: '', maxWords: '' },
   ])
   const [metadata, setMetadata] = useState({})
   const { email: user } = useAuth().user

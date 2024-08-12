@@ -346,13 +346,14 @@ export const QUESTION_TYPES = Object.freeze({
   COUNTRY: 'Country',
   MAJOR: 'Major',
   UPLOAD: 'File Upload',
+  PORTFOLIO: 'Portfolio',
+  LEGALNAME: 'Full Legal Name',
 })
 
 export const BASIC_INFO_FORM_INPUT_FIELDS = [
   'academicYear',
   'ageByHackathon',
   'canadianStatus',
-  'countryOfResidence',
   'culturalBackground',
   'dietaryRestriction',
   'disability',
@@ -363,21 +364,15 @@ export const BASIC_INFO_FORM_INPUT_FIELDS = [
   'haveTransExperience',
   'identifyAsUnderrepresented',
   'indigenousIdentification',
-  'legalFirstName',
-  'legalLastName',
-  'legalMiddleName',
-  'major',
   'phoneNumber',
   'preferredName',
   'pronouns',
   'race',
-  'school',
 ]
 
 export const SKILLS_FORM_INPUT_FIELDS = [
+  'numHackathonsAttended',
   'contributionRole',
-  'github',
-  'linkedin',
   'longAnswers1',
   'longAnswers2',
   'longAnswers3',

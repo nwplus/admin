@@ -204,18 +204,38 @@ const QuestionCard = ({
             customValue={question.description || ''}
             onChangeCustomValue={e => handleChange(id, 'description', e.target.value)}
           />
-          <QuestionTitle color={`${COLOR.MIDNIGHT_PURPLE_DEEP}`}>Form Input Field</QuestionTitle>
-          <QuestionDropdown
-            onSelect={o => handleChange(id, 'formInput', o)}
-            defaultValue={question.formInput || ''}
-            options={formInputOptions}
-            locked={locked}
-          />
           <QuestionTitle color={`${COLOR.MIDNIGHT_PURPLE_DEEP}`}>Question Type</QuestionTitle>
           <QuestionDropdown
             onSelect={o => handleChange(id, 'type', o)}
             defaultValue={question.type || ''}
             options={Object.values(QUESTION_TYPES)}
+          />
+          {![
+            QUESTION_TYPES.MAJOR,
+            QUESTION_TYPES.SCHOOL,
+            QUESTION_TYPES.COUNTRY,
+            QUESTION_TYPES.PORTFOLIO,
+            QUESTION_TYPES.LEGALNAME,
+          ].includes(question.type) && (
+            <>
+              <QuestionTitle color={`${COLOR.MIDNIGHT_PURPLE_DEEP}`}>Form Input Field</QuestionTitle>
+              <QuestionDropdown
+                onSelect={o => handleChange(id, 'formInput', o)}
+                defaultValue={question.formInput || ''}
+                options={formInputOptions}
+                locked={locked}
+              />
+            </>
+          )}
+        </>
+      )}
+      {isToggled && question.type === QUESTION_TYPES.LONGANS && (
+        <>
+          <QuestionTitle color={`${COLOR.MIDNIGHT_PURPLE_DEEP}`}>Max Words</QuestionTitle>
+          <TextField
+            placeholder="Max words"
+            customValue={question.maxWords || ''}
+            onChangeCustomValue={e => handleChange(id, 'maxWords', e.target.value)}
           />
         </>
       )}

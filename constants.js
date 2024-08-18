@@ -341,11 +341,9 @@ export const QUESTION_TYPES = Object.freeze({
   SELECTALL: 'Select All',
   SHORTANS: 'Short Answer',
   LONGANS: 'Long Answer',
-  CHECKBOX: 'Checkbox',
   SCHOOL: 'School',
   COUNTRY: 'Country',
   MAJOR: 'Major',
-  UPLOAD: 'File Upload',
   PORTFOLIO: 'Portfolio',
   LEGALNAME: 'Full Legal Name',
 })

@@ -210,12 +210,12 @@ const QuestionCard = ({
             defaultValue={question.type || ''}
             options={Object.values(QUESTION_TYPES)}
           />
-          {![
-            QUESTION_TYPES.MAJOR,
-            QUESTION_TYPES.SCHOOL,
-            QUESTION_TYPES.COUNTRY,
-            QUESTION_TYPES.PORTFOLIO,
-            QUESTION_TYPES.LEGALNAME,
+          {[
+            QUESTION_TYPES.MCQ,
+            QUESTION_TYPES.DROPDOWN,
+            QUESTION_TYPES.SELECTALL,
+            QUESTION_TYPES.SHORTANS,
+            QUESTION_TYPES.LONGANS,
           ].includes(question.type) && (
             <>
               <QuestionTitle color={`${COLOR.MIDNIGHT_PURPLE_DEEP}`}>Form Input Field</QuestionTitle>
@@ -239,10 +239,7 @@ const QuestionCard = ({
           />
         </>
       )}
-      {isToggled &&
-      [QUESTION_TYPES.MCQ, QUESTION_TYPES.DROPDOWN, QUESTION_TYPES.SELECTALL, QUESTION_TYPES.CHECKBOX].includes(
-        question.type
-      ) ? (
+      {isToggled && [QUESTION_TYPES.MCQ, QUESTION_TYPES.DROPDOWN, QUESTION_TYPES.SELECTALL].includes(question.type) ? (
         <div>
           <QuestionTitle color={`${COLOR.MIDNIGHT_PURPLE_DEEP}`}>Options</QuestionTitle>
           <StyledOptions>

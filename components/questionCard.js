@@ -132,7 +132,7 @@ const QuestionCard = ({
   const [formInputOptions, setFormInputOptions] = useState(BASIC_INFO_FORM_INPUT_FIELDS)
 
   useEffect(() => {
-    const pathSegments = location.pathname.split('/')
+    const pathSegments = window.location.pathname.split('/')
     const currentSection = pathSegments[pathSegments.length - 1]
 
     let allOptions
@@ -147,7 +147,7 @@ const QuestionCard = ({
     )
 
     setFormInputOptions(filteredOptions)
-  }, [location.pathname, questions, question.formInput])
+  }, [window.location.pathname, questions, question.formInput])
 
   const handleOptionChange = (index, value) => {
     const newOptions = [...question.options]

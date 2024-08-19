@@ -130,6 +130,7 @@ const QuestionCard = ({
 }) => {
   const [isToggled, setToggled] = useState(true)
   const [formInputOptions, setFormInputOptions] = useState(BASIC_INFO_FORM_INPUT_FIELDS)
+  const [questionTypes, setQuestionTypes] = useState([])
 
   useEffect(() => {
     const pathSegments = window.location.pathname.split('/')
@@ -148,6 +149,32 @@ const QuestionCard = ({
 
     setFormInputOptions(filteredOptions)
   }, [window.location.pathname, questions, question.formInput])
+
+  useEffect(() => {
+    const pathSegments = window.location.pathname.split('/')
+    const currentSection = pathSegments[pathSegments.length - 1]
+
+    let allTypes = [
+      QUESTION_TYPES.MCQ,
+      QUESTION_TYPES.DROPDOWN,
+      QUESTION_TYPES.SELECTALL,
+      QUESTION_TYPES.SHORTANS,
+      QUESTION_TYPES.LONGANS,
+    ]
+    if (currentSection === 'basicinfo') {
+      allTypes = [
+        ...allTypes,
+        QUESTION_TYPES.SCHOOL,
+        QUESTION_TYPES.COUNTRY,
+        QUESTION_TYPES.MAJOR,
+        QUESTION_TYPES.LEGALNAME,
+      ]
+    } else if (currentSection === 'skills') {
+      allTypes = [...allTypes, QUESTION_TYPES.PORTFOLIO]
+    }
+
+    setQuestionTypes(allTypes)
+  }, [window.location.pathname])
 
   const handleOptionChange = (index, value) => {
     const newOptions = [...question.options]
@@ -208,7 +235,7 @@ const QuestionCard = ({
           <QuestionDropdown
             onSelect={o => handleChange(id, 'type', o)}
             defaultValue={question.type || ''}
-            options={Object.values(QUESTION_TYPES)}
+            options={questionTypes}
           />
           {[
             QUESTION_TYPES.MCQ,

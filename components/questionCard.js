@@ -2,7 +2,13 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Toggle from 'react-toggle'
 import TextField from './TextField'
-import { BASIC_INFO_FORM_INPUT_FIELDS, COLOR, QUESTION_TYPES, SKILLS_FORM_INPUT_FIELDS } from '../constants'
+import {
+  BASIC_INFO_FORM_INPUT_FIELDS,
+  COLOR,
+  QUESTION_TYPES,
+  QUESTIONNAIRE_FORM_INPUT_FIELDS,
+  SKILLS_FORM_INPUT_FIELDS,
+} from '../constants'
 import QuestionDropdown from './questionDropdown'
 import Icon from './Icon'
 
@@ -141,6 +147,8 @@ const QuestionCard = ({
       allOptions = BASIC_INFO_FORM_INPUT_FIELDS
     } else if (currentSection === 'skills') {
       allOptions = SKILLS_FORM_INPUT_FIELDS
+    } else if (currentSection === 'questionnaire') {
+      allOptions = QUESTIONNAIRE_FORM_INPUT_FIELDS
     }
     const selectedFormInputs = questions.map(q => q.formInput)
     const filteredOptions = allOptions.filter(
@@ -219,19 +227,19 @@ const QuestionCard = ({
 
       {isToggled && (
         <>
-          <QuestionTitle color={`${COLOR.MIDNIGHT_PURPLE_DEEP}`}>Question</QuestionTitle>
+          <QuestionTitle color={COLOR.MIDNIGHT_PURPLE_DEEP}>Question</QuestionTitle>
           <TextField
             placeholder="Question title"
             customValue={question.title || ''}
             onChangeCustomValue={e => handleChange(id, 'title', e.target.value)}
           />
-          <QuestionTitle color={`${COLOR.MIDNIGHT_PURPLE_DEEP}`}>Description (optional)</QuestionTitle>
+          <QuestionTitle color={COLOR.MIDNIGHT_PURPLE_DEEP}>Description (optional)</QuestionTitle>
           <TextField
             placeholder="Question description"
             customValue={question.description || ''}
             onChangeCustomValue={e => handleChange(id, 'description', e.target.value)}
           />
-          <QuestionTitle color={`${COLOR.MIDNIGHT_PURPLE_DEEP}`}>Question Type</QuestionTitle>
+          <QuestionTitle color={COLOR.MIDNIGHT_PURPLE_DEEP}>Question Type</QuestionTitle>
           <QuestionDropdown
             onSelect={o => handleChange(id, 'type', o)}
             defaultValue={question.type || ''}
@@ -245,7 +253,7 @@ const QuestionCard = ({
             QUESTION_TYPES.LONGANS,
           ].includes(question.type) && (
             <>
-              <QuestionTitle color={`${COLOR.MIDNIGHT_PURPLE_DEEP}`}>Form Input Field</QuestionTitle>
+              <QuestionTitle color={COLOR.MIDNIGHT_PURPLE_DEEP}>Form Input Field</QuestionTitle>
               <QuestionDropdown
                 onSelect={o => handleChange(id, 'formInput', o)}
                 defaultValue={question.formInput || ''}
@@ -258,7 +266,7 @@ const QuestionCard = ({
       )}
       {isToggled && question.type === QUESTION_TYPES.LONGANS && (
         <>
-          <QuestionTitle color={`${COLOR.MIDNIGHT_PURPLE_DEEP}`}>Max Words</QuestionTitle>
+          <QuestionTitle color={COLOR.MIDNIGHT_PURPLE_DEEP}>Max Words</QuestionTitle>
           <TextField
             placeholder="Max words"
             customValue={question.maxWords || ''}
@@ -268,7 +276,7 @@ const QuestionCard = ({
       )}
       {isToggled && [QUESTION_TYPES.MCQ, QUESTION_TYPES.DROPDOWN, QUESTION_TYPES.SELECTALL].includes(question.type) ? (
         <div>
-          <QuestionTitle color={`${COLOR.MIDNIGHT_PURPLE_DEEP}`}>Options</QuestionTitle>
+          <QuestionTitle color={COLOR.MIDNIGHT_PURPLE_DEEP}>Options</QuestionTitle>
           <StyledOptions>
             {(question.options || []).map((option, index) => (
               <OptionsContent key={index}>
@@ -287,7 +295,7 @@ const QuestionCard = ({
             <Icon color={COLOR.MIDNIGHT_PURPLE_DEEP} icon="plus-circle" />
           </StyledQuestionButton>
           <StyledOtherToggle>
-            <QuestionTitle color={`${COLOR.MIDNIGHT_PURPLE_DEEP}`}>Add Other</QuestionTitle>
+            <QuestionTitle color={COLOR.MIDNIGHT_PURPLE_DEEP}>Add Other</QuestionTitle>
             <StyledToggle
               checked={question.other || false}
               icons={false}
@@ -303,7 +311,7 @@ const QuestionCard = ({
             icons={false}
             onChange={() => handleChange(id, 'required', !question.required)}
           />
-          <QuestionTitle color={`${COLOR.MIDNIGHT_PURPLE_DEEP}`}>Required</QuestionTitle>
+          <QuestionTitle color={COLOR.MIDNIGHT_PURPLE_DEEP}>Required</QuestionTitle>
         </StyledOtherToggle>
       )}
     </StyledQuestionCard>

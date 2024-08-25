@@ -91,6 +91,7 @@ export const HACKER_APP_NAVBAR = {
   welcome: 'Welcome',
   basicinfo: 'Basic Info',
   skills: 'Skills',
+  questionnaire: 'Questionnaire',
 }
 
 export const ASSESSMENT_COLOR = {
@@ -377,3 +378,5 @@ export const SKILLS_FORM_INPUT_FIELDS = [
   'longAnswers4',
   'longAnswers5',
 ]
+
+export const QUESTIONNAIRE_FORM_INPUT_FIELDS = ['eventsAttended', 'engagementSource']

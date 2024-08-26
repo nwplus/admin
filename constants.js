@@ -91,6 +91,7 @@ export const HACKER_APP_NAVBAR = {
   welcome: 'Welcome',
   basicinfo: 'Basic Info',
   skills: 'Skills',
+  questionnaire: 'Questionnaire',
 }
 
 export const ASSESSMENT_COLOR = {
@@ -341,11 +342,9 @@ export const QUESTION_TYPES = Object.freeze({
   SELECTALL: 'Select All',
   SHORTANS: 'Short Answer',
   LONGANS: 'Long Answer',
-  CHECKBOX: 'Checkbox',
   SCHOOL: 'School',
   COUNTRY: 'Country',
   MAJOR: 'Major',
-  UPLOAD: 'File Upload',
   PORTFOLIO: 'Portfolio',
   LEGALNAME: 'Full Legal Name',
 })
@@ -379,3 +378,5 @@ export const SKILLS_FORM_INPUT_FIELDS = [
   'longAnswers4',
   'longAnswers5',
 ]
+
+export const QUESTIONNAIRE_FORM_INPUT_FIELDS = ['eventsAttended', 'engagementSource']

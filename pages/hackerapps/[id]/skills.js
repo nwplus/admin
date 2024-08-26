@@ -131,7 +131,21 @@ export default ({ id, hackathons }) => {
     setQuestions(newQuestions)
   }
 
+  const validateQuestions = questions => {
+    for (let question of questions) {
+      if (!question.formInput || question.formInput.trim() === '') {
+        return false
+      }
+    }
+    return true
+  }
+
   const handleSave = async hackathon => {
+    const validated = validateQuestions(questions)
+    if (!validated) {
+      alert('Please make sure that you have selected a formInput field for each question.')
+      return
+    }
     await updateHackerAppQuestions(hackathon, questions, 'Skills')
     const newMetadata = { lastEditedAt: getTimestamp(), lastEditedBy: user }
     setMetadata(newMetadata)

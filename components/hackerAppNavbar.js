@@ -11,7 +11,7 @@ const Container = styled.div`
   padding: 12px;
   gap: 20px;
   width: 100px;
-  height: 110px;
+  height: 150px;
   justify-content: center;
 `
 

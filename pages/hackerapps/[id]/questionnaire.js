@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import {
-  getHackerAppQuestions,
   getHackathonPaths,
   getHackathons,
+  getHackerAppQuestions,
   updateHackerAppQuestions,
   getHackerAppQuestionsMetadata,
   formatDate,
@@ -72,11 +72,11 @@ export default ({ id, hackathons }) => {
 
   useEffect(() => {
     const fetchQuestions = async () => {
-      const appQuestions = await getHackerAppQuestions(id, 'BasicInfo')
+      const appQuestions = await getHackerAppQuestions(id, 'Questionnaire')
       setQuestions(appQuestions)
     }
     const fetchMetadata = async () => {
-      const fetchedMetadata = await getHackerAppQuestionsMetadata(id, 'BasicInfo')
+      const fetchedMetadata = await getHackerAppQuestionsMetadata(id, 'Questionnaire')
       setMetadata(fetchedMetadata)
     }
     fetchQuestions()
@@ -146,10 +146,10 @@ export default ({ id, hackathons }) => {
       alert('Please make sure that you have selected a formInput field for each question.')
       return
     }
-    await updateHackerAppQuestions(hackathon, questions, 'BasicInfo')
+    await updateHackerAppQuestions(hackathon, questions, 'Questionnaire')
     const newMetadata = { lastEditedAt: getTimestamp(), lastEditedBy: user }
     setMetadata(newMetadata)
-    await updateHackerAppQuestionsMetadata(hackathon, 'BasicInfo', newMetadata)
+    await updateHackerAppQuestionsMetadata(hackathon, 'Questionnaire', newMetadata)
     alert('Questions were saved to the database!')
   }
 
@@ -176,7 +176,7 @@ export default ({ id, hackathons }) => {
           metadata.lastEditedAt?.seconds
         )}`}</StyledMetadataP>
         <HeaderContainer>
-          <Header>2. Add basic information questions</Header>
+          <Header>4. Add questionnaire</Header>
         </HeaderContainer>
         <QuestionsContainer>
           {questions.map((question, index) => (

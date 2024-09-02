@@ -5,6 +5,7 @@ import Button from './button'
 import Dropdown from './dropdown'
 import { InputField } from './input'
 import TextBox from './textbox'
+import TextArea from './TextArea'
 
 const BackDropScreen = styled.div`
   width: 100vw;
@@ -52,9 +53,12 @@ export const ModalField = ({ dropdown, dropdownOptions, label, value, type = 'te
         {(label === 'Answer' || label === 'Description') && modalAction !== VIEW && (
           <TextBox width="95%" defaultValue={value} onChange={onChange} />
         )}
-        {label !== 'Answer' && label !== 'Description' && !dropdown && modalAction !== VIEW && (
-          <InputField type={type} defaultValue={value} onChange={onChange} />
-        )}
+        {label !== 'Answer' &&
+          label !== 'Description' &&
+          label !== 'Sponsor Blurb' &&
+          !dropdown &&
+          modalAction !== VIEW && <InputField type={type} defaultValue={value} onChange={onChange} />}
+        {label == 'Sponsor Blurb' && <TextArea type={type} defaultValue={value} onChange={onChange} />}
         {dropdown && modalAction !== VIEW && (
           <Dropdown options={dropdownOptions} onChange={onChange} defaultValue={value} />
         )}

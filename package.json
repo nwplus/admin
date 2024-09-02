@@ -26,6 +26,7 @@
     "moment": "^2.29.1",
     "next": "9.4.4",
     "next-optimized-images": "^2.6.2",
+    "nvm": "^0.0.4",
     "rc-input-number": "^6.1.1",
     "react": "^16.14.0",
     "react-csv": "^2.0.3",

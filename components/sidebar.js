@@ -150,6 +150,10 @@ export default ({ hackathons, currentPath }) => {
     setShowSidebar(!showSidebar)
   }
 
+  // Separate "www" from hackathons
+  const hackathonList = hackathons.filter(id => id !== 'www')
+  const wwwSection = hackathons.includes('www') ? 'www' : null
+
   return (
     <>
       <SidebarContainer showSidebar={showSidebar}>
@@ -157,6 +161,7 @@ export default ({ hackathons, currentPath }) => {
           <Header>nwPlus CMS</Header>
           {loading && <LoadingImage src={LoadingGif} />}
         </HeaderContainer>
+
         <NextLink href="/Livesite/announcements" as="/Livesite/announcements" passHref>
           <Link>
             <ItemContainer>
@@ -165,6 +170,7 @@ export default ({ hackathons, currentPath }) => {
             </ItemContainer>
           </Link>
         </NextLink>
+
         <NextLink href="/faq" as="/faq" passHref>
           <Link
             onClick={() => {
@@ -183,11 +189,31 @@ export default ({ hackathons, currentPath }) => {
             </ItemContainer>
           </Link>
         </NextLink>
+
+        <NextLink href="/www/intro" as="/www/intro" passHref>
+          <Link
+            onClick={() => {
+              if (currentPath !== 'www') {
+                setIfTimeOut(
+                  setTimeout(() => {
+                    setLoading(true)
+                  }, 750)
+                )
+              }
+            }}
+          >
+            <ItemContainer>
+              <Icon color={currentPath === 'www' && COLOR.WHITE} icon="question-circle" />
+              <Label selected={currentPath === 'www'}>www</Label>
+            </ItemContainer>
+          </Link>
+        </NextLink>
+
         <ItemContainer>
-          <Icon color={hackathons.includes(currentPath) && COLOR.WHITE} icon="th-list" />
-          <Label selected={hackathons.includes(currentPath)}>Websites</Label>
+          <Icon icon="th-list" />
+          <Label>Hackathons</Label>
         </ItemContainer>
-        {hackathons.map(id => {
+        {hackathonList.map(id => {
           const href = generateLinkTemplate(id)
           const link = generateLink(id)
           return (

@@ -152,8 +152,6 @@ export default ({ hackathons, currentPath }) => {
 
   // Separate "www" from hackathons
   const hackathonList = hackathons.filter(id => id !== 'www')
-  const wwwSection = hackathons.includes('www') ? 'www' : null
-
   return (
     <>
       <SidebarContainer showSidebar={showSidebar}>

@@ -2,7 +2,7 @@ import NextLink from 'next/link'
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import LoadingGif from '../assets/nwplus.gif'
-import { COLOR } from '../constants'
+import { COLOR, HACKATHONS } from '../constants'
 import { logout } from '../utility/firebase'
 import Icon from './Icon'
 

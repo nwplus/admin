@@ -87,6 +87,12 @@ export const LIVESITE_NAVBAR = {
   settings: 'Settings',
   judging: 'Judging',
 }
+export const HACKER_APP_NAVBAR = {
+  welcome: 'Welcome',
+  basicinfo: 'Basic Info',
+  skills: 'Skills',
+  questionnaire: 'Questionnaire',
+}
 
 export const ASSESSMENT_COLOR = {
   PRIMARY: '#2D2937',
@@ -327,3 +333,50 @@ export const RUBRIC = {
     },
   ],
 }
+
+export const HACKATHONS = ['HackCamp2024', 'nwHacks2025', 'cmd-f2025']
+
+export const QUESTION_TYPES = Object.freeze({
+  MCQ: 'Multiple Choice',
+  DROPDOWN: 'Dropdown',
+  SELECTALL: 'Select All',
+  SHORTANS: 'Short Answer',
+  LONGANS: 'Long Answer',
+  SCHOOL: 'School',
+  COUNTRY: 'Country',
+  MAJOR: 'Major',
+  PORTFOLIO: 'Portfolio',
+  LEGALNAME: 'Full Legal Name',
+})
+
+export const BASIC_INFO_FORM_INPUT_FIELDS = [
+  'academicYear',
+  'ageByHackathon',
+  'canadianStatus',
+  'culturalBackground',
+  'dietaryRestriction',
+  'disability',
+  'educationLevel',
+  'email',
+  'gender',
+  'graduation',
+  'haveTransExperience',
+  'identifyAsUnderrepresented',
+  'indigenousIdentification',
+  'phoneNumber',
+  'preferredName',
+  'pronouns',
+  'race',
+]
+
+export const SKILLS_FORM_INPUT_FIELDS = [
+  'numHackathonsAttended',
+  'contributionRole',
+  'longAnswers1',
+  'longAnswers2',
+  'longAnswers3',
+  'longAnswers4',
+  'longAnswers5',
+]
+
+export const QUESTIONNAIRE_FORM_INPUT_FIELDS = ['eventsAttended', 'engagementSource']

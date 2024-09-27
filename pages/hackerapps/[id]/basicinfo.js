@@ -131,8 +131,8 @@ export default ({ id, hackathons }) => {
     setQuestions(newQuestions)
   }
 
-  const validateQuestions = questions => {
-    for (let question of questions) {
+  const validateQuestions = questionList => {
+    for (const question of questionList) {
       if (!question.formInput || question.formInput.trim() === '') {
         return false
       }

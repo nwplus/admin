@@ -746,3 +746,42 @@ export const updateApplicantTags = async (userId, applicantTags) => {
     .doc(userId)
     .update({ applicantTags })
 }
+
+// hacker application questions specific
+export const getHackerAppQuestions = async (selectedHackathon, category) => {
+  const data = await db.collection('HackerAppQuestions').doc(selectedHackathon.slice(0, -4)).collection(category).get()
+  return data.docs.map(doc => doc.data())
+}
+
+export const updateHackerAppQuestions = async (selectedHackathon, questions, category) => {
+  const hackathonRef = db.collection('HackerAppQuestions').doc(selectedHackathon.slice(0, -4))
+  const categoryRef = hackathonRef.collection(category)
+
+  const batch = db.batch()
+
+  // clear all
+  const existingDocs = await categoryRef.get()
+  existingDocs.forEach(doc => {
+    batch.delete(doc.ref)
+  })
+
+  questions.forEach((question, index) => {
+    const newDocRef = categoryRef.doc(`${index.toString().padStart(3, '0')}`)
+    batch.set(newDocRef, question)
+  })
+  await batch.commit()
+}
+
+export const getHackerAppQuestionsMetadata = async (selectedHackathon, category) => {
+  const categoryRef = await db.collection('HackerAppQuestions').doc(selectedHackathon.slice(0, -4)).get()
+  return categoryRef.data()[category]
+}
+
+export const updateHackerAppQuestionsMetadata = async (selectedHackathon, category, updatedMetadata) => {
+  const doc = {
+    [category]: updatedMetadata,
+  }
+  return db.collection('HackerAppQuestions').doc(selectedHackathon.slice(0, -4)).set(doc, { merge: true })
+}
+
+// hacker application questions specific end

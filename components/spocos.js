@@ -24,6 +24,7 @@ const Text = styled.p`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 175px;
   color: ${COLOR.BODY_TEXT};
 `
 

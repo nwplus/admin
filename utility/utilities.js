@@ -125,7 +125,7 @@ export const filterHackerInfoFields = (obj, collection) => {
 }
 
 export const validateQuestions = questions => {
-  for (let question of questions) {
+  for (const question of questions) {
     if (
       [
         QUESTION_TYPES.SCHOOL,

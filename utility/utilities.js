@@ -1,4 +1,4 @@
-import { SCORING } from '../constants'
+import { QUESTION_TYPES, SCORING } from '../constants'
 
 // given hex color code, convert to RGBA with given alpha value
 export const hexToRgba = (hex, a = 1) => {
@@ -84,7 +84,10 @@ export const filterHackerInfoFields = (obj, collection) => {
       firstTimeHacker: obj.skills?.firstTimeHacker,
     }
     newObj.ethnicity = returnTrueKey(obj.basicInfo?.ethnicity)
-    newObj.dietaryRestriction = returnTrueKey(obj.basicInfo?.dietaryRestriction)
+    newObj.dietaryRestriction = createStringFromSelection(
+      obj.basicInfo?.dietaryRestriction,
+      obj.basicInfo?.otherDietaryRestriction || ''
+    )
     newObj.pronouns = createStringFromSelection(obj.basicInfo?.pronouns, obj.basicInfo?.otherPronoun || '')
     newObj.role = returnTrueKey(obj.skills?.contributionRole)
     newObj.major = createStringFromSelection(obj.basicInfo?.major, obj.basicInfo?.otherMajor || '')
@@ -119,4 +122,25 @@ export const filterHackerInfoFields = (obj, collection) => {
     }
   })
   return newObj
+}
+
+export const validateQuestions = questions => {
+  for (const question of questions) {
+    if (
+      [
+        QUESTION_TYPES.SCHOOL,
+        QUESTION_TYPES.COUNTRY,
+        QUESTION_TYPES.MAJOR,
+        QUESTION_TYPES.PORTFOLIO,
+        QUESTION_TYPES.LEGALNAME,
+      ].includes(question.type)
+    ) {
+      continue
+    }
+
+    if (!question.formInput || question.formInput.trim() === '') {
+      return false
+    }
+  }
+  return true
 }

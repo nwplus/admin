@@ -367,6 +367,7 @@ export const BASIC_INFO_FORM_INPUT_FIELDS = [
   'preferredName',
   'pronouns',
   'race',
+  'jobPosition',
 ]
 
 export const SKILLS_FORM_INPUT_FIELDS = [

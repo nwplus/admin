@@ -208,6 +208,34 @@ export default ({ hackathons, currentPath }) => {
         </NextLink>
 
         <ItemContainer>
+          <Icon color={currentPath && currentPath.includes('hackerapps') && COLOR.WHITE} icon="file-alt" />
+          <Label selected={currentPath && currentPath.includes('hackerapps')}>Hacker Apps</Label>
+        </ItemContainer>
+
+        {HACKATHONS.map(id => {
+          const href = '/hackerapps/[id]/welcome'
+          const link = `/hackerapps/${id}/welcome`
+          return (
+            <NextLink key={id} href={href} as={link} passHref>
+              <IndentedLink
+                onClick={() => {
+                  if (currentPath !== `hackerapps/${id}`) {
+                    setIfTimeOut(
+                      setTimeout(() => {
+                        setLoading(true)
+                      }, 750)
+                    )
+                  }
+                }}
+                selected={currentPath === `hackerapps/${id}`}
+              >
+                {id}
+              </IndentedLink>
+            </NextLink>
+          )
+        })}
+
+        <ItemContainer>
           <Icon icon="th-list" />
           <Label>Hackathons</Label>
         </ItemContainer>

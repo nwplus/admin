@@ -1,4 +1,4 @@
-import { SCORING } from '../constants'
+import { QUESTION_TYPES, SCORING } from '../constants'
 
 // given hex color code, convert to RGBA with given alpha value
 export const hexToRgba = (hex, a = 1) => {
@@ -84,7 +84,10 @@ export const filterHackerInfoFields = (obj, collection) => {
       firstTimeHacker: obj.skills?.firstTimeHacker,
     }
     newObj.ethnicity = returnTrueKey(obj.basicInfo?.ethnicity)
-    newObj.dietaryRestriction = returnTrueKey(obj.basicInfo?.dietaryRestriction)
+    newObj.dietaryRestriction = createStringFromSelection(
+      obj.basicInfo?.dietaryRestriction,
+      obj.basicInfo?.otherDietaryRestriction || ''
+    )
     newObj.pronouns = createStringFromSelection(obj.basicInfo?.pronouns, obj.basicInfo?.otherPronoun || '')
     newObj.role = returnTrueKey(obj.skills?.contributionRole)
     newObj.major = createStringFromSelection(obj.basicInfo?.major, obj.basicInfo?.otherMajor || '')
@@ -103,6 +106,9 @@ export const filterHackerInfoFields = (obj, collection) => {
     newObj.day2Lunch = obj.dayOf?.day2?.lunch?.length || 0
     newObj.day2Dinner = obj.dayOf?.day2?.dinner?.length || 0
     newObj.checkedIn = obj.dayOf?.checkedIn || false
+    newObj.longAnswers1 = obj.skills?.longAnswers1 || false
+    newObj.longAnswers2 = obj.skills?.longAnswers2 || false
+    newObj.longAnswers3 = obj.skills?.longAnswers3 || false
   } else if (collection === 'Projects') {
     newObj = { ...obj }
     delete newObj.grades
@@ -119,4 +125,25 @@ export const filterHackerInfoFields = (obj, collection) => {
     }
   })
   return newObj
+}
+
+export const validateQuestions = questions => {
+  for (const question of questions) {
+    if (
+      [
+        QUESTION_TYPES.SCHOOL,
+        QUESTION_TYPES.COUNTRY,
+        QUESTION_TYPES.MAJOR,
+        QUESTION_TYPES.PORTFOLIO,
+        QUESTION_TYPES.LEGALNAME,
+      ].includes(question.type)
+    ) {
+      continue
+    }
+
+    if (!question.formInput || question.formInput.trim() === '') {
+      return false
+    }
+  }
+  return true
 }

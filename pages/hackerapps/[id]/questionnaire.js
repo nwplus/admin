@@ -16,6 +16,7 @@ import QuestionCard from '../../../components/questionCard'
 import Icon from '../../../components/Icon'
 import Button from '../../../components/button'
 import { useAuth } from '../../../utility/auth'
+import { validateQuestions } from '../../../utility/utilities'
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -129,15 +130,6 @@ export default ({ id, hackathons }) => {
     const duplicate = { ...newQuestions[index] }
     newQuestions.splice(index + 1, 0, duplicate)
     setQuestions(newQuestions)
-  }
-
-  const validateQuestions = questions => {
-    for (let question of questions) {
-      if (!question.formInput || question.formInput.trim() === '') {
-        return false
-      }
-    }
-    return true
   }
 
   const handleSave = async hackathon => {

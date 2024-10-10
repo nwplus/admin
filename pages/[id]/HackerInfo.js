@@ -284,7 +284,7 @@ export default function HackerInfo({ id, hackathons }) {
               disabled={currTable === option}
               key={option}
             >
-              {option}
+              {option === 'DayOf' ? 'Schedule' : option}
             </Button>
           ))}
         </TableOptionsButtons>

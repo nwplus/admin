@@ -74,11 +74,11 @@ export const FAQCategory = Object.freeze({
 export const SPONSORSHIP = 'SPONSORSHIP'
 export const HACKATHON_NAVBAR = {
   intro: 'Intro',
-  events: 'Events',
-  spocos: 'Sponsors',
+  events: 'Edit Events',
+  spocos: 'Edit Sponsors',
   FeatureFlags: 'Feature Flags',
   BuildConfig: 'Build Config',
-  HackerInfo: 'Hacker Info',
+  HackerInfo: 'Firebase Queries',
 }
 export const LIVESITE_NAVBAR = {
   announcements: 'Announcements',

@@ -120,7 +120,6 @@ export default function Events({ id, hackathons }) {
       <TableRow>
         <TableData>{props.title}</TableData>
         <TableData>{props.date}</TableData>
-        <TableData>{props.order}</TableData>
         <TableData>{props.points}</TableData>
         <TableData>{props.lastModified}</TableData>
         <TableData actions>
@@ -178,7 +177,6 @@ export default function Events({ id, hackathons }) {
                     <TableRow>
                       <TableHeader>Event</TableHeader>
                       <TableHeader>Date</TableHeader>
-                      <TableHeader narrow>Order</TableHeader>
                       <TableHeader narrow>Points</TableHeader>
                       <TableHeader>Last Modified</TableHeader>
                       <TableHeader>Actions</TableHeader>
@@ -191,7 +189,6 @@ export default function Events({ id, hackathons }) {
                         eventID={events[curr].eventID}
                         title={events[curr].title}
                         text={events[curr].text}
-                        order={events[curr].order}
                         points={events[curr].points}
                         date={events[curr].date}
                         lastModified={events[curr].lastModified}
@@ -228,18 +225,6 @@ export default function Events({ id, hackathons }) {
               />
             </ModalContent>
             <ModalContent columns={2}>
-              <ModalField
-                label="Order"
-                modalAction={NEW}
-                onChange={event => handleInput('order', event.target.value, newEvent, setNewEvent)}
-              />
-              <ModalField
-                label="Points"
-                modalAction={NEW}
-                onChange={event => handleInput('points', event.target.value, newEvent, setNewEvent)}
-              />
-            </ModalContent>
-            <ModalContent columns={2}>
               <div>
                 <Label>Date</Label>
                 <DateTimePicker
@@ -247,6 +232,11 @@ export default function Events({ id, hackathons }) {
                   onChange={date => handleInput('date', date, newEvent, setNewEvent)}
                 />
               </div>
+              <ModalField
+                label="Points"
+                modalAction={NEW}
+                onChange={event => handleInput('points', event.target.value, newEvent, setNewEvent)}
+              />
             </ModalContent>
           </Modal>
 
@@ -264,11 +254,8 @@ export default function Events({ id, hackathons }) {
               <ModalField label="Description" value={eventViewing.text} modalAction={VIEW} />
             </ModalContent>
             <ModalContent columns={2}>
-              <ModalField label="Order" value={eventViewing.order} modalAction={VIEW} />
-              <ModalField label="Points" value={eventViewing.points} modalAction={VIEW} />
-            </ModalContent>
-            <ModalContent columns={1}>
               <ModalField label="Date" value={eventViewing.date} modalAction={VIEW} />
+              <ModalField label="Points" value={eventViewing.points} modalAction={VIEW} />
             </ModalContent>
           </Modal>
           {/* Modal for editing event */}
@@ -300,14 +287,13 @@ export default function Events({ id, hackathons }) {
               />
             </ModalContent>
             <ModalContent columns={2}>
-              <ModalField
-                label="Order"
-                value={eventEditing.order}
-                modalAction={EDIT}
-                onChange={event => {
-                  handleInput('order', event.target.value, eventEditing, setEventEditing)
-                }}
-              />
+              <div>
+                <Label>Date</Label>
+                <DateTimePicker
+                  selected={new Date(eventEditing.date)}
+                  onChange={date => handleInput('date', date, eventEditing, setEventEditing)}
+                />
+              </div>
               <ModalField
                 label="Points"
                 value={eventEditing.points}
@@ -316,15 +302,6 @@ export default function Events({ id, hackathons }) {
                   handleInput('points', event.target.value, eventEditing, setEventEditing)
                 }}
               />
-            </ModalContent>
-            <ModalContent columns={1}>
-              <div>
-                <Label>Date</Label>
-                <DateTimePicker
-                  selected={new Date(eventEditing.date)}
-                  onChange={date => handleInput('date', date, eventEditing, setEventEditing)}
-                />
-              </div>
             </ModalContent>
           </Modal>
           {/* Confirmation modal before deleting event */}
@@ -342,11 +319,8 @@ export default function Events({ id, hackathons }) {
               <ModalField label="Description" value={eventConfirm.text} modalAction={VIEW} />
             </ModalContent>
             <ModalContent columns={2}>
-              <ModalField label="Order" value={eventConfirm.order} modalAction={VIEW} />
-              <ModalField label="Points" value={eventConfirm.points} modalAction={VIEW} />
-            </ModalContent>
-            <ModalContent columns={1}>
               <ModalField label="Date" value={eventConfirm.date} modalAction={VIEW} />
+              <ModalField label="Points" value={eventConfirm.points} modalAction={VIEW} />
             </ModalContent>
           </Modal>
         </CardContent>

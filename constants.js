@@ -170,15 +170,10 @@ export const NUM_SCORES = 4
 export const SCORING = {
   RESUME: {
     label: 'Resume',
-    value: 5,
-    weight: 1,
+    value: 1,
+    weight: 88,
   },
   ESSAY1: {
-    label: 'Long Answer 1',
-    value: 3,
-    weight: 1,
-  },
-  ESSAY1NOESSAY3: {
     label: 'Long Answer 1',
     value: 4,
     weight: 1,
@@ -190,7 +185,7 @@ export const SCORING = {
   },
   ESSAY3: {
     label: 'Long Answer 3',
-    value: 3,
+    value: 4,
     weight: 1,
   },
 }
@@ -203,8 +198,8 @@ export const BONUS_SCORING = {
   },
 }
 
-// export const MAX_SCORE = Object.values(SCORING).reduce((acc, curr) => acc + curr.value * curr.weight, 0)
-export const MAX_SCORE = 15 // hardcoded for cmd-f 2024
+export const MAX_SCORE = Object.values(SCORING).reduce((acc, curr) => acc + curr.value * curr.weight, 0)
+// export const MAX_SCORE = 15 // hardcoded for cmd-f 2024
 
 export const SORT = {
   TIMESTAMP: 'Timestamp',
@@ -375,8 +370,8 @@ export const SKILLS_FORM_INPUT_FIELDS = [
   'longAnswers1',
   'longAnswers2',
   'longAnswers3',
-  'longAnswers4',
-  'longAnswers5',
+  // 'longAnswers4',
+  // 'longAnswers5',
 ]
 
 export const QUESTIONNAIRE_FORM_INPUT_FIELDS = ['eventsAttended', 'engagementSource']

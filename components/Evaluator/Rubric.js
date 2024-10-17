@@ -73,10 +73,10 @@ const Rubric = () => {
   const [selected, setSelected] = useState(null)
   return (
     <Container>
-      <HeadContainer>
+      {/* <HeadContainer>
         <Title5 color={COLOR.MIDNIGHT_PURPLE}>Rubric</Title5>
         <RubricDropdown onSelect={val => setSelected(val)} />
-      </HeadContainer>
+      </HeadContainer> */}
       <ContentContainer>
         {selected !== null ? (
           <StyledTable>

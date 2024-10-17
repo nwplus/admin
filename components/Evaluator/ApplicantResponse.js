@@ -44,7 +44,6 @@ export default function ApplicantResponse({ shouldDisplay, hacker }) {
   const [resumeURL, setResumeURL] = useState(null)
   // const [waiverURL, setWaiverURL] = useState(null)
   const [contributionRole, setContributionRole] = useState('')
-
   const fetchContributionRole = contributionMap => {
     const getContribution = obj => Object.keys(obj).filter(key => obj[key])
     const contribution = getContribution(contributionMap).map(e => CONTRIBUTION_ROLE_OPTIONS[e])
@@ -83,6 +82,10 @@ export default function ApplicantResponse({ shouldDisplay, hacker }) {
       <ResponseInput
         label="Is this your first hackathon?"
         response={hacker?.skills?.numHackathonsAttended === '0' ? 'yes' : 'no'}
+        // for HackCamp
+        responseTextColor={
+          hacker?.skills?.numHackathonsAttended === '0' ? ASSESSMENT_COLOR.BLACK : ASSESSMENT_COLOR.RED
+        }
       />
 
       <ResponseInput
@@ -92,7 +95,10 @@ export default function ApplicantResponse({ shouldDisplay, hacker }) {
 
       {/* <ResponseInput url={waiverURL} label="Waiver" response={waiverURL} /> */}
 
-      <ResponseInput label="If you had all the skills in the world, what product would you make? Why would this product be beneficial to you or your community?" response={`${hacker?.skills?.longAnswers1}`} />
+      <ResponseInput
+        label="If you had all the skills in the world, what product would you make? Why would this product be beneficial to you or your community?"
+        response={`${hacker?.skills?.longAnswers1}`}
+      />
 
       <ResponseInput
         label="Tell us about a time you made an idea or goal come to life. What was the situation?"

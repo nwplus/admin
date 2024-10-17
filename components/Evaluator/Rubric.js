@@ -2,8 +2,8 @@ import { useState } from 'react'
 import styled from 'styled-components'
 import Teapots from '../../assets/teapots.svg'
 import { ASSESSMENT_COLOR, COLOR, RUBRIC } from '../../constants'
-import { Title5 } from '../Typography'
-import RubricDropdown from './RubricDropdown'
+// import { Title5 } from '../Typography'
+// import RubricDropdown from './RubricDropdown'
 import RubricEntry from './RubricEntry'
 
 const Container = styled.div`
@@ -16,9 +16,9 @@ const Container = styled.div`
   box-sizing: border-box;
 `
 
-const HeadContainer = styled.div`
-  padding: 0 1rem;
-`
+// const HeadContainer = styled.div`
+//   padding: 0 1rem;
+// `
 
 const ContentContainer = styled.div`
   flex-grow: 1;
@@ -70,7 +70,9 @@ const StyledText = styled.div`
 `
 
 const Rubric = () => {
+  // eslint-disable-next-line no-unused-vars
   const [selected, setSelected] = useState(null)
+
   return (
     <Container>
       {/* <HeadContainer>

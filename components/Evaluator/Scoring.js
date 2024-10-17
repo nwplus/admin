@@ -111,13 +111,13 @@ export default function Scoring({ shouldDisplay, applicant }) {
           maxScore={SCORING.RESUME}
         />
         {/* {applicant?.skills?.longAnswers3 ? ( */}
-          <ScoreInput
-            label={SCORING.ESSAY1.label}
-            handleClick={handleClick}
-            score={scores?.ResponseOneScore}
-            maxScore={SCORING.ESSAY1}
-            hasMinusOne
-          />
+        <ScoreInput
+          label={SCORING.ESSAY1.label}
+          handleClick={handleClick}
+          score={scores?.ResponseOneScore}
+          maxScore={SCORING.ESSAY1}
+          hasMinusOne
+        />
         {/* ) : (
           <ScoreInput
             label={SCORING.ESSAY1NOESSAY3.label}

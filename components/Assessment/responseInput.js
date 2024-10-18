@@ -31,7 +31,7 @@ const OpenIcon = styled.a`
 
 const NO_RESPONSE = 'No Response'
 
-export default function ResponseInput({ url, label, response, openable }) {
+export default function ResponseInput({ url, label, response, openable, responseTextColor }) {
   const [open, setOpen] = useState(false)
 
   const OpenButton = () => (
@@ -56,7 +56,7 @@ export default function ResponseInput({ url, label, response, openable }) {
         backgroundColor: ASSESSMENT_COLOR.INPUT_GRAY,
         fontSize,
         resize: 'none',
-        color: 'black',
+        color: responseTextColor || 'black',
         verticalAlign: 'middle',
       }}
     >
@@ -83,7 +83,7 @@ export default function ResponseInput({ url, label, response, openable }) {
         {label}
         {openable && <OpenButton />}
       </Label>
-      <ResponseArea />
+      <ResponseArea responseTextColor={responseTextColor} />
       {open && (
         <PopoutWindow title={label} setWindowClosed={() => setOpen(false)}>
           <h5 style={{ fontSize: '20px' }}>{label}</h5>

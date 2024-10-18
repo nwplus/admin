@@ -122,7 +122,7 @@ export const getEvent = (eventID, data) => {
         title: data.title || 'Empty event field',
         text: data.text || 'Empty text description for event',
         date: data.date ? formatDate(data.date.seconds) : formatDate(getTimestamp().seconds),
-        order: data.order >= 0 ? data.order : -1,
+        points: data.points >= 0 ? data.points : '0',
         lastModified: data.lastModified ? formatDate(data.lastModified.seconds) : formatDate(getTimestamp().seconds),
         lastModifiedBy: data.lastModifiedBy || 'Unknown user',
       }
@@ -146,7 +146,7 @@ export const addEvent = async (hackathon, event) => {
     key: ref.id,
     text: event.text,
     date: event.date,
-    order: event.order,
+    points: event.points || '0',
     lastModified: getTimestamp(),
     lastModifiedBy: event.lastModifiedBy,
   })
@@ -161,7 +161,7 @@ export const updateEvent = async (hackathon, event) => {
     key: event.key || event.eventID,
     text: event.text || 'Empty text description for event',
     date: event.date || currDate,
-    order: event.order || -1,
+    points: event.points || '0',
     lastModified: currDate,
     lastModifiedBy: event.lastModifiedBy,
   })

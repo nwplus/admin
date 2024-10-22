@@ -604,14 +604,15 @@ export const getCSVData = async () => {
     .get()
   const CSV = apps.docs.map(doc => {
     const {
-      basicInfo: { firstName, lastName, email, educationLevel, phoneNumber, school, countryOfResidence, major },
+      basicInfo: { legalFirstName, legalLastName, preferredName, email, educationLevel, phoneNumber, school, countryOfResidence, major },
       status: { applicationStatus },
       skills: { firstTimeHacker },
     } = doc.data()
     const totalScore = doc.data().score?.totalScore ?? '?'
     return [
-      firstName,
-      lastName,
+      legalFirstName,
+      legalLastName,
+      preferredName,
       email,
       phoneNumber,
       school,
@@ -625,7 +626,8 @@ export const getCSVData = async () => {
   })
   CSV.unshift([
     'First Name',
-    'last Name',
+    'Last Name',
+    'Preferred Name',
     'Email',
     'Phone Number',
     'School Name',

@@ -604,7 +604,17 @@ export const getCSVData = async () => {
     .get()
   const CSV = apps.docs.map(doc => {
     const {
-      basicInfo: { legalFirstName, legalLastName, preferredName, email, educationLevel, phoneNumber, school, countryOfResidence, major },
+      basicInfo: {
+        legalFirstName,
+        legalLastName,
+        preferredName,
+        email,
+        educationLevel,
+        phoneNumber,
+        school,
+        countryOfResidence,
+        major,
+      },
       status: { applicationStatus },
       skills: { firstTimeHacker },
     } = doc.data()

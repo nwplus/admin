@@ -171,6 +171,76 @@ export const deleteEvent = async (hackathon, eventID) => {
   await db.collection('Hackathons').doc(hackathon).collection('Events').doc(eventID).delete()
 }
 
+
+// Rewards
+export const getReward = (rewardID, data) => {
+  return data
+    ? {
+        rewardID,
+        title: reward.title || 'Empty reward field',
+        key: reward.key || reward.rewardID,
+        blurb: reward.blurb || 'Empty blurb description for reward',
+        from: reward.from || 'None',
+        imgName: reward.imgName || 'None',
+        imgURL: reward.imgURL || '',
+        date: reward.date || currDate,
+        numOfWinners: reward.numOfWinners || 0,
+        lastModified: currDate,
+        lastModifiedBy: reward.lastModifiedBy,
+      }
+    : null
+}
+
+export const getRewards = async hackathon => {
+  const rewardIDs = await db.collection('Hackathons').doc(hackathon).collection('Rewards').get()
+  const rewards = {}
+  rewardIDs.docs.forEach(doc => {
+    const currReward = getReward(doc.id, doc.data())
+    if (currReward) rewards[doc.id] = currReward
+  })
+  return rewards
+}
+
+export const addReward = async (hackathon, reward) => {
+  const ref = db.collection('Hackathons').doc(hackathon).collection('Rewards').doc()
+  await ref.set({
+    title: reward.title,
+    key: ref.id,
+    blurb: reward.blurb,
+    from: reward.from,
+    imgName: reward.imgName,
+    imgURL: reward.imgURL,
+    date: reward.date,
+    numOfWinners: reward.numOfWinners,
+    lastModified: getTimestamp(),
+    lastModifiedBy: reward.lastModifiedBy,
+  })
+  return ref.id
+}
+
+export const updateReward = async (hackathon, reward) => {
+  const ref = db.collection('Hackathons').doc(hackathon).collection('Rewards').doc(reward.rewardID)
+  const currDate = getTimestamp()
+  await ref.update({
+    title: reward.title || 'Empty reward field',
+    key: reward.key || reward.rewardID,
+    blurb: reward.blurb || 'Empty blurb description for reward',
+    from: reward.from || 'None',
+    imgName: reward.imgName || 'None',
+    imgURL: reward.imgURL || '',
+    date: reward.date || currDate,
+    numOfWinners: reward.numOfWinners || 0,
+    lastModified: currDate,
+    lastModifiedBy: reward.lastModifiedBy,
+  })
+}
+
+export const deleteReward = async (hackathon, rewardID) => {
+  await db.collection('Hackathons').doc(hackathon).collection('Rewards').doc(rewardID).delete()
+}
+// Rewards ^^
+
+
 const getFaqCategory = faqCategory => {
   switch (faqCategory) {
     case FAQCategory.LOGS:

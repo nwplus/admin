@@ -27,6 +27,7 @@ import {
   getTimestamp,
   updateEvent,
 } from '../../utility/firebase'
+import Dropdown from '../../components/dropdown'
 
 export default function Events({ id, hackathons }) {
   const [events, setEvents] = useState([])
@@ -121,6 +122,7 @@ export default function Events({ id, hackathons }) {
         <TableData>{props.title}</TableData>
         <TableData>{props.date}</TableData>
         <TableData>{props.points}</TableData>
+        <TableData>{props.type}</TableData>
         <TableData>{props.lastModified}</TableData>
         <TableData actions>
           <ActionsButtonContainer>
@@ -178,6 +180,7 @@ export default function Events({ id, hackathons }) {
                       <TableHeader>Event</TableHeader>
                       <TableHeader>Date</TableHeader>
                       <TableHeader narrow>Points</TableHeader>
+                      <TableHeader>Event Type</TableHeader>
                       <TableHeader>Last Modified</TableHeader>
                       <TableHeader>Actions</TableHeader>
                     </TableRow>
@@ -190,6 +193,7 @@ export default function Events({ id, hackathons }) {
                         title={events[curr].title}
                         text={events[curr].text}
                         points={events[curr].points}
+                        type={events[curr].type}
                         date={events[curr].date}
                         lastModified={events[curr].lastModified}
                         lastModifiedBy={events[curr].lastModifiedBy}
@@ -224,7 +228,7 @@ export default function Events({ id, hackathons }) {
                 }}
               />
             </ModalContent>
-            <ModalContent columns={2}>
+            <ModalContent columns={3}>
               <div>
                 <Label>Date</Label>
                 <DateTimePicker
@@ -232,6 +236,26 @@ export default function Events({ id, hackathons }) {
                   onChange={date => handleInput('date', date, newEvent, setNewEvent)}
                 />
               </div>
+              <ModalField
+                dropdown
+                dropdownOptions={[
+                  {
+                    label: 'main',
+                  },
+                  {
+                    label: 'workshops',
+                  },
+                  {
+                    label: 'minievents',
+                  },
+                ]}
+                label="Type"
+                value={newEvent.type}
+                modalAction={NEW}
+                onChange={type => {
+                  handleInput('type', type.label, newEvent, setNewEvent)
+                }}
+              />
               <ModalField
                 label="Points"
                 modalAction={NEW}
@@ -253,9 +277,10 @@ export default function Events({ id, hackathons }) {
             <ModalContent columns={1}>
               <ModalField label="Description" value={eventViewing.text} modalAction={VIEW} />
             </ModalContent>
-            <ModalContent columns={2}>
+            <ModalContent columns={3}>
               <ModalField label="Date" value={eventViewing.date} modalAction={VIEW} />
               <ModalField label="Points" value={eventViewing.points} modalAction={VIEW} />
+              <ModalField label="Event Type" value={eventViewing.type} modalAction={VIEW} />
             </ModalContent>
           </Modal>
           {/* Modal for editing event */}
@@ -286,7 +311,7 @@ export default function Events({ id, hackathons }) {
                 }}
               />
             </ModalContent>
-            <ModalContent columns={2}>
+            <ModalContent columns={3}>
               <div>
                 <Label>Date</Label>
                 <DateTimePicker
@@ -300,6 +325,26 @@ export default function Events({ id, hackathons }) {
                 modalAction={EDIT}
                 onChange={event => {
                   handleInput('points', event.target.value, eventEditing, setEventEditing)
+                }}
+              />
+              <ModalField
+                dropdown
+                dropdownOptions={[
+                  {
+                    label: 'main',
+                  },
+                  {
+                    label: 'workshops',
+                  },
+                  {
+                    label: 'minievents',
+                  },
+                ]}
+                label="Type"
+                value={eventEditing.type}
+                modalAction={EDIT}
+                onChange={type => {
+                  handleInput('type', type.label, eventEditing, setEventEditing)
                 }}
               />
             </ModalContent>

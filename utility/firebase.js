@@ -123,6 +123,7 @@ export const getEvent = (eventID, data) => {
         text: data.text || 'Empty text description for event',
         date: data.date ? formatDate(data.date.seconds) : formatDate(getTimestamp().seconds),
         points: data.points >= 0 ? data.points : '0',
+        type: data.type || 'activities',
         lastModified: data.lastModified ? formatDate(data.lastModified.seconds) : formatDate(getTimestamp().seconds),
         lastModifiedBy: data.lastModifiedBy || 'Unknown user',
       }

@@ -46,7 +46,7 @@ const hackerStatuses = [
   'applied',
   'waitlisted',
   'rejected',
-  'accepted',
+  'acceptedNoResponseYet',
   'acceptedAndAttending',
   'acceptedUnRSVP',
   'inProgress',

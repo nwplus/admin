@@ -27,7 +27,6 @@ import {
   getTimestamp,
   updateEvent,
 } from '../../utility/firebase'
-import Dropdown from '../../components/dropdown'
 
 export default function Events({ id, hackathons }) {
   const [events, setEvents] = useState([])

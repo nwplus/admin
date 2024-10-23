@@ -143,7 +143,7 @@ export const APPLICATION_STATUS = {
   accepted: {
     color: ASSESSMENT_COLOR.GREEN,
     textColor: 'white',
-    text: 'accepted',
+    text: 'acceptedNoResponseYet',
     displayText: 'Accepted',
   },
   acceptedAndAttending: {

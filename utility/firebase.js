@@ -729,14 +729,24 @@ export const updateApplicantScore = async (applicantID, scores, comment, adminEm
 }
 
 export const updateApplicantStatus = async (userId, applicationStatus, hackathon) => {
+  const updateData = {
+    'status.applicationStatus': applicationStatus,
+  }
+
+  if (applicationStatus === 'acceptedAndAttending') {
+    updateData['status.attending'] = true
+    updateData['status.responded'] = true
+  } else if (applicationStatus === 'acceptedUnRSVP') {
+    updateData['status.attending'] = false
+    updateData['status.responded'] = true
+  }
+
   return db
     .collection('Hackathons')
     .doc(hackathon || HackerEvaluationHackathon)
     .collection('Applicants')
     .doc(userId)
-    .update({
-      'status.applicationStatus': applicationStatus,
-    })
+    .update(updateData)
 }
 
 export const getApplicantTags = async (userId, callback) => {

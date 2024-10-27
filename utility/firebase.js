@@ -171,25 +171,24 @@ export const deleteEvent = async (hackathon, eventID) => {
   await db.collection('Hackathons').doc(hackathon).collection('Events').doc(eventID).delete()
 }
 
-
 // Rewards
 export const getReward = (rewardID, data) => {
   return data
     ? {
         rewardID,
-        reward: data.reward || 'Empty reward field',                // Title of the reward
-        key: data.key || rewardID,                               // Key of the reward (defaults to rewardID)
-        blurb: data.blurb || 'Empty blurb description for reward',// Short description of the reward
-        from: data.from || 'None',                               // Source or sponsor of the reward
-        imgName: data.imgName || 'None',                         // Image name (if applicable)
-        imgURL: data.imgURL || '',                               // URL to the reward image
-        prizesAvailable: data.prizesAvailable || '0',                    // Number of winners for the reward
-        requiredPoints: data.requiredPoints || '0',              // Points required to win the reward
+        reward: data.reward || 'Empty reward field', // Title of the reward
+        key: data.key || rewardID, // Key of the reward (defaults to rewardID)
+        blurb: data.blurb || 'Empty blurb description for reward', // Short description of the reward
+        from: data.from || 'None', // Source or sponsor of the reward
+        imgName: data.imgName || 'None', // Image name (if applicable)
+        imgURL: data.imgURL || '', // URL to the reward image
+        prizesAvailable: data.prizesAvailable || '0', // Number of winners for the reward
+        requiredPoints: data.requiredPoints || '0', // Points required to win the reward
         lastmod: data.lastmod ? formatDate(data.lastmod.seconds) : formatDate(getTimestamp().seconds), // Last modified date
-        lastmodBy: data.lastmodBy || 'Unknown user',        // Last person who modified the reward
+        lastmodBy: data.lastmodBy || 'Unknown user', // Last person who modified the reward
       }
-    : null;
-};
+    : null
+}
 
 export const getRewards = async hackathon => {
   const rewardIDs = await db.collection('Hackathons').doc(hackathon).collection('Rewards').get()
@@ -202,21 +201,20 @@ export const getRewards = async hackathon => {
 }
 
 export const addReward = async (hackathon, reward) => {
-  const ref = db.collection('Hackathons').doc(hackathon).collection('Rewards').doc();
+  const ref = db.collection('Hackathons').doc(hackathon).collection('Rewards').doc()
   await ref.set({
-    reward: reward.reward,                       // Title of the reward
-    key: ref.id,                               // Key generated for the reward
-    blurb: reward.blurb,                       // Short description of the reward
-    imgName: reward.imgName,                   // Image name (if applicable)
-    imgURL: reward.imgURL,                     // URL to the reward image
-    prizesAvailable: reward.prizesAvailable,         // Number of prizes we have
-    requiredPoints: reward.requiredPoints,     // Points required to win the reward
-    lastmod: getTimestamp(),                   // Timestamp of when the reward was last modified
-    lastmodBy: reward.lastmodBy,               // User who last modified the reward
-  });
-  return ref.id;
-};
-
+    reward: reward.reward, // Title of the reward
+    key: ref.id, // Key generated for the reward
+    blurb: reward.blurb, // Short description of the reward
+    imgName: reward.imgName, // Image name (if applicable)
+    imgURL: reward.imgURL, // URL to the reward image
+    prizesAvailable: reward.prizesAvailable, // Number of prizes we have
+    requiredPoints: reward.requiredPoints, // Points required to win the reward
+    lastmod: getTimestamp(), // Timestamp of when the reward was last modified
+    lastmodBy: reward.lastmodBy, // User who last modified the reward
+  })
+  return ref.id
+}
 
 export const updateReward = async (hackathon, reward) => {
   const ref = db.collection('Hackathons').doc(hackathon).collection('Rewards').doc(reward.rewardID)
@@ -239,7 +237,6 @@ export const deleteReward = async (hackathon, rewardID) => {
   await db.collection('Hackathons').doc(hackathon).collection('Rewards').doc(rewardID).delete()
 }
 // Rewards ^^
-
 
 const getFaqCategory = faqCategory => {
   switch (faqCategory) {

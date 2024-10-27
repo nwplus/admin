@@ -3,7 +3,7 @@ import setMinutes from 'date-fns/setMinutes'
 import React, { useEffect, useState } from 'react'
 import Button from '../../components/button'
 import Card, { CardButtonContainer, CardContent, CardHeader, CardTitle } from '../../components/card'
-import Modal, { Label, ModalContent, ModalField } from '../../components/modal'
+import Modal, { ModalContent, ModalField } from '../../components/modal'
 import Page from '../../components/page'
 import {
   ActionsButtonContainer,

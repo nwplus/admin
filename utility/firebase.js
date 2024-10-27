@@ -183,7 +183,7 @@ export const getReward = (rewardID, data) => {
         from: data.from || 'None',                               // Source or sponsor of the reward
         imgName: data.imgName || 'None',                         // Image name (if applicable)
         imgURL: data.imgURL || '',                               // URL to the reward image
-        numOfWinners: data.numOfWinners || '0',                    // Number of winners for the reward
+        prizesAvailable: data.prizesAvailable || '0',                    // Number of winners for the reward
         requiredPoints: data.requiredPoints || '0',              // Points required to win the reward
         lastmod: data.lastmod ? formatDate(data.lastmod.seconds) : formatDate(getTimestamp().seconds), // Last modified date
         lastmodBy: data.lastmodBy || 'Unknown user',        // Last person who modified the reward
@@ -209,7 +209,7 @@ export const addReward = async (hackathon, reward) => {
     blurb: reward.blurb,                       // Short description of the reward
     imgName: reward.imgName,                   // Image name (if applicable)
     imgURL: reward.imgURL,                     // URL to the reward image
-    numOfWinners: reward.numOfWinners,         // Number of winners for the reward
+    prizesAvailable: reward.prizesAvailable,         // Number of prizes we have
     requiredPoints: reward.requiredPoints,     // Points required to win the reward
     lastmod: getTimestamp(),                   // Timestamp of when the reward was last modified
     lastmodBy: reward.lastmodBy,               // User who last modified the reward
@@ -228,10 +228,10 @@ export const updateReward = async (hackathon, reward) => {
     from: reward.from || 'None',
     imgName: reward.imgName || 'None',
     imgURL: reward.imgURL || '',
-    numOfWinners: reward.numOfWinners || '0',
+    prizesAvailable: reward.prizesAvailable || '0',
     requiredPoints: reward.requiredPoints || '0',
     lastmod: currDate,
-    lastmodBy: reward.lastModifiedBy,
+    lastmodBy: reward.lastmodBy,
   })
 }
 

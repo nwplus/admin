@@ -3,7 +3,6 @@ import setMinutes from 'date-fns/setMinutes'
 import React, { useEffect, useState } from 'react'
 import Button from '../../components/button'
 import Card, { CardButtonContainer, CardContent, CardHeader, CardTitle } from '../../components/card'
-import { DateTimePicker } from '../../components/dateTimePicker'
 import Modal, { Label, ModalContent, ModalField } from '../../components/modal'
 import Page from '../../components/page'
 import {
@@ -81,7 +80,6 @@ export default function Rewards({ id, hackathons }) {
       ...rewards,
       [rewardEditing.rewardID]: {
         ...rewardEditing,
-        date: formatDate(rewardEditing.date, true),
       },
     })
     setRewardEditing({})
@@ -104,7 +102,7 @@ export default function Rewards({ id, hackathons }) {
           return obj
         }, {})
     )
-    setRewardConfirm({}, setAlertMsg(`Successfully deleted the following reward: \n${rewards[rewardID].title}`))
+    setRewardConfirm({}, setAlertMsg(`Successfully deleted the following reward: \n${rewards[rewardID].reward}`))
   }
 
   const handleInput = (property, value, reward, setState) => {
@@ -119,10 +117,10 @@ export default function Rewards({ id, hackathons }) {
       <TableRow>
         <TableData>{props.reward}</TableData>
         <TableData>{props.blurb}</TableData>
-        <TableData>{props.numOfWinners}</TableData>
+        <TableData>{props.prizesAvailable}</TableData>
         <TableData>{props.requiredPoints}</TableData>
         <TableData>{props.lastmod}</TableData>
-        <TableData>{props.lastmodby}</TableData>
+        <TableData>{props.lastmodBy}</TableData>
         <TableData actions>
           <ActionsButtonContainer>
             <Button type={VIEW} color={COLOR.TRANSPARENT} onClick={() => setRewardViewing(rewards[props.rewardID])} />
@@ -178,7 +176,7 @@ export default function Rewards({ id, hackathons }) {
                     <TableRow>
                       <TableHeader>Reward</TableHeader>
                       <TableHeader>Blurb</TableHeader>
-                      <TableHeader>Number of Winners</TableHeader>
+                      <TableHeader>Number of Prizes Available</TableHeader>
                       <TableHeader>Required Points</TableHeader>
                       <TableHeader>Last Modified</TableHeader>
                       <TableHeader>Last Modified By</TableHeader>
@@ -192,7 +190,7 @@ export default function Rewards({ id, hackathons }) {
                         rewardID={rewards[curr].rewardID}
                         reward={rewards[curr].reward}
                         blurb={rewards[curr].blurb}
-                        numOfWinners={rewards[curr].numOfWinners}
+                        prizesAvailable={rewards[curr].prizesAvailable}
                         requiredPoints={rewards[curr].requiredPoints}
                         lastmod={rewards[curr].lastmod}
                         lastmodBy={rewards[curr].lastmodBy}
@@ -252,7 +250,7 @@ export default function Rewards({ id, hackathons }) {
                 label="Number of prizes available"
                 modalAction={NEW}
                 onChange={reward => {
-                  handleInput('numOfWinners', reward.target.value, newReward, setNewReward)
+                  handleInput('prizesAvailable', reward.target.value, newReward, setNewReward)
                 }}
               />
               <ModalField
@@ -283,7 +281,7 @@ export default function Rewards({ id, hackathons }) {
               <ModalField label="Image URL" value={rewardViewing.imgURL} modalAction={VIEW} />
             </ModalContent>
             <ModalContent columns={2}>
-              <ModalField label="Number of prizes available" value={rewardViewing.numOfWinners} modalAction={VIEW} />
+              <ModalField label="Number of prizes available" value={rewardViewing.prizesAvailable} modalAction={VIEW} />
               <ModalField label="Required Points" value={rewardViewing.requiredPoints} modalAction={VIEW} />
             </ModalContent>
           </Modal>
@@ -298,7 +296,7 @@ export default function Rewards({ id, hackathons }) {
             <ModalContent columns={1}>
               <ModalField
                 label="Reward"
-                value={rewardEditing.Reward}
+                value={rewardEditing.reward}
                 modalAction={EDIT}
                 onChange={reward => {
                   handleInput('reward', reward.target.value, rewardEditing, setRewardEditing)
@@ -308,7 +306,7 @@ export default function Rewards({ id, hackathons }) {
             <ModalContent columns={1}>
               <ModalField
                 label="Blurb"
-                value={rewardEditing.text}
+                value={rewardEditing.blurb}
                 modalAction={EDIT}
                 onChange={reward => {
                   handleInput('blurb', reward.target.value, rewardEditing, setRewardEditing)
@@ -318,7 +316,7 @@ export default function Rewards({ id, hackathons }) {
             <ModalContent columns={1}>
               <ModalField
                 label="Image Name"
-                value={rewardEditing.text}
+                value={rewardEditing.imgName}
                 modalAction={EDIT}
                 onChange={reward => {
                   handleInput('imgName', reward.target.value, rewardEditing, setRewardEditing)
@@ -328,7 +326,7 @@ export default function Rewards({ id, hackathons }) {
             <ModalContent columns={1}>
               <ModalField
                 label="Image URL"
-                value={rewardEditing.text}
+                value={rewardEditing.imgURL}
                 modalAction={EDIT}
                 onChange={reward => {
                   handleInput('imgURL', reward.target.value, rewardEditing, setRewardEditing)
@@ -338,15 +336,15 @@ export default function Rewards({ id, hackathons }) {
             <ModalContent columns={2}>
               <ModalField
                 label="Number of prizes available"
-                value={rewardEditing.text}
+                value={rewardEditing.prizesAvailable}
                 modalAction={EDIT}
                 onChange={reward => {
-                  handleInput('numOfWinners', reward.target.value, rewardEditing, setRewardEditing)
+                  handleInput('prizesAvailable', reward.target.value, rewardEditing, setRewardEditing)
                 }}
               />
               <ModalField
                 label="Required Points"
-                value={rewardEditing.points}
+                value={rewardEditing.requiredPoints}
                 modalAction={EDIT}
                 onChange={reward => {
                   handleInput('requiredPoints', reward.target.value, rewardEditing, setRewardEditing)
@@ -375,7 +373,7 @@ export default function Rewards({ id, hackathons }) {
               <ModalField label="Image URL" value={rewardConfirm.imgURL} modalAction={VIEW} />
             </ModalContent>
             <ModalContent columns={2}>
-              <ModalField label="Number of prizes available" value={rewardConfirm.numOfWinners} modalAction={VIEW} />
+              <ModalField label="Number of prizes available" value={rewardConfirm.prizesAvailable} modalAction={VIEW} />
               <ModalField label="Required Points" value={rewardConfirm.requiredPoints} modalAction={VIEW} />
             </ModalContent>
           </Modal>

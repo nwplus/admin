@@ -263,7 +263,7 @@ export default function SponsorshipPage({ hackathonId }) {
                   <Text>{item.link}</Text>
                   <Text>{item.imgName}</Text>
                   <Text>{item.tier}</Text>
-                  <Text>{formatDate(item.lastmod.seconds)}</Text>
+                  <Text>{item.lastmod?.seconds ? formatDate(item.lastmod.seconds) : 'N/A'}</Text>
                   <Actions>
                     <Button type={VIEW} color={COLOR.TRANSPARENT} onClick={() => handleView(key)} />
                     <Button type={EDIT} color={COLOR.TRANSPARENT} onClick={() => handleEdit(key)} />
@@ -281,7 +281,7 @@ export default function SponsorshipPage({ hackathonId }) {
         handleClose={handleCloseModal}
         handleSave={handleSave}
         modalAction={modalAction}
-        lastModified={`${formatDate(newobj.lastmod.seconds)} by ${user}`}
+        lastModified={`${newobj.lastmod?.seconds ? formatDate(newobj.lastmod.seconds) : 'N/A'} by ${user}`}
       >
         <ModalContent page={SPONSORSHIP}>
           <ModalField

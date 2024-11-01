@@ -76,6 +76,7 @@ export const HACKATHON_NAVBAR = {
   intro: 'Intro',
   events: 'Edit Events',
   spocos: 'Edit Sponsors',
+  rewards: 'Edit Rewards',
   FeatureFlags: 'Feature Flags',
   BuildConfig: 'Build Config',
   HackerInfo: 'Firebase Queries',

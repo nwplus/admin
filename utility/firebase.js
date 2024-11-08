@@ -684,6 +684,7 @@ export const getCSVData = async () => {
       },
       status: { applicationStatus },
       skills: { firstTimeHacker },
+      submission: { lastUpdated },
     } = doc.data()
     const totalScore = doc.data().score?.totalScore ?? '?'
     return [
@@ -699,6 +700,7 @@ export const getCSVData = async () => {
       applicationStatus,
       major,
       firstTimeHacker,
+      lastUpdated.toDate()
     ]
   })
   CSV.unshift([
@@ -714,6 +716,7 @@ export const getCSVData = async () => {
     'Application Status',
     'Major',
     'First time hacker?',
+    'Last Updated',
   ])
   return CSV
 }

@@ -74,7 +74,9 @@ export default ({ id, hackathons }) => {
   useEffect(() => {
     const fetchQuestions = async () => {
       const appQuestions = await getHackerAppQuestions(id, 'Skills')
-      setQuestions(appQuestions)
+      if (appQuestions?.length > 0) {
+        setQuestions(appQuestions)
+      }
     }
     const fetchMetadata = async () => {
       const fetchedMetadata = await getHackerAppQuestionsMetadata(id, 'Skills')

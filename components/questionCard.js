@@ -191,7 +191,8 @@ const QuestionCard = ({
   }
 
   const addOption = () => {
-    handleChange(id, 'options', [...question.options, ''])
+    const currentOptions = question.options || []
+    handleChange(id, 'options', [...currentOptions, ''])
   }
 
   const removeOption = index => {

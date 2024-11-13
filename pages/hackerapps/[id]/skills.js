@@ -164,9 +164,9 @@ export default ({ id, hackathons }) => {
           <Icon color={COLOR.WHITE} icon="save" />
           Save
         </StyledButton>
-        <StyledMetadataP>{`Last Edited by ${metadata.lastEditedBy} at ${formatDate(
-          metadata.lastEditedAt?.seconds
-        )}`}</StyledMetadataP>
+        <StyledMetadataP>{`Last Edited by ${metadata.lastEditedBy ?? ""} at ${
+          metadata.lastEditedAt?.seconds ? formatDate(metadata.lastEditedAt.seconds) : ""
+        }`}</StyledMetadataP>
         <HeaderContainer>
           <Header>3. Add skills and long answer questions</Header>
         </HeaderContainer>

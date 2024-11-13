@@ -108,7 +108,7 @@ export default ({ id, hackathons }) => {
   const handleSave = async hackathon => {
     const questions = [{ title, content }]
     await updateHackerAppQuestions(hackathon, questions, 'Welcome')
-    const newMetadata = { lastEditedAt: getTimestamp(), lastEditedBy: user }
+    const newMetadata = { lastEditedAt: getTimestamp() ?? "", lastEditedBy: user ?? ""}
     setMetadata(newMetadata)
     await updateHackerAppQuestionsMetadata(hackathon, 'Welcome', newMetadata)
     alert('Questions were saved to the database!')

@@ -108,7 +108,7 @@ export default ({ id, hackathons }) => {
   const handleSave = async hackathon => {
     const questions = [{ title, content }]
     await updateHackerAppQuestions(hackathon, questions, 'Welcome')
-    const newMetadata = { lastEditedAt: getTimestamp(), lastEditedBy: user }
+    const newMetadata = { lastEditedAt: getTimestamp() ?? '', lastEditedBy: user ?? '' }
     setMetadata(newMetadata)
     await updateHackerAppQuestionsMetadata(hackathon, 'Welcome', newMetadata)
     alert('Questions were saved to the database!')
@@ -133,9 +133,9 @@ export default ({ id, hackathons }) => {
           <Icon color={COLOR.WHITE} icon="save" />
           Save
         </StyledButton>
-        <StyledMetadataP>{`Last Edited by ${metadata.lastEditedBy} at ${formatDate(
-          metadata.lastEditedAt?.seconds
-        )}`}</StyledMetadataP>
+        <StyledMetadataP>{`Last Edited by ${metadata.lastEditedBy ?? ''} at ${
+          metadata.lastEditedAt?.seconds ? formatDate(metadata.lastEditedAt.seconds) : ''
+        }`}</StyledMetadataP>
         <HeaderContainer>
           <Header>1. Add a title and description</Header>
         </HeaderContainer>

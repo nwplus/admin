@@ -139,7 +139,7 @@ export default ({ id, hackathons }) => {
       return
     }
     await updateHackerAppQuestions(hackathon, questions, 'Questionnaire')
-    const newMetadata = { lastEditedAt: getTimestamp() ?? "", lastEditedBy: user ?? ""}
+    const newMetadata = { lastEditedAt: getTimestamp() ?? '', lastEditedBy: user ?? ''}
     setMetadata(newMetadata)
     await updateHackerAppQuestionsMetadata(hackathon, 'Questionnaire', newMetadata)
     alert('Questions were saved to the database!')
@@ -164,8 +164,8 @@ export default ({ id, hackathons }) => {
           <Icon color={COLOR.WHITE} icon="save" />
           Save
         </StyledButton>
-        <StyledMetadataP>{`Last Edited by ${metadata.lastEditedBy ?? ""} at ${
-          metadata.lastEditedAt?.seconds ? formatDate(metadata.lastEditedAt.seconds) : ""
+        <StyledMetadataP>{`Last Edited by ${metadata.lastEditedBy ?? ''} at ${
+          metadata.lastEditedAt?.seconds ? formatDate(metadata.lastEditedAt.seconds) : ''
         }`}</StyledMetadataP>
         <HeaderContainer>
           <Header>4. Add questionnaire</Header>

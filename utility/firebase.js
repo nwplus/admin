@@ -700,7 +700,7 @@ export const getCSVData = async () => {
       applicationStatus,
       major,
       firstTimeHacker,
-      lastUpdated.toDate()
+      lastUpdated.toDate(),
     ]
   })
   CSV.unshift([

@@ -74,7 +74,9 @@ export default ({ id, hackathons }) => {
   useEffect(() => {
     const fetchQuestions = async () => {
       const appQuestions = await getHackerAppQuestions(id, 'BasicInfo')
-      setQuestions(appQuestions)
+      if (appQuestions?.length > 0) {
+        setQuestions(appQuestions)
+      }
     }
     const fetchMetadata = async () => {
       const fetchedMetadata = await getHackerAppQuestionsMetadata(id, 'BasicInfo')
@@ -139,7 +141,7 @@ export default ({ id, hackathons }) => {
       return
     }
     await updateHackerAppQuestions(hackathon, questions, 'BasicInfo')
-    const newMetadata = { lastEditedAt: getTimestamp(), lastEditedBy: user }
+    const newMetadata = { lastEditedAt: getTimestamp() ?? '', lastEditedBy: user ?? '' }
     setMetadata(newMetadata)
     await updateHackerAppQuestionsMetadata(hackathon, 'BasicInfo', newMetadata)
     alert('Questions were saved to the database!')
@@ -164,9 +166,9 @@ export default ({ id, hackathons }) => {
           <Icon color={COLOR.WHITE} icon="save" />
           Save
         </StyledButton>
-        <StyledMetadataP>{`Last Edited by ${metadata.lastEditedBy} at ${formatDate(
-          metadata.lastEditedAt?.seconds
-        )}`}</StyledMetadataP>
+        <StyledMetadataP>{`Last Edited by ${metadata.lastEditedBy ?? ''} at ${
+          metadata.lastEditedAt?.seconds ? formatDate(metadata.lastEditedAt.seconds) : ''
+        }`}</StyledMetadataP>
         <HeaderContainer>
           <Header>2. Add basic information questions</Header>
         </HeaderContainer>

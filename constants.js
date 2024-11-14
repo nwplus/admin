@@ -372,7 +372,7 @@ export const SKILLS_FORM_INPUT_FIELDS = [
   'longAnswers1',
   'longAnswers2',
   'longAnswers3',
-  // 'longAnswers4',
+  'longAnswers4',
   // 'longAnswers5',
 ]
 

@@ -646,18 +646,33 @@ export const getAllApplicants = async callback => {
     })
 }
 
-export const getApplicantsToAccept = async score => {
+export const getApplicantsToAccept = async (score, numHackathonsMin, numHackathonsMax) => {
   const applicants = await db
     .collection('Hackathons')
     .doc(HackerEvaluationHackathon)
     .collection('Applicants')
     .where('score.totalScore', '>=', score - 1)
     .get()
+
   return applicants.docs
     .filter(app => {
-      const appStatus = app.data().status.applicationStatus
+      const appData = app.data()
+      const appStatus = appData.status.applicationStatus
+
       if (appStatus !== APPLICATION_STATUS.scored.text) return false
-      return app.data().score.totalScore >= score
+
+      if (appData.score.totalScore < score) return false
+
+      // range of hackathons attended
+      const numHackathonsAttended = appData.skills?.numHackathonsAttended
+      if (
+        (numHackathonsMin !== undefined && Number(numHackathonsAttended) < Number(numHackathonsMin)) ||
+        (numHackathonsMax !== undefined && Number(numHackathonsAttended) > Number(numHackathonsMax))
+      ) {
+        return false
+      }
+
+      return true
     })
     .map(doc => doc.data())
 }

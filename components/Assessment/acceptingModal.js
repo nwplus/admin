@@ -74,9 +74,17 @@ export default function AcceptingModal({ setShowing }) {
   const [yearLevelOptions, setYearLevelOptions] = useState([])
   const [yearLevelsSelected, setYearLevelsSelected] = useState([])
   const [applicantsToAccept, setApplicants] = useState([])
+  const [contributionRoleOptions, setContributionRoleOptions] = useState([])
+  const [contributionRolesSelected, setContributionRolesSelected] = useState([])
 
   const getApplicants = async () => {
-    const apps = await getApplicantsToAccept(score, numHackathonsMin, numHackathonsMax, yearLevelsSelected)
+    const apps = await getApplicantsToAccept(
+      score,
+      numHackathonsMin,
+      numHackathonsMax,
+      yearLevelsSelected,
+      contributionRolesSelected
+    )
     setTotalApplicants(apps.length)
     setApplicants(apps)
   }
@@ -87,8 +95,18 @@ export default function AcceptingModal({ setShowing }) {
     setShowing(false)
   }
 
-  const handleCheckboxChange = option => {
+  const handleYearLevelChange = option => {
     setYearLevelsSelected(prevSelected => {
+      if (prevSelected.includes(option)) {
+        return prevSelected.filter(item => item !== option)
+      } else {
+        return [...prevSelected, option]
+      }
+    })
+  }
+
+  const handleRoleChange = option => {
+    setContributionRolesSelected(prevSelected => {
       if (prevSelected.includes(option)) {
         return prevSelected.filter(item => item !== option)
       } else {
@@ -99,11 +117,16 @@ export default function AcceptingModal({ setShowing }) {
 
   useEffect(() => {
     const getYearLevelOptions = async () => {
-      const yearLevelOptions = await getSpecificHackerAppQuestionOptions('nwHacks2025', 'BasicInfo', 'educationLevel')
+      const yearLevelOptions = await getSpecificHackerAppQuestionOptions('BasicInfo', 'educationLevel')
       setYearLevelOptions(yearLevelOptions)
+    }
+    const getContributionRoleOptions = async () => {
+      const roleOptions = await getSpecificHackerAppQuestionOptions('Skills', 'contributionRole')
+      setContributionRoleOptions(roleOptions)
     }
 
     getYearLevelOptions()
+    getContributionRoleOptions()
   }, [])
 
   return (
@@ -148,7 +171,23 @@ export default function AcceptingModal({ setShowing }) {
                     type="checkbox"
                     value={option}
                     checked={yearLevelsSelected.includes(option)}
-                    onChange={() => handleCheckboxChange(option)}
+                    onChange={() => handleYearLevelChange(option)}
+                  />
+                  {option}
+                </MultiselectLabel>
+              ))}
+            </div>
+          </div>
+          <div>
+            <TotalApplicantsP>Contribution Roles</TotalApplicantsP>
+            <div>
+              {contributionRoleOptions.map(option => (
+                <MultiselectLabel key={option}>
+                  <input
+                    type="checkbox"
+                    value={option}
+                    checked={contributionRolesSelected.includes(option)}
+                    onChange={() => handleRoleChange(option)}
                   />
                   {option}
                 </MultiselectLabel>

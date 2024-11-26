@@ -6,7 +6,7 @@ import 'firebase/firestore'
 import 'firebase/storage'
 import JSZip from 'jszip'
 import { APPLICATION_STATUS, FAQ, FAQCategory } from '../constants'
-import { calculateTotalScore, filterHackerInfoFields, flattenObj, orderObj } from './utilities'
+import { calculateTotalScore, convertToCamelCase, filterHackerInfoFields, flattenObj, orderObj } from './utilities'
 
 if (!firebase.apps.length) {
   const config = {
@@ -646,7 +646,13 @@ export const getAllApplicants = async callback => {
     })
 }
 
-export const getApplicantsToAccept = async (score, numHackathonsMin, numHackathonsMax, yearLevelsSelected) => {
+export const getApplicantsToAccept = async (
+  score,
+  numHackathonsMin,
+  numHackathonsMax,
+  yearLevelsSelected,
+  contributionRolesSelected
+) => {
   const applicants = await db.collection('Hackathons').doc(HackerEvaluationHackathon).collection('Applicants').get()
 
   return applicants.docs
@@ -675,6 +681,13 @@ export const getApplicantsToAccept = async (score, numHackathonsMin, numHackatho
       }
 
       // for intended role
+      if (contributionRolesSelected && contributionRolesSelected.length > 0) {
+        const contributionRoles = appData.skills?.contributionRole || {}
+        const hasValidRole = contributionRolesSelected.some(
+          role => contributionRoles[convertToCamelCase(role)] === true
+        )
+        if (!hasValidRole) return false
+      }
 
       // range for # of experiences
 
@@ -897,10 +910,10 @@ export const updateHackerAppQuestionsMetadata = async (selectedHackathon, catego
   return db.collection('HackerAppQuestions').doc(selectedHackathon.slice(0, -4)).set(doc, { merge: true })
 }
 
-export const getSpecificHackerAppQuestionOptions = async (selectedHackathon, category, formInput) => {
+export const getSpecificHackerAppQuestionOptions = async (category, formInput) => {
   const querySnapshot = await db
     .collection('HackerAppQuestions')
-    .doc(selectedHackathon.slice(0, -4))
+    .doc(HackerEvaluationHackathon.slice(0, -4))
     .collection(category)
     .where('formInput', '==', formInput)
     .get()

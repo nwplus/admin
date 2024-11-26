@@ -136,90 +136,88 @@ export default function AcceptingModal({ setShowing }) {
   return (
     <Modal setShowing={setShowing}>
       <h3>Accept applicants</h3>
-      <FlexDiv>
-        <InputContainer>
-          <TotalApplicantsP>Minimum score</TotalApplicantsP>
-          <ScoreInput
+      <InputContainer>
+        <TotalApplicantsP>Minimum score</TotalApplicantsP>
+        <ScoreInput
+          onChange={e => {
+            // eslint-disable-next-line no-restricted-globals
+            if (!isNaN(e.target.value)) setScore(e.target.value)
+          }}
+          value={score ?? ''}
+          placeholder="minimum score"
+        />
+        <TotalApplicantsP>Number of Hackathons Attended</TotalApplicantsP>
+        <RangeContainer>
+          <ShortInput
             onChange={e => {
               // eslint-disable-next-line no-restricted-globals
-              if (!isNaN(e.target.value)) setScore(e.target.value)
+              if (!isNaN(e.target.value)) setNumHackathonsMin(e.target.value)
             }}
-            value={score ?? ''}
-            placeholder="minimum score"
+            value={numHackathonsMin ?? ''}
+            placeholder="min hackathons"
           />
-          <TotalApplicantsP>Number of Hackathons Attended</TotalApplicantsP>
-          <RangeContainer>
-            <ShortInput
-              onChange={e => {
-                // eslint-disable-next-line no-restricted-globals
-                if (!isNaN(e.target.value)) setNumHackathonsMin(e.target.value)
-              }}
-              value={numHackathonsMin ?? ''}
-              placeholder="min hackathons"
-            />
-            <ShortInput
-              onChange={e => {
-                // eslint-disable-next-line no-restricted-globals
-                if (!isNaN(e.target.value)) setNumHackathonsMax(e.target.value)
-              }}
-              value={numHackathonsMax ?? ''}
-              placeholder="max hackathons"
-            />
-          </RangeContainer>
+          <ShortInput
+            onChange={e => {
+              // eslint-disable-next-line no-restricted-globals
+              if (!isNaN(e.target.value)) setNumHackathonsMax(e.target.value)
+            }}
+            value={numHackathonsMax ?? ''}
+            placeholder="max hackathons"
+          />
+        </RangeContainer>
+        <div>
+          <TotalApplicantsP>Year Levels</TotalApplicantsP>
           <div>
-            <TotalApplicantsP>Year Levels</TotalApplicantsP>
-            <div>
-              {yearLevelOptions.map(option => (
-                <MultiselectLabel key={option}>
-                  <input
-                    type="checkbox"
-                    value={option}
-                    checked={yearLevelsSelected.includes(option)}
-                    onChange={() => handleYearLevelChange(option)}
-                  />
-                  {option}
-                </MultiselectLabel>
-              ))}
-            </div>
+            {yearLevelOptions.map(option => (
+              <MultiselectLabel key={option}>
+                <input
+                  type="checkbox"
+                  value={option}
+                  checked={yearLevelsSelected.includes(option)}
+                  onChange={() => handleYearLevelChange(option)}
+                />
+                {option}
+              </MultiselectLabel>
+            ))}
           </div>
+        </div>
+        <div>
+          <TotalApplicantsP>Contribution Roles</TotalApplicantsP>
           <div>
-            <TotalApplicantsP>Contribution Roles</TotalApplicantsP>
-            <div>
-              {contributionRoleOptions.map(option => (
-                <MultiselectLabel key={option}>
-                  <input
-                    type="checkbox"
-                    value={option}
-                    checked={contributionRolesSelected.includes(option)}
-                    onChange={() => handleRoleChange(option)}
-                  />
-                  {option}
-                </MultiselectLabel>
-              ))}
-            </div>
+            {contributionRoleOptions.map(option => (
+              <MultiselectLabel key={option}>
+                <input
+                  type="checkbox"
+                  value={option}
+                  checked={contributionRolesSelected.includes(option)}
+                  onChange={() => handleRoleChange(option)}
+                />
+                {option}
+              </MultiselectLabel>
+            ))}
           </div>
-          <TotalApplicantsP>Number of Experiences</TotalApplicantsP>
-          <RangeContainer>
-            <ShortInput
-              onChange={e => {
-                // eslint-disable-next-line no-restricted-globals
-                if (!isNaN(e.target.value)) setNumExperiencesMin(e.target.value)
-              }}
-              value={numExperiencesMin ?? ''}
-              placeholder="min experience"
-            />
-            <ShortInput
-              onChange={e => {
-                // eslint-disable-next-line no-restricted-globals
-                if (!isNaN(e.target.value)) setNumExperiencesMax(e.target.value)
-              }}
-              value={numExperiencesMax ?? ''}
-              placeholder="max experience"
-            />
-          </RangeContainer>
-        </InputContainer>
-        <TotalApplicantsP>Total applicants: {totalApplicants}</TotalApplicantsP>
-      </FlexDiv>
+        </div>
+        <TotalApplicantsP>Number of Experiences</TotalApplicantsP>
+        <RangeContainer>
+          <ShortInput
+            onChange={e => {
+              // eslint-disable-next-line no-restricted-globals
+              if (!isNaN(e.target.value)) setNumExperiencesMin(e.target.value)
+            }}
+            value={numExperiencesMin ?? ''}
+            placeholder="min experience"
+          />
+          <ShortInput
+            onChange={e => {
+              // eslint-disable-next-line no-restricted-globals
+              if (!isNaN(e.target.value)) setNumExperiencesMax(e.target.value)
+            }}
+            value={numExperiencesMax ?? ''}
+            placeholder="max experience"
+          />
+        </RangeContainer>
+      </InputContainer>
+      <TotalApplicantsP>Total applicants: {totalApplicants}</TotalApplicantsP>
       <FlexDiv style={{ justifyContent: 'center' }}>
         <Button
           onClick={() => {

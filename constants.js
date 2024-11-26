@@ -171,8 +171,8 @@ export const NUM_SCORES = 4
 export const SCORING = {
   RESUME: {
     label: 'Resume',
-    value: 1,
-    weight: 88,
+    value: 6,
+    weight: 1,
   },
   ESSAY1: {
     label: 'Long Answer 1',
@@ -181,12 +181,12 @@ export const SCORING = {
   },
   ESSAY2: {
     label: 'Long Answer 2',
-    value: 4,
+    value: 6,
     weight: 1,
   },
   ESSAY3: {
     label: 'Long Answer 3',
-    value: 4,
+    value: 1,
     weight: 1,
   },
 }

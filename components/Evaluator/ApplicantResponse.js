@@ -83,32 +83,39 @@ export default function ApplicantResponse({ shouldDisplay, hacker }) {
         label="Is this your first hackathon?"
         response={hacker?.skills?.numHackathonsAttended === '0' ? 'yes' : 'no'}
         // for HackCamp
-        responseTextColor={
-          hacker?.skills?.numHackathonsAttended === '0' ? ASSESSMENT_COLOR.BLACK : ASSESSMENT_COLOR.RED
-        }
+        // responseTextColor={
+        //   hacker?.skills?.numHackathonsAttended === '0' ? ASSESSMENT_COLOR.BLACK : ASSESSMENT_COLOR.RED
+        // }
       />
 
-      <ResponseInput
+      {/* <ResponseInput
         label="Do you identify as part of an underrepresented gender in the technology industry?"
         response={hacker?.basicInfo?.identifyAsUnderrepresented}
-      />
+      /> */}
 
       {/* <ResponseInput url={waiverURL} label="Waiver" response={waiverURL} /> */}
 
       <ResponseInput
-        label="If you had all the skills in the world, what product would you make? Why would this product be beneficial to you or your community?"
+        label="It's our 10-year anniversary! What would a meaningful and memorable weekend at nwHacks look like for you?"
         response={`${hacker?.skills?.longAnswers1}`}
       />
 
       <ResponseInput
-        label="Tell us about a time you made an idea or goal come to life. What was the situation?"
+        label="Share a technical or non-technical project you're proud of. What project would you display in the museum of your life? Tell us what inspired you, how you approached it, and why it matters to you."
         response={`${hacker?.skills?.longAnswers2}`}
       />
 
       {hacker?.skills?.longAnswers3 && (
         <ResponseInput
-          label="What do you hope to get out of HackCamp? What are you most excited to learn about at HackCamp?"
+          label="Create an acronym from your name or nickname that reveals something about you!"
           response={`${hacker?.skills?.longAnswers3}`}
+        />
+      )}
+
+      {hacker?.skills?.longAnswers4 && (
+        <ResponseInput
+          label="Is there anything we should know to help make you feel comfortable and supported during the event? (not graded, just for nwHacks to see)"
+          response={`${hacker?.skills?.longAnswers4}`}
         />
       )}
 

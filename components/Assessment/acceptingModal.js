@@ -1,7 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { APPLICATION_STATUS, ASSESSMENT_COLOR } from '../../constants'
-import { getApplicantsToAccept, updateApplicantStatus } from '../../utility/firebase'
+import {
+  getApplicantsToAccept,
+  getSpecificHackerAppQuestionOptions,
+  updateApplicantStatus,
+} from '../../utility/firebase'
 import { Button } from './Button'
 import Modal from './Modal'
 
@@ -37,7 +41,7 @@ const InputContainer = styled.div`
   gap: 8px;
 `
 
-const NumHackathons = styled.div`
+const RangeContainer = styled.div`
   display: flex;
   justify-content: space-between;
   margin: 8px 20px 8px 20px;
@@ -53,6 +57,11 @@ const FlexDiv = styled.div`
   align-items: flex-start;
 `
 
+const MultiselectLabel = styled.label`
+  display: block;
+  margin-bottom: 8px;
+`
+
 const acceptApplicant = async applicant => {
   return updateApplicantStatus(applicant._id, APPLICATION_STATUS.accepted.text)
 }
@@ -62,10 +71,12 @@ export default function AcceptingModal({ setShowing }) {
   const [score, setScore] = useState(undefined)
   const [numHackathonsMin, setNumHackathonsMin] = useState(undefined)
   const [numHackathonsMax, setNumHackathonsMax] = useState(undefined)
+  const [yearLevelOptions, setYearLevelOptions] = useState([])
+  const [yearLevelsSelected, setYearLevelsSelected] = useState([])
   const [applicantsToAccept, setApplicants] = useState([])
 
   const getApplicants = async () => {
-    const apps = await getApplicantsToAccept(score, numHackathonsMin, numHackathonsMax)
+    const apps = await getApplicantsToAccept(score, numHackathonsMin, numHackathonsMax, yearLevelsSelected)
     setTotalApplicants(apps.length)
     setApplicants(apps)
   }
@@ -76,11 +87,31 @@ export default function AcceptingModal({ setShowing }) {
     setShowing(false)
   }
 
+  const handleCheckboxChange = option => {
+    setYearLevelsSelected(prevSelected => {
+      if (prevSelected.includes(option)) {
+        return prevSelected.filter(item => item !== option)
+      } else {
+        return [...prevSelected, option]
+      }
+    })
+  }
+
+  useEffect(() => {
+    const getYearLevelOptions = async () => {
+      const yearLevelOptions = await getSpecificHackerAppQuestionOptions('nwHacks2025', 'BasicInfo', 'educationLevel')
+      setYearLevelOptions(yearLevelOptions)
+    }
+
+    getYearLevelOptions()
+  }, [])
+
   return (
     <Modal setShowing={setShowing}>
       <h3>Accept applicants</h3>
       <FlexDiv>
         <InputContainer>
+          <TotalApplicantsP>Minimum score</TotalApplicantsP>
           <ScoreInput
             onChange={e => {
               // eslint-disable-next-line no-restricted-globals
@@ -89,7 +120,8 @@ export default function AcceptingModal({ setShowing }) {
             value={score ?? ''}
             placeholder="minimum score"
           />
-          <NumHackathons>
+          <TotalApplicantsP>Number of Hackathons Attended</TotalApplicantsP>
+          <RangeContainer>
             <ShortInput
               onChange={e => {
                 // eslint-disable-next-line no-restricted-globals
@@ -106,7 +138,23 @@ export default function AcceptingModal({ setShowing }) {
               value={numHackathonsMax ?? ''}
               placeholder="max hackathons"
             />
-          </NumHackathons>
+          </RangeContainer>
+          <div>
+            <TotalApplicantsP>Year Levels</TotalApplicantsP>
+            <div>
+              {yearLevelOptions.map(option => (
+                <MultiselectLabel key={option}>
+                  <input
+                    type="checkbox"
+                    value={option}
+                    checked={yearLevelsSelected.includes(option)}
+                    onChange={() => handleCheckboxChange(option)}
+                  />
+                  {option}
+                </MultiselectLabel>
+              ))}
+            </div>
+          </div>
         </InputContainer>
         <TotalApplicantsP>Total applicants: {totalApplicants}</TotalApplicantsP>
       </FlexDiv>
@@ -115,7 +163,6 @@ export default function AcceptingModal({ setShowing }) {
           onClick={() => {
             getApplicants()
           }}
-          disabled={!(score > 0)}
           width="flex"
           bColor={ASSESSMENT_COLOR.BLUE}
         >

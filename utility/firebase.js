@@ -646,13 +646,8 @@ export const getAllApplicants = async callback => {
     })
 }
 
-export const getApplicantsToAccept = async (score, numHackathonsMin, numHackathonsMax) => {
-  const applicants = await db
-    .collection('Hackathons')
-    .doc(HackerEvaluationHackathon)
-    .collection('Applicants')
-    .where('score.totalScore', '>=', score - 1)
-    .get()
+export const getApplicantsToAccept = async (score, numHackathonsMin, numHackathonsMax, yearLevelsSelected) => {
+  const applicants = await db.collection('Hackathons').doc(HackerEvaluationHackathon).collection('Applicants').get()
 
   return applicants.docs
     .filter(app => {
@@ -661,7 +656,8 @@ export const getApplicantsToAccept = async (score, numHackathonsMin, numHackatho
 
       if (appStatus !== APPLICATION_STATUS.scored.text) return false
 
-      if (appData.score.totalScore < score) return false
+      // score
+      if (score !== undefined && appData.score.totalScore < score) return false
 
       // range of hackathons attended
       const numHackathonsAttended = appData.skills?.numHackathonsAttended
@@ -671,6 +667,16 @@ export const getApplicantsToAccept = async (score, numHackathonsMin, numHackatho
       ) {
         return false
       }
+
+      // range for year level
+      const yearLevel = appData.basicInfo?.educationLevel
+      if (yearLevelsSelected && yearLevelsSelected.length > 0 && !yearLevelsSelected.includes(yearLevel)) {
+        return false
+      }
+
+      // for intended role
+
+      // range for # of experiences
 
       return true
     })
@@ -889,6 +895,24 @@ export const updateHackerAppQuestionsMetadata = async (selectedHackathon, catego
     [category]: updatedMetadata,
   }
   return db.collection('HackerAppQuestions').doc(selectedHackathon.slice(0, -4)).set(doc, { merge: true })
+}
+
+export const getSpecificHackerAppQuestionOptions = async (selectedHackathon, category, formInput) => {
+  const querySnapshot = await db
+    .collection('HackerAppQuestions')
+    .doc(selectedHackathon.slice(0, -4))
+    .collection(category)
+    .where('formInput', '==', formInput)
+    .get()
+
+  if (querySnapshot.empty) {
+    console.warn(`No document found with formInput: ${formInput} in category: ${category}`)
+    return null
+  }
+
+  const matchedElement = querySnapshot.docs[0]
+  const options = matchedElement.data().options
+  return options
 }
 
 // hacker application questions specific end

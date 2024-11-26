@@ -76,6 +76,8 @@ export default function AcceptingModal({ setShowing }) {
   const [applicantsToAccept, setApplicants] = useState([])
   const [contributionRoleOptions, setContributionRoleOptions] = useState([])
   const [contributionRolesSelected, setContributionRolesSelected] = useState([])
+  const [numExperiencesMin, setNumExperiencesMin] = useState(undefined)
+  const [numExperiencesMax, setNumExperiencesMax] = useState(undefined)
 
   const getApplicants = async () => {
     const apps = await getApplicantsToAccept(
@@ -83,7 +85,9 @@ export default function AcceptingModal({ setShowing }) {
       numHackathonsMin,
       numHackathonsMax,
       yearLevelsSelected,
-      contributionRolesSelected
+      contributionRolesSelected,
+      numExperiencesMin,
+      numExperiencesMax
     )
     setTotalApplicants(apps.length)
     setApplicants(apps)
@@ -194,6 +198,25 @@ export default function AcceptingModal({ setShowing }) {
               ))}
             </div>
           </div>
+          <TotalApplicantsP>Number of Experiences</TotalApplicantsP>
+          <RangeContainer>
+            <ShortInput
+              onChange={e => {
+                // eslint-disable-next-line no-restricted-globals
+                if (!isNaN(e.target.value)) setNumExperiencesMin(e.target.value)
+              }}
+              value={numExperiencesMin ?? ''}
+              placeholder="min experience"
+            />
+            <ShortInput
+              onChange={e => {
+                // eslint-disable-next-line no-restricted-globals
+                if (!isNaN(e.target.value)) setNumExperiencesMax(e.target.value)
+              }}
+              value={numExperiencesMax ?? ''}
+              placeholder="max experience"
+            />
+          </RangeContainer>
         </InputContainer>
         <TotalApplicantsP>Total applicants: {totalApplicants}</TotalApplicantsP>
       </FlexDiv>

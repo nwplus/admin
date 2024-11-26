@@ -651,7 +651,9 @@ export const getApplicantsToAccept = async (
   numHackathonsMin,
   numHackathonsMax,
   yearLevelsSelected,
-  contributionRolesSelected
+  contributionRolesSelected,
+  numExperiencesMin,
+  numExperiencesMax
 ) => {
   const applicants = await db.collection('Hackathons').doc(HackerEvaluationHackathon).collection('Applicants').get()
 
@@ -690,6 +692,13 @@ export const getApplicantsToAccept = async (
       }
 
       // range for # of experiences
+      const numExperiences = appData.score?.scores?.NumExperiences
+      if (
+        (numExperiencesMin !== undefined && Number(numExperiences) < Number(numExperiencesMin)) ||
+        (numExperiencesMax !== undefined && Number(numExperiences) > Number(numExperiencesMax))
+      ) {
+        return false
+      }
 
       return true
     })

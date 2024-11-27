@@ -103,9 +103,8 @@ export default function AcceptingModal({ setShowing }) {
     setYearLevelsSelected(prevSelected => {
       if (prevSelected.includes(option)) {
         return prevSelected.filter(item => item !== option)
-      } else {
-        return [...prevSelected, option]
       }
+      return [...prevSelected, option]
     })
   }
 
@@ -113,16 +112,15 @@ export default function AcceptingModal({ setShowing }) {
     setContributionRolesSelected(prevSelected => {
       if (prevSelected.includes(option)) {
         return prevSelected.filter(item => item !== option)
-      } else {
-        return [...prevSelected, option]
       }
+      return [...prevSelected, option]
     })
   }
 
   useEffect(() => {
     const getYearLevelOptions = async () => {
-      const yearLevelOptions = await getSpecificHackerAppQuestionOptions('BasicInfo', 'educationLevel')
-      setYearLevelOptions(yearLevelOptions)
+      const levelOptions = await getSpecificHackerAppQuestionOptions('BasicInfo', 'educationLevel')
+      setYearLevelOptions(levelOptions)
     }
     const getContributionRoleOptions = async () => {
       const roleOptions = await getSpecificHackerAppQuestionOptions('Skills', 'contributionRole')

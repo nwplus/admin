@@ -933,7 +933,7 @@ export const getSpecificHackerAppQuestionOptions = async (category, formInput) =
   }
 
   const matchedElement = querySnapshot.docs[0]
-  const options = matchedElement.data().options
+  const { options } = matchedElement.data()
   return options
 }
 

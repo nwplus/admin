@@ -99,17 +99,8 @@ export default function AcceptingModal({ setShowing }) {
     setShowing(false)
   }
 
-  const handleYearLevelChange = option => {
-    setYearLevelsSelected(prevSelected => {
-      if (prevSelected.includes(option)) {
-        return prevSelected.filter(item => item !== option)
-      }
-      return [...prevSelected, option]
-    })
-  }
-
-  const handleRoleChange = option => {
-    setContributionRolesSelected(prevSelected => {
+  const handleOptionChange = (option, setSelected) => {
+    setSelected(prevSelected => {
       if (prevSelected.includes(option)) {
         return prevSelected.filter(item => item !== option)
       }
@@ -118,17 +109,12 @@ export default function AcceptingModal({ setShowing }) {
   }
 
   useEffect(() => {
-    const getYearLevelOptions = async () => {
-      const levelOptions = await getSpecificHackerAppQuestionOptions('BasicInfo', 'educationLevel')
-      setYearLevelOptions(levelOptions)
+    const fetchOptions = async (category, field, setOptions) => {
+      const options = await getSpecificHackerAppQuestionOptions(category, field)
+      setOptions(options)
     }
-    const getContributionRoleOptions = async () => {
-      const roleOptions = await getSpecificHackerAppQuestionOptions('Skills', 'contributionRole')
-      setContributionRoleOptions(roleOptions)
-    }
-
-    getYearLevelOptions()
-    getContributionRoleOptions()
+    fetchOptions('BasicInfo', 'educationLevel', setYearLevelOptions)
+    fetchOptions('Skills', 'contributionRole', setContributionRoleOptions)
   }, [])
 
   return (
@@ -172,7 +158,7 @@ export default function AcceptingModal({ setShowing }) {
                   type="checkbox"
                   value={option}
                   checked={yearLevelsSelected.includes(option)}
-                  onChange={() => handleYearLevelChange(option)}
+                  onChange={() => handleOptionChange(option, setYearLevelsSelected)}
                 />
                 {option}
               </MultiselectLabel>
@@ -188,7 +174,7 @@ export default function AcceptingModal({ setShowing }) {
                   type="checkbox"
                   value={option}
                   checked={contributionRolesSelected.includes(option)}
-                  onChange={() => handleRoleChange(option)}
+                  onChange={() => handleOptionChange(option, setContributionRolesSelected)}
                 />
                 {option}
               </MultiselectLabel>

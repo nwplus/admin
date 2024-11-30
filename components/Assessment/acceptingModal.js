@@ -117,6 +117,14 @@ export default function AcceptingModal({ setShowing }) {
     fetchOptions('Skills', 'contributionRole', setContributionRoleOptions)
   }, [])
 
+  // remove horizontal scrollbar
+  useEffect(() => {
+    document.body.style.overflowX = 'hidden'
+    return () => {
+      document.body.style.overflowX = 'unset'
+    }
+  }, [])
+
   return (
     <Modal setShowing={setShowing}>
       <h3>Accept applicants</h3>

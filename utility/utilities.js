@@ -13,7 +13,12 @@ export const calculateTotalScore = hackerScore => {
   // summing up values score
   const reducer = (accumulator, currentValue) => accumulator + currentValue
   const maxScore = Object.values(SCORING).reduce((acc, curr) => acc + curr.value * curr.weight, 0)
-  return Math.min(maxScore, Object.values(hackerScore).reduce(reducer, 0))
+  return Math.min(
+    maxScore,
+    Object.values(hackerScore)
+      .map(score => score?.score ?? 0)
+      .reduce(reducer, 0)
+  )
 }
 
 // Given an object, flatten all key/values, taking all nested properties to top level

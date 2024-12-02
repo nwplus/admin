@@ -166,7 +166,7 @@ export default ({ hackathons, currentPath }) => {
         </ItemContainer>
 
         {HACKATHONS.map(id => {
-          const href = `/portal/${id}/settings`
+          const href = `/portal/[id]/settings`
           const link = `/portal/${id}/settings`
           return (
             <NextLink key={id} href={href} as={link} passHref>

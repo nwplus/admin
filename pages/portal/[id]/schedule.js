@@ -25,6 +25,7 @@ import {
   getTimestamp,
   updatePortalEvent,
   subscribeToPortalSchedule,
+  getHackathonPaths,
 } from '../../../utility/firebase'
 
 export default ({ hackathons }) => {
@@ -388,23 +389,16 @@ export default ({ hackathons }) => {
   )
 }
 
-export const getStaticProps = async () => {
+export const getStaticPaths = async () => {
+  return getHackathonPaths()
+}
+
+export const getStaticProps = async ({ params }) => {
   const hackathons = await getHackathons()
   return {
     props: {
       hackathons,
+      id: params.id,
     },
-  }
-}
-
-export const getStaticPaths = async () => {
-  const hackathons = await getHackathons()
-  const paths = hackathons.map(id => ({
-    params: { id },
-  }))
-
-  return {
-    paths,
-    fallback: false,
   }
 }

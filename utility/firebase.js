@@ -84,7 +84,10 @@ export const getHackathons = async () => {
     .then(querySnapshot => {
       const hackathons = []
       querySnapshot.forEach(doc => {
-        hackathons.push(doc.id)
+        const year = doc.id.slice(-4)
+        if (year >= '2024' && year <= '2025') {
+          hackathons.push(doc.id)
+        }
       })
       return hackathons
     })

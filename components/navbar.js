@@ -25,11 +25,13 @@ const NavLink = styled.a`
 `
 
 const getHref = (currentPath, key) => {
-  return currentPath.includes('Livesite') ? `/Livesite/${key}` : `/[id]/${key}`
+  return currentPath.includes('portal') ? `/portal/${key}` : `/[id]/${key}`
 }
 
 export default ({ items, setTimeOut, setLoading, currentPath }) => {
-  const currentPage = window.location.pathname.split('/')[2]
+  const currentPage = currentPath.includes('portal')
+    ? window.location.pathname.split('/')[3]
+    : window.location.pathname.split('/')[2]
   const onClick = ({ path }) => {
     if (!window.location.href.includes(path)) {
       setTimeOut(

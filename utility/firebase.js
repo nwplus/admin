@@ -31,7 +31,7 @@ const faqCollection = FAQ
 const Hackathons = 'Hackathons'
 const InternalWebsitesCollection = 'InternalWebsites'
 const CMSCollection = 'CMS'
-const LivesiteCollection = 'Livesite'
+const PortalCollection = 'Portal'
 const HackerEvaluationHackathon = 'nwHacks2025'
 
 export const getTimestamp = () => {
@@ -438,9 +438,7 @@ export const subscribeToCMSStatus = dateCallback => {
     })
 }
 
-const livesiteDocRef = db.collection(InternalWebsitesCollection).doc(LivesiteCollection)
-
-export const getActiveHackathon = livesiteDocRef.get().then(doc => doc.data()?.activeHackathon)
+const portalDocRef = db.collection(InternalWebsitesCollection).doc(PortalCollection)
 
 const announcementsRef = hackathon => {
   return db.collection(Hackathons).doc(hackathon).collection('Announcements')
@@ -475,12 +473,15 @@ export const deleteAnnouncement = async (hackathon, id) => {
   await announcementsRef(hackathon).doc(id).delete()
 }
 
-export const subscribeToLivesiteData = callback => {
-  return livesiteDocRef.onSnapshot(doc => callback(doc.data()))
+export const subscribeToPortalSettings = callback => {
+  return db
+    .collection(InternalWebsitesCollection)
+    .doc(PortalCollection)
+    .onSnapshot(doc => callback(doc.data()))
 }
 
-export const updateLivesiteData = async data => {
-  return livesiteDocRef.update(data)
+export const updatePortalSettings = async data => {
+  return portalDocRef.update(data)
 }
 
 export const getLivesiteQuicklinks = async (hackathon, callback) => {
@@ -525,31 +526,24 @@ export const deleteQuicklink = async (hackathon, id) => {
   await quicklinksRef(hackathon).doc(id).delete()
 }
 
-export const getLivesiteEvent = (eventID, data) => {
-  return data
-    ? {
-        ...data,
-        eventID,
-        key: data.key || eventID,
-        name: data.name || 'Empty event field',
-        description: data.description || 'Empty text description for event',
-        lastModified: data.lastModified ? formatDate(data.lastModified.seconds) : formatDate(getTimestamp().seconds),
-        lastModifiedBy: data.lastModifiedBy || 'Unknown user',
-      }
-    : null
+export const subscribeToPortalSchedule = (hackathon, callback) => {
+  return db
+    .collection(Hackathons)
+    .doc(hackathon)
+    .collection('DayOf')
+    .onSnapshot(querySnapshot => {
+      const events = {}
+      querySnapshot.docs.forEach(doc => {
+        events[doc.id] = {
+          ...doc.data(),
+          eventID: doc.id,
+        }
+      })
+      callback(events)
+    })
 }
 
-export const getLivesiteEvents = async hackathon => {
-  const eventIDs = await db.collection('Hackathons').doc(hackathon).collection('DayOf').orderBy('startTime').get()
-  const events = {}
-  eventIDs.docs.forEach(doc => {
-    const currEvent = getLivesiteEvent(doc.id, doc.data())
-    if (currEvent) events[doc.id] = currEvent
-  })
-  return events
-}
-
-export const addLivesiteEvent = async (hackathon, event) => {
+export const addPortalEvent = async (hackathon, event) => {
   const ref = db.collection('Hackathons').doc(hackathon).collection('DayOf').doc()
   delete event.eventID
   delete event.key
@@ -560,7 +554,7 @@ export const addLivesiteEvent = async (hackathon, event) => {
   return ref.id
 }
 
-export const updateLivesiteEvent = async (hackathon, event) => {
+export const updatePortalEvent = async (hackathon, event) => {
   const ref = db.collection('Hackathons').doc(hackathon).collection('DayOf').doc(event.eventID)
   delete event.eventID
   delete event.key
@@ -570,7 +564,7 @@ export const updateLivesiteEvent = async (hackathon, event) => {
   })
 }
 
-export const deleteLivesiteEvent = async (hackathon, eventID) => {
+export const deletePortalEvent = async (hackathon, eventID) => {
   await db.collection('Hackathons').doc(hackathon).collection('DayOf').doc(eventID).delete()
 }
 

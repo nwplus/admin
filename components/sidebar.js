@@ -122,7 +122,7 @@ const getTrailingPath = currentPath => {
   const paths = window.location.href.split('/')
   const pathIndex = paths.findIndex(val => val === currentPath)
   const trailingPathArray = paths.slice(pathIndex + 1)
-  if (pathIndex === -1 || trailingPathArray.length === 0 || paths.includes('Livesite')) {
+  if (pathIndex === -1 || trailingPathArray.length === 0 || paths.includes('portal')) {
     return 'intro'
   }
   return trailingPathArray.join('/')
@@ -160,14 +160,33 @@ export default ({ hackathons, currentPath }) => {
           {loading && <LoadingImage src={LoadingGif} />}
         </HeaderContainer>
 
-        <NextLink href="/Livesite/announcements" as="/Livesite/announcements" passHref>
-          <Link>
-            <ItemContainer>
-              <Icon color={currentPath === 'Livesite' && COLOR.WHITE} icon="circle" />
-              <Label selected={currentPath === 'Livesite'}>Livesite</Label>
-            </ItemContainer>
-          </Link>
-        </NextLink>
+        <ItemContainer>
+          <Icon color={currentPath?.includes('portal') && COLOR.WHITE} icon="circle" />
+          <Label selected={currentPath?.includes('portal')}>Portal</Label>
+        </ItemContainer>
+
+        {HACKATHONS.map(id => {
+          const href = `/portal/${id}/settings`
+          const link = `/portal/${id}/settings`
+          return (
+            <NextLink key={id} href={href} as={link} passHref>
+              <IndentedLink
+                onClick={() => {
+                  if (!currentPath?.includes(`portal/${id}`)) {
+                    setIfTimeOut(
+                      setTimeout(() => {
+                        setLoading(true)
+                      }, 750)
+                    )
+                  }
+                }}
+                selected={currentPath?.includes(`portal/${id}`)}
+              >
+                {id}
+              </IndentedLink>
+            </NextLink>
+          )
+        })}
 
         <NextLink href="/faq" as="/faq" passHref>
           <Link

@@ -81,13 +81,12 @@ export const HACKATHON_NAVBAR = {
   BuildConfig: 'Build Config',
   HackerInfo: 'Firebase Queries',
 }
-export const LIVESITE_NAVBAR = {
-  announcements: 'Announcements',
-  quicklinks: 'Quicklinks',
-  schedule: 'Schedule',
+export const PORTAL_NAVBAR = {
   settings: 'Settings',
+  schedule: 'Schedule',
   judging: 'Judging',
 }
+
 export const HACKER_APP_NAVBAR = {
   welcome: 'Welcome',
   basicinfo: 'Basic Info',

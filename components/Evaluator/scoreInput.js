@@ -22,7 +22,8 @@ export default function ScoreInput({ label, score, handleClick, maxScore, hasMin
   const arr = hasMinusOne ? [-1, ...Array(maxScore.value + 1).keys()] : [...Array(maxScore.value + 1).keys()]
 
   const handleMultipier = (value, numberLabel) => {
-    return handleClick(value * maxScore.weight, numberLabel)
+    const adjustedValue = maxScore.weight === 0 ? value : value * maxScore.weight
+    return handleClick(adjustedValue, numberLabel)
   }
 
   return (
@@ -30,15 +31,12 @@ export default function ScoreInput({ label, score, handleClick, maxScore, hasMin
       <Label>{label}</Label>
       <ScoreContainer>
         {arr.map(num => {
-          return (
-            <Number
-              label={label}
-              number={num}
-              active={score != null && score / maxScore.weight === num}
-              key={num}
-              handleClick={handleMultipier}
-            />
-          )
+          const isActive =
+            maxScore.weight === 0
+              ? score === num // directly compare score when weight is 0
+              : score / maxScore.weight === num // use weighted logic otherwise
+
+          return <Number label={label} number={num} active={isActive} key={num} handleClick={handleMultipier} />
         })}
       </ScoreContainer>
     </Container>

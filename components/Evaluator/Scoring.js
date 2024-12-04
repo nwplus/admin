@@ -76,6 +76,9 @@ export default function Scoring({ shouldDisplay, applicant }) {
       case SCORING.RESUME.label:
         field = 'ResumeScore'
         break
+      case SCORING.NUM_EXP.label:
+        field = 'NumExperiences'
+        break
       case SCORING.ESSAY1.label:
         field = 'ResponseOneScore'
         break
@@ -109,6 +112,12 @@ export default function Scoring({ shouldDisplay, applicant }) {
           handleClick={handleClick}
           score={scores?.ResumeScore}
           maxScore={SCORING.RESUME}
+        />
+        <ScoreInput
+          label={SCORING.NUM_EXP.label}
+          handleClick={handleClick}
+          score={scores?.NumExperiences}
+          maxScore={SCORING.NUM_EXP}
         />
         {/* {applicant?.skills?.longAnswers3 ? ( */}
         <ScoreInput

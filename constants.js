@@ -166,13 +166,18 @@ export const APPLICATION_STATUS = {
   },
 }
 
-export const NUM_SCORES = 4
+export const NUM_SCORES = 5
 
 export const SCORING = {
   RESUME: {
     label: 'Resume',
     value: 6,
     weight: 1,
+  },
+  NUM_EXP: {
+    label: 'Number of Experiences',
+    value: 5,
+    weight: 0,
   },
   ESSAY1: {
     label: 'Long Answer 1',

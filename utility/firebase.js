@@ -6,7 +6,7 @@ import 'firebase/firestore'
 import 'firebase/storage'
 import JSZip from 'jszip'
 import { APPLICATION_STATUS, FAQ, FAQCategory } from '../constants'
-import { calculateTotalScore, filterHackerInfoFields, flattenObj, orderObj } from './utilities'
+import { calculateTotalScore, convertToCamelCase, filterHackerInfoFields, flattenObj, orderObj } from './utilities'
 
 if (!firebase.apps.length) {
   const config = {
@@ -646,18 +646,61 @@ export const getAllApplicants = async callback => {
     })
 }
 
-export const getApplicantsToAccept = async score => {
-  const applicants = await db
-    .collection('Hackathons')
-    .doc(HackerEvaluationHackathon)
-    .collection('Applicants')
-    .where('score.totalScore', '>=', score - 1)
-    .get()
+export const getApplicantsToAccept = async (
+  score,
+  numHackathonsMin,
+  numHackathonsMax,
+  yearLevelsSelected,
+  contributionRolesSelected,
+  numExperiencesMin,
+  numExperiencesMax
+) => {
+  const applicants = await db.collection('Hackathons').doc(HackerEvaluationHackathon).collection('Applicants').get()
+
   return applicants.docs
     .filter(app => {
-      const appStatus = app.data().status.applicationStatus
+      const appData = app.data()
+      const appStatus = appData.status.applicationStatus
+
       if (appStatus !== APPLICATION_STATUS.scored.text) return false
-      return app.data().score.totalScore >= score
+
+      // score
+      if (score !== undefined && appData.score.totalScore < score) return false
+
+      // range of hackathons attended
+      const numHackathonsAttended = appData.skills?.numHackathonsAttended
+      if (
+        (numHackathonsMin !== undefined && Number(numHackathonsAttended) < Number(numHackathonsMin)) ||
+        (numHackathonsMax !== undefined && Number(numHackathonsAttended) > Number(numHackathonsMax))
+      ) {
+        return false
+      }
+
+      // range for year level
+      const yearLevel = appData.basicInfo?.educationLevel
+      if (yearLevelsSelected && yearLevelsSelected.length > 0 && !yearLevelsSelected.includes(yearLevel)) {
+        return false
+      }
+
+      // for intended role
+      if (contributionRolesSelected && contributionRolesSelected.length > 0) {
+        const contributionRoles = appData.skills?.contributionRole || {}
+        const hasValidRole = contributionRolesSelected.some(
+          role => contributionRoles[convertToCamelCase(role)] === true
+        )
+        if (!hasValidRole) return false
+      }
+
+      // range for # of experiences
+      const numExperiences = appData.score?.scores?.NumExperiences
+      if (
+        (numExperiencesMin !== undefined && Number(numExperiences) < Number(numExperiencesMin)) ||
+        (numExperiencesMax !== undefined && Number(numExperiences) > Number(numExperiencesMax))
+      ) {
+        return false
+      }
+
+      return true
     })
     .map(doc => doc.data())
 }
@@ -874,6 +917,24 @@ export const updateHackerAppQuestionsMetadata = async (selectedHackathon, catego
     [category]: updatedMetadata,
   }
   return db.collection('HackerAppQuestions').doc(selectedHackathon.slice(0, -4)).set(doc, { merge: true })
+}
+
+export const getSpecificHackerAppQuestionOptions = async (category, formInput) => {
+  const querySnapshot = await db
+    .collection('HackerAppQuestions')
+    .doc(HackerEvaluationHackathon.slice(0, -4))
+    .collection(category)
+    .where('formInput', '==', formInput)
+    .get()
+
+  if (querySnapshot.empty) {
+    console.warn(`No document found with formInput: ${formInput} in category: ${category}`)
+    return null
+  }
+
+  const matchedElement = querySnapshot.docs[0]
+  const { options } = matchedElement.data()
+  return options
 }
 
 // hacker application questions specific end

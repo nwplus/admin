@@ -11,7 +11,8 @@ const GreyDiv = styled.div`
 
 const ModalDiv = styled.div`
   width: 400px;
-  height: auto;
+  height: 70%;
+  overflow-y: auto;
   position: absolute;
   left: 50%;
   top: 25%;

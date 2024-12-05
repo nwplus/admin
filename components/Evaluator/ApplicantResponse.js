@@ -79,6 +79,9 @@ export default function ApplicantResponse({ shouldDisplay, hacker }) {
 
       <ResponseInput label="Role" response={contributionRole} />
 
+      <ResponseInput label="Year Level" response={hacker?.basicInfo?.educationLevel} />
+      <ResponseInput label="Num Hackathons Attended" response={hacker?.skills?.numHackathonsAttended} />
+
       <ResponseInput
         label="Is this your first hackathon?"
         response={hacker?.skills?.numHackathonsAttended === '0' ? 'yes' : 'no'}

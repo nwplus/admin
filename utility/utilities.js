@@ -10,10 +10,39 @@ export const hexToRgba = (hex, a = 1) => {
 
 // Given an object, take its values and sum them up
 export const calculateTotalScore = hackerScore => {
-  // summing up values score
-  const reducer = (accumulator, currentValue) => accumulator + currentValue
+  const reducer = (accumulator, currentValue) => accumulator + currentValue[1]
   const maxScore = Object.values(SCORING).reduce((acc, curr) => acc + curr.value * curr.weight, 0)
-  return Math.min(maxScore, Object.values(hackerScore).reduce(reducer, 0))
+
+  // filter out scores with weight zero
+  const validScores = Object.entries(hackerScore).filter(entry => {
+    const field = entry[0]
+    let label = ''
+    switch (field) {
+      case 'ResumeScore':
+        label = SCORING.RESUME.label
+        break
+      case 'NumExperiences':
+        label = SCORING.NUM_EXP.label
+        break
+      case 'ResponseOneScore':
+        label = SCORING.ESSAY1.label
+        break
+      case 'ResponseTwoScore':
+        label = SCORING.ESSAY2.label
+        break
+      case 'ResponseThreeScore':
+        label = SCORING.ESSAY3.label
+        break
+      default:
+        break
+    }
+    const scoringItem = Object.values(SCORING).find(item => item.label === label)
+    return scoringItem && scoringItem.weight !== 0
+  })
+
+  const totalScore = Object.values(validScores).reduce(reducer, 0)
+
+  return Math.min(maxScore, totalScore)
 }
 
 // Given an object, flatten all key/values, taking all nested properties to top level
@@ -146,4 +175,13 @@ export const validateQuestions = questions => {
     }
   }
   return true
+}
+
+export const convertToCamelCase = str => {
+  return str
+    .split(' ')
+    .map((word, index) =>
+      index === 0 ? word.toLowerCase() : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+    )
+    .join('')
 }

@@ -28,7 +28,7 @@ const NavLink = styled.a`
 `
 
 const getHref = (currentPath, key) => {
-  return currentPath.includes('Livesite') ? `/Livesite/${key}` : `/hackerapps/[id]/${key}`
+  return currentPath.includes('portal') ? `/portal/[id]/${key}` : `/hackerapps/[id]/${key}`
 }
 
 const HackerAppNavbar = ({ items, setTimeOut, setLoading, currentPath }) => {

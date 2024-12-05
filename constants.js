@@ -81,13 +81,12 @@ export const HACKATHON_NAVBAR = {
   BuildConfig: 'Build Config',
   HackerInfo: 'Firebase Queries',
 }
-export const LIVESITE_NAVBAR = {
-  announcements: 'Announcements',
-  quicklinks: 'Quicklinks',
-  schedule: 'Schedule',
+export const PORTAL_NAVBAR = {
   settings: 'Settings',
+  schedule: 'Schedule',
   judging: 'Judging',
 }
+
 export const HACKER_APP_NAVBAR = {
   welcome: 'Welcome',
   basicinfo: 'Basic Info',
@@ -166,13 +165,18 @@ export const APPLICATION_STATUS = {
   },
 }
 
-export const NUM_SCORES = 4
+export const NUM_SCORES = 5
 
 export const SCORING = {
   RESUME: {
     label: 'Resume',
     value: 6,
     weight: 1,
+  },
+  NUM_EXP: {
+    label: 'Number of Experiences',
+    value: 5,
+    weight: 0,
   },
   ESSAY1: {
     label: 'Long Answer 1',

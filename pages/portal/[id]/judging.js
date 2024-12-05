@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import Input from '../../components/input'
-import Modal from '../../components/modal'
-import Page from '../../components/page'
-import ProjectsCard from '../../components/projectsCard'
-import TextBox from '../../components/textbox'
-import { EDIT, LIVESITE_NAVBAR, NEW } from '../../constants'
+import { useRouter } from 'next/router'
+import Input from '../../../components/input'
+import Modal from '../../../components/modal'
+import Page from '../../../components/page'
+import ProjectsCard from '../../../components/projectsCard'
+import TextBox from '../../../components/textbox'
+import { EDIT, PORTAL_NAVBAR, NEW } from '../../../constants'
 import {
   createProject,
   deleteProject,
-  getActiveHackathon,
   getHackathons,
   subscribeToProjects,
   updateProject,
-} from '../../utility/firebase'
+  getHackathonPaths,
+} from '../../../utility/firebase'
 
 const Label = styled.p`
   font-weight: bold;
@@ -21,34 +22,30 @@ const Label = styled.p`
 `
 
 export default ({ hackathons }) => {
-  const [activeHackathon, setActiveHackathon] = useState('')
   const [projects, setProjects] = useState({})
   const [activeModal, setActiveModal] = useState('')
   const [data, setData] = useState({})
+  const router = useRouter()
+  const { id: activeHackathon } = router.query
 
   useEffect(() => {
-    ;(async () => {
-      setActiveHackathon(await getActiveHackathon)
-    })()
-  })
-
-  // eslint-disable-next-line consistent-return
-  useEffect(() => {
-    if (activeHackathon) {
-      return subscribeToProjects(activeHackathon, p => {
-        setProjects(p)
-      })
+    if (!activeHackathon) {
+      return undefined
     }
-  }, [activeHackathon, setProjects])
+    return subscribeToProjects(activeHackathon, firebaseData => {
+      setProjects(firebaseData)
+    })
+  }, [activeHackathon])
 
   const handleNew = () => {
     setData({
+      links: {
+        devpost: '',
+        youtube: '',
+      },
       description: '',
-      devpostUrl: '',
-      youtubeUrl: '',
       sponsorPrizes: '',
-      teamMembers: '',
-      teamMembersEmails: '',
+      teamMembers: [],
       title: '',
     })
     setActiveModal(NEW)
@@ -67,8 +64,17 @@ export default ({ hackathons }) => {
 
   const formatProject = project => {
     project.sponsorPrizes = stringToArr(project.sponsorPrizes)
-    project.teamMembers = stringToArr(project.teamMembers)
-    project.teamMembersEmails = stringToArr(project.teamMembersEmails)
+    const names = stringToArr(project.names) || []
+    const emails = stringToArr(project.emails) || []
+
+    project.teamMembers = names.map((name, index) => ({
+      name,
+      email: emails[index] || '',
+      id: '',
+    }))
+
+    delete project.names
+    delete project.emails
     return project
   }
 
@@ -108,14 +114,36 @@ export default ({ hackathons }) => {
     setData({
       ...projects[key],
       id: key,
-      teamMembers: projects[key].teamMembers?.toString(),
-      teamMembersEmails: projects[key].teamMembersEmails?.toString(),
+      names: projects[key].teamMembers?.map(member => member.name).join(', ') || '',
+      emails: projects[key].teamMembers?.map(member => member.email).join(', ') || '',
       sponsorPrizes: projects[key].sponsorPrizes?.toString(),
+      links: {
+        devpost: projects[key].links?.devpost,
+        youtube: projects[key].links?.youtube,
+      },
     })
     setActiveModal(EDIT)
   }
 
   const handleChange = (field, e) => {
+    if (field === 'names' || field === 'emails') {
+      setData({
+        ...data,
+        [field]: e.target.value,
+      })
+      return
+    }
+    if (field.startsWith('links.')) {
+      const linkField = field.split('.')[1]
+      setData({
+        ...data,
+        links: {
+          ...data.links,
+          [linkField]: e.target.value,
+        },
+      })
+      return
+    }
     setData({
       ...data,
       [field]: e.target.value,
@@ -123,7 +151,7 @@ export default ({ hackathons }) => {
   }
 
   return (
-    <Page currentPath="Livesite" hackathons={hackathons} navbarItems={LIVESITE_NAVBAR}>
+    <Page currentPath={`portal/${activeHackathon}`} hackathons={hackathons} navbarItems={PORTAL_NAVBAR}>
       <ProjectsCard
         handleEdit={handleEdit}
         handleNew={handleNew}
@@ -138,29 +166,34 @@ export default ({ hackathons }) => {
         modalAction={activeModal}
       >
         <Label>Title</Label>
-        <Input value={data.title} onChange={e => handleChange('title', e)} />
+        <Input value={data?.title} onChange={e => handleChange('title', e)} />
         <Label>Description</Label>
-        <TextBox defaultValue={data.description} onChange={e => handleChange('description', e)} />
+        <TextBox defaultValue={data?.description} onChange={e => handleChange('description', e)} />
         <Label>Sponsor Prizes (Comma separated)</Label>
-        <Input value={data.sponsorPrizes} onChange={e => handleChange('sponsorPrizes', e)} />
+        <Input value={data?.sponsorPrizes} onChange={e => handleChange('sponsorPrizes', e)} />
         <Label>Devpost Url</Label>
-        <Input value={data.devpostUrl} onChange={e => handleChange('devpostUrl', e)} />
+        <Input value={data?.links?.devpost} onChange={e => handleChange('links.devpost', e)} />
         <Label>Youtube Url</Label>
-        <Input value={data.youtubeUrl} onChange={e => handleChange('youtubeUrl', e)} />
+        <Input value={data?.links?.youtube} onChange={e => handleChange('links.youtube', e)} />
         <Label>Team Members (Comma separated)</Label>
-        <Input value={data.teamMembers} onChange={e => handleChange('teamMembers', e)} />
+        <Input value={data.names || ''} onChange={e => handleChange('names', e)} />
         <Label>Team Emails (Comma separated)</Label>
-        <Input value={data.teamMembersEmails} onChange={e => handleChange('teamMembersEmails', e)} />
+        <Input value={data.emails} onChange={e => handleChange('emails', e)} />
       </Modal>
     </Page>
   )
 }
 
-export const getStaticProps = async () => {
+export const getStaticPaths = async () => {
+  return getHackathonPaths()
+}
+
+export const getStaticProps = async ({ params }) => {
   const hackathons = await getHackathons()
   return {
     props: {
       hackathons,
+      id: params.id,
     },
   }
 }

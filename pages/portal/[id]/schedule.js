@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import FeatureFlag from '../../components/FeatureFlag'
-import Button from '../../components/button'
-import Card, { CardButtonContainer, CardContent, CardHeader, CardTitle } from '../../components/card'
-import { DateTimePicker } from '../../components/dateTimePicker'
-import Modal, { Label, ModalContent, ModalField } from '../../components/modal'
-import Page from '../../components/page'
+import { useRouter } from 'next/router'
+import FeatureFlag from '../../../components/FeatureFlag'
+import Button from '../../../components/button'
+import Card, { CardButtonContainer, CardContent, CardHeader, CardTitle } from '../../../components/card'
+import { DateTimePicker } from '../../../components/dateTimePicker'
+import Modal, { Label, ModalContent, ModalField } from '../../../components/modal'
+import Page from '../../../components/page'
 import {
   ActionsButtonContainer,
   TableContent,
@@ -13,46 +14,41 @@ import {
   TableHeader,
   TableRow,
   TableWrapper,
-} from '../../components/table'
-import { COLOR, DELETE, EDIT, LIVESITE_NAVBAR, NEW, VIEW } from '../../constants'
-import { useAuth } from '../../utility/auth'
+} from '../../../components/table'
+import { COLOR, DELETE, EDIT, PORTAL_NAVBAR, NEW, VIEW } from '../../../constants'
+import { useAuth } from '../../../utility/auth'
 import {
-  addLivesiteEvent,
-  deleteLivesiteEvent,
+  addPortalEvent,
+  deletePortalEvent,
   formatDate,
-  getActiveHackathon,
   getHackathons,
-  getLivesiteEvents,
   getTimestamp,
-  updateLivesiteEvent,
-} from '../../utility/firebase'
+  updatePortalEvent,
+  subscribeToPortalSchedule,
+  getHackathonPaths,
+} from '../../../utility/firebase'
 
-export default function Events({ hackathons }) {
-  const [activeHackathon, setActiveHackathon] = useState('')
+export default ({ hackathons }) => {
   const [events, setEvents] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const { email: user } = useAuth().user
+  const router = useRouter()
+  const { id: activeHackathon } = router.query
   const [newEvent, setNewEvent] = useState({})
   const [eventViewing, setEventViewing] = useState({})
   const [eventEditing, setEventEditing] = useState({})
   const [eventConfirm, setEventConfirm] = useState({})
-  const [isLoading, setIsLoading] = useState(true)
   const [alertMsg, setAlertMsg] = useState('')
-  const { email: user } = useAuth().user
 
   useEffect(() => {
-    ;(async () => {
-      setActiveHackathon(await getActiveHackathon)
-    })()
-  })
-
-  const fetchEvents = async () => {
-    if (activeHackathon) {
-      const eventsFetched = await getLivesiteEvents(activeHackathon)
-      if (Object.keys(eventsFetched).length > 0) {
-        setEvents(eventsFetched)
-      }
+    if (!activeHackathon) {
+      return undefined
     }
-    setIsLoading(false)
-  }
+    return subscribeToPortalSchedule(activeHackathon, data => {
+      setEvents(data)
+      setIsLoading(false)
+    })
+  }, [activeHackathon])
 
   useEffect(() => {
     if (alertMsg.length > 0) {
@@ -60,16 +56,12 @@ export default function Events({ hackathons }) {
     }
   }, [alertMsg])
 
-  useEffect(() => {
-    fetchEvents()
-  }, [activeHackathon])
-
   const handleNew = async () => {
     newEvent.lastModifiedBy = user
     newEvent.startTime = new Date(newEvent.startTime).toISOString()
     newEvent.endTime = new Date(newEvent.endTime).toISOString()
     newEvent.type = newEvent.type ?? 'main'
-    const eventID = await addLivesiteEvent(activeHackathon, { ...newEvent })
+    const eventID = await addPortalEvent(activeHackathon, { ...newEvent })
     newEvent.lastModified = formatDate(getTimestamp().seconds)
     setEvents({
       ...events,
@@ -86,7 +78,7 @@ export default function Events({ hackathons }) {
     eventEditing.lastModified = user
     eventEditing.startTime = new Date(eventEditing.startTime).toISOString()
     eventEditing.endTime = new Date(eventEditing.endTime).toISOString()
-    await updateLivesiteEvent(activeHackathon, { ...eventEditing })
+    await updatePortalEvent(activeHackathon, { ...eventEditing })
     eventEditing.lastModified = formatDate(getTimestamp().seconds)
     setEvents({
       ...events,
@@ -101,7 +93,7 @@ export default function Events({ hackathons }) {
       setEventConfirm({ ...events[eventID] })
       return
     }
-    deleteLivesiteEvent(activeHackathon, eventID)
+    deletePortalEvent(activeHackathon, eventID)
     setEvents(
       Object.keys(events)
         .filter(curr => {
@@ -144,7 +136,7 @@ export default function Events({ hackathons }) {
     )
   }
   return (
-    <Page currentPath="Livesite" hackathons={hackathons} navbarItems={LIVESITE_NAVBAR}>
+    <Page currentPath={`portal/${activeHackathon}`} hackathons={hackathons} navbarItems={PORTAL_NAVBAR}>
       <Card>
         <CardHeader>
           <CardTitle>Events</CardTitle>
@@ -191,8 +183,8 @@ export default function Events({ hackathons }) {
                     </TableRow>
                   </thead>
                   <tbody>
-                    {Object.entries(events).map(([key, event]) => (
-                      <EventRow {...event} key={key} />
+                    {Object.keys(events).map(event => (
+                      <EventRow {...events[event]} key={event} />
                     ))}
                   </tbody>
                 </>
@@ -397,11 +389,16 @@ export default function Events({ hackathons }) {
   )
 }
 
-export const getStaticProps = async () => {
+export const getStaticPaths = async () => {
+  return getHackathonPaths()
+}
+
+export const getStaticProps = async ({ params }) => {
   const hackathons = await getHackathons()
   return {
     props: {
       hackathons,
+      id: params.id,
     },
   }
 }

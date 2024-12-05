@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import React from 'react'
 import styled from 'styled-components'
 import { COLOR } from '../constants'
@@ -25,13 +26,17 @@ const NavLink = styled.a`
 `
 
 const getHref = (currentPath, key) => {
-  return currentPath.includes('Livesite') ? `/Livesite/${key}` : `/[id]/${key}`
+  return currentPath.includes('portal') ? `/portal/[id]/${key}` : `/[id]/${key}`
 }
 
 export default ({ items, setTimeOut, setLoading, currentPath }) => {
-  const currentPage = window.location.pathname.split('/')[2]
-  const onClick = ({ path }) => {
-    if (!window.location.href.includes(path)) {
+  const router = useRouter()
+  const { id } = router.query
+
+  const currentPage = currentPath.includes('portal') ? router.pathname.split('/')[3] : router.pathname.split('/')[2]
+
+  const onClick = path => {
+    if (!router.pathname.includes(path)) {
       setTimeOut(
         setTimeout(() => {
           setLoading(true)
@@ -43,7 +48,12 @@ export default ({ items, setTimeOut, setLoading, currentPath }) => {
   return (
     <Container>
       {Object.entries(items).map(([key, value]) => (
-        <Link key={key} href={getHref(currentPath, key)} as={`/${currentPath}/${key}`} passHref>
+        <Link
+          key={key}
+          href={getHref(currentPath, key)}
+          as={currentPath.includes('portal') ? `/portal/${id}/${key}` : `/${id}/${key}`}
+          passHref
+        >
           <NavLink onClick={() => onClick(key)} selected={currentPage === key}>
             {value}
           </NavLink>

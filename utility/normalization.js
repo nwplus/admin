@@ -1,6 +1,6 @@
-import { getAllGradedApplicants, HackerEvaluationHackathon, updateDocument } from './firebase'
 import * as math from 'mathjs'
 import firebase from 'firebase'
+import { getAllGradedApplicants, HackerEvaluationHackathon } from './firebase'
 
 // this is what the data looks like in firebase
 // {
@@ -110,7 +110,6 @@ export const updateNormalizedScores = async normalizedScores => {
     Object.entries(questions).forEach(([questionName, normalizedScore]) => {
       updates[`score.scores.${questionName}.normalizedScore`] = normalizedScore
     })
-    console.log(updates)
 
     return db
       .collection('Hackathons')

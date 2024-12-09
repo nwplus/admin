@@ -1,4 +1,4 @@
-import { getAllGradedApplicants } from './firebase'
+import { getAllGradedApplicants, HackerEvaluationHackathon, updateDocument } from './firebase'
 import * as math from 'mathjs'
 import firebase from 'firebase'
 
@@ -46,7 +46,7 @@ export const transformScores = () => {
 
         Object.entries(scores).forEach(([questionName, value]) => {
           if (!value?.lastUpdatedBy || !value?.score) return
-          
+
           const { lastUpdatedBy, score } = value
 
           if (!result[lastUpdatedBy]) {
@@ -60,8 +60,6 @@ export const transformScores = () => {
           result[lastUpdatedBy][questionName].push([score, _id])
         })
       })
-
-      console.log('Transformed data:', result)
       resolve(result)
     })
   })
@@ -69,7 +67,6 @@ export const transformScores = () => {
 
 export const calculateNormalizedScores = async () => {
   const data = await transformScores()
-  console.log('Test data:', data)
   const normalizedScores = {}
   for (const grader in data) {
     normalizedScores[grader] = {}
@@ -83,17 +80,15 @@ export const calculateNormalizedScores = async () => {
       ])
     }
   }
-  console.log(normalizedScores)
-  updateNormalizedScores(normalizedScores)
+  await updateNormalizedScores(normalizedScores)
 }
 
-export const updateNormalizedScores = async () => {
-  const normalizedScores = await calculateNormalizedScores()
+export const updateNormalizedScores = async normalizedScores => {
   const db = firebase.firestore()
 
   // Restructure normalized scores by applicant ID
   const applicantScores = {}
-  
+
   // Reorganize data by applicant ID
   Object.entries(normalizedScores).forEach(([grader, questions]) => {
     Object.entries(questions).forEach(([questionName, scores]) => {
@@ -110,20 +105,19 @@ export const updateNormalizedScores = async () => {
 
   // Update Firebase
   const promises = Object.entries(applicantScores).map(([applicantId, questions]) => {
-    const applicantRef = db.collection('applications').doc(applicantId)
-    
-    return applicantRef.get().then(doc => {
-      if (!doc.exists) return
-
-      // Create update object with dot notation
-      const updates = {}
-      Object.entries(questions).forEach(([questionName, normalizedScore]) => {
-        updates[`score.scores.${questionName}.normalizedScore`] = normalizedScore
-      })
-
-      // Update the document
-      return applicantRef.update(updates)
+    // Create update object with dot notation
+    const updates = {}
+    Object.entries(questions).forEach(([questionName, normalizedScore]) => {
+      updates[`score.scores.${questionName}.normalizedScore`] = normalizedScore
     })
+    console.log(updates)
+
+    return db
+      .collection('Hackathons')
+      .doc(HackerEvaluationHackathon)
+      .collection('Applicants')
+      .doc(applicantId)
+      .update(updates)
   })
 
   try {
@@ -134,4 +128,3 @@ export const updateNormalizedScores = async () => {
     throw error
   }
 }
-

@@ -7,6 +7,7 @@ import Icon from '../Icon'
 import { Title5 } from '../Typography'
 import Input from '../input'
 import HackerEntry from './HackerEntry'
+import { calculateNormalizedScores } from '../../utility/normalization'
 
 const Container = styled.div`
   height: 60%;
@@ -166,6 +167,9 @@ export default function HackerList({ applicants, selectedApplicant, setSelectedA
         ) : (
           <>
             <Title5 color={COLOR.MIDNIGHT_PURPLE}>Applicant List</Title5>
+            <button onClick={calculateNormalizedScores} type="button">
+              Transform Scores
+            </button>
             <ButtonContainer>
               <StyledIcon icon="search" onClick={() => setSearchActive(true)} />
               <StyledIcon

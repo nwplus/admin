@@ -1,16 +1,18 @@
 import { getAllGradedApplicants } from './firebase'
 import * as math from 'mathjs'
+import firebase from 'firebase'
 
 // this is what the data looks like in firebase
 // {
 // 	[applicantId: string]: {
 // 		score: {
 // 			// ... other stuff
-// 			scores: {
-// 				[questionName: string]: {
-// 					lastUpdated: Date
-// 					lastUpdatedBy: string
-// 					score: number
+// 				scores: {
+// 					[questionName: string]: {
+// 						lastUpdated: Date
+// 						lastUpdatedBy: string
+// 						score: number
+// 					}
 // 				}
 // 			}
 // 		}
@@ -82,5 +84,54 @@ export const calculateNormalizedScores = async () => {
     }
   }
   console.log(normalizedScores)
-  return normalizedScores
+  updateNormalizedScores(normalizedScores)
 }
+
+export const updateNormalizedScores = async () => {
+  const normalizedScores = await calculateNormalizedScores()
+  const db = firebase.firestore()
+
+  // Restructure normalized scores by applicant ID
+  const applicantScores = {}
+  
+  // Reorganize data by applicant ID
+  Object.entries(normalizedScores).forEach(([grader, questions]) => {
+    Object.entries(questions).forEach(([questionName, scores]) => {
+      scores.forEach(([normalizedScore, applicantId]) => {
+        if (!applicantScores[applicantId]) {
+          applicantScores[applicantId] = {}
+        }
+        if (!applicantScores[applicantId][questionName]) {
+          applicantScores[applicantId][questionName] = normalizedScore
+        }
+      })
+    })
+  })
+
+  // Update Firebase
+  const promises = Object.entries(applicantScores).map(([applicantId, questions]) => {
+    const applicantRef = db.collection('applications').doc(applicantId)
+    
+    return applicantRef.get().then(doc => {
+      if (!doc.exists) return
+
+      // Create update object with dot notation
+      const updates = {}
+      Object.entries(questions).forEach(([questionName, normalizedScore]) => {
+        updates[`score.scores.${questionName}.normalizedScore`] = normalizedScore
+      })
+
+      // Update the document
+      return applicantRef.update(updates)
+    })
+  })
+
+  try {
+    await Promise.all(promises)
+    console.log('Successfully updated normalized scores in Firebase')
+  } catch (error) {
+    console.error('Error updating normalized scores:', error)
+    throw error
+  }
+}
+

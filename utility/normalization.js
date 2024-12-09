@@ -1,4 +1,5 @@
 import { getAllGradedApplicants } from './firebase'
+import * as math from 'mathjs'
 
 // this is what the data looks like in firebase
 // {
@@ -53,3 +54,25 @@ export const transformScores = () => {
     return result
   })
 }
+
+export const calculateNormalizedScores = () => {
+    const data = transformScores();
+    console.log('Test data:', data);
+    const normalizedScores = {};
+    for (const grader in data) {
+        normalizedScores[grader] = {};
+        for (const question in data[grader]) {
+            const scores = data[grader][question].map(([score, appId]) => score);
+            const mean = math.mean(scores);
+            const stdDev = math.std(scores);
+            normalizedScores[grader][question] = data[grader][question].map(([score, appId]) => [
+                stdDev === 0 ? 0 : (score - mean) / stdDev,
+                appId
+            ]);
+        }
+    }
+    console.log(normalizedScores);
+    return normalizedScores;
+}
+
+

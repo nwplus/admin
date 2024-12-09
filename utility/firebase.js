@@ -827,13 +827,13 @@ export const getAllResumes = async () => {
 export const updateApplicantScore = async (applicantID, newScores, oldScores, comment, adminEmail) => {
   const totalScore = newScores ? calculateTotalScore(newScores) : null
   const scoresWithUpdatedTimes = Object.entries(newScores).reduce((prev, [question, scoreObj]) => {
-    const scoreChanged = oldScores[question]?.score !== scoreObj.score
+    const scoreChanged = oldScores?.[question]?.score !== scoreObj.score
     return {
       ...prev,
       [question]: {
         ...scoreObj,
-        lastUpdated: scoreChanged ? getTimestamp() : oldScores[question].lastUpdated,
-        lastUpdatedBy: scoreChanged ? adminEmail : oldScores[question].lastUpdatedBy,
+        lastUpdated: scoreChanged ? getTimestamp() : oldScores?.[question]?.lastUpdated,
+        lastUpdatedBy: scoreChanged ? adminEmail : oldScores?.[question]?.lastUpdatedBy,
       },
     }
   }, {})

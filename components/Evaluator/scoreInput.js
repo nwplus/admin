@@ -39,8 +39,8 @@ export default function ScoreInput({ label, score, handleClick, maxScore, hasMin
         {arr.map(num => {
           const isActive =
             maxScore.weight === 0
-              ? score.score === num // directly compare score when weight is 0
-              : score.score / maxScore.weight === num // use weighted logic otherwise
+              ? score?.score === num // directly compare score when weight is 0
+              : score?.score / maxScore.weight === num // use weighted logic otherwise
 
           return <Number label={label} number={num} active={isActive} key={num} handleClick={handleMultipier} />
         })}

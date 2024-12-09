@@ -29,13 +29,22 @@ export const transformScores = () => {
 
   return new Promise(resolve => {
     getAllGradedApplicants(applicants => {
+      if (!applicants) {
+        resolve({})
+        return
+      }
+
       applicants.forEach(applicant => {
+        if (!applicant?._id || !applicant?.score?.scores) return
+
         const {
           _id,
           score: { scores },
         } = applicant
 
         Object.entries(scores).forEach(([questionName, value]) => {
+          if (!value?.lastUpdatedBy || !value?.score) return
+          
           const { lastUpdatedBy, score } = value
 
           if (!result[lastUpdatedBy]) {

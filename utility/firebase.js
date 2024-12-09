@@ -894,6 +894,22 @@ export const updateApplicantTags = async (userId, applicantTags) => {
     .update({ applicantTags })
 }
 
+export const getAllGradedApplicants = async callback => {
+  return db
+    .collection('Hackathons')
+    .doc(HackerEvaluationHackathon)
+    .collection('Applicants')
+    .where('status.applicationStatus', '==', 'scored')
+    .onSnapshot(snap => {
+      callback(
+        snap.docs
+          .map(doc => doc.data())
+          .filter(a => a.basicInfo.identifyAsUnderrepresented !== 'no') // cmd-f filter; remove after
+          .sort((a, b) => a.submission?.lastUpdated - b.submission?.lastUpdated)
+      )
+    })
+}
+
 // hacker application questions specific
 export const getHackerAppQuestions = async (selectedHackathon, category) => {
   const data = await db.collection('HackerAppQuestions').doc(selectedHackathon.slice(0, -4)).collection(category).get()

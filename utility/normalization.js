@@ -1,7 +1,17 @@
-import { getAllApplicants } from './firebase'
+import { getAllGradedApplicants } from './firebase'
 
 export const transformScores = () => {
-  getAllApplicants(applicants => {
-    console.log(applicants)
+  getAllGradedApplicants(applicants => {
+    applicants.forEach(applicant => {
+      const {
+        _id,
+        score: { scores },
+      } = applicant
+      console.log('id', _id)
+      Object.entries(scores).forEach(([key, value]) => {
+        const { lastUpdatedBy, score } = value
+        console.log(key, lastUpdatedBy, score)
+      })
+    })
   })
 }

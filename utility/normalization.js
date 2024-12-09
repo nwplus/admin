@@ -113,13 +113,13 @@ export const updateNormalizedScores = async normalizedScores => {
 export const calculateNormalizedScores = async () => {
   const data = await transformScores()
   const normalizedScores = {}
-  Object.values(data).forEach(grader => {
+  Object.keys(data).forEach(grader => {
     normalizedScores[grader] = {}
-    Object.values(data[grader]).forEach(questions => {
+    Object.entries(data[grader]).forEach(([questionName, questions]) => {
       const scores = questions.map(([score]) => score)
       const mean = math.mean(scores)
       const stdDev = math.std(scores)
-      normalizedScores[grader][questions] = data[grader][questions].map(([score, appId]) => [
+      normalizedScores[grader][questionName] = data[grader][questionName].map(([score, appId]) => [
         stdDev === 0 ? 0 : (score - mean) / stdDev,
         appId,
       ])

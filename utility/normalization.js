@@ -45,7 +45,7 @@ export const transformScores = () => {
         } = applicant
 
         Object.entries(scores).forEach(([questionName, value]) => {
-          if (!value?.lastUpdatedBy || !value?.score) return
+          if (!value?.lastUpdatedBy || typeof value?.score !== 'number') return
 
           const { lastUpdatedBy, score } = value
 

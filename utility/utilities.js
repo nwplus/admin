@@ -40,7 +40,9 @@ export const calculateTotalScore = hackerScore => {
     return scoringItem && scoringItem.weight !== 0
   })
 
-  const totalScore = Object.values(validScores).reduce(reducer, 0)
+  const totalScore = Object.values(validScores)
+    .map(score => score?.score ?? 0)
+    .reduce(reducer, 0)
 
   return Math.min(maxScore, totalScore)
 }

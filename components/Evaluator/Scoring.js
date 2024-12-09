@@ -1,4 +1,3 @@
-import moment from 'moment'
 import { useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { APPLICATION_STATUS, COLOR, MAX_SCORE, SCORING, TAGS } from '../../constants'
@@ -34,11 +33,6 @@ const BottomSection = styled.div`
 
 const StyledButton = styled(Button)`
   margin-top: 12px;
-`
-
-const SmallText = styled.div`
-  font-size: 0.8em;
-  color: ${COLOR.GREY_500};
 `
 
 // const Label = styled.p`
@@ -92,15 +86,25 @@ export default function Scoring({ shouldDisplay, applicant }) {
         break
     }
     const newScores = { ...scores }
-    newScores[field] = score
+    newScores[field] = {
+      ...newScores[field],
+      score,
+    }
     newScores.BonusScore = qualifyingBonus()
     setScores(newScores)
     setTotalScore(calculateTotalScore(newScores))
   }
 
   const handleSave = async () => {
-    await updateApplicantScore(applicant._id, scores, comment, user.email)
+    const updatedScores = await updateApplicantScore(
+      applicant._id,
+      scores,
+      applicant?.score?.scores,
+      comment,
+      user.email
+    )
     await updateApplicantStatus(applicant._id, APPLICATION_STATUS.scored.text)
+    setScores(updatedScores)
   }
 
   return (
@@ -164,12 +168,6 @@ export default function Scoring({ shouldDisplay, applicant }) {
       <BottomSection>
         <AddTagButton allTags={TAGS} hacker={applicant} />
         Total Score: {totalScore} / {MAX_SCORE}
-        {applicant && (
-          <SmallText>
-            Last updated by: {applicant?.score?.lastUpdatedBy} at{' '}
-            {moment(applicant?.score?.lastUpdated.toDate()).format('MMM Do, YYYY h:mm:ss A')}
-          </SmallText>
-        )}
         <StyledButton color={COLOR.MIDNIGHT_PURPLE_LIGHT} contentColor={COLOR.WHITE} onClick={handleSave}>
           Save
         </StyledButton>

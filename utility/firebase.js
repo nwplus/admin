@@ -20,6 +20,9 @@ if (!firebase.apps.length) {
     messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   }
   firebase.initializeApp(config)
+  firebase.firestore().settings({
+    ignoreUndefinedProperties: true,
+  })
 }
 
 export const db = firebase.firestore()
@@ -821,21 +824,33 @@ export const getAllResumes = async () => {
   download(finishedZip, 'Resumes', 'application/zip')
 }
 
-export const updateApplicantScore = async (applicantID, scores, comment, adminEmail) => {
-  const totalScore = scores ? calculateTotalScore(scores) : null
+export const updateApplicantScore = async (applicantID, newScores, oldScores, comment, adminEmail) => {
+  const totalScore = newScores ? calculateTotalScore(newScores) : null
+  const scoresWithUpdatedTimes = Object.entries(newScores).reduce((prev, [question, scoreObj]) => {
+    const scoreChanged = oldScores?.[question]?.score !== scoreObj.score
+    return {
+      ...prev,
+      [question]: {
+        ...scoreObj,
+        lastUpdated: scoreChanged ? getTimestamp() : oldScores?.[question]?.lastUpdated,
+        lastUpdatedBy: scoreChanged ? adminEmail : oldScores?.[question]?.lastUpdatedBy,
+      },
+    }
+  }, {})
+
   db.collection('Hackathons')
     .doc(HackerEvaluationHackathon)
     .collection('Applicants')
     .doc(applicantID)
     .update({
       score: {
-        scores,
+        scores: scoresWithUpdatedTimes,
         totalScore,
         comment,
-        lastUpdated: firebase.firestore.Timestamp.now(),
-        lastUpdatedBy: adminEmail,
       },
     })
+
+  return scoresWithUpdatedTimes
 }
 
 export const updateApplicantStatus = async (userId, applicationStatus, hackathon) => {

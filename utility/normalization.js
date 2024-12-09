@@ -65,24 +65,6 @@ export const transformScores = () => {
   })
 }
 
-export const calculateNormalizedScores = async () => {
-  const data = await transformScores()
-  const normalizedScores = {}
-  for (const grader in data) {
-    normalizedScores[grader] = {}
-    for (const question in data[grader]) {
-      const scores = data[grader][question].map(([score, appId]) => score)
-      const mean = math.mean(scores)
-      const stdDev = math.std(scores)
-      normalizedScores[grader][question] = data[grader][question].map(([score, appId]) => [
-        stdDev === 0 ? 0 : (score - mean) / stdDev,
-        appId,
-      ])
-    }
-  }
-  await updateNormalizedScores(normalizedScores)
-}
-
 export const updateNormalizedScores = async normalizedScores => {
   const db = firebase.firestore()
 
@@ -90,7 +72,7 @@ export const updateNormalizedScores = async normalizedScores => {
   const applicantScores = {}
 
   // Reorganize data by applicant ID
-  Object.entries(normalizedScores).forEach(([grader, questions]) => {
+  Object.entries(normalizedScores).forEach(([, questions]) => {
     Object.entries(questions).forEach(([questionName, scores]) => {
       scores.forEach(([normalizedScore, applicantId]) => {
         if (!applicantScores[applicantId]) {
@@ -126,4 +108,22 @@ export const updateNormalizedScores = async normalizedScores => {
     console.error('Error updating normalized scores:', error)
     throw error
   }
+}
+
+export const calculateNormalizedScores = async () => {
+  const data = await transformScores()
+  const normalizedScores = {}
+  Object.values(data).forEach(grader => {
+    normalizedScores[grader] = {}
+    Object.values(data[grader]).forEach(questions => {
+      const scores = questions.map(([score]) => score)
+      const mean = math.mean(scores)
+      const stdDev = math.std(scores)
+      normalizedScores[grader][questions] = data[grader][questions].map(([score, appId]) => [
+        stdDev === 0 ? 0 : (score - mean) / stdDev,
+        appId,
+      ])
+    })
+  })
+  await updateNormalizedScores(normalizedScores)
 }

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import styled from 'styled-components'
 import Page from '../components/page'
-import { getHackathons, getApplicants, updateApplicantStatus } from '../utility/firebase'
+import { getHackathons, getApplicants, updateApplicantStatus, updateReleaseLiabilityCheck } from '../utility/firebase'
 import Button from '../components/button'
 import Checkbox from '../components/checkbox'
 
@@ -59,6 +59,7 @@ export default function Status({ hackathons }) {
   const [statusSelected, setStatusSelected] = useState('')
   const [success, setSuccess] = useState('')
   const [error, setError] = useState('')
+  const [liabilityStatusSelected, setLiabilityStatusSelected] = useState(false)
 
   const validateInputs = () => {
     if (!emails) {
@@ -104,6 +105,9 @@ export default function Status({ hackathons }) {
 
     for (const userId of filteredApplicants) {
       await updateApplicantStatus(userId, statusSelected, hackathonSelected)
+      if (statusSelected === 'acceptedAndAttending') {
+        await updateReleaseLiabilityCheck(userId, liabilityStatusSelected, hackathonSelected)
+      }
     }
 
     if (filteredApplicants.length > 0) {
@@ -151,6 +155,15 @@ export default function Status({ hackathons }) {
             </option>
           ))}
         </select>
+        {statusSelected === 'acceptedAndAttending' && (
+          <div>
+            <Checkbox
+              label="Release Liability Waiver"
+              checked={liabilityStatusSelected}
+              onClick={() => setLiabilityStatusSelected(!liabilityStatusSelected)}
+            />
+          </div>
+        )}
         <ButtonContainer>
           <Button hoverBackgroundColor="#EB5757" onClick={handleUpdate}>
             Update

@@ -746,3 +746,14 @@ export const updateApplicantTags = async (userId, applicantTags) => {
     .doc(userId)
     .update({ applicantTags })
 }
+
+export const updateReleaseLiabilityCheck = async (userId, releaseLiabilityStatus, hackathon) => {
+  return db
+    .collection('Hackathons')
+    .doc(hackathon || HackerEvaluationHackathon)
+    .collection('Applicants')
+    .doc(userId)
+    .update({
+      'basicInfo.releaseLiabilityCheck': releaseLiabilityStatus,
+    })
+}

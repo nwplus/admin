@@ -747,13 +747,13 @@ export const updateApplicantTags = async (userId, applicantTags) => {
     .update({ applicantTags })
 }
 
-export const updateReleaseLiabilityCheck = async (userId, releaseLiabilityStatus, hackathon) => {
+export const updateWaiver = async (userId, waiver, status, hackathon) => {
   return db
     .collection('Hackathons')
     .doc(hackathon || HackerEvaluationHackathon)
     .collection('Applicants')
     .doc(userId)
     .update({
-      'basicInfo.releaseLiabilityCheck': releaseLiabilityStatus,
+      [`basicInfo.${waiver}`]: status,
     })
 }

@@ -9,6 +9,7 @@ import { Title5 } from '../Typography'
 import Button from '../button'
 import AddTagButton from './AddTagButton'
 import ScoreInput from './scoreInput'
+import Modal from '../Assessment/Modal'
 
 const Container = styled.div`
   ${p => !p.shouldDisplay && 'display: none'};
@@ -35,7 +36,28 @@ const StyledButton = styled(Button)`
   margin-top: 12px;
 `
 
-// const Label = styled.p`
+const StyledModal = styled(Modal)`
+  height: auto !important;
+  border-radius: 10px;
+`
+const ModalContent = styled.div`
+  padding: 20px;
+  text-align: center;
+`
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+`
+
+const ModalButton = styled(Button)`
+  margin: 10px;
+  background: ${props => (props.variant === 'no' ? COLOR.RED : COLOR.GREEN)};
+  color: white;
+
+  // const Label = styled.p
+`
 //   color: ${ASSESSMENT_COLOR.LIGHT_GRAY};
 // `;
 
@@ -43,6 +65,9 @@ export default function Scoring({ shouldDisplay, applicant }) {
   const [scores, setScores] = useState({})
   const [totalScore, setTotalScore] = useState(null)
   const [comment, setComment] = useState('')
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [currentQuestion, setCurrentQuestion] = useState(null)
+  const [previousEditor, setPreviousEditor] = useState('')
 
   const { user } = useContext(AuthContext)
 
@@ -85,6 +110,17 @@ export default function Scoring({ shouldDisplay, applicant }) {
       default:
         break
     }
+
+    if (scores[field]?.lastUpdatedBy && user.email !== scores[field]?.lastUpdatedBy) {
+      setCurrentQuestion({ field, score })
+      setPreviousEditor(scores[field]?.lastUpdatedBy)
+      setIsModalOpen(true)
+    } else {
+      updateScore(field, score)
+    }
+  }
+
+  const updateScore = (field, score) => {
     const newScores = { ...scores }
     newScores[field] = {
       ...newScores[field],
@@ -93,6 +129,17 @@ export default function Scoring({ shouldDisplay, applicant }) {
     newScores.BonusScore = qualifyingBonus()
     setScores(newScores)
     setTotalScore(calculateTotalScore(newScores))
+  }
+
+  const handleYesClick = () => {
+    setIsModalOpen(false)
+    updateScore(currentQuestion.field, currentQuestion.score)
+    setCurrentQuestion(null)
+  }
+
+  const handleNoClick = () => {
+    setIsModalOpen(false)
+    setCurrentQuestion(null)
   }
 
   // if none of the required fields are in scores or if scores doesnt even exist, set APPLICATION_STATUS.ungraded.text
@@ -196,6 +243,26 @@ export default function Scoring({ shouldDisplay, applicant }) {
           Save
         </StyledButton>
       </BottomSection>
+      {isModalOpen && (
+        <StyledModal setShowing={setIsModalOpen}>
+          <ModalContent>
+            <p>
+              ‼️ <strong>You are about to modify an existing score from {previousEditor}</strong>
+            </p>
+            <p>
+              Changing this score will impact the sample size of corresponding z-scores. <strong>Are you sure?</strong>
+            </p>
+            <ButtonContainer>
+              <ModalButton variant="no" onClick={handleNoClick}>
+                No
+              </ModalButton>
+              <ModalButton variant="yes" onClick={handleYesClick}>
+                Yes
+              </ModalButton>
+            </ButtonContainer>
+          </ModalContent>
+        </StyledModal>
+      )}
     </Container>
   )
 }

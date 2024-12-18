@@ -110,7 +110,8 @@ export default function Scoring({ shouldDisplay, applicant }) {
 
     if (filledFields.length === 0) {
       return APPLICATION_STATUS.ungraded.text
-    } else if (filledFields.length < requiredFields.length) {
+    }
+    if (filledFields.length < requiredFields.length) {
       return APPLICATION_STATUS.gradinginprog.text
     }
     return APPLICATION_STATUS.scored.text

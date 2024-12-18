@@ -63,7 +63,7 @@ export default function Status({ hackathons }) {
   const [covidWaiverStatus, setCovidWaiverStatus] = useState(false)
   const [mediaConsentStatus, setMediaConsentStatus] = useState(false)
   const [safewalkSelectStatus, setsafewalkSelectStatus] = useState('safewalkNo')
-  const [MentorshipSelectStatus, setMentorshipSelectStatus] = useState('nwMentorshipNo')
+  const [mentorshipSelectStatus, setMentorshipSelectStatus] = useState('nwMentorshipNo')
 
   const validateInputs = () => {
     if (!emails) {
@@ -114,7 +114,7 @@ export default function Status({ hackathons }) {
         await updateWaiver(userId, 'covidWaiverCheck', covidWaiverStatus, hackathonSelected)
         await updateWaiver(userId, 'mediaConsentCheck', mediaConsentStatus, hackathonSelected)
         await updateWaiver(userId, 'safewalkSelect', safewalkSelectStatus, hackathonSelected)
-        await updateWaiver(userId, 'nwMentorshipSelect', MentorshipSelectStatus, hackathonSelected)
+        await updateWaiver(userId, 'nwMentorshipSelect', mentorshipSelectStatus, hackathonSelected)
       }
     }
 
@@ -188,7 +188,7 @@ export default function Status({ hackathons }) {
               },
               {
                 label: 'nwMentorship',
-                checked: MentorshipSelectStatus === 'nwMentorshipYes',
+                checked: mentorshipSelectStatus === 'nwMentorshipYes',
                 onClick: () =>
                   setMentorshipSelectStatus(prev =>
                     prev === 'nwMentorshipYes' ? 'nwMentorshipNo' : 'nwMentorshipYes'

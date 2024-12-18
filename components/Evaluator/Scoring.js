@@ -95,6 +95,28 @@ export default function Scoring({ shouldDisplay, applicant }) {
     setTotalScore(calculateTotalScore(newScores))
   }
 
+  // if none of the required fields are in scores or if scores doesnt even exist, set APPLICATION_STATUS.ungraded.text
+  // if one of the reuiqred fields are in scores and not all, set APPLICATION_STATUS.gradinginprog.text
+  // if all required fields are in, set APPLICATION_STATUS.scored.text
+  const getStatus = scores => {
+    // TODO: UPDATE REQUIRED FIELDS PER HACKATHON
+    const requiredFields = ['ResumeScore', 'ResponseOneScore', 'ResponseTwoScore', 'ResponseThreeScore']
+
+    if (!scores) {
+      return APPLICATION_STATUS.ungraded.text
+    }
+
+    const filledFields = requiredFields.filter(field => scores[field] !== null && scores[field] !== undefined)
+
+    if (filledFields.length === 0) {
+      return APPLICATION_STATUS.ungraded.text
+    } else if (filledFields.length < requiredFields.length) {
+      return APPLICATION_STATUS.gradinginprog.text
+    } else {
+      return APPLICATION_STATUS.scored.text
+    }
+  }
+
   const handleSave = async () => {
     const updatedScores = await updateApplicantScore(
       applicant._id,
@@ -103,7 +125,9 @@ export default function Scoring({ shouldDisplay, applicant }) {
       comment,
       user.email
     )
-    await updateApplicantStatus(applicant._id, APPLICATION_STATUS.scored.text)
+    // checks if all fields have scores and update accordingly
+    const newStatus = getStatus(updatedScores)
+    await updateApplicantStatus(applicant._id, newStatus)
     setScores(updatedScores)
   }
 

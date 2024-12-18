@@ -59,6 +59,8 @@ const StyledTag = styled.div`
       ? `background: ${ASSESSMENT_COLOR.YELLOW};`
       : p.status === APPLICATION_STATUS.scored.text
       ? `background: ${ASSESSMENT_COLOR.BLUE};`
+      : p.status === APPLICATION_STATUS.gradinginprog.text
+      ? `background: ${ASSESSMENT_COLOR.DARK_GRAY};`
       : `background: ${ASSESSMENT_COLOR.RED};`}
   padding: 0px 5px;
   border-radius: 4px;
@@ -93,8 +95,11 @@ export default function HackerEntry({
         return <StyledTag status={status}>{APPLICATION_STATUS.waitlisted.displayText}</StyledTag>
       case APPLICATION_STATUS.rejected.text:
         return <StyledTag status={status}>{APPLICATION_STATUS.rejected.displayText}</StyledTag>
+      case APPLICATION_STATUS.gradinginprog.text:
+        return <StyledTag status={status}>{APPLICATION_STATUS.gradinginprog.displayText}</StyledTag>
+      case APPLICATION_STATUS.ungraded.text:
       default:
-        return <StyledTag status={status}>Ungraded</StyledTag>
+        return <StyledTag status={status}>{APPLICATION_STATUS.ungraded.displayText}</StyledTag>
     }
   }
 
@@ -107,7 +112,7 @@ export default function HackerEntry({
           Applicant {index}
         </HackerName>
         <HackerInfoText>
-          Score: {score?.totalScore ?? '?'}/{MAX_SCORE}
+          Score: {score?.totalScore !== undefined ? `${score.totalScore}/${MAX_SCORE}` : 'n/a'}
         </HackerInfoText>
       </StyledInfoContainer>
       {getStyleTag()}

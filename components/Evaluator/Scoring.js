@@ -98,7 +98,7 @@ export default function Scoring({ shouldDisplay, applicant }) {
   // if none of the required fields are in scores or if scores doesnt even exist, set APPLICATION_STATUS.ungraded.text
   // if one of the reuiqred fields are in scores and not all, set APPLICATION_STATUS.gradinginprog.text
   // if all required fields are in, set APPLICATION_STATUS.scored.text
-  const getStatus = scores => {
+  const getStatus = () => {
     // TODO: UPDATE REQUIRED FIELDS PER HACKATHON
     const requiredFields = ['ResumeScore', 'ResponseOneScore', 'ResponseTwoScore', 'ResponseThreeScore']
 
@@ -112,9 +112,8 @@ export default function Scoring({ shouldDisplay, applicant }) {
       return APPLICATION_STATUS.ungraded.text
     } else if (filledFields.length < requiredFields.length) {
       return APPLICATION_STATUS.gradinginprog.text
-    } else {
-      return APPLICATION_STATUS.scored.text
     }
+    return APPLICATION_STATUS.scored.text
   }
 
   const handleSave = async () => {

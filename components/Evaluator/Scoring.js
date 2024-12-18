@@ -87,6 +87,17 @@ export default function Scoring({ shouldDisplay, applicant }) {
     //   : 0;
   }
 
+  const updateScore = (field, score) => {
+    const newScores = { ...scores }
+    newScores[field] = {
+      ...newScores[field],
+      score,
+    }
+    newScores.BonusScore = qualifyingBonus()
+    setScores(newScores)
+    setTotalScore(calculateTotalScore(newScores))
+  }
+
   // TODO: For next hackathon, change to camelCase.
   const handleClick = (score, label) => {
     // Switch to whatever the field is in Firebase
@@ -118,17 +129,6 @@ export default function Scoring({ shouldDisplay, applicant }) {
     } else {
       updateScore(field, score)
     }
-  }
-
-  const updateScore = (field, score) => {
-    const newScores = { ...scores }
-    newScores[field] = {
-      ...newScores[field],
-      score,
-    }
-    newScores.BonusScore = qualifyingBonus()
-    setScores(newScores)
-    setTotalScore(calculateTotalScore(newScores))
   }
 
   const handleYesClick = () => {

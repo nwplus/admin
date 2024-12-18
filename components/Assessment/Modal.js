@@ -25,7 +25,7 @@ const ModalDiv = styled.div`
   align-items: center;
 `
 
-export default function Modal({ children, setShowing }) {
+export default function Modal({ children, setShowing, className }) {
   const backgroundRef = useRef()
   useEffect(() => {
     const escFunction = ({ keyCode }) => {
@@ -47,7 +47,7 @@ export default function Modal({ children, setShowing }) {
         }
       }}
     >
-      <ModalDiv>{children}</ModalDiv>
+      <ModalDiv className={className}>{children}</ModalDiv>
     </GreyDiv>
   )
 }

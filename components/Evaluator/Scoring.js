@@ -257,7 +257,7 @@ export default function Scoring({ shouldDisplay, applicant }) {
       <BottomSection>
         <AddTagButton allTags={TAGS} hacker={applicant} />
         Total Score: {totalScore} / {MAX_SCORE}
-        <br></br>
+        <br />
         {getTotalZScore() !== undefined && <strong>Total Z-score: {getTotalZScore()}</strong>}
         <StyledButton color={COLOR.MIDNIGHT_PURPLE_LIGHT} contentColor={COLOR.WHITE} onClick={handleSave}>
           Save

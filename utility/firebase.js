@@ -675,7 +675,7 @@ export const getApplicantsToAccept = async (
         ResponseOneScore?.normalizedScore,
         ResponseTwoScore?.normalizedScore,
         ResponseThreeScore?.normalizedScore,
-      ].reduce((acc, score) => acc + (score !== undefined ? score : 0), 0)
+      ].reduce((acc, normalizedScore) => acc + (normalizedScore !== undefined ? normalizedScore : 0), 0)
 
       if (zscore !== undefined && totalZScore < zscore) return false
 

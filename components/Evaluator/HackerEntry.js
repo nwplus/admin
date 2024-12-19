@@ -70,6 +70,11 @@ const StyledTag = styled.div`
   justify-content: center;
 `
 
+const ScoreContainer = styled.div`
+  display: flex;
+  gap: 10px;
+`
+
 export default function HackerEntry({
   index,
   // firstName,
@@ -103,6 +108,24 @@ export default function HackerEntry({
     }
   }
 
+  const getTotalZScore = () => {
+    const { NumExperiences, ResponseOneScore, ResponseTwoScore, ResponseThreeScore } = score?.scores || {}
+    if (
+      NumExperiences?.normalizedScore !== undefined &&
+      ResponseOneScore?.normalizedScore !== undefined &&
+      ResponseTwoScore?.normalizedScore !== undefined &&
+      ResponseThreeScore?.normalizedScore !== undefined
+    ) {
+      return (
+        NumExperiences.normalizedScore +
+        ResponseOneScore.normalizedScore +
+        ResponseTwoScore.normalizedScore +
+        ResponseThreeScore.normalizedScore
+      )
+    }
+    return undefined
+  }
+
   return (
     <StyledHackerEntryDiv onClick={() => selectHacker(id)} selected={isSelected}>
       <HackerIndex>{index}</HackerIndex>
@@ -111,9 +134,14 @@ export default function HackerEntry({
           {/* {firstName} {lastName} */}
           Applicant {index}
         </HackerName>
-        <HackerInfoText>
-          Score: {score?.totalScore !== undefined ? `${score.totalScore}/${MAX_SCORE}` : 'n/a'}
-        </HackerInfoText>
+        <ScoreContainer>
+          <HackerInfoText>
+            Score: {score?.totalScore !== undefined ? `${score.totalScore}/${MAX_SCORE}` : 'n/a'}
+          </HackerInfoText>
+          <HackerInfoText>
+            {getTotalZScore() !== undefined && <strong>z: {getTotalZScore().toFixed(2)}</strong>}
+          </HackerInfoText>
+        </ScoreContainer>
       </StyledInfoContainer>
       {getStyleTag()}
     </StyledHackerEntryDiv>

@@ -178,6 +178,24 @@ export default function Scoring({ shouldDisplay, applicant }) {
     setScores(updatedScores)
   }
 
+  const getTotalZScore = () => {
+    const { NumExperiences, ResponseOneScore, ResponseTwoScore, ResponseThreeScore } = scores || {}
+    if (
+      NumExperiences?.normalizedScore !== undefined &&
+      ResponseOneScore?.normalizedScore !== undefined &&
+      ResponseTwoScore?.normalizedScore !== undefined &&
+      ResponseThreeScore?.normalizedScore !== undefined
+    ) {
+      return (
+        NumExperiences.normalizedScore +
+        ResponseOneScore.normalizedScore +
+        ResponseTwoScore.normalizedScore +
+        ResponseThreeScore.normalizedScore
+      ).toFixed(2)
+    }
+    return undefined
+  }
+
   return (
     <Container shouldDisplay={shouldDisplay}>
       <Title5 color={COLOR.MIDNIGHT_PURPLE}>Scoring</Title5>
@@ -239,6 +257,8 @@ export default function Scoring({ shouldDisplay, applicant }) {
       <BottomSection>
         <AddTagButton allTags={TAGS} hacker={applicant} />
         Total Score: {totalScore} / {MAX_SCORE}
+        <br></br>
+        {getTotalZScore() !== undefined && <strong>Total Z-score: {getTotalZScore()}</strong>}
         <StyledButton color={COLOR.MIDNIGHT_PURPLE_LIGHT} contentColor={COLOR.WHITE} onClick={handleSave}>
           Save
         </StyledButton>

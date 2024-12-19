@@ -5,7 +5,9 @@ const GreyDiv = styled.div`
   height: 100vh;
   width: 100vw;
   background: rgba(0, 0, 0, 0.4);
-  position: absolute;
+  top: 0;
+  left: 0;
+  position: fixed;
   z-index: 99;
 `
 
@@ -13,7 +15,7 @@ const ModalDiv = styled.div`
   width: 400px;
   height: 70%;
   overflow-y: auto;
-  position: absolute;
+  position: fixed;
   left: 50%;
   top: 25%;
   background-color: white;
@@ -25,7 +27,7 @@ const ModalDiv = styled.div`
   align-items: center;
 `
 
-export default function Modal({ children, setShowing }) {
+export default function Modal({ children, setShowing, className }) {
   const backgroundRef = useRef()
   useEffect(() => {
     const escFunction = ({ keyCode }) => {
@@ -47,7 +49,7 @@ export default function Modal({ children, setShowing }) {
         }
       }}
     >
-      <ModalDiv>{children}</ModalDiv>
+      <ModalDiv className={className}>{children}</ModalDiv>
     </GreyDiv>
   )
 }

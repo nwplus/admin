@@ -648,6 +648,7 @@ export const getAllApplicants = async callback => {
 
 export const getApplicantsToAccept = async (
   score,
+  zscore,
   numHackathonsMin,
   numHackathonsMax,
   yearLevelsSelected,
@@ -666,6 +667,17 @@ export const getApplicantsToAccept = async (
 
       // score
       if (score !== undefined && appData.score.totalScore < score) return false
+
+      // zscore
+      const { NumExperiences, ResponseOneScore, ResponseTwoScore, ResponseThreeScore } = appData.score.scores || {}
+      const totalZScore = [
+        NumExperiences?.normalizedScore,
+        ResponseOneScore?.normalizedScore,
+        ResponseTwoScore?.normalizedScore,
+        ResponseThreeScore?.normalizedScore,
+      ].reduce((acc, score) => acc + (score !== undefined ? score : 0), 0)
+
+      if (zscore !== undefined && totalZScore < zscore) return false
 
       // range of hackathons attended
       const numHackathonsAttended = appData.skills?.numHackathonsAttended

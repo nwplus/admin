@@ -69,6 +69,7 @@ const acceptApplicant = async applicant => {
 export default function AcceptingModal({ setShowing }) {
   const [totalApplicants, setTotalApplicants] = useState(0)
   const [score, setScore] = useState(undefined)
+  const [zscore, setZScore] = useState(undefined)
   const [numHackathonsMin, setNumHackathonsMin] = useState(undefined)
   const [numHackathonsMax, setNumHackathonsMax] = useState(undefined)
   const [yearLevelOptions, setYearLevelOptions] = useState([])
@@ -82,6 +83,7 @@ export default function AcceptingModal({ setShowing }) {
   const getApplicants = async () => {
     const apps = await getApplicantsToAccept(
       score,
+      zscore,
       numHackathonsMin,
       numHackathonsMax,
       yearLevelsSelected,
@@ -137,6 +139,15 @@ export default function AcceptingModal({ setShowing }) {
           }}
           value={score ?? ''}
           placeholder="minimum score"
+        />
+        <TotalApplicantsP>Minimum z-score</TotalApplicantsP>
+        <ScoreInput
+          onChange={e => {
+            // eslint-disable-next-line no-restricted-globals
+            if (!isNaN(e.target.value)) setZScore(e.target.value)
+          }}
+          value={zscore ?? ''}
+          placeholder="minimum z-score"
         />
         <TotalApplicantsP>Number of Hackathons Attended</TotalApplicantsP>
         <RangeContainer>

@@ -29,13 +29,12 @@ export const db = firebase.firestore()
 export const storage = firebase.storage()
 export const { firestore } = firebase
 
-const webCollection = 'Website_content'
 const faqCollection = FAQ
 const Hackathons = 'Hackathons'
 const InternalWebsitesCollection = 'InternalWebsites'
 const CMSCollection = 'CMS'
 const PortalCollection = 'Portal'
-const HackerEvaluationHackathon = 'nwHacks2025'
+export const HackerEvaluationHackathon = 'nwHacks2025'
 
 export const getTimestamp = () => {
   return firebase.firestore.Timestamp.now()
@@ -52,32 +51,6 @@ export const formatDate = (date, isGMT = false) => {
   }
   // convert to RFC3339 then to yyyy-mm-dd hh:mm
   return new Date(date - timeZoneOffset).toISOString().slice(0, -1).slice(0, -7).replace('T', ' ')
-}
-
-export const getDocument = async (hackathon, collection) => {
-  if (collection === hackathon) {
-    const ref = db.collection(webCollection).doc(hackathon)
-    const data = await ref.get()
-    return data.data()
-  }
-  const ref = db.collection(webCollection).doc(hackathon).collection(collection)
-  return (await ref.get()).docs.map(doc => ({
-    id: doc.id,
-    data: doc.data(),
-  }))
-}
-
-export const updateDocument = (hackathon, collection, docId, object) => {
-  db.collection(webCollection).doc(hackathon).collection(collection).doc(docId).update(object)
-}
-
-export const addDocument = async (hackathon, collection, object) => {
-  const ref = await db.collection(webCollection).doc(hackathon).collection(collection).add(object)
-  return ref.id
-}
-
-export const deleteDocument = async (hackathon, collection, docId) => {
-  await db.collection(webCollection).doc(hackathon).collection(collection).doc(docId).delete()
 }
 
 export const getHackathons = async () => {
@@ -904,6 +877,22 @@ export const updateApplicantTags = async (userId, applicantTags) => {
     .collection('Applicants')
     .doc(userId)
     .update({ applicantTags })
+}
+
+export const getAllGradedApplicants = async callback => {
+  return db
+    .collection('Hackathons')
+    .doc(HackerEvaluationHackathon)
+    .collection('Applicants')
+    .where('status.applicationStatus', '==', 'scored')
+    .onSnapshot(snap => {
+      callback(
+        snap.docs
+          .map(doc => doc.data())
+          .filter(a => a.basicInfo.identifyAsUnderrepresented !== 'no') // cmd-f filter; remove after
+          .sort((a, b) => a.submission?.lastUpdated - b.submission?.lastUpdated)
+      )
+    })
 }
 
 // hacker application questions specific

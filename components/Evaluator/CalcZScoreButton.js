@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { COLOR } from '../../constants'
 import Button from '../button'
 import Modal from '../Assessment/Modal'
+import { calculateNormalizedScores } from '../../utility/normalization'
 
 const StyledButton = styled(Button)`
   background: ${COLOR.MIDNIGHT_PURPLE_LIGHT};
@@ -41,6 +42,7 @@ export default function CalcZScoreButton() {
 
   const handleYesClick = () => {
     // TODO: logic to calculate z-score goes in here?
+    calculateNormalizedScores()
     setIsModalOpen(false)
   }
 

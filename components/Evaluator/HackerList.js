@@ -167,9 +167,9 @@ export default function HackerList({ applicants, selectedApplicant, setSelectedA
         ) : (
           <>
             <Title5 color={COLOR.MIDNIGHT_PURPLE}>Applicant List</Title5>
-            <button onClick={calculateNormalizedScores} type="button">
+            {/* <button onClick={calculateNormalizedScores} type="button">
               Transform Scores
-            </button>
+            </button> */}
             <ButtonContainer>
               <StyledIcon icon="search" onClick={() => setSearchActive(true)} />
               <StyledIcon

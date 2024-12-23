@@ -7,7 +7,7 @@ import Icon from '../Icon'
 import { Title5 } from '../Typography'
 import Input from '../input'
 import HackerEntry from './HackerEntry'
-import { calculateNormalizedScores } from '../../utility/normalization'
+// import { calculateNormalizedScores } from '../../utility/normalization'
 
 const Container = styled.div`
   height: 60%;

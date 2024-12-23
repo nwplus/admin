@@ -41,7 +41,6 @@ export default function CalcZScoreButton() {
   }
 
   const handleYesClick = () => {
-    // TODO: logic to calculate z-score goes in here?
     calculateNormalizedScores()
     setIsModalOpen(false)
   }

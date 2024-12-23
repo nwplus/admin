@@ -1,4 +1,3 @@
-import moment from 'moment'
 import { useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { APPLICATION_STATUS, COLOR, MAX_SCORE, SCORING, TAGS } from '../../constants'
@@ -10,6 +9,7 @@ import { Title5 } from '../Typography'
 import Button from '../button'
 import AddTagButton from './AddTagButton'
 import ScoreInput from './scoreInput'
+import Modal from '../Assessment/Modal'
 
 const Container = styled.div`
   ${p => !p.shouldDisplay && 'display: none'};
@@ -36,12 +36,28 @@ const StyledButton = styled(Button)`
   margin-top: 12px;
 `
 
-const SmallText = styled.div`
-  font-size: 0.8em;
-  color: ${COLOR.GREY_500};
+const StyledModal = styled(Modal)`
+  height: auto !important;
+  border-radius: 10px;
+`
+const ModalContent = styled.div`
+  padding: 20px;
+  text-align: center;
 `
 
-// const Label = styled.p`
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+`
+
+const ModalButton = styled(Button)`
+  margin: 10px;
+  background: ${props => (props.variant === 'no' ? COLOR.RED : COLOR.GREEN)};
+  color: white;
+
+  // const Label = styled.p
+`
 //   color: ${ASSESSMENT_COLOR.LIGHT_GRAY};
 // `;
 
@@ -49,6 +65,9 @@ export default function Scoring({ shouldDisplay, applicant }) {
   const [scores, setScores] = useState({})
   const [totalScore, setTotalScore] = useState(null)
   const [comment, setComment] = useState('')
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [currentQuestion, setCurrentQuestion] = useState(null)
+  const [previousEditor, setPreviousEditor] = useState('')
 
   const { user } = useContext(AuthContext)
 
@@ -66,6 +85,17 @@ export default function Scoring({ shouldDisplay, applicant }) {
     //   ? BONUS_SCORING.FIRST_TIME_HACKER.value *
     //       BONUS_SCORING.FIRST_TIME_HACKER.weight
     //   : 0;
+  }
+
+  const updateScore = (field, score) => {
+    const newScores = { ...scores }
+    newScores[field] = {
+      ...newScores[field],
+      score,
+    }
+    newScores.BonusScore = qualifyingBonus()
+    setScores(newScores)
+    setTotalScore(calculateTotalScore(newScores))
   }
 
   // TODO: For next hackathon, change to camelCase.
@@ -91,16 +121,79 @@ export default function Scoring({ shouldDisplay, applicant }) {
       default:
         break
     }
-    const newScores = { ...scores }
-    newScores[field] = score
-    newScores.BonusScore = qualifyingBonus()
-    setScores(newScores)
-    setTotalScore(calculateTotalScore(newScores))
+
+    if (scores[field]?.lastUpdatedBy && user.email !== scores[field]?.lastUpdatedBy) {
+      setCurrentQuestion({ field, score })
+      setPreviousEditor(scores[field]?.lastUpdatedBy)
+      setIsModalOpen(true)
+    } else {
+      updateScore(field, score)
+    }
+  }
+
+  const handleYesClick = () => {
+    setIsModalOpen(false)
+    updateScore(currentQuestion.field, currentQuestion.score)
+    setCurrentQuestion(null)
+  }
+
+  const handleNoClick = () => {
+    setIsModalOpen(false)
+    setCurrentQuestion(null)
+  }
+
+  // if none of the required fields are in scores or if scores doesnt even exist, set APPLICATION_STATUS.ungraded.text
+  // if one of the reuiqred fields are in scores and not all, set APPLICATION_STATUS.gradinginprog.text
+  // if all required fields are in, set APPLICATION_STATUS.scored.text
+  const getStatus = () => {
+    // TODO: UPDATE REQUIRED FIELDS PER HACKATHON
+    const requiredFields = ['ResumeScore', 'ResponseOneScore', 'ResponseTwoScore', 'ResponseThreeScore']
+
+    if (!scores) {
+      return APPLICATION_STATUS.ungraded.text
+    }
+
+    const filledFields = requiredFields.filter(field => scores[field] !== null && scores[field] !== undefined)
+
+    if (filledFields.length === 0) {
+      return APPLICATION_STATUS.ungraded.text
+    }
+    if (filledFields.length < requiredFields.length) {
+      return APPLICATION_STATUS.gradinginprog.text
+    }
+    return APPLICATION_STATUS.scored.text
   }
 
   const handleSave = async () => {
-    await updateApplicantScore(applicant._id, scores, comment, user.email)
-    await updateApplicantStatus(applicant._id, APPLICATION_STATUS.scored.text)
+    const updatedScores = await updateApplicantScore(
+      applicant._id,
+      scores,
+      applicant?.score?.scores,
+      comment,
+      user.email
+    )
+    // checks if all fields have scores and update accordingly
+    const newStatus = getStatus(updatedScores)
+    await updateApplicantStatus(applicant._id, newStatus)
+    setScores(updatedScores)
+  }
+
+  const getTotalZScore = () => {
+    const { NumExperiences, ResponseOneScore, ResponseTwoScore, ResponseThreeScore } = scores || {}
+    if (
+      NumExperiences?.normalizedScore !== undefined &&
+      ResponseOneScore?.normalizedScore !== undefined &&
+      ResponseTwoScore?.normalizedScore !== undefined &&
+      ResponseThreeScore?.normalizedScore !== undefined
+    ) {
+      return (
+        NumExperiences.normalizedScore +
+        ResponseOneScore.normalizedScore +
+        ResponseTwoScore.normalizedScore +
+        ResponseThreeScore.normalizedScore
+      ).toFixed(2)
+    }
+    return undefined
   }
 
   return (
@@ -164,16 +257,32 @@ export default function Scoring({ shouldDisplay, applicant }) {
       <BottomSection>
         <AddTagButton allTags={TAGS} hacker={applicant} />
         Total Score: {totalScore} / {MAX_SCORE}
-        {applicant && (
-          <SmallText>
-            Last updated by: {applicant?.score?.lastUpdatedBy} at{' '}
-            {moment(applicant?.score?.lastUpdated.toDate()).format('MMM Do, YYYY h:mm:ss A')}
-          </SmallText>
-        )}
+        <br />
+        {getTotalZScore() !== undefined && <strong>Total Z-score: {getTotalZScore()}</strong>}
         <StyledButton color={COLOR.MIDNIGHT_PURPLE_LIGHT} contentColor={COLOR.WHITE} onClick={handleSave}>
           Save
         </StyledButton>
       </BottomSection>
+      {isModalOpen && (
+        <StyledModal setShowing={setIsModalOpen}>
+          <ModalContent>
+            <p>
+              ‼️ <strong>You are about to modify an existing score from {previousEditor}</strong>
+            </p>
+            <p>
+              Changing this score will impact the sample size of corresponding z-scores. <strong>Are you sure?</strong>
+            </p>
+            <ButtonContainer>
+              <ModalButton variant="no" onClick={handleNoClick}>
+                No
+              </ModalButton>
+              <ModalButton variant="yes" onClick={handleYesClick}>
+                Yes
+              </ModalButton>
+            </ButtonContainer>
+          </ModalContent>
+        </StyledModal>
+      )}
     </Container>
   )
 }

@@ -20,19 +20,21 @@ if (!firebase.apps.length) {
     messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   }
   firebase.initializeApp(config)
+  firebase.firestore().settings({
+    ignoreUndefinedProperties: true,
+  })
 }
 
 export const db = firebase.firestore()
 export const storage = firebase.storage()
 export const { firestore } = firebase
 
-const webCollection = 'Website_content'
 const faqCollection = FAQ
 const Hackathons = 'Hackathons'
 const InternalWebsitesCollection = 'InternalWebsites'
 const CMSCollection = 'CMS'
 const PortalCollection = 'Portal'
-const HackerEvaluationHackathon = 'nwHacks2025'
+export const HackerEvaluationHackathon = 'nwHacks2025'
 
 export const getTimestamp = () => {
   return firebase.firestore.Timestamp.now()
@@ -49,32 +51,6 @@ export const formatDate = (date, isGMT = false) => {
   }
   // convert to RFC3339 then to yyyy-mm-dd hh:mm
   return new Date(date - timeZoneOffset).toISOString().slice(0, -1).slice(0, -7).replace('T', ' ')
-}
-
-export const getDocument = async (hackathon, collection) => {
-  if (collection === hackathon) {
-    const ref = db.collection(webCollection).doc(hackathon)
-    const data = await ref.get()
-    return data.data()
-  }
-  const ref = db.collection(webCollection).doc(hackathon).collection(collection)
-  return (await ref.get()).docs.map(doc => ({
-    id: doc.id,
-    data: doc.data(),
-  }))
-}
-
-export const updateDocument = (hackathon, collection, docId, object) => {
-  db.collection(webCollection).doc(hackathon).collection(collection).doc(docId).update(object)
-}
-
-export const addDocument = async (hackathon, collection, object) => {
-  const ref = await db.collection(webCollection).doc(hackathon).collection(collection).add(object)
-  return ref.id
-}
-
-export const deleteDocument = async (hackathon, collection, docId) => {
-  await db.collection(webCollection).doc(hackathon).collection(collection).doc(docId).delete()
 }
 
 export const getHackathons = async () => {
@@ -645,6 +621,7 @@ export const getAllApplicants = async callback => {
 
 export const getApplicantsToAccept = async (
   score,
+  zscore,
   numHackathonsMin,
   numHackathonsMax,
   yearLevelsSelected,
@@ -663,6 +640,17 @@ export const getApplicantsToAccept = async (
 
       // score
       if (score !== undefined && appData.score.totalScore < score) return false
+
+      // zscore
+      const { NumExperiences, ResponseOneScore, ResponseTwoScore, ResponseThreeScore } = appData.score.scores || {}
+      const totalZScore = [
+        NumExperiences?.normalizedScore,
+        ResponseOneScore?.normalizedScore,
+        ResponseTwoScore?.normalizedScore,
+        ResponseThreeScore?.normalizedScore,
+      ].reduce((acc, normalizedScore) => acc + (normalizedScore !== undefined ? normalizedScore : 0), 0)
+
+      if (zscore !== undefined && totalZScore < zscore) return false
 
       // range of hackathons attended
       const numHackathonsAttended = appData.skills?.numHackathonsAttended
@@ -821,21 +809,33 @@ export const getAllResumes = async () => {
   download(finishedZip, 'Resumes', 'application/zip')
 }
 
-export const updateApplicantScore = async (applicantID, scores, comment, adminEmail) => {
-  const totalScore = scores ? calculateTotalScore(scores) : null
+export const updateApplicantScore = async (applicantID, newScores, oldScores, comment, adminEmail) => {
+  const totalScore = newScores ? calculateTotalScore(newScores) : null
+  const scoresWithUpdatedTimes = Object.entries(newScores).reduce((prev, [question, scoreObj]) => {
+    const scoreChanged = oldScores?.[question]?.score !== scoreObj.score
+    return {
+      ...prev,
+      [question]: {
+        ...scoreObj,
+        lastUpdated: scoreChanged ? getTimestamp() : oldScores?.[question]?.lastUpdated,
+        lastUpdatedBy: scoreChanged ? adminEmail : oldScores?.[question]?.lastUpdatedBy,
+      },
+    }
+  }, {})
+
   db.collection('Hackathons')
     .doc(HackerEvaluationHackathon)
     .collection('Applicants')
     .doc(applicantID)
     .update({
       score: {
-        scores,
+        scores: scoresWithUpdatedTimes,
         totalScore,
         comment,
-        lastUpdated: firebase.firestore.Timestamp.now(),
-        lastUpdatedBy: adminEmail,
       },
     })
+
+  return scoresWithUpdatedTimes
 }
 
 export const updateApplicantStatus = async (userId, applicationStatus, hackathon) => {
@@ -877,6 +877,22 @@ export const updateApplicantTags = async (userId, applicantTags) => {
     .collection('Applicants')
     .doc(userId)
     .update({ applicantTags })
+}
+
+export const getAllGradedApplicants = async callback => {
+  return db
+    .collection('Hackathons')
+    .doc(HackerEvaluationHackathon)
+    .collection('Applicants')
+    .where('status.applicationStatus', '==', 'scored')
+    .onSnapshot(snap => {
+      callback(
+        snap.docs
+          .map(doc => doc.data())
+          .filter(a => a.basicInfo.identifyAsUnderrepresented !== 'no') // cmd-f filter; remove after
+          .sort((a, b) => a.submission?.lastUpdated - b.submission?.lastUpdated)
+      )
+    })
 }
 
 // hacker application questions specific

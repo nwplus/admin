@@ -134,6 +134,18 @@ export const APPLICATION_STATUS = {
     text: 'rejected',
     displayText: 'Rejected',
   },
+  gradinginprog: {
+    color: ASSESSMENT_COLOR.DARK_GRAY,
+    textColor: 'white',
+    text: 'gradinginprog',
+    displayText: 'In progress',
+  },
+  ungraded: {
+    color: ASSESSMENT_COLOR.RED,
+    textColor: 'white',
+    text: 'ungraded',
+    displayText: 'Ungraded',
+  },
   scored: {
     color: ASSESSMENT_COLOR.BLUE,
     textColor: 'white',

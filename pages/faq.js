@@ -112,7 +112,6 @@ export default function Faq({ hackathons }) {
   useEffect(() => {
     // eslint-disable-next-line no-alert
     if (alertMsg.length > 0) {
-      console.log(alertMsg)
       alert(alertMsg)
     }
   }, [alertMsg])

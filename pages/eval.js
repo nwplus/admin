@@ -6,6 +6,7 @@ import Rubric from '../components/Evaluator/Rubric'
 import Scoring from '../components/Evaluator/Scoring'
 import Page from '../components/page'
 import { getAllApplicants, getHackathons } from '../utility/firebase'
+import CalcZScoreButton from '../components/Evaluator/CalcZScoreButton'
 
 const Container = styled.div`
   display: grid;
@@ -45,7 +46,8 @@ export default function Eval({ hackathons }) {
   return (
     <Page hackathons={hackathons} currentPath="eval" isFullscreen>
       <Container>
-        <Column items={2}>
+        <Column items={3}>
+          <CalcZScoreButton />
           <HackerList
             applicants={applicants}
             selectedApplicant={selectedApplicant}

@@ -44,7 +44,6 @@ export default function ApplicantResponse({ shouldDisplay, hacker }) {
   const [resumeURL, setResumeURL] = useState(null)
   // const [waiverURL, setWaiverURL] = useState(null)
   const [contributionRole, setContributionRole] = useState('')
-
   const fetchContributionRole = contributionMap => {
     const getContribution = obj => Object.keys(obj).filter(key => obj[key])
     const contribution = getContribution(contributionMap).map(e => CONTRIBUTION_ROLE_OPTIONS[e])
@@ -80,29 +79,46 @@ export default function ApplicantResponse({ shouldDisplay, hacker }) {
 
       <ResponseInput label="Role" response={contributionRole} />
 
+      <ResponseInput label="Year Level" response={hacker?.basicInfo?.educationLevel} />
+      <ResponseInput label="Num Hackathons Attended" response={hacker?.skills?.numHackathonsAttended} />
+
       <ResponseInput
         label="Is this your first hackathon?"
         response={hacker?.skills?.numHackathonsAttended === '0' ? 'yes' : 'no'}
+        // for HackCamp
+        // responseTextColor={
+        //   hacker?.skills?.numHackathonsAttended === '0' ? ASSESSMENT_COLOR.BLACK : ASSESSMENT_COLOR.RED
+        // }
       />
 
-      <ResponseInput
+      {/* <ResponseInput
         label="Do you identify as part of an underrepresented gender in the technology industry?"
         response={hacker?.basicInfo?.identifyAsUnderrepresented}
-      />
+      /> */}
 
       {/* <ResponseInput url={waiverURL} label="Waiver" response={waiverURL} /> */}
 
-      <ResponseInput label="Why do you want to attend cmd-f 2024?" response={`${hacker?.skills?.longAnswers1}`} />
+      <ResponseInput
+        label="It's our 10-year anniversary! What would a meaningful and memorable weekend at nwHacks look like for you?"
+        response={`${hacker?.skills?.longAnswers1}`}
+      />
 
       <ResponseInput
-        label="How would you make tech a more welcoming space for underrepresented demographics?"
+        label="Share a technical or non-technical project you're proud of. What project would you display in the museum of your life? Tell us what inspired you, how you approached it, and why it matters to you."
         response={`${hacker?.skills?.longAnswers2}`}
       />
 
       {hacker?.skills?.longAnswers3 && (
         <ResponseInput
-          label="Tell us about a project you're really proud of and what you learned from it."
+          label="Create an acronym from your name or nickname that reveals something about you!"
           response={`${hacker?.skills?.longAnswers3}`}
+        />
+      )}
+
+      {hacker?.skills?.longAnswers4 && (
+        <ResponseInput
+          label="Is there anything we should know to help make you feel comfortable and supported during the event? (not graded, just for nwHacks to see)"
+          response={`${hacker?.skills?.longAnswers4}`}
         />
       )}
 

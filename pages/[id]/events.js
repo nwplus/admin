@@ -120,7 +120,8 @@ export default function Events({ id, hackathons }) {
       <TableRow>
         <TableData>{props.title}</TableData>
         <TableData>{props.date}</TableData>
-        <TableData>{props.order}</TableData>
+        <TableData>{props.points}</TableData>
+        <TableData>{props.type}</TableData>
         <TableData>{props.lastModified}</TableData>
         <TableData actions>
           <ActionsButtonContainer>
@@ -177,7 +178,8 @@ export default function Events({ id, hackathons }) {
                     <TableRow>
                       <TableHeader>Event</TableHeader>
                       <TableHeader>Date</TableHeader>
-                      <TableHeader narrow>Order</TableHeader>
+                      <TableHeader narrow>Points</TableHeader>
+                      <TableHeader>Event Type</TableHeader>
                       <TableHeader>Last Modified</TableHeader>
                       <TableHeader>Actions</TableHeader>
                     </TableRow>
@@ -189,7 +191,8 @@ export default function Events({ id, hackathons }) {
                         eventID={events[curr].eventID}
                         title={events[curr].title}
                         text={events[curr].text}
-                        order={events[curr].order}
+                        points={events[curr].points}
+                        type={events[curr].type}
                         date={events[curr].date}
                         lastModified={events[curr].lastModified}
                         lastModifiedBy={events[curr].lastModifiedBy}
@@ -224,7 +227,7 @@ export default function Events({ id, hackathons }) {
                 }}
               />
             </ModalContent>
-            <ModalContent columns={2}>
+            <ModalContent columns={3}>
               <div>
                 <Label>Date</Label>
                 <DateTimePicker
@@ -233,9 +236,29 @@ export default function Events({ id, hackathons }) {
                 />
               </div>
               <ModalField
-                label="Order"
+                dropdown
+                dropdownOptions={[
+                  {
+                    label: 'main',
+                  },
+                  {
+                    label: 'workshops',
+                  },
+                  {
+                    label: 'minievents',
+                  },
+                ]}
+                label="Type"
+                value={newEvent.type}
                 modalAction={NEW}
-                onChange={event => handleInput('order', event.target.value, newEvent, setNewEvent)}
+                onChange={type => {
+                  handleInput('type', type.label, newEvent, setNewEvent)
+                }}
+              />
+              <ModalField
+                label="Points"
+                modalAction={NEW}
+                onChange={event => handleInput('points', event.target.value, newEvent, setNewEvent)}
               />
             </ModalContent>
           </Modal>
@@ -253,9 +276,10 @@ export default function Events({ id, hackathons }) {
             <ModalContent columns={1}>
               <ModalField label="Description" value={eventViewing.text} modalAction={VIEW} />
             </ModalContent>
-            <ModalContent columns={2}>
+            <ModalContent columns={3}>
               <ModalField label="Date" value={eventViewing.date} modalAction={VIEW} />
-              <ModalField label="Order" value={eventViewing.order} modalAction={VIEW} />
+              <ModalField label="Points" value={eventViewing.points} modalAction={VIEW} />
+              <ModalField label="Event Type" value={eventViewing.type} modalAction={VIEW} />
             </ModalContent>
           </Modal>
           {/* Modal for editing event */}
@@ -286,7 +310,7 @@ export default function Events({ id, hackathons }) {
                 }}
               />
             </ModalContent>
-            <ModalContent columns={2}>
+            <ModalContent columns={3}>
               <div>
                 <Label>Date</Label>
                 <DateTimePicker
@@ -295,11 +319,31 @@ export default function Events({ id, hackathons }) {
                 />
               </div>
               <ModalField
-                label="Order"
-                value={eventEditing.order}
+                label="Points"
+                value={eventEditing.points}
                 modalAction={EDIT}
                 onChange={event => {
-                  handleInput('order', event.target.value, eventEditing, setEventEditing)
+                  handleInput('points', event.target.value, eventEditing, setEventEditing)
+                }}
+              />
+              <ModalField
+                dropdown
+                dropdownOptions={[
+                  {
+                    label: 'main',
+                  },
+                  {
+                    label: 'workshops',
+                  },
+                  {
+                    label: 'minievents',
+                  },
+                ]}
+                label="Type"
+                value={eventEditing.type}
+                modalAction={EDIT}
+                onChange={type => {
+                  handleInput('type', type.label, eventEditing, setEventEditing)
                 }}
               />
             </ModalContent>
@@ -320,7 +364,7 @@ export default function Events({ id, hackathons }) {
             </ModalContent>
             <ModalContent columns={2}>
               <ModalField label="Date" value={eventConfirm.date} modalAction={VIEW} />
-              <ModalField label="Order" value={eventConfirm.order} modalAction={VIEW} />
+              <ModalField label="Points" value={eventConfirm.points} modalAction={VIEW} />
             </ModalContent>
           </Modal>
         </CardContent>

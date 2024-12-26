@@ -6,7 +6,7 @@ import 'firebase/firestore'
 import 'firebase/storage'
 import JSZip from 'jszip'
 import { APPLICATION_STATUS, FAQ, FAQCategory } from '../constants'
-import { calculateTotalScore, filterHackerInfoFields, flattenObj, orderObj } from './utilities'
+import { calculateTotalScore, convertToCamelCase, filterHackerInfoFields, flattenObj, orderObj } from './utilities'
 
 if (!firebase.apps.length) {
   const config = {
@@ -20,19 +20,21 @@ if (!firebase.apps.length) {
     messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   }
   firebase.initializeApp(config)
+  firebase.firestore().settings({
+    ignoreUndefinedProperties: true,
+  })
 }
 
 export const db = firebase.firestore()
 export const storage = firebase.storage()
 export const { firestore } = firebase
 
-const webCollection = 'Website_content'
 const faqCollection = FAQ
 const Hackathons = 'Hackathons'
 const InternalWebsitesCollection = 'InternalWebsites'
 const CMSCollection = 'CMS'
-const LivesiteCollection = 'Livesite'
-const HackerEvaluationHackathon = 'cmd-f2024'
+const PortalCollection = 'Portal'
+export const HackerEvaluationHackathon = 'nwHacks2025'
 
 export const getTimestamp = () => {
   return firebase.firestore.Timestamp.now()
@@ -51,32 +53,6 @@ export const formatDate = (date, isGMT = false) => {
   return new Date(date - timeZoneOffset).toISOString().slice(0, -1).slice(0, -7).replace('T', ' ')
 }
 
-export const getDocument = async (hackathon, collection) => {
-  if (collection === hackathon) {
-    const ref = db.collection(webCollection).doc(hackathon)
-    const data = await ref.get()
-    return data.data()
-  }
-  const ref = db.collection(webCollection).doc(hackathon).collection(collection)
-  return (await ref.get()).docs.map(doc => ({
-    id: doc.id,
-    data: doc.data(),
-  }))
-}
-
-export const updateDocument = (hackathon, collection, docId, object) => {
-  db.collection(webCollection).doc(hackathon).collection(collection).doc(docId).update(object)
-}
-
-export const addDocument = async (hackathon, collection, object) => {
-  const ref = await db.collection(webCollection).doc(hackathon).collection(collection).add(object)
-  return ref.id
-}
-
-export const deleteDocument = async (hackathon, collection, docId) => {
-  await db.collection(webCollection).doc(hackathon).collection(collection).doc(docId).delete()
-}
-
 export const getHackathons = async () => {
   return db
     .collection('Hackathons')
@@ -84,7 +60,10 @@ export const getHackathons = async () => {
     .then(querySnapshot => {
       const hackathons = []
       querySnapshot.forEach(doc => {
-        hackathons.push(doc.id)
+        const year = doc.id.slice(-4)
+        if (year >= '2024' && year <= '2025') {
+          hackathons.push(doc.id)
+        }
       })
       return hackathons
     })
@@ -122,7 +101,8 @@ export const getEvent = (eventID, data) => {
         title: data.title || 'Empty event field',
         text: data.text || 'Empty text description for event',
         date: data.date ? formatDate(data.date.seconds) : formatDate(getTimestamp().seconds),
-        order: data.order >= 0 ? data.order : -1,
+        points: data.points >= 0 ? data.points : '0',
+        type: data.type || 'minievents',
         lastModified: data.lastModified ? formatDate(data.lastModified.seconds) : formatDate(getTimestamp().seconds),
         lastModifiedBy: data.lastModifiedBy || 'Unknown user',
       }
@@ -146,7 +126,7 @@ export const addEvent = async (hackathon, event) => {
     key: ref.id,
     text: event.text,
     date: event.date,
-    order: event.order,
+    points: event.points || '0',
     lastModified: getTimestamp(),
     lastModifiedBy: event.lastModifiedBy,
   })
@@ -161,7 +141,7 @@ export const updateEvent = async (hackathon, event) => {
     key: event.key || event.eventID,
     text: event.text || 'Empty text description for event',
     date: event.date || currDate,
-    order: event.order || -1,
+    points: event.points || '0',
     lastModified: currDate,
     lastModifiedBy: event.lastModifiedBy,
   })
@@ -170,6 +150,73 @@ export const updateEvent = async (hackathon, event) => {
 export const deleteEvent = async (hackathon, eventID) => {
   await db.collection('Hackathons').doc(hackathon).collection('Events').doc(eventID).delete()
 }
+
+// Rewards
+export const getReward = (rewardID, data) => {
+  return data
+    ? {
+        rewardID,
+        reward: data.reward || 'Empty reward field', // Title of the reward
+        key: data.key || rewardID, // Key of the reward (defaults to rewardID)
+        blurb: data.blurb || 'Empty blurb description for reward', // Short description of the reward
+        from: data.from || 'None', // Source or sponsor of the reward
+        imgName: data.imgName || 'None', // Image name (if applicable)
+        imgURL: data.imgURL || '', // URL to the reward image
+        prizesAvailable: data.prizesAvailable || '0', // Number of winners for the reward
+        requiredPoints: data.requiredPoints || '0', // Points required to win the reward
+        lastmod: data.lastmod ? formatDate(data.lastmod.seconds) : formatDate(getTimestamp().seconds), // Last modified date
+        lastmodBy: data.lastmodBy || 'Unknown user', // Last person who modified the reward
+      }
+    : null
+}
+
+export const getRewards = async hackathon => {
+  const rewardIDs = await db.collection('Hackathons').doc(hackathon).collection('Rewards').get()
+  const rewards = {}
+  rewardIDs.docs.forEach(doc => {
+    const currReward = getReward(doc.id, doc.data())
+    if (currReward) rewards[doc.id] = currReward
+  })
+  return rewards
+}
+
+export const addReward = async (hackathon, reward) => {
+  const ref = db.collection('Hackathons').doc(hackathon).collection('Rewards').doc()
+  await ref.set({
+    reward: reward.reward, // Title of the reward
+    key: ref.id, // Key generated for the reward
+    blurb: reward.blurb, // Short description of the reward
+    imgName: reward.imgName, // Image name (if applicable)
+    imgURL: reward.imgURL, // URL to the reward image
+    prizesAvailable: reward.prizesAvailable, // Number of prizes we have
+    requiredPoints: reward.requiredPoints, // Points required to win the reward
+    lastmod: getTimestamp(), // Timestamp of when the reward was last modified
+    lastmodBy: reward.lastmodBy, // User who last modified the reward
+  })
+  return ref.id
+}
+
+export const updateReward = async (hackathon, reward) => {
+  const ref = db.collection('Hackathons').doc(hackathon).collection('Rewards').doc(reward.rewardID)
+  const currDate = getTimestamp()
+  await ref.update({
+    reward: reward.reward || 'Empty reward field',
+    key: reward.key || reward.rewardID,
+    blurb: reward.blurb || 'Empty blurb description for reward',
+    from: reward.from || 'None',
+    imgName: reward.imgName || 'None',
+    imgURL: reward.imgURL || '',
+    prizesAvailable: reward.prizesAvailable || '0',
+    requiredPoints: reward.requiredPoints || '0',
+    lastmod: currDate,
+    lastmodBy: reward.lastmodBy,
+  })
+}
+
+export const deleteReward = async (hackathon, rewardID) => {
+  await db.collection('Hackathons').doc(hackathon).collection('Rewards').doc(rewardID).delete()
+}
+// Rewards ^^
 
 const getFaqCategory = faqCategory => {
   switch (faqCategory) {
@@ -371,9 +418,7 @@ export const subscribeToCMSStatus = dateCallback => {
     })
 }
 
-const livesiteDocRef = db.collection(InternalWebsitesCollection).doc(LivesiteCollection)
-
-export const getActiveHackathon = livesiteDocRef.get().then(doc => doc.data()?.activeHackathon)
+const portalDocRef = db.collection(InternalWebsitesCollection).doc(PortalCollection)
 
 const announcementsRef = hackathon => {
   return db.collection(Hackathons).doc(hackathon).collection('Announcements')
@@ -408,12 +453,15 @@ export const deleteAnnouncement = async (hackathon, id) => {
   await announcementsRef(hackathon).doc(id).delete()
 }
 
-export const subscribeToLivesiteData = callback => {
-  return livesiteDocRef.onSnapshot(doc => callback(doc.data()))
+export const subscribeToPortalSettings = callback => {
+  return db
+    .collection(InternalWebsitesCollection)
+    .doc(PortalCollection)
+    .onSnapshot(doc => callback(doc.data()))
 }
 
-export const updateLivesiteData = async data => {
-  return livesiteDocRef.update(data)
+export const updatePortalSettings = async data => {
+  return portalDocRef.update(data)
 }
 
 export const getLivesiteQuicklinks = async (hackathon, callback) => {
@@ -458,31 +506,24 @@ export const deleteQuicklink = async (hackathon, id) => {
   await quicklinksRef(hackathon).doc(id).delete()
 }
 
-export const getLivesiteEvent = (eventID, data) => {
-  return data
-    ? {
-        ...data,
-        eventID,
-        key: data.key || eventID,
-        name: data.name || 'Empty event field',
-        description: data.description || 'Empty text description for event',
-        lastModified: data.lastModified ? formatDate(data.lastModified.seconds) : formatDate(getTimestamp().seconds),
-        lastModifiedBy: data.lastModifiedBy || 'Unknown user',
-      }
-    : null
+export const subscribeToPortalSchedule = (hackathon, callback) => {
+  return db
+    .collection(Hackathons)
+    .doc(hackathon)
+    .collection('DayOf')
+    .onSnapshot(querySnapshot => {
+      const events = {}
+      querySnapshot.docs.forEach(doc => {
+        events[doc.id] = {
+          ...doc.data(),
+          eventID: doc.id,
+        }
+      })
+      callback(events)
+    })
 }
 
-export const getLivesiteEvents = async hackathon => {
-  const eventIDs = await db.collection('Hackathons').doc(hackathon).collection('DayOf').orderBy('startTime').get()
-  const events = {}
-  eventIDs.docs.forEach(doc => {
-    const currEvent = getLivesiteEvent(doc.id, doc.data())
-    if (currEvent) events[doc.id] = currEvent
-  })
-  return events
-}
-
-export const addLivesiteEvent = async (hackathon, event) => {
+export const addPortalEvent = async (hackathon, event) => {
   const ref = db.collection('Hackathons').doc(hackathon).collection('DayOf').doc()
   delete event.eventID
   delete event.key
@@ -493,7 +534,7 @@ export const addLivesiteEvent = async (hackathon, event) => {
   return ref.id
 }
 
-export const updateLivesiteEvent = async (hackathon, event) => {
+export const updatePortalEvent = async (hackathon, event) => {
   const ref = db.collection('Hackathons').doc(hackathon).collection('DayOf').doc(event.eventID)
   delete event.eventID
   delete event.key
@@ -503,7 +544,7 @@ export const updateLivesiteEvent = async (hackathon, event) => {
   })
 }
 
-export const deleteLivesiteEvent = async (hackathon, eventID) => {
+export const deletePortalEvent = async (hackathon, eventID) => {
   await db.collection('Hackathons').doc(hackathon).collection('DayOf').doc(eventID).delete()
 }
 
@@ -579,18 +620,73 @@ export const getAllApplicants = async callback => {
     })
 }
 
-export const getApplicantsToAccept = async score => {
-  const applicants = await db
-    .collection('Hackathons')
-    .doc(HackerEvaluationHackathon)
-    .collection('Applicants')
-    .where('score.totalScore', '>=', score - 1)
-    .get()
+export const getApplicantsToAccept = async (
+  score,
+  zscore,
+  numHackathonsMin,
+  numHackathonsMax,
+  yearLevelsSelected,
+  contributionRolesSelected,
+  numExperiencesMin,
+  numExperiencesMax
+) => {
+  const applicants = await db.collection('Hackathons').doc(HackerEvaluationHackathon).collection('Applicants').get()
+
   return applicants.docs
     .filter(app => {
-      const appStatus = app.data().status.applicationStatus
+      const appData = app.data()
+      const appStatus = appData.status.applicationStatus
+
       if (appStatus !== APPLICATION_STATUS.scored.text) return false
-      return app.data().score.totalScore >= score
+
+      // score
+      if (score !== undefined && appData.score.totalScore < score) return false
+
+      // zscore
+      const { NumExperiences, ResponseOneScore, ResponseTwoScore, ResponseThreeScore } = appData.score.scores || {}
+      const totalZScore = [
+        NumExperiences?.normalizedScore,
+        ResponseOneScore?.normalizedScore,
+        ResponseTwoScore?.normalizedScore,
+        ResponseThreeScore?.normalizedScore,
+      ].reduce((acc, normalizedScore) => acc + (normalizedScore !== undefined ? normalizedScore : 0), 0)
+
+      if (zscore !== undefined && totalZScore < zscore) return false
+
+      // range of hackathons attended
+      const numHackathonsAttended = appData.skills?.numHackathonsAttended
+      if (
+        (numHackathonsMin !== undefined && Number(numHackathonsAttended) < Number(numHackathonsMin)) ||
+        (numHackathonsMax !== undefined && Number(numHackathonsAttended) > Number(numHackathonsMax))
+      ) {
+        return false
+      }
+
+      // range for year level
+      const yearLevel = appData.basicInfo?.educationLevel
+      if (yearLevelsSelected && yearLevelsSelected.length > 0 && !yearLevelsSelected.includes(yearLevel)) {
+        return false
+      }
+
+      // for intended role
+      if (contributionRolesSelected && contributionRolesSelected.length > 0) {
+        const contributionRoles = appData.skills?.contributionRole || {}
+        const hasValidRole = contributionRolesSelected.some(
+          role => contributionRoles[convertToCamelCase(role)] === true
+        )
+        if (!hasValidRole) return false
+      }
+
+      // range for # of experiences
+      const numExperiences = appData.score?.scores?.NumExperiences
+      if (
+        (numExperiencesMin !== undefined && Number(numExperiences) < Number(numExperiencesMin)) ||
+        (numExperiencesMax !== undefined && Number(numExperiences) > Number(numExperiencesMax))
+      ) {
+        return false
+      }
+
+      return true
     })
     .map(doc => doc.data())
 }
@@ -604,14 +700,26 @@ export const getCSVData = async () => {
     .get()
   const CSV = apps.docs.map(doc => {
     const {
-      basicInfo: { firstName, lastName, email, educationLevel, phoneNumber, school, countryOfResidence, major },
+      basicInfo: {
+        legalFirstName,
+        legalLastName,
+        preferredName,
+        email,
+        educationLevel,
+        phoneNumber,
+        school,
+        countryOfResidence,
+        major,
+      },
       status: { applicationStatus },
       skills: { firstTimeHacker },
+      submission: { lastUpdated },
     } = doc.data()
     const totalScore = doc.data().score?.totalScore ?? '?'
     return [
-      firstName,
-      lastName,
+      legalFirstName,
+      legalLastName,
+      preferredName,
       email,
       phoneNumber,
       school,
@@ -621,11 +729,13 @@ export const getCSVData = async () => {
       applicationStatus,
       major,
       firstTimeHacker,
+      lastUpdated.toDate(),
     ]
   })
   CSV.unshift([
     'First Name',
-    'last Name',
+    'Last Name',
+    'Preferred Name',
     'Email',
     'Phone Number',
     'School Name',
@@ -635,6 +745,7 @@ export const getCSVData = async () => {
     'Application Status',
     'Major',
     'First time hacker?',
+    'Last Updated',
   ])
   return CSV
 }
@@ -699,32 +810,54 @@ export const getAllResumes = async () => {
   download(finishedZip, 'Resumes', 'application/zip')
 }
 
-export const updateApplicantScore = async (applicantID, scores, comment, adminEmail) => {
-  const totalScore = scores ? calculateTotalScore(scores) : null
+export const updateApplicantScore = async (applicantID, newScores, oldScores, comment, adminEmail) => {
+  const totalScore = newScores ? calculateTotalScore(newScores) : null
+  const scoresWithUpdatedTimes = Object.entries(newScores).reduce((prev, [question, scoreObj]) => {
+    const scoreChanged = oldScores?.[question]?.score !== scoreObj.score
+    return {
+      ...prev,
+      [question]: {
+        ...scoreObj,
+        lastUpdated: scoreChanged ? getTimestamp() : oldScores?.[question]?.lastUpdated,
+        lastUpdatedBy: scoreChanged ? adminEmail : oldScores?.[question]?.lastUpdatedBy,
+      },
+    }
+  }, {})
+
   db.collection('Hackathons')
     .doc(HackerEvaluationHackathon)
     .collection('Applicants')
     .doc(applicantID)
     .update({
       score: {
-        scores,
+        scores: scoresWithUpdatedTimes,
         totalScore,
         comment,
-        lastUpdated: firebase.firestore.Timestamp.now(),
-        lastUpdatedBy: adminEmail,
       },
     })
+
+  return scoresWithUpdatedTimes
 }
 
 export const updateApplicantStatus = async (userId, applicationStatus, hackathon) => {
+  const statusUpdate = {
+    'status.applicationStatus': applicationStatus,
+  }
+
+  if (applicationStatus === 'acceptedAndAttending') {
+    statusUpdate['status.attending'] = true
+    statusUpdate['status.responded'] = true
+  } else if (applicationStatus === 'acceptedUnRSVP') {
+    statusUpdate['status.attending'] = false
+    statusUpdate['status.responded'] = true
+  }
+
   return db
     .collection('Hackathons')
     .doc(hackathon || HackerEvaluationHackathon)
     .collection('Applicants')
     .doc(userId)
-    .update({
-      'status.applicationStatus': applicationStatus,
-    })
+    .update(statusUpdate)
 }
 
 export const getApplicantTags = async (userId, callback) => {
@@ -746,6 +879,79 @@ export const updateApplicantTags = async (userId, applicantTags) => {
     .doc(userId)
     .update({ applicantTags })
 }
+
+export const getAllGradedApplicants = async callback => {
+  return db
+    .collection('Hackathons')
+    .doc(HackerEvaluationHackathon)
+    .collection('Applicants')
+    .where('status.applicationStatus', '==', 'scored')
+    .onSnapshot(snap => {
+      callback(
+        snap.docs
+          .map(doc => doc.data())
+          .filter(a => a.basicInfo.identifyAsUnderrepresented !== 'no') // cmd-f filter; remove after
+          .sort((a, b) => a.submission?.lastUpdated - b.submission?.lastUpdated)
+      )
+    })
+}
+
+// hacker application questions specific
+export const getHackerAppQuestions = async (selectedHackathon, category) => {
+  const data = await db.collection('HackerAppQuestions').doc(selectedHackathon.slice(0, -4)).collection(category).get()
+  return data.docs.map(doc => doc.data())
+}
+
+export const updateHackerAppQuestions = async (selectedHackathon, questions, category) => {
+  const hackathonRef = db.collection('HackerAppQuestions').doc(selectedHackathon.slice(0, -4))
+  const categoryRef = hackathonRef.collection(category)
+
+  const batch = db.batch()
+
+  // clear all
+  const existingDocs = await categoryRef.get()
+  existingDocs.forEach(doc => {
+    batch.delete(doc.ref)
+  })
+
+  questions.forEach((question, index) => {
+    const newDocRef = categoryRef.doc(`${index.toString().padStart(3, '0')}`)
+    batch.set(newDocRef, question)
+  })
+  await batch.commit()
+}
+
+export const getHackerAppQuestionsMetadata = async (selectedHackathon, category) => {
+  const categoryRef = await db.collection('HackerAppQuestions').doc(selectedHackathon.slice(0, -4)).get()
+  return categoryRef.data()[category]
+}
+
+export const updateHackerAppQuestionsMetadata = async (selectedHackathon, category, updatedMetadata) => {
+  const doc = {
+    [category]: updatedMetadata,
+  }
+  return db.collection('HackerAppQuestions').doc(selectedHackathon.slice(0, -4)).set(doc, { merge: true })
+}
+
+export const getSpecificHackerAppQuestionOptions = async (category, formInput) => {
+  const querySnapshot = await db
+    .collection('HackerAppQuestions')
+    .doc(HackerEvaluationHackathon.slice(0, -4))
+    .collection(category)
+    .where('formInput', '==', formInput)
+    .get()
+
+  if (querySnapshot.empty) {
+    console.warn(`No document found with formInput: ${formInput} in category: ${category}`)
+    return null
+  }
+
+  const matchedElement = querySnapshot.docs[0]
+  const { options } = matchedElement.data()
+  return options
+}
+
+// hacker application questions specific end
 
 export const updateWaiver = async (userId, waiver, status, hackathon) => {
   return db

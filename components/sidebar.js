@@ -2,7 +2,7 @@ import NextLink from 'next/link'
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import LoadingGif from '../assets/nwplus.gif'
-import { COLOR } from '../constants'
+import { COLOR, HACKATHONS } from '../constants'
 import { logout } from '../utility/firebase'
 import Icon from './Icon'
 
@@ -122,7 +122,7 @@ const getTrailingPath = currentPath => {
   const paths = window.location.href.split('/')
   const pathIndex = paths.findIndex(val => val === currentPath)
   const trailingPathArray = paths.slice(pathIndex + 1)
-  if (pathIndex === -1 || trailingPathArray.length === 0 || paths.includes('Livesite')) {
+  if (pathIndex === -1 || trailingPathArray.length === 0 || paths.includes('portal')) {
     return 'intro'
   }
   return trailingPathArray.join('/')
@@ -150,6 +150,8 @@ export default ({ hackathons, currentPath }) => {
     setShowSidebar(!showSidebar)
   }
 
+  // Separate "www" from hackathons
+  const hackathonList = hackathons.filter(id => id !== 'www')
   return (
     <>
       <SidebarContainer showSidebar={showSidebar}>
@@ -157,14 +159,35 @@ export default ({ hackathons, currentPath }) => {
           <Header>nwPlus CMS</Header>
           {loading && <LoadingImage src={LoadingGif} />}
         </HeaderContainer>
-        <NextLink href="/Livesite/announcements" as="/Livesite/announcements" passHref>
-          <Link>
-            <ItemContainer>
-              <Icon color={currentPath === 'Livesite' && COLOR.WHITE} icon="circle" />
-              <Label selected={currentPath === 'Livesite'}>Livesite</Label>
-            </ItemContainer>
-          </Link>
-        </NextLink>
+
+        <ItemContainer>
+          <Icon color={currentPath?.includes('portal') && COLOR.WHITE} icon="circle" />
+          <Label selected={currentPath?.includes('portal')}>Portal</Label>
+        </ItemContainer>
+
+        {HACKATHONS.map(id => {
+          const href = `/portal/[id]/settings`
+          const link = `/portal/${id}/settings`
+          return (
+            <NextLink key={id} href={href} as={link} passHref>
+              <IndentedLink
+                onClick={() => {
+                  if (!currentPath?.includes(`portal/${id}`)) {
+                    setIfTimeOut(
+                      setTimeout(() => {
+                        setLoading(true)
+                      }, 750)
+                    )
+                  }
+                }}
+                selected={currentPath?.includes(`portal/${id}`)}
+              >
+                {id}
+              </IndentedLink>
+            </NextLink>
+          )
+        })}
+
         <NextLink href="/faq" as="/faq" passHref>
           <Link
             onClick={() => {
@@ -183,11 +206,59 @@ export default ({ hackathons, currentPath }) => {
             </ItemContainer>
           </Link>
         </NextLink>
+
+        <NextLink href="/www/intro" as="/www/intro" passHref>
+          <Link
+            onClick={() => {
+              if (currentPath !== 'www') {
+                setIfTimeOut(
+                  setTimeout(() => {
+                    setLoading(true)
+                  }, 750)
+                )
+              }
+            }}
+          >
+            <ItemContainer>
+              <Icon color={currentPath === 'www' && COLOR.WHITE} icon="question-circle" />
+              <Label selected={currentPath === 'www'}>www</Label>
+            </ItemContainer>
+          </Link>
+        </NextLink>
+
         <ItemContainer>
-          <Icon color={hackathons.includes(currentPath) && COLOR.WHITE} icon="th-list" />
-          <Label selected={hackathons.includes(currentPath)}>Websites</Label>
+          <Icon color={currentPath && currentPath.includes('hackerapps') && COLOR.WHITE} icon="file-alt" />
+          <Label selected={currentPath && currentPath.includes('hackerapps')}>Hacker Apps</Label>
         </ItemContainer>
-        {hackathons.map(id => {
+
+        {HACKATHONS.map(id => {
+          const href = '/hackerapps/[id]/welcome'
+          const link = `/hackerapps/${id}/welcome`
+          return (
+            <NextLink key={id} href={href} as={link} passHref>
+              <IndentedLink
+                onClick={() => {
+                  if (currentPath !== `hackerapps/${id}`) {
+                    setIfTimeOut(
+                      setTimeout(() => {
+                        setLoading(true)
+                      }, 750)
+                    )
+                  }
+                }}
+                selected={currentPath === `hackerapps/${id}`}
+              >
+                {id}
+              </IndentedLink>
+            </NextLink>
+          )
+        })}
+
+        <ItemContainer>
+          <Icon icon="th-list" />
+          <Label>Hackathons</Label>
+        </ItemContainer>
+        {hackathonList.map(id => {
           const href = generateLinkTemplate(id)
           const link = generateLink(id)
           return (

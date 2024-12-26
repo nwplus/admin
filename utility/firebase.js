@@ -952,3 +952,14 @@ export const getSpecificHackerAppQuestionOptions = async (category, formInput) =
 }
 
 // hacker application questions specific end
+
+export const updateWaiver = async (userId, waiver, status, hackathon) => {
+  return db
+    .collection('Hackathons')
+    .doc(hackathon || HackerEvaluationHackathon)
+    .collection('Applicants')
+    .doc(userId)
+    .update({
+      [`basicInfo.${waiver}`]: status,
+    })
+}

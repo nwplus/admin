@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import styled from 'styled-components'
 import Page from '../components/page'
-import { getHackathons, getApplicants, updateApplicantStatus } from '../utility/firebase'
+import { getHackathons, getApplicants, updateApplicantStatus, updateWaiver } from '../utility/firebase'
 import Button from '../components/button'
 import Checkbox from '../components/checkbox'
 
@@ -59,6 +59,11 @@ export default function Status({ hackathons }) {
   const [statusSelected, setStatusSelected] = useState('')
   const [success, setSuccess] = useState('')
   const [error, setError] = useState('')
+  const [releaseLiabilityStatus, setreleaseLiabilityStatus] = useState(false)
+  const [covidWaiverStatus, setCovidWaiverStatus] = useState(false)
+  const [mediaConsentStatus, setMediaConsentStatus] = useState(false)
+  const [safewalkSelectStatus, setsafewalkSelectStatus] = useState('safewalkNo')
+  const [mentorshipSelectStatus, setMentorshipSelectStatus] = useState('nwMentorshipNo')
 
   const validateInputs = () => {
     if (!emails) {
@@ -104,6 +109,13 @@ export default function Status({ hackathons }) {
 
     for (const userId of filteredApplicants) {
       await updateApplicantStatus(userId, statusSelected, hackathonSelected)
+      if (statusSelected === 'acceptedAndAttending') {
+        await updateWaiver(userId, 'releaseLiabilityCheck', releaseLiabilityStatus, hackathonSelected)
+        await updateWaiver(userId, 'covidWaiverCheck', covidWaiverStatus, hackathonSelected)
+        await updateWaiver(userId, 'mediaConsentCheck', mediaConsentStatus, hackathonSelected)
+        await updateWaiver(userId, 'safewalkSelect', safewalkSelectStatus, hackathonSelected)
+        await updateWaiver(userId, 'nwMentorshipSelect', mentorshipSelectStatus, hackathonSelected)
+      }
     }
 
     if (filteredApplicants.length > 0) {
@@ -151,6 +163,44 @@ export default function Status({ hackathons }) {
             </option>
           ))}
         </select>
+        {statusSelected === 'acceptedAndAttending' && (
+          <>
+            {[
+              {
+                label: 'Release of Liability Waiver',
+                checked: releaseLiabilityStatus,
+                onClick: () => setreleaseLiabilityStatus(!releaseLiabilityStatus),
+              },
+              {
+                label: 'Covid Waiver',
+                checked: covidWaiverStatus,
+                onClick: () => setCovidWaiverStatus(!covidWaiverStatus),
+              },
+              {
+                label: 'Media Consent',
+                checked: mediaConsentStatus,
+                onClick: () => setMediaConsentStatus(!mediaConsentStatus),
+              },
+              {
+                label: 'Safewalk',
+                checked: safewalkSelectStatus === 'safewalkYes',
+                onClick: () => setsafewalkSelectStatus(prev => (prev === 'safewalkYes' ? 'safewalkNo' : 'safewalkYes')),
+              },
+              {
+                label: 'nwMentorship',
+                checked: mentorshipSelectStatus === 'nwMentorshipYes',
+                onClick: () =>
+                  setMentorshipSelectStatus(prev =>
+                    prev === 'nwMentorshipYes' ? 'nwMentorshipNo' : 'nwMentorshipYes'
+                  ),
+              },
+            ].map(({ label, checked, onClick }) => (
+              <div key={label}>
+                <Checkbox label={label} checked={checked} onClick={onClick} />
+              </div>
+            ))}
+          </>
+        )}
         <ButtonContainer>
           <Button hoverBackgroundColor="#EB5757" onClick={handleUpdate}>
             Update

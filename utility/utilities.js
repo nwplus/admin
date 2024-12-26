@@ -137,6 +137,8 @@ export const filterHackerInfoFields = (obj, collection) => {
     newObj.longAnswers1 = obj.skills?.longAnswers1 || false
     newObj.longAnswers2 = obj.skills?.longAnswers2 || false
     newObj.longAnswers3 = obj.skills?.longAnswers3 || false
+
+    newObj.attendedEvents = obj.dayOf?.events?.map(e => e.eventName).join(', ') ?? ''
   } else if (collection === 'Projects') {
     newObj = { ...obj }
     delete newObj.grades

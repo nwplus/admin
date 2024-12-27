@@ -110,7 +110,7 @@ export const getEvent = (eventID, data) => {
 }
 
 export const getEvents = async hackathon => {
-  const eventIDs = await db.collection('Hackathons').doc(hackathon).collection('Events').get()
+  const eventIDs = await db.collection('Hackathons').doc(hackathon).collection('DayOf').get()
   const events = {}
   eventIDs.docs.forEach(doc => {
     const currEvent = getEvent(doc.id, doc.data())
@@ -120,7 +120,7 @@ export const getEvents = async hackathon => {
 }
 
 export const addEvent = async (hackathon, event) => {
-  const ref = db.collection('Hackathons').doc(hackathon).collection('Events').doc()
+  const ref = db.collection('Hackathons').doc(hackathon).collection('DayOf').doc()
   await ref.set({
     title: event.title,
     key: ref.id,
@@ -134,7 +134,7 @@ export const addEvent = async (hackathon, event) => {
 }
 
 export const updateEvent = async (hackathon, event) => {
-  const ref = db.collection('Hackathons').doc(hackathon).collection('Events').doc(event.eventID)
+  const ref = db.collection('Hackathons').doc(hackathon).collection('DayOf').doc(event.eventID)
   const currDate = getTimestamp()
   await ref.update({
     title: event.title || 'Empty event field',
@@ -148,7 +148,7 @@ export const updateEvent = async (hackathon, event) => {
 }
 
 export const deleteEvent = async (hackathon, eventID) => {
-  await db.collection('Hackathons').doc(hackathon).collection('Events').doc(eventID).delete()
+  await db.collection('Hackathons').doc(hackathon).collection('DayOf').doc(eventID).delete()
 }
 
 // Rewards

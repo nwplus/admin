@@ -74,7 +74,7 @@ export const FAQCategory = Object.freeze({
 export const SPONSORSHIP = 'SPONSORSHIP'
 export const HACKATHON_NAVBAR = {
   intro: 'Intro',
-  // events: 'Edit Events',
+  // events: 'Edit Events', # merged this with dayOf in portal schedule
   spocos: 'Edit Sponsors',
   rewards: 'Edit Rewards',
   FeatureFlags: 'Feature Flags',

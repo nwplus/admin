@@ -121,6 +121,7 @@ export default ({ hackathons }) => {
         <TableData>{props.startTime}</TableData>
         <TableData>{props.delayed ? 'True' : 'False'}</TableData>
         <TableData>{props.type}</TableData>
+        <TableData>{props.points}</TableData>
         <TableData actions>
           <ActionsButtonContainer>
             <Button type={VIEW} color={COLOR.TRANSPARENT} onClick={() => setEventViewing(events[props.eventID])} />
@@ -179,6 +180,7 @@ export default ({ hackathons }) => {
                       <TableHeader>Start Time</TableHeader>
                       <TableHeader>Delayed</TableHeader>
                       <TableHeader>Type</TableHeader>
+                      <TableHeader>Points</TableHeader>
                       <TableHeader>Actions</TableHeader>
                     </TableRow>
                   </thead>
@@ -215,7 +217,7 @@ export default ({ hackathons }) => {
                 }}
               />
             </ModalContent>
-            <ModalContent columns={1}>
+            <ModalContent columns={2}>
               <ModalField
                 dropdown
                 dropdownOptions={[
@@ -238,6 +240,11 @@ export default ({ hackathons }) => {
                 onChange={type => {
                   handleInput('type', type.label, newEvent, setNewEvent)
                 }}
+              />
+              <ModalField
+                label="Points"
+                modalAction={NEW}
+                onChange={event => handleInput('points', event.target.value, newEvent, setNewEvent)}
               />
             </ModalContent>
             <ModalContent columns={1}>
@@ -280,8 +287,9 @@ export default ({ hackathons }) => {
             <ModalContent columns={1}>
               <ModalField label="Description" value={eventViewing.description} modalAction={VIEW} />
             </ModalContent>
-            <ModalContent columns={2}>
+            <ModalContent columns={3}>
               <ModalField label="Type" value={eventViewing.type} modalAction={VIEW} />
+              <ModalField label="Points" value={eventViewing.points} modalAction={VIEW} />
               <ModalField label="Delayed" value={eventViewing.delayed ? 'True' : 'False'} modalAction={VIEW} />
             </ModalContent>
             <ModalContent columns={2}>
@@ -317,7 +325,7 @@ export default ({ hackathons }) => {
                 }}
               />
             </ModalContent>
-            <ModalContent columns={1}>
+            <ModalContent columns={2}>
               <ModalField
                 dropdown
                 dropdownOptions={[
@@ -339,6 +347,14 @@ export default ({ hackathons }) => {
                 modalAction={EDIT}
                 onChange={type => {
                   handleInput('type', type.label, eventEditing, setEventEditing)
+                }}
+              />
+              <ModalField
+                label="Points"
+                value={eventEditing.points}
+                modalAction={EDIT}
+                onChange={event => {
+                  handleInput('points', event.target.value, eventEditing, setEventEditing)
                 }}
               />
             </ModalContent>
@@ -381,6 +397,9 @@ export default ({ hackathons }) => {
             </ModalContent>
             <ModalContent columns={1}>
               <ModalField label="Description" value={eventConfirm.description} modalAction={VIEW} />
+            </ModalContent>
+            <ModalContent columns={1}>
+              <ModalField label="Points" value={eventConfirm.points} modalAction={VIEW} />
             </ModalContent>
           </Modal>
         </CardContent>

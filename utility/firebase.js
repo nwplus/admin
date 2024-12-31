@@ -102,6 +102,7 @@ export const getEvent = (eventID, data) => {
         text: data.text || 'Empty text description for event',
         date: data.date ? formatDate(data.date.seconds) : formatDate(getTimestamp().seconds),
         points: data.points >= 0 ? data.points : '0',
+        type: data.type || 'minievents',
         lastModified: data.lastModified ? formatDate(data.lastModified.seconds) : formatDate(getTimestamp().seconds),
         lastModifiedBy: data.lastModifiedBy || 'Unknown user',
       }
@@ -109,7 +110,7 @@ export const getEvent = (eventID, data) => {
 }
 
 export const getEvents = async hackathon => {
-  const eventIDs = await db.collection('Hackathons').doc(hackathon).collection('Events').get()
+  const eventIDs = await db.collection('Hackathons').doc(hackathon).collection('DayOf').get()
   const events = {}
   eventIDs.docs.forEach(doc => {
     const currEvent = getEvent(doc.id, doc.data())
@@ -119,7 +120,7 @@ export const getEvents = async hackathon => {
 }
 
 export const addEvent = async (hackathon, event) => {
-  const ref = db.collection('Hackathons').doc(hackathon).collection('Events').doc()
+  const ref = db.collection('Hackathons').doc(hackathon).collection('DayOf').doc()
   await ref.set({
     title: event.title,
     key: ref.id,
@@ -133,7 +134,7 @@ export const addEvent = async (hackathon, event) => {
 }
 
 export const updateEvent = async (hackathon, event) => {
-  const ref = db.collection('Hackathons').doc(hackathon).collection('Events').doc(event.eventID)
+  const ref = db.collection('Hackathons').doc(hackathon).collection('DayOf').doc(event.eventID)
   const currDate = getTimestamp()
   await ref.update({
     title: event.title || 'Empty event field',
@@ -147,7 +148,7 @@ export const updateEvent = async (hackathon, event) => {
 }
 
 export const deleteEvent = async (hackathon, eventID) => {
-  await db.collection('Hackathons').doc(hackathon).collection('Events').doc(eventID).delete()
+  await db.collection('Hackathons').doc(hackathon).collection('DayOf').doc(eventID).delete()
 }
 
 // Rewards
@@ -524,8 +525,10 @@ export const subscribeToPortalSchedule = (hackathon, callback) => {
 
 export const addPortalEvent = async (hackathon, event) => {
   const ref = db.collection('Hackathons').doc(hackathon).collection('DayOf').doc()
-  delete event.eventID
-  delete event.key
+  // delete event.eventID
+  // delete event.key
+  event.eventID = ref.id
+  event.key = ref.id
   await ref.set({
     ...event,
     lastModified: getTimestamp(),
@@ -535,8 +538,8 @@ export const addPortalEvent = async (hackathon, event) => {
 
 export const updatePortalEvent = async (hackathon, event) => {
   const ref = db.collection('Hackathons').doc(hackathon).collection('DayOf').doc(event.eventID)
-  delete event.eventID
-  delete event.key
+  // delete event.eventID
+  // delete event.key
   await ref.update({
     ...event,
     lastModified: getTimestamp(),
@@ -951,3 +954,14 @@ export const getSpecificHackerAppQuestionOptions = async (category, formInput) =
 }
 
 // hacker application questions specific end
+
+export const updateWaiver = async (userId, waiver, status, hackathon) => {
+  return db
+    .collection('Hackathons')
+    .doc(hackathon || HackerEvaluationHackathon)
+    .collection('Applicants')
+    .doc(userId)
+    .update({
+      [`basicInfo.${waiver}`]: status,
+    })
+}

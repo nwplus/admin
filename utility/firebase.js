@@ -525,8 +525,10 @@ export const subscribeToPortalSchedule = (hackathon, callback) => {
 
 export const addPortalEvent = async (hackathon, event) => {
   const ref = db.collection('Hackathons').doc(hackathon).collection('DayOf').doc()
-  delete event.eventID
-  delete event.key
+  // delete event.eventID
+  // delete event.key
+  event.eventID = ref.id
+  event.key = ref.id
   await ref.set({
     ...event,
     lastModified: getTimestamp(),
@@ -536,8 +538,8 @@ export const addPortalEvent = async (hackathon, event) => {
 
 export const updatePortalEvent = async (hackathon, event) => {
   const ref = db.collection('Hackathons').doc(hackathon).collection('DayOf').doc(event.eventID)
-  delete event.eventID
-  delete event.key
+  // delete event.eventID
+  // delete event.key
   await ref.update({
     ...event,
     lastModified: getTimestamp(),

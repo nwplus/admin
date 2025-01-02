@@ -29,15 +29,15 @@ jobs:
           NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${{ secrets.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}
           SERVICE_ACCOUNT_TOKEN: ${{ secrets.SERVICE_ACCOUNT_TOKEN }}
           FIREBASE_CLI_PREVIEWS: hostingchannels
-      - name: Deploy to dev firebase project
-        if: ${{ env.IS_PRODUCTION == 'false' }}
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_NWPLUS_UBC }}'
-          channelId: dev
-          projectId: nwplus-ubc-dev
-          firebaseToolsVersion: 12.9.1
+      # - name: Deploy to dev firebase project
+      #   if: ${{ env.IS_PRODUCTION == 'false' }}
+      #   uses: FirebaseExtended/action-hosting-deploy@v0
+      #   with:
+      #     repoToken: '${{ secrets.GITHUB_TOKEN }}'
+      #     firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_NWPLUS_UBC }}'
+      #     channelId: dev
+      #     projectId: nwplus-ubc-dev
+      #     firebaseToolsVersion: 12.9.1
       - name: Deploy to prod firebase project
         if: ${{ env.IS_PRODUCTION == 'true' }}
         uses: FirebaseExtended/action-hosting-deploy@v0

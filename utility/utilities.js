@@ -1,4 +1,4 @@
-import { SCORING } from '../constants'
+import { QUESTION_TYPES, SCORING } from '../constants'
 
 // given hex color code, convert to RGBA with given alpha value
 export const hexToRgba = (hex, a = 1) => {
@@ -10,10 +10,38 @@ export const hexToRgba = (hex, a = 1) => {
 
 // Given an object, take its values and sum them up
 export const calculateTotalScore = hackerScore => {
-  // summing up values score
-  const reducer = (accumulator, currentValue) => accumulator + currentValue
+  const reducer = (accumulator, currentValue) => accumulator + currentValue[1]?.score ?? 0
   const maxScore = Object.values(SCORING).reduce((acc, curr) => acc + curr.value * curr.weight, 0)
-  return Math.min(maxScore, Object.values(hackerScore).reduce(reducer, 0))
+
+  // filter out scores with weight zero
+  const validScores = Object.entries(hackerScore).filter(entry => {
+    const field = entry[0]
+    let label = ''
+    switch (field) {
+      case 'ResumeScore':
+        label = SCORING.RESUME.label
+        break
+      case 'NumExperiences':
+        label = SCORING.NUM_EXP.label
+        break
+      case 'ResponseOneScore':
+        label = SCORING.ESSAY1.label
+        break
+      case 'ResponseTwoScore':
+        label = SCORING.ESSAY2.label
+        break
+      case 'ResponseThreeScore':
+        label = SCORING.ESSAY3.label
+        break
+      default:
+        break
+    }
+    const scoringItem = Object.values(SCORING).find(item => item.label === label)
+    return scoringItem && scoringItem.weight !== 0
+  })
+  const totalScore = Object.values(validScores).reduce(reducer, 0)
+
+  return Math.min(maxScore, totalScore)
 }
 
 // Given an object, flatten all key/values, taking all nested properties to top level
@@ -84,7 +112,10 @@ export const filterHackerInfoFields = (obj, collection) => {
       firstTimeHacker: obj.skills?.firstTimeHacker,
     }
     newObj.ethnicity = returnTrueKey(obj.basicInfo?.ethnicity)
-    newObj.dietaryRestriction = returnTrueKey(obj.basicInfo?.dietaryRestriction)
+    newObj.dietaryRestriction = createStringFromSelection(
+      obj.basicInfo?.dietaryRestriction,
+      obj.basicInfo?.otherDietaryRestriction || ''
+    )
     newObj.pronouns = createStringFromSelection(obj.basicInfo?.pronouns, obj.basicInfo?.otherPronoun || '')
     newObj.role = returnTrueKey(obj.skills?.contributionRole)
     newObj.major = createStringFromSelection(obj.basicInfo?.major, obj.basicInfo?.otherMajor || '')
@@ -103,6 +134,11 @@ export const filterHackerInfoFields = (obj, collection) => {
     newObj.day2Lunch = obj.dayOf?.day2?.lunch?.length || 0
     newObj.day2Dinner = obj.dayOf?.day2?.dinner?.length || 0
     newObj.checkedIn = obj.dayOf?.checkedIn || false
+    newObj.longAnswers1 = obj.skills?.longAnswers1 || false
+    newObj.longAnswers2 = obj.skills?.longAnswers2 || false
+    newObj.longAnswers3 = obj.skills?.longAnswers3 || false
+
+    newObj.attendedEvents = obj.dayOf?.events?.map(e => e.eventName).join(', ') ?? ''
   } else if (collection === 'Projects') {
     newObj = { ...obj }
     delete newObj.grades
@@ -119,4 +155,34 @@ export const filterHackerInfoFields = (obj, collection) => {
     }
   })
   return newObj
+}
+
+export const validateQuestions = questions => {
+  for (const question of questions) {
+    if (
+      [
+        QUESTION_TYPES.SCHOOL,
+        QUESTION_TYPES.COUNTRY,
+        QUESTION_TYPES.MAJOR,
+        QUESTION_TYPES.PORTFOLIO,
+        QUESTION_TYPES.LEGALNAME,
+      ].includes(question.type)
+    ) {
+      continue
+    }
+
+    if (!question.formInput || question.formInput.trim() === '') {
+      return false
+    }
+  }
+  return true
+}
+
+export const convertToCamelCase = str => {
+  return str
+    .split(' ')
+    .map((word, index) =>
+      index === 0 ? word.toLowerCase() : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+    )
+    .join('')
 }

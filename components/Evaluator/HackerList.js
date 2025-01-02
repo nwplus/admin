@@ -7,6 +7,7 @@ import Icon from '../Icon'
 import { Title5 } from '../Typography'
 import Input from '../input'
 import HackerEntry from './HackerEntry'
+// import { calculateNormalizedScores } from '../../utility/normalization'
 
 const Container = styled.div`
   height: 60%;
@@ -107,7 +108,7 @@ export default function HackerList({ applicants, selectedApplicant, setSelectedA
 
   // filter applicants based off of search term and/or filter state
   useEffect(() => {
-    const filteredBySearch = applicants.filter(applicant => {
+    let filteredApplicants = applicants.filter(applicant => {
       if (debouncedSearch === '') {
         return true
       }
@@ -129,14 +130,17 @@ export default function HackerList({ applicants, selectedApplicant, setSelectedA
 
     // If filterActive is true, we filter out those that are already completed
     // If filterActive is false, we don't filter any applications
-    const filteredByComplete = filteredBySearch.filter(applicant => {
+    filteredApplicants = filteredApplicants.filter(applicant => {
       if (!filterActive) {
         return true
       }
       return !applicant.score || Object.keys(applicant.score.scores).length < NUM_SCORES
     })
 
-    setFiltered(filteredByComplete)
+    // sort by id
+    filteredApplicants.sort((a, b) => a._id.localeCompare(b._id))
+
+    setFiltered(filteredApplicants)
   }, [debouncedSearch, filterActive, applicants])
 
   const closeSearch = () => {
@@ -163,6 +167,9 @@ export default function HackerList({ applicants, selectedApplicant, setSelectedA
         ) : (
           <>
             <Title5 color={COLOR.MIDNIGHT_PURPLE}>Applicant List</Title5>
+            {/* <button onClick={calculateNormalizedScores} type="button">
+              Transform Scores
+            </button> */}
             <ButtonContainer>
               <StyledIcon icon="search" onClick={() => setSearchActive(true)} />
               <StyledIcon

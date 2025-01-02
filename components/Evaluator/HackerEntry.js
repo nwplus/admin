@@ -59,6 +59,8 @@ const StyledTag = styled.div`
       ? `background: ${ASSESSMENT_COLOR.YELLOW};`
       : p.status === APPLICATION_STATUS.scored.text
       ? `background: ${ASSESSMENT_COLOR.BLUE};`
+      : p.status === APPLICATION_STATUS.gradinginprog.text
+      ? `background: ${ASSESSMENT_COLOR.DARK_GRAY};`
       : `background: ${ASSESSMENT_COLOR.RED};`}
   padding: 0px 5px;
   border-radius: 4px;
@@ -66,6 +68,11 @@ const StyledTag = styled.div`
   margin-left: auto;
   min-width: 80px;
   justify-content: center;
+`
+
+const ScoreContainer = styled.div`
+  display: flex;
+  gap: 10px;
 `
 
 export default function HackerEntry({
@@ -93,9 +100,30 @@ export default function HackerEntry({
         return <StyledTag status={status}>{APPLICATION_STATUS.waitlisted.displayText}</StyledTag>
       case APPLICATION_STATUS.rejected.text:
         return <StyledTag status={status}>{APPLICATION_STATUS.rejected.displayText}</StyledTag>
+      case APPLICATION_STATUS.gradinginprog.text:
+        return <StyledTag status={status}>{APPLICATION_STATUS.gradinginprog.displayText}</StyledTag>
+      case APPLICATION_STATUS.ungraded.text:
       default:
-        return <StyledTag status={status}>Ungraded</StyledTag>
+        return <StyledTag status={status}>{APPLICATION_STATUS.ungraded.displayText}</StyledTag>
     }
+  }
+
+  const getTotalZScore = () => {
+    const { NumExperiences, ResponseOneScore, ResponseTwoScore, ResponseThreeScore } = score?.scores || {}
+    if (
+      NumExperiences?.normalizedScore !== undefined &&
+      ResponseOneScore?.normalizedScore !== undefined &&
+      ResponseTwoScore?.normalizedScore !== undefined &&
+      ResponseThreeScore?.normalizedScore !== undefined
+    ) {
+      return (
+        NumExperiences.normalizedScore +
+        ResponseOneScore.normalizedScore +
+        ResponseTwoScore.normalizedScore +
+        ResponseThreeScore.normalizedScore
+      )
+    }
+    return undefined
   }
 
   return (
@@ -106,9 +134,14 @@ export default function HackerEntry({
           {/* {firstName} {lastName} */}
           Applicant {index}
         </HackerName>
-        <HackerInfoText>
-          Score: {score?.totalScore ?? '?'}/{MAX_SCORE}
-        </HackerInfoText>
+        <ScoreContainer>
+          <HackerInfoText>
+            Score: {score?.totalScore !== undefined ? `${score.totalScore}/${MAX_SCORE}` : 'n/a'}
+          </HackerInfoText>
+          <HackerInfoText>
+            {getTotalZScore() !== undefined && <strong>z: {getTotalZScore().toFixed(2)}</strong>}
+          </HackerInfoText>
+        </ScoreContainer>
       </StyledInfoContainer>
       {getStyleTag()}
     </StyledHackerEntryDiv>

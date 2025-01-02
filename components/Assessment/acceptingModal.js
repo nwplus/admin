@@ -1,7 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { APPLICATION_STATUS, ASSESSMENT_COLOR } from '../../constants'
-import { getApplicantsToAccept, updateApplicantStatus } from '../../utility/firebase'
+import {
+  getApplicantsToAccept,
+  getSpecificHackerAppQuestionOptions,
+  updateApplicantStatus,
+} from '../../utility/firebase'
 import { Button } from './Button'
 import Modal from './Modal'
 
@@ -17,12 +21,45 @@ const ScoreInput = styled.input`
     color: ${ASSESSMENT_COLOR.BLACK};
   }
 `
+
+const ShortInput = styled.input`
+  font-size: 16px;
+  border: 1px solid ${ASSESSMENT_COLOR.BLACK};
+  border-radius: 4px;
+  box-sizing: border-box;
+  text-align: left;
+  padding: 0px 10px;
+  max-width: 100px;
+  :focus {
+    color: ${ASSESSMENT_COLOR.BLACK};
+  }
+`
+
+const InputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`
+
+const RangeContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin: 8px 20px 8px 20px;
+`
+
 const TotalApplicantsP = styled.p`
   font-weight: bold;
 `
 
 const FlexDiv = styled.div`
   display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+`
+
+const MultiselectLabel = styled.label`
+  display: block;
+  margin-bottom: 8px;
 `
 
 const acceptApplicant = async applicant => {
@@ -32,10 +69,28 @@ const acceptApplicant = async applicant => {
 export default function AcceptingModal({ setShowing }) {
   const [totalApplicants, setTotalApplicants] = useState(0)
   const [score, setScore] = useState(undefined)
+  const [zscore, setZScore] = useState(undefined)
+  const [numHackathonsMin, setNumHackathonsMin] = useState(undefined)
+  const [numHackathonsMax, setNumHackathonsMax] = useState(undefined)
+  const [yearLevelOptions, setYearLevelOptions] = useState([])
+  const [yearLevelsSelected, setYearLevelsSelected] = useState([])
   const [applicantsToAccept, setApplicants] = useState([])
+  const [contributionRoleOptions, setContributionRoleOptions] = useState([])
+  const [contributionRolesSelected, setContributionRolesSelected] = useState([])
+  const [numExperiencesMin, setNumExperiencesMin] = useState(undefined)
+  const [numExperiencesMax, setNumExperiencesMax] = useState(undefined)
 
   const getApplicants = async () => {
-    const apps = await getApplicantsToAccept(score)
+    const apps = await getApplicantsToAccept(
+      score,
+      zscore,
+      numHackathonsMin,
+      numHackathonsMax,
+      yearLevelsSelected,
+      contributionRolesSelected,
+      numExperiencesMin,
+      numExperiencesMax
+    )
     setTotalApplicants(apps.length)
     setApplicants(apps)
   }
@@ -46,11 +101,37 @@ export default function AcceptingModal({ setShowing }) {
     setShowing(false)
   }
 
+  const handleOptionChange = (option, setSelected) => {
+    setSelected(prevSelected => {
+      if (prevSelected.includes(option)) {
+        return prevSelected.filter(item => item !== option)
+      }
+      return [...prevSelected, option]
+    })
+  }
+
+  useEffect(() => {
+    const fetchOptions = async (category, field, setOptions) => {
+      const options = await getSpecificHackerAppQuestionOptions(category, field)
+      setOptions(options)
+    }
+    fetchOptions('BasicInfo', 'educationLevel', setYearLevelOptions)
+    fetchOptions('Skills', 'contributionRole', setContributionRoleOptions)
+  }, [])
+
+  // remove horizontal scrollbar
+  useEffect(() => {
+    document.body.style.overflowX = 'hidden'
+    return () => {
+      document.body.style.overflowX = 'unset'
+    }
+  }, [])
+
   return (
     <Modal setShowing={setShowing}>
       <h3>Accept applicants</h3>
-      {/* <ScoreInput /> */}
-      <FlexDiv>
+      <InputContainer>
+        <TotalApplicantsP>Minimum score</TotalApplicantsP>
         <ScoreInput
           onChange={e => {
             // eslint-disable-next-line no-restricted-globals
@@ -59,14 +140,92 @@ export default function AcceptingModal({ setShowing }) {
           value={score ?? ''}
           placeholder="minimum score"
         />
-        <TotalApplicantsP>Total applicants: {totalApplicants}</TotalApplicantsP>
-      </FlexDiv>
+        <TotalApplicantsP>Minimum z-score</TotalApplicantsP>
+        <ScoreInput
+          onChange={e => {
+            // eslint-disable-next-line no-restricted-globals
+            if (!isNaN(e.target.value)) setZScore(e.target.value)
+          }}
+          value={zscore ?? ''}
+          placeholder="minimum z-score"
+        />
+        <TotalApplicantsP>Number of Hackathons Attended</TotalApplicantsP>
+        <RangeContainer>
+          <ShortInput
+            onChange={e => {
+              // eslint-disable-next-line no-restricted-globals
+              if (!isNaN(e.target.value)) setNumHackathonsMin(e.target.value)
+            }}
+            value={numHackathonsMin ?? ''}
+            placeholder="min hackathons"
+          />
+          <ShortInput
+            onChange={e => {
+              // eslint-disable-next-line no-restricted-globals
+              if (!isNaN(e.target.value)) setNumHackathonsMax(e.target.value)
+            }}
+            value={numHackathonsMax ?? ''}
+            placeholder="max hackathons"
+          />
+        </RangeContainer>
+        <div>
+          <TotalApplicantsP>Year Levels</TotalApplicantsP>
+          <div>
+            {yearLevelOptions.map(option => (
+              <MultiselectLabel key={option}>
+                <input
+                  type="checkbox"
+                  value={option}
+                  checked={yearLevelsSelected.includes(option)}
+                  onChange={() => handleOptionChange(option, setYearLevelsSelected)}
+                />
+                {option}
+              </MultiselectLabel>
+            ))}
+          </div>
+        </div>
+        <div>
+          <TotalApplicantsP>Contribution Roles</TotalApplicantsP>
+          <div>
+            {contributionRoleOptions.map(option => (
+              <MultiselectLabel key={option}>
+                <input
+                  type="checkbox"
+                  value={option}
+                  checked={contributionRolesSelected.includes(option)}
+                  onChange={() => handleOptionChange(option, setContributionRolesSelected)}
+                />
+                {option}
+              </MultiselectLabel>
+            ))}
+          </div>
+        </div>
+        <TotalApplicantsP>Number of Experiences</TotalApplicantsP>
+        <RangeContainer>
+          <ShortInput
+            onChange={e => {
+              // eslint-disable-next-line no-restricted-globals
+              if (!isNaN(e.target.value)) setNumExperiencesMin(e.target.value)
+            }}
+            value={numExperiencesMin ?? ''}
+            placeholder="min experience"
+          />
+          <ShortInput
+            onChange={e => {
+              // eslint-disable-next-line no-restricted-globals
+              if (!isNaN(e.target.value)) setNumExperiencesMax(e.target.value)
+            }}
+            value={numExperiencesMax ?? ''}
+            placeholder="max experience"
+          />
+        </RangeContainer>
+      </InputContainer>
+      <TotalApplicantsP>Total applicants: {totalApplicants}</TotalApplicantsP>
       <FlexDiv style={{ justifyContent: 'center' }}>
         <Button
           onClick={() => {
             getApplicants()
           }}
-          disabled={!(score > 0)}
           width="flex"
           bColor={ASSESSMENT_COLOR.BLUE}
         >

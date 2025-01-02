@@ -74,18 +74,24 @@ export const FAQCategory = Object.freeze({
 export const SPONSORSHIP = 'SPONSORSHIP'
 export const HACKATHON_NAVBAR = {
   intro: 'Intro',
-  events: 'Events',
-  spocos: 'Sponsors',
+  events: 'Edit Events',
+  spocos: 'Edit Sponsors',
+  rewards: 'Edit Rewards',
   FeatureFlags: 'Feature Flags',
   BuildConfig: 'Build Config',
-  HackerInfo: 'Hacker Info',
+  HackerInfo: 'Firebase Queries',
 }
-export const LIVESITE_NAVBAR = {
-  announcements: 'Announcements',
-  quicklinks: 'Quicklinks',
-  schedule: 'Schedule',
+export const PORTAL_NAVBAR = {
   settings: 'Settings',
+  schedule: 'Schedule',
   judging: 'Judging',
+}
+
+export const HACKER_APP_NAVBAR = {
+  welcome: 'Welcome',
+  basicinfo: 'Basic Info',
+  skills: 'Skills',
+  questionnaire: 'Questionnaire',
 }
 
 export const ASSESSMENT_COLOR = {
@@ -128,6 +134,18 @@ export const APPLICATION_STATUS = {
     text: 'rejected',
     displayText: 'Rejected',
   },
+  gradinginprog: {
+    color: ASSESSMENT_COLOR.DARK_GRAY,
+    textColor: 'white',
+    text: 'gradinginprog',
+    displayText: 'In progress',
+  },
+  ungraded: {
+    color: ASSESSMENT_COLOR.RED,
+    textColor: 'white',
+    text: 'ungraded',
+    displayText: 'Ungraded',
+  },
   scored: {
     color: ASSESSMENT_COLOR.BLUE,
     textColor: 'white',
@@ -137,7 +155,7 @@ export const APPLICATION_STATUS = {
   accepted: {
     color: ASSESSMENT_COLOR.GREEN,
     textColor: 'white',
-    text: 'accepted',
+    text: 'acceptedNoResponseYet',
     displayText: 'Accepted',
   },
   acceptedAndAttending: {
@@ -159,32 +177,32 @@ export const APPLICATION_STATUS = {
   },
 }
 
-export const NUM_SCORES = 4
+export const NUM_SCORES = 5
 
 export const SCORING = {
   RESUME: {
     label: 'Resume',
-    value: 5,
+    value: 6,
     weight: 1,
+  },
+  NUM_EXP: {
+    label: 'Number of Experiences',
+    value: 5,
+    weight: 0,
   },
   ESSAY1: {
-    label: 'Long Answer 1',
-    value: 3,
-    weight: 1,
-  },
-  ESSAY1NOESSAY3: {
     label: 'Long Answer 1',
     value: 4,
     weight: 1,
   },
   ESSAY2: {
     label: 'Long Answer 2',
-    value: 4,
+    value: 6,
     weight: 1,
   },
   ESSAY3: {
     label: 'Long Answer 3',
-    value: 3,
+    value: 1,
     weight: 1,
   },
 }
@@ -197,8 +215,8 @@ export const BONUS_SCORING = {
   },
 }
 
-// export const MAX_SCORE = Object.values(SCORING).reduce((acc, curr) => acc + curr.value * curr.weight, 0)
-export const MAX_SCORE = 15 // hardcoded for cmd-f 2024
+export const MAX_SCORE = Object.values(SCORING).reduce((acc, curr) => acc + curr.value * curr.weight, 0)
+// export const MAX_SCORE = 15 // hardcoded for cmd-f 2024
 
 export const SORT = {
   TIMESTAMP: 'Timestamp',
@@ -327,3 +345,51 @@ export const RUBRIC = {
     },
   ],
 }
+
+export const HACKATHONS = ['HackCamp2024', 'nwHacks2025', 'cmd-f2025']
+
+export const QUESTION_TYPES = Object.freeze({
+  MCQ: 'Multiple Choice',
+  DROPDOWN: 'Dropdown',
+  SELECTALL: 'Select All',
+  SHORTANS: 'Short Answer',
+  LONGANS: 'Long Answer',
+  SCHOOL: 'School',
+  COUNTRY: 'Country',
+  MAJOR: 'Major',
+  PORTFOLIO: 'Portfolio',
+  LEGALNAME: 'Full Legal Name',
+})
+
+export const BASIC_INFO_FORM_INPUT_FIELDS = [
+  'academicYear',
+  'ageByHackathon',
+  'canadianStatus',
+  'culturalBackground',
+  'dietaryRestriction',
+  'disability',
+  'educationLevel',
+  'email',
+  'gender',
+  'graduation',
+  'haveTransExperience',
+  'identifyAsUnderrepresented',
+  'indigenousIdentification',
+  'phoneNumber',
+  'preferredName',
+  'pronouns',
+  'race',
+  'jobPosition',
+]
+
+export const SKILLS_FORM_INPUT_FIELDS = [
+  'numHackathonsAttended',
+  'contributionRole',
+  'longAnswers1',
+  'longAnswers2',
+  'longAnswers3',
+  'longAnswers4',
+  // 'longAnswers5',
+]
+
+export const QUESTIONNAIRE_FORM_INPUT_FIELDS = ['eventsAttended', 'engagementSource']

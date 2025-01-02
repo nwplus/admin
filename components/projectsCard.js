@@ -24,7 +24,7 @@ export default ({ isLoading, handleNew, handleEdit, handleDelete, projects }) =>
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Livesite Judging</CardTitle>
+        <CardTitle>Portal Judging</CardTitle>
         <CardButtonContainer>
           <Button type={NEW} onClick={handleNew}>
             New Project
@@ -47,9 +47,6 @@ export default ({ isLoading, handleNew, handleEdit, handleDelete, projects }) =>
                 <strong>Devpost Url</strong>
               </Text>
               <Text>
-                <strong>Team Members</strong>
-              </Text>
-              <Text>
                 <strong>Actions</strong>
               </Text>
             </CardContainer>
@@ -60,11 +57,10 @@ export default ({ isLoading, handleNew, handleEdit, handleDelete, projects }) =>
                 <Text style={{ flex: '2 2 0' }}>{project.title}</Text>
                 <Text>{project.countAssigned}</Text>
                 <Text>
-                  <a target="_blank no referrer" href={project.devpostUrl}>
+                  <a target="_blank no referrer" href={project.links.devpost}>
                     Link
                   </a>
                 </Text>
-                <Text>{project.teamMembers?.toString()}</Text>
                 <Actions>
                   <Button type={EDIT} color={COLOR.TRANSPARENT} onClick={() => handleEdit(key)} />
                   <Button type={DELETE} color={COLOR.TRANSPARENT} onClick={() => handleDelete(key)} />

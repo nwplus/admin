@@ -1,23 +1,24 @@
+// hasn't been updated for the new portal object yet
 /* eslint-disable no-alert */
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import styled from 'styled-components'
-import AnnouncementsCard from '../../components/announcementsCard'
-import Modal from '../../components/modal'
-import Page from '../../components/page'
-import TextBox from '../../components/textbox'
-import Checkbox from '../../components/checkbox'
-import { DateTimePicker } from '../../components/dateTimePicker'
-import { EDIT, LIVESITE_NAVBAR, NEW } from '../../constants'
-import { useAuth } from '../../utility/auth'
+import { useRouter } from 'next/router'
+import AnnouncementsCard from '../../../components/announcementsCard'
+import Modal from '../../../components/modal'
+import Page from '../../../components/page'
+import TextBox from '../../../components/textbox'
+import Checkbox from '../../../components/checkbox'
+import { DateTimePicker } from '../../../components/dateTimePicker'
+import { EDIT, PORTAL_NAVBAR, NEW } from '../../../constants'
+import { useAuth } from '../../../utility/auth'
 import {
   deleteAnnouncement,
-  getActiveHackathon,
   getHackathons,
   subscribeToLivesiteAnnouncements,
   updateAnnouncement,
-} from '../../utility/firebase'
+} from '../../../utility/firebase'
 
 const StyledTextBox = styled(TextBox)`
   margin-bottom: 12px;
@@ -50,28 +51,23 @@ const announcementDateFormat = timestamp => {
 
 export default ({ hackathons }) => {
   const [announcements, setAnnouncements] = useState([])
-  const [activeHackathon, setActiveHackathon] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const [activeModal, setActiveModal] = useState('')
   const [currentAnnouncement, setCurrentAnnouncement] = useState({})
   const [announcementTimeOption, setAnnouncementTimeOption] = useState('immediate')
   const [announcementTime, setAnnouncementTime] = useState(Date.now())
   const { email: user } = useAuth().user
+  const router = useRouter()
+  const { id: activeHackathon } = router.query
 
   useEffect(() => {
-    ;(async () => {
-      setActiveHackathon(await getActiveHackathon)
-    })()
-  })
-
-  // eslint-disable-next-line consistent-return
-  useEffect(() => {
-    if (activeHackathon) {
-      return subscribeToLivesiteAnnouncements(activeHackathon, data => {
-        setAnnouncements(data)
-        setIsLoading(false)
-      })
+    if (!activeHackathon) {
+      return undefined
     }
+    return subscribeToLivesiteAnnouncements(activeHackathon, data => {
+      setAnnouncements(data)
+      setIsLoading(false)
+    })
   }, [activeHackathon, setAnnouncements])
 
   const handleNew = () => {
@@ -119,7 +115,7 @@ export default ({ hackathons }) => {
   }
 
   return (
-    <Page currentPath="Livesite" hackathons={hackathons} navbarItems={LIVESITE_NAVBAR}>
+    <Page currentPath={`livesite/${activeHackathon}`} hackathons={hackathons} navbarItems={PORTAL_NAVBAR}>
       <AnnouncementsCard
         isLoading={isLoading}
         announcements={announcements}
@@ -187,5 +183,17 @@ export const getStaticProps = async () => {
     props: {
       hackathons,
     },
+  }
+}
+
+export const getStaticPaths = async () => {
+  const hackathons = await getHackathons()
+  const paths = hackathons.map(id => ({
+    params: { id },
+  }))
+
+  return {
+    paths,
+    fallback: false,
   }
 }

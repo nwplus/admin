@@ -4,11 +4,12 @@
 name: Deploy to Firebase Hosting on merge
 'on':
   push:
-    branches:
-      - main
+    branches: [main, dev, bywang/dev-env]
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
+    env:
+      IS_PRODUCTION: ${{ endsWith(github.ref, 'main') }}
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js
@@ -28,10 +29,10 @@ jobs:
           NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${{ secrets.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}
           SERVICE_ACCOUNT_TOKEN: ${{ secrets.SERVICE_ACCOUNT_TOKEN }}
           FIREBASE_CLI_PREVIEWS: hostingchannels
-      - uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_NWPLUS_UBC }}'
-          channelId: live
-          projectId: nwplus-ubc
-          firebaseToolsVersion: 12.9.1
+      - name: Deploy to dev firebase project
+        if: ${{ env.IS_PRODUCTION == 'false' }}
+        run: firebase deploy --only hosting:admin-portal --non-interactive --token ${{ secrets.FIREBASE_TOKEN }}
+
+      - name: Deploy to prod firebase project
+        if: ${{ env.IS_PRODUCTION == 'true' }}
+        run: firebase deploy --only hosting:admin-portal --non-interactive --token ${{ secrets.FIREBASE_TOKEN }}

@@ -680,7 +680,7 @@ export const getApplicantsToAccept = async (
       }
 
       // range for # of experiences
-      const numExperiences = appData.score?.scores?.NumExperiences
+      const numExperiences = appData.score?.scores?.NumExperiences.score
       if (
         (numExperiencesMin !== undefined && Number(numExperiences) < Number(numExperiencesMin)) ||
         (numExperiencesMax !== undefined && Number(numExperiences) > Number(numExperiencesMax))

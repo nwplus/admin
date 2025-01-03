@@ -135,7 +135,7 @@ export default function AcceptingModal({ setShowing }) {
         <ScoreInput
           onChange={e => {
             // eslint-disable-next-line no-restricted-globals
-            if (!isNaN(e.target.value)) setScore(e.target.value)
+            if (/^-?\d*\.?\d*$/.test(e.target.value)) setScore(e.target.value)
           }}
           value={score ?? ''}
           placeholder="minimum score"
@@ -144,7 +144,7 @@ export default function AcceptingModal({ setShowing }) {
         <ScoreInput
           onChange={e => {
             // eslint-disable-next-line no-restricted-globals
-            if (!isNaN(e.target.value)) setZScore(e.target.value)
+            if (/^-?\d*\.?\d*$/.test(e.target.value)) setZScore(e.target.value)
           }}
           value={zscore ?? ''}
           placeholder="minimum z-score"
@@ -154,7 +154,7 @@ export default function AcceptingModal({ setShowing }) {
           <ShortInput
             onChange={e => {
               // eslint-disable-next-line no-restricted-globals
-              if (!isNaN(e.target.value)) setNumHackathonsMin(e.target.value)
+              if (/^-?\d*\.?\d*$/.test(e.target.value)) setNumHackathonsMin(e.target.value)
             }}
             value={numHackathonsMin ?? ''}
             placeholder="min hackathons"
@@ -162,7 +162,7 @@ export default function AcceptingModal({ setShowing }) {
           <ShortInput
             onChange={e => {
               // eslint-disable-next-line no-restricted-globals
-              if (!isNaN(e.target.value)) setNumHackathonsMax(e.target.value)
+              if (/^-?\d*\.?\d*$/.test(e.target.value)) setNumHackathonsMax(e.target.value)
             }}
             value={numHackathonsMax ?? ''}
             placeholder="max hackathons"
@@ -205,7 +205,7 @@ export default function AcceptingModal({ setShowing }) {
           <ShortInput
             onChange={e => {
               // eslint-disable-next-line no-restricted-globals
-              if (!isNaN(e.target.value)) setNumExperiencesMin(e.target.value)
+              if (/^-?\d*\.?\d*$/.test(e.target.value)) setNumExperiencesMin(e.target.value)
             }}
             value={numExperiencesMin ?? ''}
             placeholder="min experience"
@@ -213,7 +213,7 @@ export default function AcceptingModal({ setShowing }) {
           <ShortInput
             onChange={e => {
               // eslint-disable-next-line no-restricted-globals
-              if (!isNaN(e.target.value)) setNumExperiencesMax(e.target.value)
+              if (/^-?\d*\.?\d*$/.test(e.target.value)) setNumExperiencesMax(e.target.value)
             }}
             value={numExperiencesMax ?? ''}
             placeholder="max experience"

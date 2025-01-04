@@ -4,7 +4,7 @@
 name: Deploy to Firebase Hosting on merge
 'on':
   push:
-    branches: [main, dev, bywang/dev-env]
+    branches: [main, dev]
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
@@ -32,14 +32,6 @@ jobs:
           NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${{ secrets.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}
           SERVICE_ACCOUNT_TOKEN: ${{ secrets.SERVICE_ACCOUNT_TOKEN }}
           FIREBASE_CLI_PREVIEWS: hostingchannels
-      # - name: Deploy to dev firebase project
-      #   if: ${{ env.IS_PRODUCTION == 'false' }}
-      #   uses: FirebaseExtended/action-hosting-deploy@v0
-      #   with:
-      #     repoToken: '${{ secrets.GITHUB_TOKEN }}'
-      #     firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_NWPLUS_UBC_DEV }}'
-      #     projectId: nwplus-ubc-dev
-      #     firebaseToolsVersion: 12.9.1
       - name: Deploy to dev firebase project
         if: ${{ env.IS_PRODUCTION == 'false' }}
         run: firebase deploy --only hosting:admin-portal --project nwplus-ubc-dev --non-interactive --token ${{ secrets.FIREBASE_TOKEN }}

@@ -16,6 +16,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '16.x'
+      - name: Set up Firebase CLI
+        run: yarn global add firebase-tools
       - name: Install and Build
         run: yarn install --frozen-lockfile && yarn build
         env:

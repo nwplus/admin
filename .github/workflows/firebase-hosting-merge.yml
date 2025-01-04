@@ -15,7 +15,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16.x'
+          node-version: '18.x'
       - name: Set up Firebase CLI
         run: yarn global add firebase-tools
       - name: Install and Build

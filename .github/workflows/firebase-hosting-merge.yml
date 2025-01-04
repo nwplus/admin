@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       IS_PRODUCTION: ${{ endsWith(github.ref, 'main') }}
+      NODE_OPTIONS: --openssl-legacy-provider
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js

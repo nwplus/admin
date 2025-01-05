@@ -228,9 +228,6 @@ export default ({ hackathons }) => {
                   {
                     label: 'minievents',
                   },
-                  {
-                    label: 'notices',
-                  },
                 ]}
                 label="Type"
                 value={newEvent.type}
@@ -329,9 +326,6 @@ export default ({ hackathons }) => {
                   },
                   {
                     label: 'minievents',
-                  },
-                  {
-                    label: 'notices',
                   },
                 ]}
                 label="Type"

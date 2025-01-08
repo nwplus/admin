@@ -64,6 +64,7 @@ export default function Status({ hackathons }) {
   const [safewalkSelectStatus, setsafewalkSelectStatus] = useState('safewalkNo')
   const [mentorshipSelectStatus, setMentorshipSelectStatus] = useState('nwMentorshipNo')
   const [emailConsentStatus, setEmailConsentStatus] = useState(false)
+  const [checkInDisclaimerStatus, setCheckInDisclaimerStatus] = useState(false)
 
   const validateInputs = () => {
     if (!emails) {
@@ -115,6 +116,7 @@ export default function Status({ hackathons }) {
         await updateWaiver(userId, 'safewalkSelect', safewalkSelectStatus, hackathonSelected)
         await updateWaiver(userId, 'nwMentorshipSelect', mentorshipSelectStatus, hackathonSelected)
         await updateWaiver(userId, 'sponsorEmailConsentCheck', emailConsentStatus, hackathonSelected)
+        await updateWaiver(userId, 'checkInDisclaimerCheck', checkInDisclaimerStatus, hackathonSelected)
       }
     }
 
@@ -194,6 +196,12 @@ export default function Status({ hackathons }) {
                   'I authorize the use of my email to receive hiring opportunities, promotions, and information from participating nwHacks sponsors',
                 checked: emailConsentStatus,
                 onClick: () => setEmailConsentStatus(!emailConsentStatus),
+              },
+              {
+                label:
+                  'I understand that if I do not arrive during the designated check-in period, my spot may be given to someone else. In this case my RSVP does not guarantee entry to the event.',
+                checked: checkInDisclaimerStatus,
+                onClick: () => setCheckInDisclaimerStatus(!checkInDisclaimerStatus),
               },
             ].map(({ label, checked, onClick }) => (
               <div key={label}>

@@ -123,6 +123,11 @@ export const filterHackerInfoFields = (obj, collection) => {
       obj.basicInfo?.culturalBackground,
       obj.basicInfo?.otherCulturalBackground || ''
     )
+    newObj.engagementSource = createStringFromSelection(
+      obj.questionnaire?.engagementSource,
+      obj.questionnaire?.otherEngagementSource || ''
+    )
+    newObj.gender = createStringFromSelection(obj.basicInfo?.gender, obj.basicInfo?.otherGender || '')
     newObj.race = createStringFromSelection(obj.basicInfo?.race, obj.basicInfo?.otherRace || '')
     newObj.MLHCodeOfConduct = obj.termsAndConditions?.MLHCodeOfConduct
     newObj.MLHPrivacyPolicy = obj.termsAndConditions?.MLHPrivacyPolicy

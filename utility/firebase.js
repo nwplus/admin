@@ -592,11 +592,10 @@ export const getHackerInfo = async (callback, hackathon, collection) => {
     .doc(hackathon)
     .collection(collection)
     .onSnapshot(snap => {
-      callback(
-        snap.docs.map(doc => {
-          return orderObj(flattenObj(filterHackerInfoFields(doc.data(), collection)))
-        })
-      )
+      const hackerInfoPromises = snap.docs.map(async doc => {
+        return orderObj(flattenObj(await filterHackerInfoFields(db, doc.data(), hackathon, collection)))
+      })
+      Promise.all(hackerInfoPromises).then(callback)
     })
   return res
 }

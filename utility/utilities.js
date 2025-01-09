@@ -100,7 +100,8 @@ const createStringFromSelection = (selection, other = '') => {
 }
 
 // Specifically for hacker info page - fixes/removes certain fields for table display
-export const filterHackerInfoFields = (obj, collection) => {
+// Take `db` as a parameter to avoid circular dependency with firebase.js
+export const filterHackerInfoFields = async (db, obj, hackathon, collection) => {
   let newObj = {}
   if (collection === 'Applicants') {
     delete obj.questionnaire?.eventsAttended
@@ -139,6 +140,12 @@ export const filterHackerInfoFields = (obj, collection) => {
     newObj.longAnswers3 = obj.skills?.longAnswers3 || false
 
     newObj.attendedEvents = obj.dayOf?.events?.map(e => e.eventName).join(', ') ?? ''
+
+    const dayOfDocsPromises = obj.dayOf?.events?.map(e =>
+      db.collection('Hackathons').doc(hackathon).collection('DayOf').doc(e.eventId).get()
+    )
+    const dayOfDocs = await Promise.all(dayOfDocsPromises ?? [])
+    newObj.points = dayOfDocs.reduce((acc, curr) => acc + Number(curr.data().points ?? 0), 0)
   } else if (collection === 'Projects') {
     newObj = { ...obj }
     delete newObj.grades

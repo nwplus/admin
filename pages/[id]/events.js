@@ -120,6 +120,7 @@ export default function Events({ id, hackathons }) {
       <TableRow>
         <TableData>{props.title}</TableData>
         <TableData>{props.date}</TableData>
+        <TableData>{props.location}</TableData>
         <TableData>{props.points}</TableData>
         <TableData>{props.type}</TableData>
         <TableData>{props.lastModified}</TableData>
@@ -178,6 +179,7 @@ export default function Events({ id, hackathons }) {
                     <TableRow>
                       <TableHeader>Event</TableHeader>
                       <TableHeader>Date</TableHeader>
+                      <TableHeader>Location</TableHeader>
                       <TableHeader narrow>Points</TableHeader>
                       <TableHeader>Event Type</TableHeader>
                       <TableHeader>Last Modified</TableHeader>
@@ -191,6 +193,7 @@ export default function Events({ id, hackathons }) {
                         eventID={events[curr].eventID}
                         title={events[curr].title}
                         text={events[curr].text}
+                        location={events[curr].location}
                         points={events[curr].points}
                         type={events[curr].type}
                         date={events[curr].date}
@@ -225,6 +228,13 @@ export default function Events({ id, hackathons }) {
                 onChange={event => {
                   handleInput('text', event.target.value, newEvent, setNewEvent)
                 }}
+              />
+            </ModalContent>
+            <ModalContent columns={1}>
+              <ModalField
+                label="Location"
+                modalAction={NEW}
+                onChange={event => handleInput('location', event.target.value, newEvent, setNewEvent)}
               />
             </ModalContent>
             <ModalContent columns={3}>
@@ -276,6 +286,9 @@ export default function Events({ id, hackathons }) {
             <ModalContent columns={1}>
               <ModalField label="Description" value={eventViewing.text} modalAction={VIEW} />
             </ModalContent>
+            <ModalContent columns={1}>
+              <ModalField label="Location" value={eventViewing.location} modalAction={VIEW} />
+            </ModalContent>
             <ModalContent columns={3}>
               <ModalField label="Date" value={eventViewing.date} modalAction={VIEW} />
               <ModalField label="Points" value={eventViewing.points} modalAction={VIEW} />
@@ -307,6 +320,16 @@ export default function Events({ id, hackathons }) {
                 modalAction={EDIT}
                 onChange={event => {
                   handleInput('text', event.target.value, eventEditing, setEventEditing)
+                }}
+              />
+            </ModalContent>
+            <ModalContent columns={1}>
+              <ModalField
+                label="Location"
+                value={eventEditing.location}
+                modalAction={EDIT}
+                onChange={event => {
+                  handleInput('location', event.target.value, eventEditing, setEventEditing)
                 }}
               />
             </ModalContent>
@@ -361,6 +384,9 @@ export default function Events({ id, hackathons }) {
             </ModalContent>
             <ModalContent columns={1}>
               <ModalField label="Description" value={eventConfirm.text} modalAction={VIEW} />
+            </ModalContent>
+            <ModalContent columns={1}>
+              <ModalField label="Location" value={eventConfirm.location} modalAction={VIEW} />
             </ModalContent>
             <ModalContent columns={2}>
               <ModalField label="Date" value={eventConfirm.date} modalAction={VIEW} />

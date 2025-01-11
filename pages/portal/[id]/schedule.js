@@ -118,6 +118,7 @@ export default ({ hackathons }) => {
     return (
       <TableRow>
         <TableData>{props.name}</TableData>
+        <TableData>{props.location}</TableData>
         <TableData>{props.startTime}</TableData>
         <TableData>{props.delayed ? 'True' : 'False'}</TableData>
         <TableData>{props.type}</TableData>
@@ -177,6 +178,7 @@ export default ({ hackathons }) => {
                   <thead>
                     <TableRow>
                       <TableHeader>Event</TableHeader>
+                      <TableHeader>Location</TableHeader>
                       <TableHeader>Start Time</TableHeader>
                       <TableHeader>Delayed</TableHeader>
                       <TableHeader>Type</TableHeader>
@@ -214,6 +216,15 @@ export default ({ hackathons }) => {
                 modalAction={NEW}
                 onChange={event => {
                   handleInput('description', event.target.value, newEvent, setNewEvent)
+                }}
+              />
+            </ModalContent>
+            <ModalContent columns={1}>
+              <ModalField
+                label="Location"
+                modalAction={NEW}
+                onChange={event => {
+                  handleInput('location', event.target.value, newEvent, setNewEvent)
                 }}
               />
             </ModalContent>
@@ -284,6 +295,9 @@ export default ({ hackathons }) => {
             <ModalContent columns={1}>
               <ModalField label="Description" value={eventViewing.description} modalAction={VIEW} />
             </ModalContent>
+            <ModalContent columns={1}>
+              <ModalField label="Location" value={eventViewing.location} modalAction={VIEW} />
+            </ModalContent>
             <ModalContent columns={3}>
               <ModalField label="Type" value={eventViewing.type} modalAction={VIEW} />
               <ModalField label="Points" value={eventViewing.points} modalAction={VIEW} />
@@ -319,6 +333,16 @@ export default ({ hackathons }) => {
                 modalAction={EDIT}
                 onChange={event => {
                   handleInput('description', event.target.value, eventEditing, setEventEditing)
+                }}
+              />
+            </ModalContent>
+            <ModalContent columns={1}>
+              <ModalField
+                label="Location"
+                value={eventEditing.location}
+                modalAction={EDIT}
+                onChange={event => {
+                  handleInput('location', event.target.value, eventEditing, setEventEditing)
                 }}
               />
             </ModalContent>

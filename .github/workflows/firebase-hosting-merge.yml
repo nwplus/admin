@@ -40,6 +40,7 @@ jobs:
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_NWPLUS_UBC_DEV }}'
+          channelId: live
           projectId: nwplus-ubc-dev
           firebaseToolsVersion: 12.9.1
       - name: Deploy to prod firebase project

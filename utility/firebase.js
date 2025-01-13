@@ -158,6 +158,7 @@ export const getReward = (rewardID, data) => {
         rewardID,
         reward: data.reward || 'Empty reward field', // Title of the reward
         key: data.key || rewardID, // Key of the reward (defaults to rewardID)
+        type: data.type, // Reward type
         blurb: data.blurb || 'Empty blurb description for reward', // Short description of the reward
         from: data.from || 'None', // Source or sponsor of the reward
         imgName: data.imgName || 'None', // Image name (if applicable)
@@ -185,6 +186,7 @@ export const addReward = async (hackathon, reward) => {
   await ref.set({
     reward: reward.reward, // Title of the reward
     key: ref.id, // Key generated for the reward
+    type: reward.type, // Reward type
     blurb: reward.blurb, // Short description of the reward
     imgName: reward.imgName, // Image name (if applicable)
     imgURL: reward.imgURL, // URL to the reward image
@@ -202,6 +204,7 @@ export const updateReward = async (hackathon, reward) => {
   await ref.update({
     reward: reward.reward || 'Empty reward field',
     key: reward.key || reward.rewardID,
+    type: reward.type,
     blurb: reward.blurb || 'Empty blurb description for reward',
     from: reward.from || 'None',
     imgName: reward.imgName || 'None',

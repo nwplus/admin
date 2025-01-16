@@ -37,6 +37,8 @@ export default function Rewards({ id, hackathons }) {
   const [alertMsg, setAlertMsg] = useState('')
   const { email: user } = useAuth().user
 
+  const REWARD_TYPES = [{ label: 'Reward' }, { label: 'Raffle' }]
+
   const fetchRewards = async () => {
     const rewardsFetched = await getRewards(id)
     if (Object.keys(rewardsFetched).length > 0) {
@@ -116,6 +118,7 @@ export default function Rewards({ id, hackathons }) {
     return (
       <TableRow>
         <TableData>{props.reward}</TableData>
+        <TableData>{props.type}</TableData>
         <TableData>{props.blurb}</TableData>
         <TableData>{props.prizesAvailable}</TableData>
         <TableData>{props.requiredPoints}</TableData>
@@ -143,11 +146,12 @@ export default function Rewards({ id, hackathons }) {
           <CardButtonContainer>
             <Button
               type={NEW}
-              onClick={() =>
+              onClick={() => {
                 setNewReward({
                   date: setHours(setMinutes(new Date(), 0), 13),
+                  type: 'Reward',
                 })
-              }
+              }}
             >
               New Reward
             </Button>
@@ -175,6 +179,7 @@ export default function Rewards({ id, hackathons }) {
                   <thead>
                     <TableRow>
                       <TableHeader>Reward</TableHeader>
+                      <TableHeader>Type</TableHeader>
                       <TableHeader>Blurb</TableHeader>
                       <TableHeader>Number of Prizes Available</TableHeader>
                       <TableHeader>Required Points</TableHeader>
@@ -189,6 +194,7 @@ export default function Rewards({ id, hackathons }) {
                         key={rewards[curr].rewardID}
                         rewardID={rewards[curr].rewardID}
                         reward={rewards[curr].reward}
+                        type={rewards[curr].type}
                         blurb={rewards[curr].blurb}
                         prizesAvailable={rewards[curr].prizesAvailable}
                         requiredPoints={rewards[curr].requiredPoints}
@@ -214,6 +220,17 @@ export default function Rewards({ id, hackathons }) {
                 label="Reward"
                 modalAction={NEW}
                 onChange={reward => handleInput('reward', reward.target.value, newReward, setNewReward)}
+              />
+            </ModalContent>
+            <ModalContent columns={1}>
+              <ModalField
+                label="Type"
+                modalAction={NEW}
+                dropdown
+                dropdownOptions={REWARD_TYPES}
+                onChange={type => {
+                  handleInput('type', type.label, newReward, setNewReward)
+                }}
               />
             </ModalContent>
             <ModalContent columns={1}>
@@ -272,6 +289,9 @@ export default function Rewards({ id, hackathons }) {
               <ModalField label="Reward" value={rewardViewing.reward} modalAction={VIEW} />
             </ModalContent>
             <ModalContent columns={1}>
+              <ModalField label="Type" value={rewardViewing.type} modalAction={VIEW} />
+            </ModalContent>
+            <ModalContent columns={1}>
               <ModalField label="Blurb" value={rewardViewing.blurb} modalAction={VIEW} />
             </ModalContent>
             <ModalContent columns={1}>
@@ -300,6 +320,18 @@ export default function Rewards({ id, hackathons }) {
                 modalAction={EDIT}
                 onChange={reward => {
                   handleInput('reward', reward.target.value, rewardEditing, setRewardEditing)
+                }}
+              />
+            </ModalContent>
+            <ModalContent columns={1}>
+              <ModalField
+                label="Type"
+                modalAction={NEW}
+                dropdown
+                dropdownOptions={REWARD_TYPES}
+                value={rewardEditing?.type || undefined}
+                onChange={type => {
+                  handleInput('type', type.label, rewardEditing, setRewardEditing)
                 }}
               />
             </ModalContent>
@@ -362,6 +394,9 @@ export default function Rewards({ id, hackathons }) {
           >
             <ModalContent columns={1}>
               <ModalField label="Reward" value={rewardConfirm.rewardConfirm} modalAction={VIEW} />
+            </ModalContent>
+            <ModalContent columns={1}>
+              <ModalField label="Type" value={rewardConfirm.type} modalAction={VIEW} />
             </ModalContent>
             <ModalContent columns={1}>
               <ModalField label="Blurb" value={rewardConfirm.blurb} modalAction={VIEW} />

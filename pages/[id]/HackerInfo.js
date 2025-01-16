@@ -122,6 +122,8 @@ export default function HackerInfo({ id, hackathons }) {
   const [filter, setFilter] = useState({})
   const [calculate, setCalculate] = useState({})
   const downloadLink = useRef()
+  const [uniqueEvents, setUniqueEvents] = useState([])
+  const [selectedEvents, setSelectedEvents] = useState([])
 
   const clearFilters = () => {
     setGroupBy({ col1: '', func: '', col2: '' })
@@ -151,6 +153,35 @@ export default function HackerInfo({ id, hackathons }) {
     }
     setFilteredData(res)
   }, [filter])
+
+  useEffect(() => {
+    if (unfilteredData.length > 0 && currTable === 'Applicants') {
+      const events = new Set()
+      unfilteredData.forEach(hacker => {
+        if (hacker.attendedEvents) {
+          const hackerEvents = hacker.attendedEvents.split(',').map(e => e.trim())
+          hackerEvents.forEach(event => {
+            if (event) events.add(event)
+          })
+        }
+      })
+      setUniqueEvents(Array.from(events))
+    }
+  }, [unfilteredData, currTable])
+
+  const applyEventFilter = () => {
+    if (selectedEvents.length === 0) {
+      setFilteredData(unfilteredData)
+      return
+    }
+
+    const filtered = unfilteredData.filter(hacker => {
+      if (!hacker.attendedEvents) return false
+      const hackerEvents = hacker.attendedEvents.split(',').map(e => e.trim())
+      return selectedEvents.every(event => hackerEvents.includes(event))
+    })
+    setFilteredData(filtered)
+  }
 
   const saveGroupBy = () => {
     setFilter({
@@ -458,6 +489,34 @@ export default function HackerInfo({ id, hackathons }) {
                 <Button
                   type={CHECK}
                   onClick={() => saveSort()}
+                  color={COLOR.TRANSPARENT}
+                  contentColor={COLOR.DARK_GRAY}
+                />
+              )}
+            </Selection>
+          </Menu>
+          <Menu label="Events">
+            <Selection>
+              {uniqueEvents.map(event => (
+                <label key={event} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <input
+                    type="checkbox"
+                    checked={selectedEvents.includes(event)}
+                    onChange={e => {
+                      if (e.target.checked) {
+                        setSelectedEvents([...selectedEvents, event])
+                      } else {
+                        setSelectedEvents(selectedEvents.filter(ev => ev !== event))
+                      }
+                    }}
+                  />
+                  {event}
+                </label>
+              ))}
+              {uniqueEvents.length > 0 && (
+                <Button
+                  type={CHECK}
+                  onClick={applyEventFilter}
                   color={COLOR.TRANSPARENT}
                   contentColor={COLOR.DARK_GRAY}
                 />

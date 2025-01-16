@@ -498,8 +498,13 @@ export default function HackerInfo({ id, hackathons }) {
           <Menu label="Events">
             <Selection>
               {uniqueEvents.map(event => (
-                <label key={event} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <label
+                  key={event}
+                  htmlFor={`event-${event}`}
+                  style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+                >
                   <input
+                    id={`event-${event}`}
                     type="checkbox"
                     checked={selectedEvents.includes(event)}
                     onChange={e => {

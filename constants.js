@@ -389,7 +389,8 @@ export const SKILLS_FORM_INPUT_FIELDS = [
   'longAnswers2',
   'longAnswers3',
   'longAnswers4',
-  // 'longAnswers5',
+  'longAnswers5',
+  'longAnswers6',
 ]
 
 export const QUESTIONNAIRE_FORM_INPUT_FIELDS = ['eventsAttended', 'engagementSource']

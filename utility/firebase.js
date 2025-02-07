@@ -34,7 +34,7 @@ const Hackathons = 'Hackathons'
 const InternalWebsitesCollection = 'InternalWebsites'
 const CMSCollection = 'CMS'
 const PortalCollection = 'Portal'
-export const HackerEvaluationHackathon = 'nwHacks2025'
+export const HackerEvaluationHackathon = 'cmd-f2025'
 
 export const getTimestamp = () => {
   return firebase.firestore.Timestamp.now()

@@ -115,6 +115,18 @@ export default function ApplicantScore(props) {
           score={score.ResponseTwoScore}
           handleClick={handleClick}
         />
+        <ScoreInput
+          maxScore={SCORING.ESSAY3}
+          label="Written Response Score 3"
+          score={score.ResponseThreeScore}
+          handleClick={handleClick}
+        />
+        <ScoreInput
+          maxScore={SCORING.ESSAY4}
+          label="Written Response Score 4"
+          score={score.ResponseFourScore}
+          handleClick={handleClick}
+        />
       </Main>
       {hasScore && (
         <Summary>

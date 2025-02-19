@@ -99,28 +99,28 @@ export default function ApplicantResponse({ shouldDisplay, hacker }) {
       {/* <ResponseInput url={waiverURL} label="Waiver" response={waiverURL} /> */}
 
       <ResponseInput
-        label="It's our 10-year anniversary! What would a meaningful and memorable weekend at nwHacks look like for you?"
+        label="Q1 - Here at cmd-f, we value community, innovation and passion. Tell us about a time where you have shown one or more of these traits. (150 words)"
         response={`${hacker?.skills?.longAnswers1}`}
       />
 
       <ResponseInput
-        label="Share a technical or non-technical project you're proud of. What project would you display in the museum of your life? Tell us what inspired you, how you approached it, and why it matters to you."
+        label="Q2 - If you had unlimited resources at your disposal, what is one change you would make in the tech industry to make it more inclusive for underrepresented genders and why? (200 words)"
         response={`${hacker?.skills?.longAnswers2}`}
       />
 
-      {hacker?.skills?.longAnswers3 && (
-        <ResponseInput
-          label="Create an acronym from your name or nickname that reveals something about you!"
-          response={`${hacker?.skills?.longAnswers3}`}
-        />
-      )}
+      {/* {hacker?.skills?.longAnswers3 && ( */}
+      <ResponseInput
+        label="Q3 - The sweetest rewards stem from hard work. Tell us about a technical or non-technical project you are proud of — include your inspiration, why you chose this project and what you learnt from it. (200 words)"
+        response={`${hacker?.skills?.longAnswers3}`}
+      />
+      {/* )} */}
 
-      {hacker?.skills?.longAnswers4 && (
-        <ResponseInput
-          label="Is there anything we should know to help make you feel comfortable and supported during the event? (not graded, just for nwHacks to see)"
-          response={`${hacker?.skills?.longAnswers4}`}
-        />
-      )}
+      {/* {hacker?.skills?.longAnswers4 && ( */}
+      <ResponseInput
+        label="Q4 - If you were a baked good, what would you be and why? (50 words)"
+        response={`${hacker?.skills?.longAnswers4}`}
+      />
+      {/* )} */}
 
       <ResponseInput url={resumeURL} label="Resume" response={resumeURL} />
 

@@ -33,6 +33,9 @@ export const calculateTotalScore = hackerScore => {
       case 'ResponseThreeScore':
         label = SCORING.ESSAY3.label
         break
+      case 'ResponseFourScore':
+        label = SCORING.ESSAY4.label
+        break
       default:
         break
     }

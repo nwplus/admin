@@ -183,12 +183,12 @@ export const SCORING = {
   RESUME: {
     label: 'Resume',
     value: 6,
-    weight: 1,
+    weight: 0.5,
   },
   NUM_EXP: {
     label: 'Number of Experiences',
     value: 5,
-    weight: 0,
+    weight: 0.6,
   },
   ESSAY1: {
     label: 'Long Answer 1',
@@ -202,6 +202,11 @@ export const SCORING = {
   },
   ESSAY3: {
     label: 'Long Answer 3',
+    value: 6,
+    weight: 1,
+  },
+  ESSAY4: {
+    label: 'Long Answer 4',
     value: 1,
     weight: 1,
   },

@@ -4,17 +4,21 @@
 name: Deploy to Firebase Hosting on merge
 'on':
   push:
-    branches:
-      - main
+    branches: [main, dev, bywang/dev-env]
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
+    env:
+      IS_PRODUCTION: ${{ endsWith(github.ref, 'main') }}
+      NODE_OPTIONS: --openssl-legacy-provider
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16.x'
+          node-version: '18.x'
+      - name: Set up Firebase CLI
+        run: yarn global add firebase-tools
       - name: Install and Build
         run: yarn install --frozen-lockfile && yarn build
         env:
@@ -28,7 +32,21 @@ jobs:
           NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${{ secrets.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}
           SERVICE_ACCOUNT_TOKEN: ${{ secrets.SERVICE_ACCOUNT_TOKEN }}
           FIREBASE_CLI_PREVIEWS: hostingchannels
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+      # - name: Deploy to dev firebase project
+      #   if: ${{ env.IS_PRODUCTION == 'false' }}
+      #   run: firebase deploy --only hosting:admin-portal --project nwplus-ubc-dev --non-interactive --token ${{ secrets.FIREBASE_TOKEN }}
+      - name: Deploy to dev firebase project
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_NWPLUS_UBC_DEV }}'
+          projectId: nwplus-ubc-dev
+          target: admin-portal
+          channelId: live
+          firebaseToolsVersion: 12.9.1
+      - name: Deploy to prod firebase project
+        if: ${{ env.IS_PRODUCTION == 'true' }}
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_NWPLUS_UBC }}'

@@ -1,6 +1,7 @@
 {
   "projects": {
-    "default": "nwplus-ubc"
+    "default": "nwplus-ubc",
+    "dev": "nwplus-ubc-dev"
   },
   "targets": {
     "nwplus-ubc": {
@@ -9,6 +10,14 @@
           "nw-admin-portal"
         ]
       }
+    },
+    "nwplus-ubc-dev": {
+      "hosting": {
+        "admin-portal": [
+          "dev-nwplus-admin"
+        ]
+      }
     }
-  }
+  },
+  "etags": {}
 }

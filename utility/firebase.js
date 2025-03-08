@@ -754,6 +754,54 @@ export const getCSVData = async () => {
   return CSV
 }
 
+
+export const getRaffleWheelEmails = async () => {
+  const apps = await db
+    .collection('Hackathons')
+    .doc(HackerEvaluationHackathon)
+    .collection('Applicants')
+    .where('dayOf.checkedIn', '==', true)
+    .get()
+  const CSV = apps.docs.map(doc => {
+    const {
+      basicInfo: {
+        legalFirstName,
+        legalLastName,
+        preferredName,
+        email,
+        phoneNumber,
+      }
+    } = doc.data()
+    // TODO - Raffle
+    const totalPoints = email
+    const totalRaffleEntries = "4000"
+
+    return [
+      legalFirstName,
+      legalLastName,
+      preferredName,
+      email,
+      phoneNumber,
+      totalPoints,
+      totalRaffleEntries,
+    ]
+  })
+  CSV.unshift([
+    'First Name',
+    'Last Name',
+    'Preferred Name',
+    'Email',
+    'Phone Number',
+    'Events',
+    'Total Points',
+    'Raffle Entries'
+  ])
+
+  console.log(CSV)
+
+  return CSV
+}
+
 export const getResumeFile = async userId => {
   try {
     const ref = storage.ref(`applicantResumes/${userId}`)

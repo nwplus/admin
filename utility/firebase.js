@@ -754,6 +754,146 @@ export const getCSVData = async () => {
   return CSV
 }
 
+
+// export const getRaffleNumbers = async () => {
+//   const apps = await db
+//     .collection('Hackathons')
+//     .doc(HackerEvaluationHackathon)
+//     .collection('Applicants')
+//     .where('dayOf.checkedIn', '==', true)
+//     .get();
+
+//   // Use Promise.all to handle asynchronous logic for each applicant
+//   const CSV = await Promise.all(
+//     apps.docs.map(async (doc) => {
+//       const {
+//         basicInfo: {
+//           legalFirstName,
+//           legalLastName,
+//           preferredName,
+//           email,
+//           phoneNumber,
+//         },
+//         dayOf,
+//       } = doc.data();
+
+//       // Ensure dayOf.events exists before proceeding
+//       if (!dayOf?.events || !Array.isArray(dayOf.events)) return null;
+
+//       // Fetch event documents for each event in dayOf.events
+//       const dayOfDocsPromises = dayOf.events.map((e) =>
+//         db
+//           .collection('Hackathons')
+//           .doc(HackerEvaluationHackathon)
+//           .collection('DayOf')
+//           .doc(e.eventId)
+//           .get()
+//       );
+      
+//       // Wait for all dayOfDocs to resolve
+//       const dayOfDocs = await Promise.all(dayOfDocsPromises);
+      
+//       // Calculate total points from events
+//       const totalPoints = dayOfDocs.reduce(
+//         (acc, curr) => acc + Number(curr.data()?.points ?? 0),
+//         0
+//       );
+
+//       // Calculate raffle entries based on total points
+//       const totalRaffleEntries = Math.floor(totalPoints / 15);
+
+//       return [
+//         legalFirstName,
+//         legalLastName,
+//         preferredName,
+//         email,
+//         phoneNumber,
+//         totalPoints.toString(),
+//         totalRaffleEntries.toString(),
+//       ];
+//     })
+//   );
+
+//   // Filter out null results (in case any docs didn't have events or checked-in status)
+//   const validCSV = CSV.filter((entry) => entry !== null);
+
+//   // Add headers to CSV
+//   validCSV.unshift([
+//     'First Name',
+//     'Last Name',
+//     'Preferred Name',
+//     'Email',
+//     'Phone Number',
+//     'Total Points',
+//     'Raffle Entries',
+//   ]);
+
+//   console.log(validCSV);
+
+//   return validCSV;
+// };
+
+
+export const getRaffleWheelEmails = async () => {
+  const apps = await db
+    .collection('Hackathons')
+    .doc(HackerEvaluationHackathon)
+    .collection('Applicants')
+    .where('dayOf.checkedIn', '==', true)
+    .get();
+
+  // Create an array to hold all rows for the raffle entries
+  const raffleEntries = [];
+
+  // Iterate over the documents and calculate raffle entries for each user
+  for (const doc of apps.docs) {
+    const {
+      basicInfo: { email },
+      dayOf,
+    } = doc.data();
+
+    if (!dayOf?.events || !Array.isArray(dayOf.events)) continue;
+
+    // Fetch event documents for each event in dayOf.events
+    const dayOfDocsPromises = dayOf.events.map((e) =>
+      db
+        .collection('Hackathons')
+        .doc(HackerEvaluationHackathon)
+        .collection('DayOf')
+        .doc(e.eventId)
+        .get()
+    );
+
+    const dayOfDocs = await Promise.all(dayOfDocsPromises);
+
+    // Calculate total points from events
+    // +15 is from check in : cmd-f 2025
+    const totalPoints = 15 + dayOfDocs.reduce(
+      (acc, curr) => acc + Number(curr.data()?.points ?? 0),
+      0
+    );
+
+    // Calculate raffle entries based on total points
+    const totalRaffleEntries = Math.floor(totalPoints / 15);
+
+    // Add the user's email multiple times based on raffle entries
+    for (let i = 0; i < totalRaffleEntries; i++) {
+      raffleEntries.push(email); // Repeat the email for each raffle entry
+    }
+  }
+
+  // Prepare CSV with only the "Raffle Entries" column
+  const CSV = [
+    ['Raffle Entries'],
+    ...raffleEntries.map(email => [email]), // Convert to array format for CSV
+  ];
+
+  console.log(CSV);
+
+  return CSV;
+};
+
+
 export const getResumeFile = async userId => {
   try {
     const ref = storage.ref(`applicantResumes/${userId}`)

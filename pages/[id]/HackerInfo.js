@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import styled from 'styled-components'
 import { CSVLink } from 'react-csv'
-import { getHackathonPaths, getHackathons, getHackerInfo } from '../../utility/firebase'
+import { getHackathonPaths, getHackathons, getHackerInfo, getRaffleWheelEmails } from '../../utility/firebase'
 import Page from '../../components/page'
 import Button from '../../components/button'
 import Menu from '../../components/menu'
@@ -102,6 +102,7 @@ const Calculate = styled.select`
 export default function HackerInfo({ id, hackathons }) {
   const [unfilteredData, setUnfilteredData] = useState([])
   const [filteredData, setFilteredData] = useState([])
+  const [raffleData, setRaffleData] = useState([])
   const [currTable, setCurrTable] = useState('Applicants')
   const [unfilteredTableKeys, setUnfilteredTableKeys] = useState([])
   const [filteredTableKeys, setFilteredTableKeys] = useState([])
@@ -122,6 +123,7 @@ export default function HackerInfo({ id, hackathons }) {
   const [filter, setFilter] = useState({})
   const [calculate, setCalculate] = useState({})
   const downloadLink = useRef()
+  const raffleDownloadLink = useRef()
   const [uniqueEvents, setUniqueEvents] = useState([])
   const [selectedEvents, setSelectedEvents] = useState([])
 
@@ -229,6 +231,7 @@ export default function HackerInfo({ id, hackathons }) {
     })
   }
 
+  
   const HackerInfoRow = ({ data }) => {
     return (
       <TableRow>
@@ -329,6 +332,22 @@ export default function HackerInfo({ id, hackathons }) {
           </Button>
           <CSVLink style={{ visibility: 'hidden' }} ref={downloadLink} filename="hackerinfo.csv" data={filteredData} />
         </ExportButton>
+
+        {/* TODO raffle */}
+        <ExportButton>
+          <Button
+            onClick={async () => {
+              const data = await getRaffleWheelEmails()
+              setRaffleData(data)
+              raffleDownloadLink.current.link.click()
+            }}
+          >
+            cmd-f 2025 Raffle
+          </Button>
+          <CSVLink style={{ visibility: 'hidden' }} ref={raffleDownloadLink} filename="cmd-f2025-raffle-emails.csv" data={raffleData} />
+        </ExportButton>
+        
+
       </Buttons>
       <Filters>
         <FilterPills>

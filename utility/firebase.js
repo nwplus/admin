@@ -833,7 +833,6 @@ export const getCSVData = async () => {
 //   return validCSV;
 // };
 
-
 export const getRaffleWheelEmails = async () => {
   const apps = await db
     .collection('Hackathons')
@@ -849,11 +848,14 @@ export const getRaffleWheelEmails = async () => {
   // Iterate over the documents and calculate raffle entries for each user
   for (const doc of apps.docs) {
     const {
-      basicInfo: { email, legalFirstName },
+      basicInfo: { email, legalFirstName, preferredName },
       dayOf,
     } = doc.data();
 
     if (!dayOf?.events || !Array.isArray(dayOf.events)) continue;
+
+    // Determine the name to use
+    const displayName = preferredName?.trim() || legalFirstName;
 
     // Fetch event documents for each event in dayOf.events
     const dayOfDocsPromises = dayOf.events.map((e) =>
@@ -877,12 +879,12 @@ export const getRaffleWheelEmails = async () => {
 
     // Add the user's data multiple times based on raffle entries
     for (let i = 0; i < totalRaffleEntries; i++) {
-      raffleEntries.push([counter, `${legalFirstName} ${counter}`, email]); 
+      raffleEntries.push([counter, `${displayName} ${counter}`, email]); 
       counter++; // Increment counter
     }
   }
 
-  // Prepare CSV with "Number", "First Name + Number", and "Email" columns
+  // Prepare CSV with "Number", "First Name + Number", and "Raffle Entries" columns
   const CSV = [
     ['Number', 'Name + Number', 'Raffle Entries'],
     ...raffleEntries,
@@ -892,7 +894,6 @@ export const getRaffleWheelEmails = async () => {
 
   return CSV;
 };
-
 
 
 export const getResumeFile = async userId => {

@@ -848,14 +848,14 @@ export const getRaffleWheelEmails = async () => {
   // Iterate over the documents and calculate raffle entries for each user
   for (const doc of apps.docs) {
     const {
-      basicInfo: { email, legalFirstName, preferredName },
+      basicInfo: { email, legalFirstName, preferredName, legalLastName },
       dayOf,
     } = doc.data();
 
     if (!dayOf?.events || !Array.isArray(dayOf.events)) continue;
 
     // Determine the name to use
-    const displayName = preferredName?.trim() || legalFirstName;
+    const displayName = (preferredName?.trim() || legalFirstName) + " " + legalLastName;
 
     // Fetch event documents for each event in dayOf.events
     const dayOfDocsPromises = dayOf.events.map((e) =>
@@ -879,7 +879,7 @@ export const getRaffleWheelEmails = async () => {
 
     // Add the user's data multiple times based on raffle entries
     for (let i = 0; i < totalRaffleEntries; i++) {
-      raffleEntries.push([counter, `${displayName} ${counter}`, email]); 
+      raffleEntries.push([counter, `${displayName} [${counter}]`, email]); 
       counter++; // Increment counter
     }
   }

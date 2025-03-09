@@ -844,11 +844,12 @@ export const getRaffleWheelEmails = async () => {
 
   // Create an array to hold all rows for the raffle entries
   const raffleEntries = [];
+  let counter = 1; // Initialize a counter
 
   // Iterate over the documents and calculate raffle entries for each user
   for (const doc of apps.docs) {
     const {
-      basicInfo: { email },
+      basicInfo: { email, legalFirstName },
       dayOf,
     } = doc.data();
 
@@ -866,32 +867,32 @@ export const getRaffleWheelEmails = async () => {
 
     const dayOfDocs = await Promise.all(dayOfDocsPromises);
 
-    // Calculate total points from events
-    // +15 is from check in : cmd-f 2025
-    const totalPoints = 15 + dayOfDocs.reduce(
-      (acc, curr) => acc + Number(curr.data()?.points ?? 0),
-      0
-    );
+    // Calculate total points from events (+15 from check-in)
+    const totalPoints =
+      15 +
+      dayOfDocs.reduce((acc, curr) => acc + Number(curr.data()?.points ?? 0), 0);
 
     // Calculate raffle entries based on total points
     const totalRaffleEntries = Math.floor(totalPoints / 15);
 
-    // Add the user's email multiple times based on raffle entries
+    // Add the user's data multiple times based on raffle entries
     for (let i = 0; i < totalRaffleEntries; i++) {
-      raffleEntries.push(email); // Repeat the email for each raffle entry
+      raffleEntries.push([counter, `${legalFirstName} ${counter}`, email]); 
+      counter++; // Increment counter
     }
   }
 
-  // Prepare CSV with only the "Raffle Entries" column
+  // Prepare CSV with "Number", "First Name + Number", and "Email" columns
   const CSV = [
-    ['Raffle Entries'],
-    ...raffleEntries.map(email => [email]), // Convert to array format for CSV
+    ['Number', 'Name + Number', 'Raffle Entries'],
+    ...raffleEntries,
   ];
 
   console.log(CSV);
 
   return CSV;
 };
+
 
 
 export const getResumeFile = async userId => {

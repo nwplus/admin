@@ -4,7 +4,8 @@
 name: Deploy to Firebase Hosting on merge
 'on':
   push:
-    branches: [main, dev, bywang/dev-env]
+    branches: [main, dev]
+  workflow_dispatch:
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest

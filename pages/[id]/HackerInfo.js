@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import styled from 'styled-components'
 import { CSVLink } from 'react-csv'
-import { getHackathonPaths, getHackathons, getHackerInfo } from '../../utility/firebase'
+import { getHackathonPaths, getHackathons, getHackerInfo, getRaffleWheelEmails } from '../../utility/firebase'
 import Page from '../../components/page'
 import Button from '../../components/button'
 import Menu from '../../components/menu'
@@ -102,6 +102,7 @@ const Calculate = styled.select`
 export default function HackerInfo({ id, hackathons }) {
   const [unfilteredData, setUnfilteredData] = useState([])
   const [filteredData, setFilteredData] = useState([])
+  const [raffleData, setRaffleData] = useState([])
   const [currTable, setCurrTable] = useState('Applicants')
   const [unfilteredTableKeys, setUnfilteredTableKeys] = useState([])
   const [filteredTableKeys, setFilteredTableKeys] = useState([])
@@ -111,6 +112,9 @@ export default function HackerInfo({ id, hackathons }) {
   const [filter, setFilter] = useState({})
   const [calculate, setCalculate] = useState({})
   const downloadLink = useRef()
+  const raffleDownloadLink = useRef()
+  const [uniqueEvents, setUniqueEvents] = useState([])
+  const [selectedEvents, setSelectedEvents] = useState([])
 
   const clearFilters = () => {
     setGroupBy({ col1: '', func: '', col2: '' })
@@ -140,6 +144,35 @@ export default function HackerInfo({ id, hackathons }) {
     }
     setFilteredData(res)
   }, [filter])
+
+  useEffect(() => {
+    if (unfilteredData.length > 0 && currTable === 'Applicants') {
+      const events = new Set()
+      unfilteredData.forEach(hacker => {
+        if (hacker.attendedEvents) {
+          const hackerEvents = hacker.attendedEvents.split(',').map(e => e.trim())
+          hackerEvents.forEach(event => {
+            if (event) events.add(event)
+          })
+        }
+      })
+      setUniqueEvents(Array.from(events))
+    }
+  }, [unfilteredData, currTable])
+
+  const applyEventFilter = () => {
+    if (selectedEvents.length === 0) {
+      setFilteredData(unfilteredData)
+      return
+    }
+
+    const filtered = unfilteredData.filter(hacker => {
+      if (!hacker.attendedEvents) return false
+      const hackerEvents = hacker.attendedEvents.split(',').map(e => e.trim())
+      return selectedEvents.every(event => hackerEvents.includes(event))
+    })
+    setFilteredData(filtered)
+  }
 
   const saveGroupBy = () => {
     setFilter({
@@ -278,6 +311,22 @@ export default function HackerInfo({ id, hackathons }) {
           <Button onClick={() => downloadLink.current.link.click()}>Export</Button>
           <CSVLink style={{ visibility: 'hidden' }} ref={downloadLink} filename="hackerinfo.csv" data={filteredData} />
         </ExportButton>
+
+        {/* TODO raffle */}
+        <ExportButton>
+          <Button
+            onClick={async () => {
+              const data = await getRaffleWheelEmails()
+              setRaffleData(data)
+              raffleDownloadLink.current.link.click()
+            }}
+          >
+            cmd-f 2025 Raffle
+          </Button>
+          <CSVLink style={{ visibility: 'hidden' }} ref={raffleDownloadLink} filename="cmd-f2025-raffle-emails.csv" data={raffleData} />
+        </ExportButton>
+        
+
       </Buttons>
       <Filters>
         <FilterPills>
@@ -426,6 +475,39 @@ export default function HackerInfo({ id, hackathons }) {
               </select>
               {sort.col && sort.direction && (
                 <Button type={CHECK} onClick={saveSort} color={COLOR.TRANSPARENT} contentColor={COLOR.DARK_GRAY} />
+              )}
+            </Selection>
+          </Menu>
+          <Menu label="Events">
+            <Selection>
+              {uniqueEvents.map(event => (
+                <label
+                  key={event}
+                  htmlFor={`event-${event}`}
+                  style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+                >
+                  <input
+                    id={`event-${event}`}
+                    type="checkbox"
+                    checked={selectedEvents.includes(event)}
+                    onChange={e => {
+                      if (e.target.checked) {
+                        setSelectedEvents([...selectedEvents, event])
+                      } else {
+                        setSelectedEvents(selectedEvents.filter(ev => ev !== event))
+                      }
+                    }}
+                  />
+                  {event}
+                </label>
+              ))}
+              {uniqueEvents.length > 0 && (
+                <Button
+                  type={CHECK}
+                  onClick={applyEventFilter}
+                  color={COLOR.TRANSPARENT}
+                  contentColor={COLOR.DARK_GRAY}
+                />
               )}
             </Selection>
           </Menu>

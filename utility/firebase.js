@@ -781,10 +781,8 @@ export const getAllResumes = async () => {
     .get()
 
   const sharableApps = apps.docs.filter(app => {
-    const {
-      termsAndConditions: { shareWithSponsors },
-    } = app.data()
-    return shareWithSponsors
+    const { termsAndConditions } = app.data()
+    return termsAndConditions?.shareWithSponsors
   })
 
   const namesAndIds = sharableApps.map(doc => {
@@ -802,13 +800,15 @@ export const getAllResumes = async () => {
     return { ...info, url }
   })
 
-  const APPUrls = await Promise.all(urlPromises)
+  const appUrls = await Promise.all(urlPromises)
 
   const zip = new JSZip()
-  const zipPromises = APPUrls.map(async ({ url, name }) => {
-    const resume = (await fetch(url)).blob()
+  const zipPromises = appUrls.map(async ({ url, name }) => {
+    const response = await fetch(url)
+    const resume = await response.blob()
     zip.file(`${name}.pdf`, resume, { binary: true })
   })
+
   await Promise.all(zipPromises)
   const finishedZip = await zip.generateAsync({ type: 'blob' })
   download(finishedZip, 'Resumes', 'application/zip')
@@ -828,7 +828,8 @@ export const updateApplicantScore = async (applicantID, newScores, oldScores, co
     }
   }, {})
 
-  db.collection('Hackathons')
+  await db
+    .collection('Hackathons')
     .doc(HackerEvaluationHackathon)
     .collection('Applicants')
     .doc(applicantID)

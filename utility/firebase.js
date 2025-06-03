@@ -870,9 +870,9 @@ export const getRaffleWheelEmails = async () => {
     const totalRaffleEntries = Math.floor(totalPoints / 15)
 
     // Add the user's data multiple times based on raffle entries
-    for (let i = 0; i < totalRaffleEntries; i++) {
+    for (let i = 0; i < totalRaffleEntries; i += 1) {
       raffleEntries.push([counter, `${displayName} [${counter}]`, email])
-      counter++ // Increment counter
+      counter += 1 // Increment counter
     }
   }
 

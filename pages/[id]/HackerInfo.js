@@ -323,10 +323,13 @@ export default function HackerInfo({ id, hackathons }) {
           >
             cmd-f 2025 Raffle
           </Button>
-          <CSVLink style={{ visibility: 'hidden' }} ref={raffleDownloadLink} filename="cmd-f2025-raffle-emails.csv" data={raffleData} />
+          <CSVLink
+            style={{ visibility: 'hidden' }}
+            ref={raffleDownloadLink}
+            filename="cmd-f2025-raffle-emails.csv"
+            data={raffleData}
+          />
         </ExportButton>
-        
-
       </Buttons>
       <Filters>
         <FilterPills>

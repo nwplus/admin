@@ -106,20 +106,9 @@ export default function HackerInfo({ id, hackathons }) {
   const [currTable, setCurrTable] = useState('Applicants')
   const [unfilteredTableKeys, setUnfilteredTableKeys] = useState([])
   const [filteredTableKeys, setFilteredTableKeys] = useState([])
-  const [groupBy, setGroupBy] = useState({
-    col1: '',
-    func: '',
-    col2: '',
-  })
-  const [where, setWhere] = useState({
-    col: '',
-    func: '',
-    val: '',
-  })
-  const [sort, setSort] = useState({
-    col: '',
-    direction: '',
-  })
+  const [groupBy, setGroupBy] = useState({ col1: '', func: '', col2: '' })
+  const [where, setWhere] = useState({ col: '', func: '', val: '' })
+  const [sort, setSort] = useState({ col: '', direction: '' })
   const [filter, setFilter] = useState({})
   const [calculate, setCalculate] = useState({})
   const downloadLink = useRef()
@@ -129,9 +118,9 @@ export default function HackerInfo({ id, hackathons }) {
 
   const clearFilters = () => {
     setGroupBy({ col1: '', func: '', col2: '' })
-    setFilter({ col: '', func: '', val: '' })
-    setSort({ col: '', direction: '' })
     setFilter({})
+    setSort({ col: '', direction: '' })
+    setWhere({ col: '', func: '', val: '' })
   }
 
   useEffect(() => {
@@ -204,7 +193,6 @@ export default function HackerInfo({ id, hackathons }) {
   const saveWhere = () => {
     const condition = {}
     if (['NIS', 'NEQ'].includes(where.func)) {
-      // negation condition
       condition.NOT = {
         [where.func.substring(1)]: {
           [where.col]: where.func === 'NEQ' ? Number(where.val) : where.val,
@@ -231,16 +219,13 @@ export default function HackerInfo({ id, hackathons }) {
     })
   }
 
-  
-  const HackerInfoRow = ({ data }) => {
-    return (
-      <TableRow>
-        {filteredTableKeys.map(key => (
-          <TableData key={`${data}-${key}`}>{data[key]}</TableData>
-        ))}
-      </TableRow>
-    )
-  }
+  const HackerInfoRow = ({ data }) => (
+    <TableRow>
+      {filteredTableKeys.map(key => (
+        <TableData key={`${data}-${key}`}>{data[key]}</TableData>
+      ))}
+    </TableRow>
+  )
 
   const renderTable = useMemo(
     () => (
@@ -296,7 +281,7 @@ export default function HackerInfo({ id, hackathons }) {
               </thead>
               <tbody>
                 {filteredData.map(entry => (
-                  <HackerInfoRow key={entry} data={entry} />
+                  <HackerInfoRow key={JSON.stringify(entry)} data={entry} />
                 ))}
               </tbody>
             </>
@@ -323,13 +308,7 @@ export default function HackerInfo({ id, hackathons }) {
           ))}
         </TableOptionsButtons>
         <ExportButton>
-          <Button
-            onClick={() => {
-              downloadLink.current.link.click()
-            }}
-          >
-            Export
-          </Button>
+          <Button onClick={() => downloadLink.current.link.click()}>Export</Button>
           <CSVLink style={{ visibility: 'hidden' }} ref={downloadLink} filename="hackerinfo.csv" data={filteredData} />
         </ExportButton>
 
@@ -344,10 +323,13 @@ export default function HackerInfo({ id, hackathons }) {
           >
             cmd-f 2025 Raffle
           </Button>
-          <CSVLink style={{ visibility: 'hidden' }} ref={raffleDownloadLink} filename="cmd-f2025-raffle-emails.csv" data={raffleData} />
+          <CSVLink
+            style={{ visibility: 'hidden' }}
+            ref={raffleDownloadLink}
+            filename="cmd-f2025-raffle-emails.csv"
+            data={raffleData}
+          />
         </ExportButton>
-        
-
       </Buttons>
       <Filters>
         <FilterPills>
@@ -437,12 +419,7 @@ export default function HackerInfo({ id, hackathons }) {
                 ))}
               </select>
               {groupBy.col1 && groupBy.func && groupBy.col2 && (
-                <Button
-                  type={CHECK}
-                  onClick={() => saveGroupBy()}
-                  color={COLOR.TRANSPARENT}
-                  contentColor={COLOR.DARK_GRAY}
-                />
+                <Button type={CHECK} onClick={saveGroupBy} color={COLOR.TRANSPARENT} contentColor={COLOR.DARK_GRAY} />
               )}
             </Selection>
           </Menu>
@@ -476,12 +453,7 @@ export default function HackerInfo({ id, hackathons }) {
                 placeholder="Value"
               />
               {where.col && where.func && where.val && (
-                <Button
-                  type={CHECK}
-                  onClick={() => saveWhere()}
-                  color={COLOR.TRANSPARENT}
-                  contentColor={COLOR.DARK_GRAY}
-                />
+                <Button type={CHECK} onClick={saveWhere} color={COLOR.TRANSPARENT} contentColor={COLOR.DARK_GRAY} />
               )}
             </Selection>
           </Menu>
@@ -505,12 +477,7 @@ export default function HackerInfo({ id, hackathons }) {
                 <option value="DOWN">Descending</option>
               </select>
               {sort.col && sort.direction && (
-                <Button
-                  type={CHECK}
-                  onClick={() => saveSort()}
-                  color={COLOR.TRANSPARENT}
-                  contentColor={COLOR.DARK_GRAY}
-                />
+                <Button type={CHECK} onClick={saveSort} color={COLOR.TRANSPARENT} contentColor={COLOR.DARK_GRAY} />
               )}
             </Selection>
           </Menu>
@@ -554,16 +521,9 @@ export default function HackerInfo({ id, hackathons }) {
   )
 }
 
-export const getStaticPaths = async () => {
-  return getHackathonPaths()
-}
+export const getStaticPaths = async () => getHackathonPaths()
 
 export const getStaticProps = async ({ params }) => {
   const hackathons = await getHackathons()
-  return {
-    props: {
-      hackathons,
-      id: params.id,
-    },
-  }
+  return { props: { hackathons, id: params.id } }
 }

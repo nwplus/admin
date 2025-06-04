@@ -754,7 +754,6 @@ export const getCSVData = async () => {
   return CSV
 }
 
-
 // export const getRaffleNumbers = async () => {
 //   const apps = await db
 //     .collection('Hackathons')
@@ -789,10 +788,10 @@ export const getCSVData = async () => {
 //           .doc(e.eventId)
 //           .get()
 //       );
-      
+
 //       // Wait for all dayOfDocs to resolve
 //       const dayOfDocs = await Promise.all(dayOfDocsPromises);
-      
+
 //       // Calculate total points from events
 //       const totalPoints = dayOfDocs.reduce(
 //         (acc, curr) => acc + Number(curr.data()?.points ?? 0),
@@ -839,62 +838,51 @@ export const getRaffleWheelEmails = async () => {
     .doc(HackerEvaluationHackathon)
     .collection('Applicants')
     .where('dayOf.checkedIn', '==', true)
-    .get();
+    .get()
 
   // Create an array to hold all rows for the raffle entries
-  const raffleEntries = [];
-  let counter = 1; // Initialize a counter
+  const raffleEntries = []
+  let counter = 1 // Initialize a counter
 
   // Iterate over the documents and calculate raffle entries for each user
   for (const doc of apps.docs) {
     const {
       basicInfo: { email, legalFirstName, preferredName, legalLastName },
       dayOf,
-    } = doc.data();
+    } = doc.data()
 
-    if (!dayOf?.events || !Array.isArray(dayOf.events)) continue;
+    if (!dayOf?.events || !Array.isArray(dayOf.events)) continue
 
     // Determine the name to use
-    const displayName = (preferredName?.trim() || legalFirstName) + " " + legalLastName;
+    const displayName = `${preferredName?.trim() || legalFirstName} ${legalLastName}`
 
     // Fetch event documents for each event in dayOf.events
-    const dayOfDocsPromises = dayOf.events.map((e) =>
-      db
-        .collection('Hackathons')
-        .doc(HackerEvaluationHackathon)
-        .collection('DayOf')
-        .doc(e.eventId)
-        .get()
-    );
+    const dayOfDocsPromises = dayOf.events.map(e =>
+      db.collection('Hackathons').doc(HackerEvaluationHackathon).collection('DayOf').doc(e.eventId).get()
+    )
 
-    const dayOfDocs = await Promise.all(dayOfDocsPromises);
+    const dayOfDocs = await Promise.all(dayOfDocsPromises)
 
     // Calculate total points from events (+15 from check-in)
-    const totalPoints =
-      15 +
-      dayOfDocs.reduce((acc, curr) => acc + Number(curr.data()?.points ?? 0), 0);
+    const totalPoints = 15 + dayOfDocs.reduce((acc, curr) => acc + Number(curr.data()?.points ?? 0), 0)
 
     // Calculate raffle entries based on total points
-    const totalRaffleEntries = Math.floor(totalPoints / 15);
+    const totalRaffleEntries = Math.floor(totalPoints / 15)
 
     // Add the user's data multiple times based on raffle entries
-    for (let i = 0; i < totalRaffleEntries; i++) {
-      raffleEntries.push([counter, `${displayName} [${counter}]`, email]); 
-      counter++; // Increment counter
+    for (let i = 0; i < totalRaffleEntries; i += 1) {
+      raffleEntries.push([counter, `${displayName} [${counter}]`, email])
+      counter += 1 // Increment counter
     }
   }
 
   // Prepare CSV with "Number", "First Name + Number", and "Raffle Entries" columns
-  const CSV = [
-    ['Number', 'Name + Number', 'Raffle Entries'],
-    ...raffleEntries,
-  ];
+  const CSV = [['Number', 'Name + Number', 'Raffle Entries'], ...raffleEntries]
 
-  console.log(CSV);
+  console.log(CSV)
 
-  return CSV;
-};
-
+  return CSV
+}
 
 export const getResumeFile = async userId => {
   try {
@@ -923,10 +911,8 @@ export const getAllResumes = async () => {
     .get()
 
   const sharableApps = apps.docs.filter(app => {
-    const {
-      termsAndConditions: { shareWithSponsors },
-    } = app.data()
-    return shareWithSponsors
+    const { termsAndConditions } = app.data()
+    return termsAndConditions?.shareWithSponsors
   })
 
   const namesAndIds = sharableApps.map(doc => {
@@ -944,13 +930,15 @@ export const getAllResumes = async () => {
     return { ...info, url }
   })
 
-  const APPUrls = await Promise.all(urlPromises)
+  const appUrls = await Promise.all(urlPromises)
 
   const zip = new JSZip()
-  const zipPromises = APPUrls.map(async ({ url, name }) => {
-    const resume = (await fetch(url)).blob()
+  const zipPromises = appUrls.map(async ({ url, name }) => {
+    const response = await fetch(url)
+    const resume = await response.blob()
     zip.file(`${name}.pdf`, resume, { binary: true })
   })
+
   await Promise.all(zipPromises)
   const finishedZip = await zip.generateAsync({ type: 'blob' })
   download(finishedZip, 'Resumes', 'application/zip')
@@ -970,7 +958,8 @@ export const updateApplicantScore = async (applicantID, newScores, oldScores, co
     }
   }, {})
 
-  db.collection('Hackathons')
+  await db
+    .collection('Hackathons')
     .doc(HackerEvaluationHackathon)
     .collection('Applicants')
     .doc(applicantID)
